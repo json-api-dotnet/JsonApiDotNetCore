@@ -10,6 +10,240 @@
     }
   ],
   "paths": {
+    "/coffeeSummaries/summary": {
+      "get": {
+        "tags": [
+          "coffeeSummaries"
+        ],
+        "description": "Summarizes all cups of coffee, indicating their ingredients.",
+        "operationId": "get-coffee-summary",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryCoffeeSummaryResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "coffeeSummaries"
+        ],
+        "description": "Summarizes all cups of coffee, indicating their ingredients.",
+        "operationId": "head-coffee-summary",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/cupOfCoffees/onlyBlack": {
+      "get": {
+        "tags": [
+          "cupOfCoffees"
+        ],
+        "description": "Gets all cups of coffee without sugar and milk.",
+        "operationId": "get-only-black",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/cupOfCoffeeCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cupOfCoffees"
+        ],
+        "description": "Gets all cups of coffee without sugar and milk.",
+        "operationId": "head-only-black",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/cupOfCoffees/onlyBlack/{id}": {
+      "get": {
+        "tags": [
+          "cupOfCoffees"
+        ],
+        "description": "Gets a cup of coffee by ID, if the cup is without sugar and milk. Returns 404 otherwise.",
+        "operationId": "get-only-if-black",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryCupOfCoffeeResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cupOfCoffees"
+        ],
+        "description": "Gets a cup of coffee by ID, if the cup is without sugar and milk. Returns 404 otherwise.",
+        "operationId": "head-only-if-black",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/cupOfCoffees/batch": {
+      "post": {
+        "tags": [
+          "cupOfCoffees"
+        ],
+        "description": "Creates cups of coffee in batch.",
+        "operationId": "batchCreateCupsOfCoffee",
+        "parameters": [
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The batch size.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "The batch size.",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createCupOfCoffeeRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cupOfCoffees"
+        ],
+        "description": "Resets all cups of coffee to black.",
+        "operationId": "batchResetToBlack",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cupOfCoffees"
+        ],
+        "description": "Deletes all cups of coffee. Returns 404 when none found.",
+        "operationId": "deleteAll",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/cupOfCoffees": {
       "get": {
         "tags": [
@@ -457,6 +691,87 @@
   },
   "components": {
     "schemas": {
+      "attributesInCoffeeSummaryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "totalCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "blackCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "onlySugarCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "onlyMilkCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "sugarWithMilkCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateCupOfCoffeeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "hasMilk",
+              "hasSugar"
+            ],
+            "type": "object",
+            "properties": {
+              "hasSugar": {
+                "type": "boolean"
+              },
+              "hasMilk": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "cupOfCoffees": "#/components/schemas/attributesInCreateCupOfCoffeeRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "attributesInCupOfCoffeeResponse": {
         "allOf": [
           {
@@ -495,10 +810,34 @@
         "discriminator": {
           "propertyName": "openapi:discriminator",
           "mapping": {
+            "coffeeSummaries": "#/components/schemas/attributesInCoffeeSummaryResponse",
             "cupOfCoffees": "#/components/schemas/attributesInCupOfCoffeeResponse"
           }
         },
         "x-abstract": true
+      },
+      "createCupOfCoffeeRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateCupOfCoffeeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "cupOfCoffeeCollectionResponseDocument": {
         "required": [
@@ -534,6 +873,64 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "dataInCoffeeSummaryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCoffeeSummaryResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateCupOfCoffeeRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateCupOfCoffeeRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "dataInCupOfCoffeeResponse": {
@@ -773,6 +1170,80 @@
           "nullable": true
         }
       },
+      "primaryCoffeeSummaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCoffeeSummaryResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryCupOfCoffeeResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCupOfCoffeeResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
@@ -796,6 +1267,36 @@
           }
         },
         "additionalProperties": false
+      },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "cupOfCoffees": "#/components/schemas/dataInCreateCupOfCoffeeRequest"
+          }
+        },
+        "x-abstract": true
       },
       "resourceInResponse": {
         "required": [
@@ -822,6 +1323,7 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
+            "coffeeSummaries": "#/components/schemas/dataInCoffeeSummaryResponse",
             "cupOfCoffees": "#/components/schemas/dataInCupOfCoffeeResponse"
           }
         },
@@ -836,8 +1338,21 @@
         },
         "additionalProperties": false
       },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "resourceType": {
         "enum": [
+          "coffeeSummaries",
           "cupOfCoffees"
         ],
         "type": "string"

@@ -1,7 +1,6 @@
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +24,9 @@ public sealed class CoffeeSummaryController : BaseJsonApiController<CoffeeSummar
     [HttpGet("summary", Name = "get-coffee-summary")]
     [HttpHead("summary", Name = "head-coffee-summary")]
     [EndpointDescription("Summarizes all cups of coffee, indicating their ingredients.")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<CoffeeSummary> GetSummaryAsync(CancellationToken cancellationToken)
+    [ProducesResponseType<CoffeeSummary>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSummaryAsync(CancellationToken cancellationToken)
     {
         var summary = new CoffeeSummary
         {
@@ -65,21 +65,15 @@ public sealed class CoffeeSummaryController : BaseJsonApiController<CoffeeSummar
             summary.TotalCount++;
         }
 
-        return summary;
-    }
-
-    [HttpDelete("only-milk", Name = "delete-only-milk")]
-    [EndpointDescription("Deletes all cups of coffee with milk, but no sugar.")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task DeleteOnlyMilkAsync(CancellationToken cancellationToken)
-    {
-        int numDeleted = await _dbContext.CupsOfCoffee.Where(cupOfCoffee => cupOfCoffee.HasMilk == true && cupOfCoffee.HasSugar != true)
-            .ExecuteDeleteAsync(cancellationToken);
-
-        if (numDeleted == 0)
+        if (summary.TotalCount == 0)
         {
-            throw new JsonApiException(new ErrorObject(HttpStatusCode.NotFound));
+            return Error(new ErrorObject(HttpStatusCode.NotFound)
+            {
+                StatusCode = HttpStatusCode.NotFound,
+                Title = "No cups available to summarize."
+            });
         }
+
+        return Ok(summary);
     }
 }

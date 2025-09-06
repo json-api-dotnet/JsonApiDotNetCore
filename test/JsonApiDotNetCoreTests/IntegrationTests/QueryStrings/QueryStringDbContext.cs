@@ -36,7 +36,7 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
             .HasForeignKey<Man>();
 
         builder.Entity<Calendar>()
-            .HasMany<Appointment>(calendar => calendar.Appointments)
+            .HasMany(calendar => calendar.Appointments)
             .WithOne(appointment => appointment.Calendar);
 
         base.OnModelCreating(builder);

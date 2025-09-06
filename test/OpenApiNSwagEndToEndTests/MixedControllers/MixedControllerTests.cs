@@ -1,7 +1,9 @@
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenApiNSwagEndToEndTests.MixedControllers.GeneratedCode;
@@ -27,6 +29,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         testContext.UseController<FileTransferController>();
         testContext.UseController<CupOfCoffeesController>();
+        testContext.UseController<CoffeeSummaryController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -40,6 +43,309 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         var emailsProvider = _testContext.Factory.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
         emailsProvider.SentEmails.Clear();
+
+        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.AllowUnknownQueryStringParameters = true;
+    }
+
+    [Fact]
+    public async Task Can_get_coffee_summary()
+    {
+        // Arrange
+        List<CupOfCoffee> cups = _fakers.CupOfCoffee.GenerateList(10);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+            dbContext.CupsOfCoffee.AddRange(cups);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        PrimaryCoffeeSummaryResponseDocument response = await apiClient.GetCoffeeSummaryAsync();
+
+        // Assert
+        response.Data.Attributes.Should().NotBeNull();
+        response.Data.Attributes.TotalCount.Should().Be(10);
+        response.Data.Attributes.BlackCount.Should().Be(cups.Count(cup => cup is { HasMilk: false, HasSugar: false }));
+        response.Data.Attributes.OnlySugarCount.Should().Be(cups.Count(cup => cup is { HasMilk: false, HasSugar: true }));
+        response.Data.Attributes.OnlyMilkCount.Should().Be(cups.Count(cup => cup is { HasMilk: true, HasSugar: false }));
+        response.Data.Attributes.SugarWithMilkCount.Should().Be(cups.Count(cup => cup is { HasMilk: true, HasSugar: true }));
+    }
+
+    [Fact]
+    public async Task Cannot_get_empty_coffee_summary()
+    {
+        // Arrange
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        Func<Task> action = async () => await apiClient.GetCoffeeSummaryAsync();
+
+        // Assert
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Result.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("404");
+        error.Title.Should().Be("No cups available to summarize.");
+        error.Detail.Should().BeNull();
+        error.Source.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Can_get_only_black_cups()
+    {
+        // Arrange
+        List<CupOfCoffee> cups = _fakers.CupOfCoffee.GenerateList(2);
+        cups[0].HasSugar = true;
+        cups[1].HasMilk = false;
+        cups[1].HasSugar = false;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+            dbContext.CupsOfCoffee.AddRange(cups);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        CupOfCoffeeCollectionResponseDocument response = await apiClient.GetOnlyBlackAsync();
+
+        // Assert
+        response.Data.Should().ContainSingle().Which.With(data =>
+        {
+            data.Id.Should().Be(cups[1].StringId);
+            data.Attributes.Should().NotBeNull();
+            data.Attributes.HasMilk.Should().BeFalse();
+            data.Attributes.HasSugar.Should().BeFalse();
+        });
+    }
+
+    [Fact]
+    public async Task Can_get_existing_black_cup()
+    {
+        // Arrange
+        CupOfCoffee cup = _fakers.CupOfCoffee.GenerateOne();
+        cup.HasSugar = false;
+        cup.HasMilk = false;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.CupsOfCoffee.Add(cup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        PrimaryCupOfCoffeeResponseDocument response = await apiClient.GetOnlyIfBlackAsync(cup.StringId!);
+
+        // Assert
+        response.Data.Id.Should().Be(cup.StringId);
+        response.Data.Attributes.Should().NotBeNull();
+        response.Data.Attributes.HasMilk.Should().BeFalse();
+        response.Data.Attributes.HasSugar.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Cannot_get_unknown_black_cup()
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        Func<Task> action = async () => await apiClient.GetOnlyIfBlackAsync(Unknown.StringId.Int64);
+
+        // Assert
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Result.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("404");
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'cupOfCoffees' with ID '{Unknown.StringId.Int64}' does not exist.");
+        error.Source.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Can_create_cups_in_batch()
+    {
+        // Arrange
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        CreateCupOfCoffeeRequestDocument requestBody = new()
+        {
+            Data = new DataInCreateCupOfCoffeeRequest
+            {
+                Attributes = new AttributesInCreateCupOfCoffeeRequest
+                {
+                    HasSugar = true,
+                    HasMilk = true
+                }
+            }
+        };
+
+        // Act
+        await apiClient.BatchCreateCupsOfCoffeeAsync(3, requestBody);
+
+        // Assert
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<CupOfCoffee> cupsInDatabase = await dbContext.CupsOfCoffee.ToListAsync();
+
+            cupsInDatabase.Should().HaveCount(3);
+            cupsInDatabase.Should().AllSatisfy(cup => cup.HasSugar.Should().BeTrue());
+            cupsInDatabase.Should().AllSatisfy(cup => cup.HasMilk.Should().BeTrue());
+        });
+    }
+
+    [Fact]
+    public async Task Cannot_create_cups_with_negative_batch_size()
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        CreateCupOfCoffeeRequestDocument requestBody = new()
+        {
+            Data = new DataInCreateCupOfCoffeeRequest
+            {
+                Attributes = new AttributesInCreateCupOfCoffeeRequest
+                {
+                    HasSugar = true,
+                    HasMilk = true
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = async () => await apiClient.BatchCreateCupsOfCoffeeAsync(-1, requestBody);
+
+        // Assert
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+        exception.Message.Should().Be("HTTP 400: Bad Request");
+        exception.Result.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("400");
+        error.Title.Should().Be("Invalid batch size.");
+        error.Detail.Should().Be("Please specify a batch size of one or higher in the query string.");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("size");
+    }
+
+    [Fact]
+    public async Task Can_reset_cups_in_batch()
+    {
+        // Arrange
+        List<CupOfCoffee> cups = _fakers.CupOfCoffee.GenerateList(5);
+        cups[0].HasSugar = true;
+        cups[4].HasSugar = true;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+            dbContext.CupsOfCoffee.AddRange(cups);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        await apiClient.BatchResetToBlackAsync();
+
+        // Assert
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<CupOfCoffee> cupsInDatabase = await dbContext.CupsOfCoffee.ToListAsync();
+
+            cupsInDatabase.Should().HaveCount(5);
+            cupsInDatabase.Should().AllSatisfy(cup => cup.HasSugar.Should().BeFalse());
+            cupsInDatabase.Should().AllSatisfy(cup => cup.HasMilk.Should().BeFalse());
+        });
+    }
+
+    [Fact]
+    public async Task Can_delete_all_cups()
+    {
+        // Arrange
+        List<CupOfCoffee> cups = _fakers.CupOfCoffee.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+            dbContext.CupsOfCoffee.AddRange(cups);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        await apiClient.DeleteAllAsync();
+
+        // Assert
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<CupOfCoffee> cupsInDatabase = await dbContext.CupsOfCoffee.ToListAsync();
+
+            cupsInDatabase.Should().BeEmpty();
+        });
+    }
+
+    [Fact]
+    public async Task Cannot_delete_all_cups_when_empty()
+    {
+        // Arrange
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        Func<Task> action = async () => await apiClient.DeleteAllAsync();
+
+        // Assert
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Result.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("404");
+        error.Title.Should().BeNull();
+        error.Detail.Should().BeNull();
+        error.Source.Should().BeNull();
     }
 
     [Fact]
@@ -77,7 +383,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         exception.Message.Should().Be("HTTP 400: Bad Request");
         exception.Response.Should().Be("Empty files cannot be uploaded.");
@@ -114,7 +419,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: Not Found");
         exception.Response.Should().BeNull();
@@ -158,7 +462,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: Not Found");
         exception.Response.Should().Be("The file 'demo-missing-file.txt' does not exist.");
@@ -214,7 +517,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         // Assert
         ApiException<HttpValidationProblemDetails> exception = (await action.Should().ThrowExactlyAsync<ApiException<HttpValidationProblemDetails>>()).Which;
-
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         exception.Message.Should().Be("HTTP 400: Bad Request");
         exception.Result.Status.Should().Be((int)HttpStatusCode.BadRequest);
@@ -274,7 +576,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         // Assert
         ApiException<HttpValidationProblemDetails> exception = (await action.Should().ThrowExactlyAsync<ApiException<HttpValidationProblemDetails>>()).Which;
-
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         exception.Message.Should().Be("HTTP 400: Bad Request");
         exception.Result.Status.Should().Be((int)HttpStatusCode.BadRequest);
@@ -303,7 +604,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         exception.Message.Should().Be("HTTP 400: Bad Request");
         exception.Response.Should().BeNull();

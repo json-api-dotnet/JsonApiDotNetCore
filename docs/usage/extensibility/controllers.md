@@ -137,3 +137,56 @@ public class ReportsController : JsonApiController<Report, int>
 ```
 
 For more information about resource service injection, see [Replacing injected services](~/usage/extensibility/layer-overview.md#replacing-injected-services) and [Resource Services](~/usage/extensibility/services.md).
+
+## Custom action methods
+
+Aside from adding custom ASP.NET controllers and Minimal API endpoints to your project that are unrelated to JSON:API,
+you can also augment JsonApiDotNetCore controllers with custom action methods.
+This applies to both auto-generated and explicit controllers.
+
+When doing so, they participate in the JsonApiDotNetCore pipeline, which means that JSON:API query string parameters are available,
+exceptions are handled, and the request/response bodies match the JSON:API structure. As a result, the following restrictions apply:
+
+- The input/output resource types used must exist in the resource graph.
+- For primary endpoints, the input/output resource types must match the controller resource type.
+- An action method can only return a resource, a collection of resources, an error, or null.
+
+For example, the following custom POST endpoint doesn't take a request body and returns a collection of resources:
+
+```c#
+partial class TagsController
+{
+    // POST /tags/defaults
+    [HttpPost("defaults")]
+    public async Task<IActionResult> CreateDefaultTagsAsync()
+    {
+        List<string> defaultTagNames =
+        [
+            "Create design",
+            "Implement feature",
+            "Write tests",
+            "Update documentation",
+            "Deploy changes"
+        ];
+
+        bool hasDefaultTags = await _appDbContext.Tags.AnyAsync(tag => defaultTagNames.Contains(tag.Name));
+        if (hasDefaultTags)
+        {
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.Conflict)
+            {
+                Title = "Default tags already exist."
+            });
+        }
+
+        List<Tag> defaultTags = defaultTagNames.Select(name => new Tag
+        {
+            Name = name
+        }).ToList();
+
+        _appDbContext.Tags.AddRange(defaultTags);
+        await _appDbContext.SaveChangesAsync();
+
+        return Ok(defaultTags);
+    }
+}
+```

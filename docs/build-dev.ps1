@@ -4,7 +4,9 @@
 
 param(
     # Specify -NoBuild to skip code build and examples generation. This runs faster, so handy when only editing Markdown files.
-    [switch] $NoBuild=$False
+    [switch] $NoBuild=$False,
+    # Specify -NoOpen to skip opening the documentation website in a web browser.
+    [switch] $NoOpen=$False
 )
 
 function VerifySuccessExitCode {
@@ -53,8 +55,11 @@ Copy-Item -Force -Recurse home/assets/* _site/styles/
 
 cd _site
 $webServerJob = httpserver &
-Start-Process "http://localhost:8080/"
 cd ..
+
+if (-Not $NoOpen) {
+    Start-Process "http://localhost:8080/"
+}
 
 Write-Host ""
 Write-Host "Web server started. Press Enter to close."

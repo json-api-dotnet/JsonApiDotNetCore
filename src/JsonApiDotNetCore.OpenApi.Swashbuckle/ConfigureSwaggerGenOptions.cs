@@ -146,17 +146,17 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
 
     private static IList<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
     {
-        var actionMethod = OpenApiActionMethod.Create(description.ActionDescriptor);
+        var actionMethod = JsonApiActionMethod.TryCreate(description.ActionDescriptor);
 
         switch (actionMethod)
         {
-            case AtomicOperationsActionMethod:
+            case OperationsActionMethod:
             {
                 return ["operations"];
             }
-            case JsonApiActionMethod jsonApiActionMethod:
+            case ResourceActionMethod resourceActionMethod:
             {
-                ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(jsonApiActionMethod.ControllerType);
+                ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(resourceActionMethod.ControllerType);
                 ConsistencyGuard.ThrowIf(resourceType == null);
 
                 return [resourceType.PublicName];
