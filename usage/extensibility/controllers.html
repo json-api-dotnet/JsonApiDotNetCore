@@ -193,6 +193,54 @@ In some cases, resources may be an aggregation of entities or a view on top of t
 }
 </code></pre>
 <p>For more information about resource service injection, see <a href="layer-overview.html#replacing-injected-services">Replacing injected services</a> and <a href="services.html">Resource Services</a>.</p>
+<h2 id="custom-action-methods">Custom action methods</h2>
+<p>Aside from adding custom ASP.NET controllers and Minimal API endpoints to your project that are unrelated to JSON:API,
+you can also augment JsonApiDotNetCore controllers with custom action methods.
+This applies to both auto-generated and explicit controllers.</p>
+<p>When doing so, they participate in the JsonApiDotNetCore pipeline, which means that JSON:API query string parameters are available,
+exceptions are handled, and the request/response bodies match the JSON:API structure. As a result, the following restrictions apply:</p>
+<ul>
+<li>The input/output resource types used must exist in the resource graph.</li>
+<li>For primary endpoints, the input/output resource types must match the controller resource type.</li>
+<li>An action method can only return a resource, a collection of resources, an error, or null.</li>
+</ul>
+<p>For example, the following custom POST endpoint doesn't take a request body and returns a collection of resources:</p>
+<pre><code class="lang-c#">partial class TagsController
+{
+    // POST /tags/defaults
+    [HttpPost(&quot;defaults&quot;)]
+    public async Task&lt;IActionResult&gt; CreateDefaultTagsAsync()
+    {
+        List&lt;string&gt; defaultTagNames =
+        [
+            &quot;Create design&quot;,
+            &quot;Implement feature&quot;,
+            &quot;Write tests&quot;,
+            &quot;Update documentation&quot;,
+            &quot;Deploy changes&quot;
+        ];
+
+        bool hasDefaultTags = await _appDbContext.Tags.AnyAsync(tag =&gt; defaultTagNames.Contains(tag.Name));
+        if (hasDefaultTags)
+        {
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.Conflict)
+            {
+                Title = &quot;Default tags already exist.&quot;
+            });
+        }
+
+        List&lt;Tag&gt; defaultTags = defaultTagNames.Select(name =&gt; new Tag
+        {
+            Name = name
+        }).ToList();
+
+        _appDbContext.Tags.AddRange(defaultTags);
+        await _appDbContext.SaveChangesAsync();
+
+        return Ok(defaultTags);
+    }
+}
+</code></pre>
 
 </article>
 

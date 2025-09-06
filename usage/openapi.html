@@ -122,9 +122,13 @@ app.UseSwagger();
 </li>
 </ol>
 <p>By default, the OpenAPI document will be available at <code>http://localhost:&lt;port&gt;/swagger/v1/swagger.json</code>.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>In addition to the documentation here, various examples can be found in the <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/OpenApiTests">OpenApiTests project</a>.</p>
+</div>
 <h3 id="customizing-the-route-template">Customizing the Route Template</h3>
 <p>Because Swashbuckle doesn't properly implement the ASP.NET Options pattern, you must <em>not</em> use its
-<a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore?tab=readme-ov-file#change-the-path-for-swagger-json-endpoints">documented way</a>
+<a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/docs/configure-and-customize-swagger.md#change-the-path-for-swagger-json-endpoints">documented way</a>
 to change the route template:</p>
 <pre><code class="lang-c#">// DO NOT USE THIS! INCOMPATIBLE WITH JSON:API!
 app.UseSwagger(options =&gt; options.RouteTemplate = &quot;api-docs/{documentName}/swagger.yaml&quot;);
@@ -149,9 +153,42 @@ The <code>NoWarn</code> line is optional, which suppresses build warnings for un
     &lt;NoWarn&gt;$(NoWarn);1591&lt;/NoWarn&gt;
   &lt;/PropertyGroup&gt;
 </code></pre>
-<p>You can combine this with the documentation that Swagger itself supports, by enabling it as described
-<a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore#include-descriptions-from-xml-comments">here</a>.
+<p>You can combine this with the documentation that Swashbuckle itself supports, by enabling it as described
+<a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/docs/configure-and-customize-swaggergen.md#include-descriptions-from-xml-comments">here</a>.
 This adds documentation for additional types, such as triple-slash comments on enums used in your resource models.</p>
+<h2 id="custom-jsonapi-action-methods">Custom JSON:API action methods</h2>
+<p>To express the metadata of <a href="extensibility/controllers.html#custom-action-methods">custom action methods</a> in OpenAPI,
+use the following attributes on your controller action method:</p>
+<ul>
+<li><p>The <code>Name</code> property on <code>HttpMethodAttribute</code> to specify the OpenAPI operation ID, for example:</p>
+<pre><code class="lang-c#">[HttpGet(&quot;active&quot;, Name = &quot;get-active-users&quot;)]
+</code></pre>
+</li>
+<li><p><code>EndpointDescriptionAttribute</code> to specify the OpenAPI endpoint description, for example:</p>
+<pre><code class="lang-c#">[EndpointDescription(&quot;Provides access to user accounts.&quot;)]
+</code></pre>
+</li>
+<li><p><code>ConsumesAttribute</code> to specify the resource type of the request body, for example:</p>
+<pre><code class="lang-c#">[Consumes(typeof(UserAccount), &quot;application/vnd.api+json&quot;)]
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>The <code>contentType</code> parameter is required, but effectively ignored.</p>
+</div>
+</li>
+<li><p><code>ProducesResponseTypeAttribute</code> attribute(s) to specify the response types and status codes, for example:</p>
+<pre><code class="lang-c#">[ProducesResponseType&lt;ICollection&lt;UserAccount&gt;&gt;(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status204NoContent)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+[ProducesResponseType(StatusCodes.Status409Conflict)]
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>For non-success response status codes, the type should be omitted.</p>
+</div>
+</li>
+</ul>
+<p>Custom parameters on action methods can be decorated with the usual attributes, such as <code>[Required]</code>, <code>[Description]</code>, etc.</p>
 
 </article>
 
