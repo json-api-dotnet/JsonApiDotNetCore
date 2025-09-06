@@ -12,11 +12,18 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class ResourceInResponse : IBackedModel, IParsable
+    public partial class CreateCupOfCoffeeRequestDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
+
+        /// <summary>The data property</summary>
+        public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.DataInCreateCupOfCoffeeRequest? Data
+        {
+            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.DataInCreateCupOfCoffeeRequest?>("data"); }
+            set { BackingStore?.Set("data", value); }
+        }
 
         /// <summary>The meta property</summary>
         public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.Meta? Meta
@@ -25,17 +32,10 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
             set { BackingStore?.Set("meta", value); }
         }
 
-        /// <summary>The type property</summary>
-        public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceType? Type
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceType?>("type"); }
-            set { BackingStore?.Set("type", value); }
-        }
-
         /// <summary>
-        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.CreateCupOfCoffeeRequestDocument"/> and sets the default values.
         /// </summary>
-        public ResourceInResponse()
+        public CreateCupOfCoffeeRequestDocument()
         {
             BackingStore = BackingStoreFactorySingleton.Instance.CreateBackingStore();
         }
@@ -43,18 +43,12 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceInResponse"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.CreateCupOfCoffeeRequestDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.CreateCupOfCoffeeRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            var mappingValue = parseNode.GetChildNode("type")?.GetStringValue();
-            return mappingValue switch
-            {
-                "coffeeSummaries" => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.DataInCoffeeSummaryResponse(),
-                "cupOfCoffees" => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.DataInCupOfCoffeeResponse(),
-                _ => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceInResponse(),
-            };
+            return new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.CreateCupOfCoffeeRequestDocument();
         }
 
         /// <summary>
@@ -65,8 +59,8 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
+                { "data", n => { Data = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.DataInCreateCupOfCoffeeRequest>(global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.DataInCreateCupOfCoffeeRequest.CreateFromDiscriminatorValue); } },
                 { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
-                { "type", n => { Type = n.GetEnumValue<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceType>(); } },
             };
         }
 
@@ -77,8 +71,8 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.DataInCreateCupOfCoffeeRequest>("data", Data);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.Meta>("meta", Meta);
-            writer.WriteEnumValue<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ResourceType>("type", Type);
         }
     }
 }

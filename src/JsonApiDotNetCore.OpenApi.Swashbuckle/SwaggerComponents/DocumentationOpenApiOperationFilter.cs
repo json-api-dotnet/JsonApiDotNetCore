@@ -1,10 +1,10 @@
 using System.Net;
-using System.Reflection;
 using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -84,9 +84,15 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             }
         }
 
-        MethodInfo actionMethod = context.ApiDescription.ActionDescriptor.GetActionMethod();
+        var actionMethod = JsonApiActionMethod.TryCreate(context.ApiDescription.ActionDescriptor);
+
+        if (actionMethod is not OperationsActionMethod and not BuiltinResourceActionMethod)
+        {
+            return;
+        }
+
         string actionName = context.MethodInfo.Name;
-        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(context.MethodInfo.ReflectedType);
 
         if (resourceType != null)
         {

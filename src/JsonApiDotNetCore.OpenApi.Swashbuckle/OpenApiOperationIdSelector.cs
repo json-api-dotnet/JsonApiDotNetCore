@@ -56,22 +56,17 @@ internal sealed class OpenApiOperationIdSelector
     {
         ArgumentNullException.ThrowIfNull(endpoint);
 
-        var actionMethod = OpenApiActionMethod.Create(endpoint.ActionDescriptor);
+        var actionMethod = JsonApiActionMethod.TryCreate(endpoint.ActionDescriptor);
 
-        switch (actionMethod)
+        if (actionMethod is not null and not CustomResourceActionMethod)
         {
-            case BuiltinJsonApiActionMethod builtinJsonApiActionMethod:
-            {
-                ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(builtinJsonApiActionMethod.ControllerType);
+            ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ControllerType);
 
-                string template = GetTemplate(endpoint);
-                return ApplyTemplate(template, primaryResourceType, endpoint);
-            }
-            default:
-            {
-                return DefaultOperationIdSelector(endpoint);
-            }
+            string template = GetTemplate(endpoint);
+            return ApplyTemplate(template, primaryResourceType, endpoint);
         }
+
+        return DefaultOperationIdSelector(endpoint);
     }
 
     private static string GetTemplate(ApiDescription endpoint)

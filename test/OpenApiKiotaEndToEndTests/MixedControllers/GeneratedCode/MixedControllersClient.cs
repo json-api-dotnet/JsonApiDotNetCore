@@ -9,6 +9,7 @@ using Microsoft.Kiota.Serialization.Form;
 using Microsoft.Kiota.Serialization.Json;
 using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
+using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CoffeeSummaries;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Emails;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.FileTransfers;
@@ -24,6 +25,12 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class MixedControllersClient : BaseRequestBuilder
     {
+        /// <summary>The coffeeSummaries property</summary>
+        public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CoffeeSummaries.CoffeeSummariesRequestBuilder CoffeeSummaries
+        {
+            get => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CoffeeSummaries.CoffeeSummariesRequestBuilder(PathParameters, RequestAdapter);
+        }
+
         /// <summary>The cupOfCoffees property</summary>
         public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.CupOfCoffeesRequestBuilder CupOfCoffees
         {

@@ -10,6 +10,10 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
     public enum ResourceType
     #pragma warning restore CS1591
     {
+        [EnumMember(Value = "coffeeSummaries")]
+        #pragma warning disable CS1591
+        CoffeeSummaries,
+        #pragma warning restore CS1591
         [EnumMember(Value = "cupOfCoffees")]
         #pragma warning disable CS1591
         CupOfCoffees,

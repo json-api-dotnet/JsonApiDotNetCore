@@ -12,7 +12,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class AttributesInResponse : IBackedModel, IParsable
+    public partial class AttributesInCreateRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -26,9 +26,9 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
         }
 
         /// <summary>
-        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInCreateRequest"/> and sets the default values.
         /// </summary>
-        public AttributesInResponse()
+        public AttributesInCreateRequest()
         {
             BackingStore = BackingStoreFactorySingleton.Instance.CreateBackingStore();
         }
@@ -36,17 +36,16 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInResponse"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInCreateRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInCreateRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
             var mappingValue = parseNode.GetChildNode("openapi:discriminator")?.GetStringValue();
             return mappingValue switch
             {
-                "coffeeSummaries" => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInCoffeeSummaryResponse(),
-                "cupOfCoffees" => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInCupOfCoffeeResponse(),
-                _ => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInResponse(),
+                "cupOfCoffees" => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInCreateCupOfCoffeeRequest(),
+                _ => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.AttributesInCreateRequest(),
             };
         }
 

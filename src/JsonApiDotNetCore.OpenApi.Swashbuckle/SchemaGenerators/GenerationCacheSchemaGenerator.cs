@@ -73,9 +73,9 @@ internal sealed class GenerationCacheSchemaGenerator
 
         foreach (ActionDescriptor descriptor in descriptors)
         {
-            var actionMethod = OpenApiActionMethod.Create(descriptor);
+            var actionMethod = JsonApiActionMethod.TryCreate(descriptor);
 
-            if (actionMethod is AtomicOperationsActionMethod)
+            if (actionMethod is OperationsActionMethod)
             {
                 return true;
             }

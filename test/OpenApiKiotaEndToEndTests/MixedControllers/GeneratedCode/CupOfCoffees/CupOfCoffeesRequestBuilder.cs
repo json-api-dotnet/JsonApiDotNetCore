@@ -5,7 +5,9 @@
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Serialization;
 using Microsoft.Kiota.Abstractions;
+using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Batch;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Item;
+using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.OnlyBlack;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +22,18 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class CupOfCoffeesRequestBuilder : BaseRequestBuilder
     {
+        /// <summary>The batch property</summary>
+        public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Batch.BatchRequestBuilder Batch
+        {
+            get => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Batch.BatchRequestBuilder(PathParameters, RequestAdapter);
+        }
+
+        /// <summary>The onlyBlack property</summary>
+        public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.OnlyBlack.OnlyBlackRequestBuilder OnlyBlack
+        {
+            get => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.OnlyBlack.OnlyBlackRequestBuilder(PathParameters, RequestAdapter);
+        }
+
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.cupOfCoffees.item collection</summary>
         /// <param name="position">The identifier of the cupOfCoffee to delete.</param>
         /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Item.CupOfCoffeesItemRequestBuilder"/></returns>

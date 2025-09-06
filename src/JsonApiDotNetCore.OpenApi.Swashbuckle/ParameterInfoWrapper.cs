@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 /// Used for parameters in action method expansion. Changes the parameter name and type, while still using all metadata of the underlying non-expanded
 /// parameter.
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal sealed class ParameterInfoWrapper : ParameterInfo
 {
     private readonly ParameterInfo _innerParameter;
