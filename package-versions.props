@@ -25,7 +25,7 @@
     <NSwagApiClientVersion>14.5.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
-    <ScalarAspNetCoreVersion>2.7.*</ScalarAspNetCoreVersion>
+    <ScalarAspNetCoreVersion>2.8.0</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>9.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
     <TestSdkVersion>17.14.*</TestSdkVersion>
