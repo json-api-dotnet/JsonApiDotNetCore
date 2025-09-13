@@ -175,6 +175,8 @@ public interface IJsonApiOptions
     /// </summary>
     IsolationLevel? TransactionIsolationLevel { get; }
 
+    // ReSharper disable once InvalidXmlDocComment
+    // Justification: Temporary workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-501671.
     /// <summary>
     /// Lists the JSON:API extensions that are turned on. Empty by default, but if your project contains a controller that derives from
     /// <see cref="BaseJsonApiOperationsController" />, the <see cref="JsonApiMediaTypeExtension.AtomicOperations" /> and
