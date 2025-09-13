@@ -41,6 +41,8 @@ public interface IResourceDefinition<TResource, in TId>
     /// </returns>
     FilterExpression? OnApplyFilter(FilterExpression? existingFilter);
 
+    // ReSharper disable once InvalidXmlDocComment
+    // Justification: Temporary workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-501671.
     /// <summary>
     /// Enables to extend, replace or remove a sort order that is being applied on a set of this resource type. Tip: Use
     /// <see cref="JsonApiResourceDefinition{TResource, TId}.CreateSortExpressionFromLambda" /> to build from a lambda expression.

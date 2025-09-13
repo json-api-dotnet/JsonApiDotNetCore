@@ -61,7 +61,7 @@ internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
 
     private static bool IsId(string key)
     {
-        return key == nameof(Identifiable<object>.Id) || key.EndsWith($".{nameof(Identifiable<object>.Id)}", StringComparison.Ordinal);
+        return key == nameof(Identifiable<>.Id) || key.EndsWith($".{nameof(Identifiable<>.Id)}", StringComparison.Ordinal);
     }
 
     private static bool IsAtPrimaryEndpoint(IJsonApiRequest request)
