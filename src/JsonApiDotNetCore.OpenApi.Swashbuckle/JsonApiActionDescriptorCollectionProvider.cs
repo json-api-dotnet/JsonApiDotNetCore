@@ -315,7 +315,7 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
         string contentType = mediaType.ToString();
 
         if (descriptor is ControllerActionDescriptor controllerActionDescriptor &&
-            controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(ConsumesAttribute)).Any())
+            controllerActionDescriptor.MethodInfo.GetCustomAttributes<ConsumesAttribute>().Any())
         {
             // A custom JSON:API action method with [Consumes] on it. Hide the attribute from Swashbuckle, so it uses our data in API Explorer.
             controllerActionDescriptor.MethodInfo = new MethodInfoWrapper(controllerActionDescriptor.MethodInfo, [typeof(ConsumesAttribute)]);
