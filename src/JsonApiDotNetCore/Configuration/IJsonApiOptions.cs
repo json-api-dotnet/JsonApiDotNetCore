@@ -6,6 +6,9 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
+// ReSharper disable InvalidXmlDocComment
+// Justification: Temporary workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-501671.
+
 namespace JsonApiDotNetCore.Configuration;
 
 /// <summary>
