@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
@@ -18,7 +18,7 @@
   <PropertyGroup>
     <!-- .NET 10 Preview -->
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-    <NoWarn>$(NoWarn);CA1873;NU1903;NU5104;NU1608</NoWarn>
+    <NoWarn>$(NoWarn);CA1873;NU1903;NU5104;NU1608;IDE0340</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
