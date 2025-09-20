@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
@@ -26,7 +26,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         _documentSchemaGenerators = documentSchemaGenerators as DocumentSchemaGenerator[] ?? documentSchemaGenerators.ToArray();
     }
 
-    public OpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
+    public IOpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
         ApiParameterRouteInfo? routeInfo = null)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
@@ -41,7 +41,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         if (schemaGenerator != null)
         {
-            OpenApiSchema referenceSchema = schemaGenerator.GenerateSchema(schemaType, schemaRepository);
+            IOpenApiSchema referenceSchema = schemaGenerator.GenerateSchema(schemaType, schemaRepository);
 
             if (memberInfo != null || parameterInfo != null)
             {
