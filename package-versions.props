@@ -22,7 +22,7 @@
     <MicrosoftApiClientVersion>9.0.*</MicrosoftApiClientVersion>
     <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
     <MiniValidationVersion>0.9.*</MiniValidationVersion>
-    <NSwagApiClientVersion>14.5.*</NSwagApiClientVersion>
+    <NSwagApiClientVersion>14.6.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <ScalarAspNetCoreVersion>2.8.*</ScalarAspNetCoreVersion>
