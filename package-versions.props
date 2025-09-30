@@ -5,7 +5,7 @@
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.4</NewtonsoftJsonFrozenVersion>
-    <SwashbuckleFrozenVersion>9.0.4</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>9.0.5</SwashbuckleFrozenVersion>
     <SystemTextRegularExpressionsFrozenVersion>4.3.1</SystemTextRegularExpressionsFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
