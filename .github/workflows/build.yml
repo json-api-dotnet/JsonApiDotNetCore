@@ -238,7 +238,7 @@ jobs:
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
-      if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
+      if: ${{ github.event_name == 'push' || github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
       shell: pwsh
       run: |
         Write-Output 'Running code cleanup on all files.'
