@@ -34,7 +34,7 @@ function Start-WebServer {
     Write-Output "Starting web server"
     $startTimeUtc = Get-Date -AsUTC
     $job = Start-Job -ScriptBlock {
-        dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --framework net8.0 --configuration Debug --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141
+        dotnet run --project ../src/Examples/GettingStarted/GettingStarted.csproj --framework net8.0 --configuration Debug --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141
     }
 
     $webProcessId = $null
