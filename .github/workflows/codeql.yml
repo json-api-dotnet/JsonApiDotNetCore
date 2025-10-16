@@ -28,6 +28,11 @@ jobs:
         dotnet-version: |
           8.0.*
           9.0.*
+    - name: Setup .NET 10 preview
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.*
+        dotnet-quality: 'preview'
     - name: Git checkout
       uses: actions/checkout@v5
     - name: Initialize CodeQL

@@ -7,13 +7,12 @@ namespace OpenApiTests.ModelStateValidation;
 
 public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
 {
-    // ReSharper disable once UseCollectionExpression (https://youtrack.jetbrains.com/issue/RSRP-497450)
-    public static readonly TheoryData<string> SchemaNames = new()
-    {
+    public static readonly TheoryData<string> SchemaNames =
+    [
         "attributesInCreateSocialMediaAccountRequest",
         "attributesInUpdateSocialMediaAccountRequest",
         "attributesInSocialMediaAccountResponse"
-    };
+    ];
 
     private readonly OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> _testContext;
 
