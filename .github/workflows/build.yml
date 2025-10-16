@@ -257,6 +257,9 @@ jobs:
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Download artifacts
       uses: actions/download-artifact@v5
+      with:
+        name: packages
+        path: packages
     - name: Publish to GitHub Packages
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
