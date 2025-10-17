@@ -45,6 +45,7 @@ if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
 dotnet tool restore
 VerifySuccessExitCode
 
+$env:DOCFX_SOURCE_BRANCH_NAME="dev"
 dotnet docfx ./docfx.json --warningsAsErrors true
 VerifySuccessExitCode
 
