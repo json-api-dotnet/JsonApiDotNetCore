@@ -256,7 +256,11 @@ jobs:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Download artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
+      with:
+        path: test-artefacts
+    - name: Verify download
+      run: ls -al ${{ github.workspace }}/test-artefacts
     - name: Publish to GitHub Packages
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
