@@ -258,8 +258,9 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v5
       with:
-        name: packages
-        path: packages
+        path: test-artefacts
+    - name: Verify download
+      run: ls -al ${{ github.workspace }}
     - name: Publish to GitHub Packages
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
