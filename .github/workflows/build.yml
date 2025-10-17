@@ -260,7 +260,7 @@ jobs:
       with:
         path: test-artefacts
     - name: Verify download
-      run: ls -al ${{ github.workspace }}
+      run: ls -al ${{ github.workspace }}/test-artefacts
     - name: Publish to GitHub Packages
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
