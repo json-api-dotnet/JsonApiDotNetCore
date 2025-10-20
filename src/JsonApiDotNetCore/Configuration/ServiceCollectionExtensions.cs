@@ -1,3 +1,4 @@
+using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
@@ -14,6 +15,16 @@ public static class ServiceCollectionExtensions
     private static readonly TypeLocator TypeLocator = new();
 
     /// <summary>
+    /// Configures JsonApiDotNetCore by registering resources from an Entity Framework Core model.
+    /// </summary>
+    public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services, Action<JsonApiOptions>? options = null,
+        Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null)
+        where TDbContext : DbContext
+    {
+        return AddJsonApi(services, options, discovery, resources, mvcBuilder, [typeof(TDbContext)]);
+    }
+
+    /// <summary>
     /// Configures JsonApiDotNetCore by registering resources manually.
     /// </summary>
 #pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
@@ -23,20 +34,33 @@ public static class ServiceCollectionExtensions
 #pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         ArgumentNullException.ThrowIfNull(services);
+        AssertCompatibleOpenApiVersion();
 
         SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, dbContextTypes ?? Array.Empty<Type>());
 
         return services;
     }
 
-    /// <summary>
-    /// Configures JsonApiDotNetCore by registering resources from an Entity Framework Core model.
-    /// </summary>
-    public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services, Action<JsonApiOptions>? options = null,
-        Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null)
-        where TDbContext : DbContext
+    private static void AssertCompatibleOpenApiVersion()
     {
-        return AddJsonApi(services, options, discovery, resources, mvcBuilder, [typeof(TDbContext)]);
+        Version thisAssemblyVersion = typeof(IJsonApiOptions).Assembly.GetName().Version!;
+        Version? openApiAssemblyVersion = TryGetOpenApiAssemblyVersion();
+
+        if (openApiAssemblyVersion != null && openApiAssemblyVersion != thisAssemblyVersion)
+        {
+            throw new InvalidOperationException(
+                $"JsonApiDotNetCore v{thisAssemblyVersion.ToString(3)} is incompatible with JsonApiDotNetCore.OpenApi.Swashbuckle v{openApiAssemblyVersion.ToString(3)}. " +
+                $"Reference a matching (preview) version of the JsonApiDotNetCore.OpenApi.Swashbuckle NuGet package.");
+        }
+    }
+
+    private static Version? TryGetOpenApiAssemblyVersion()
+    {
+        Assembly? openApiAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly =>
+            assembly.FullName?.StartsWith("JsonApiDotNetCore.OpenApi.Swashbuckle", StringComparison.Ordinal) == true &&
+            assembly.GetName().Name == "JsonApiDotNetCore.OpenApi.Swashbuckle");
+
+        return openApiAssembly?.GetType("JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions", false)?.Assembly.GetName().Version;
     }
 
     private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions>? configureOptions,
