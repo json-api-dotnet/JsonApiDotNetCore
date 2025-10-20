@@ -24,7 +24,7 @@
     <MiniValidationVersion>0.9.*</MiniValidationVersion>
     <NSwagApiClientVersion>14.6.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <PolyfillVersion>8.8.*</PolyfillVersion>
+    <PolyfillVersion>8.9.*</PolyfillVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <ScalarAspNetCoreVersion>2.9.*</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>9.*-*</SwashbuckleVersion>
