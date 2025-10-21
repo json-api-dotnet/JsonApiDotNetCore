@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IAsyncConvertEmptyActionResultFilter ">
       
-      <meta name="description" content="Converts action result without parameters into action result with null parameter.  return NotFound() -&amp;gt; return NotFound(null) This ensures our formatter is invoked, where we&#39;ll build a JSON:API compliant response. For details, see: https://github.com/dotnet/aspnetcore/issues/16969">
+      <meta name="description" content="Converts action result without parameters into action result with null parameter.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -92,7 +92,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Middleware_IAsyncConvertEmptyActionResultFilter" data-uid="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter" class="text-break">
-Interface IAsyncConvertEmptyActionResultFilter  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IAsyncConvertEmptyActionResultFilter.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Interface IAsyncConvertEmptyActionResultFilter  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IAsyncConvertEmptyActionResultFilter.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -100,11 +100,7 @@ Interface IAsyncConvertEmptyActionResultFilter  <a class="header-action link-sec
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Converts action result without parameters into action result with null parameter.
-<example>
-<pre><code class="lang-csharp">return NotFound() -&gt; return NotFound(null)</code></pre></example>
-This ensures our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
-<a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
+  <div class="markdown summary"><p>Converts action result without parameters into action result with null parameter.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -130,13 +126,25 @@ public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFil
 
 
 
+  <h2 id="JsonApiDotNetCore_Middleware_IAsyncConvertEmptyActionResultFilter_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This basically turns calls such as
+<code>
+return NotFound()
+</code>
+into
+<code>
+return NotFound(null)
+</code>
+, so that our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
+<a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
+</div>
 
 
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IAsyncConvertEmptyActionResultFilter.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IAsyncConvertEmptyActionResultFilter.cs/#L21" class="edit-link">Edit this page</a>
         </div>
 
 
