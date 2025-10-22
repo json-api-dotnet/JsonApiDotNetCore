@@ -9,6 +9,7 @@
     <SystemTextRegularExpressionsFrozenVersion>4.3.1</SystemTextRegularExpressionsFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AutoBogusVersion>2.13.*</AutoBogusVersion>
     <BenchmarkDotNetVersion>0.15.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
