@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-// To debug in Visual Studio (requires v17.13 or higher):
+// To debug in Visual Studio (requires v17.8 or higher):
 // - Set JsonApiDotNetCore.SourceGenerators as startup project
 // - Add a breakpoint at the start of the Initialize method
 // - Optional: change targetProject in Properties\launchSettings.json
