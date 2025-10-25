@@ -178,6 +178,7 @@ jobs:
       run: |
         $inspectCodeOutputPath = Join-Path $env:RUNNER_TEMP 'jetbrains-inspectcode-results.xml'
         Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        dotnet jb inspectcode --version
         dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     - name: Upload output to artifacts
       uses: actions/upload-artifact@v4
@@ -251,12 +252,14 @@ jobs:
         $baseCommitHash = git rev-parse HEAD~1
 
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
+        dotnet jb cleanupcode --version
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
       if: ${{ github.event_name == 'push' || github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
       shell: pwsh
       run: |
         Write-Output 'Running code cleanup on all files.'
+        dotnet jb cleanupcode --version
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
