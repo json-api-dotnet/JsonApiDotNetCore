@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2025.2.3",
+      "version": "2025.3.0-eap07",
       "commands": [
         "jb"
       ],
@@ -24,7 +24,7 @@
       "rollForward": false
     },
     "docfx": {
-      "version": "2.78.2",
+      "version": "2.78.4",
       "commands": [
         "docfx"
       ],
