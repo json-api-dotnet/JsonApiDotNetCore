@@ -6,15 +6,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-internal sealed class EndpointOrderingFilter : IDocumentFilter
+internal sealed partial class EndpointOrderingFilter : IDocumentFilter
 {
-    // Workaround for docfx bug.
-    private const string PatternText = @".*{id}/(?>relationships\/)?(?<RelationshipName>\w+)";
-    private const RegexOptions RegexOptionsNet60 = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
-#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-    private static readonly Regex RelationshipNameInUrlPattern = new(PatternText, RegexOptionsNet60);
-#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         ArgumentNullException.ThrowIfNull(swaggerDoc);
@@ -58,8 +51,11 @@ internal sealed class EndpointOrderingFilter : IDocumentFilter
 
     private static string GetRelationshipName(KeyValuePair<string, IOpenApiPathItem> entry)
     {
-        Match match = RelationshipNameInUrlPattern.Match(entry.Key);
+        Match match = RelationshipNameInUrlRegex().Match(entry.Key);
 
         return match.Success ? match.Groups["RelationshipName"].Value : string.Empty;
     }
+
+    [GeneratedRegex(@".*{id}/(?>relationships\/)?(?<RelationshipName>\w+)", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+    private static partial Regex RelationshipNameInUrlRegex();
 }
