@@ -48,7 +48,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInCreateWriteOnlyChannelRequest
             {
-                Type = ResourceType.WriteOnlyChannels,
+                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Attributes = new AttributesInCreateWriteOnlyChannelRequest
                 {
                     Name = newChannel.Name,
@@ -179,7 +179,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInCreateWriteOnlyChannelRequest
             {
-                Type = ResourceType.WriteOnlyChannels,
+                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Attributes = new AttributesInCreateWriteOnlyChannelRequest
                 {
                     Name = newChannel.Name

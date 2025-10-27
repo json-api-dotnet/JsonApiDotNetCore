@@ -136,11 +136,13 @@ internal sealed class DataSchemaGenerator
 
         inlineSchemaForData.ReorderProperties(DataPropertyNamesInOrder);
 
-        if (commonDataSchemaType != null)
+        // TODO: Exclude the type when it is abstract and we are generating for CreateResource.
+        if (commonDataSchemaType != null || resourceType.IsPartOfTypeHierarchy())
         {
             MapInDiscriminator(resourceSchemaType, forRequestSchema, JsonApiPropertyName.Type, schemaRepository);
         }
 
+        // TODO: Is this still needed, or have the conditions changed?
         if (RequiresRootObjectTypeInDataSchema(resourceSchemaType, forRequestSchema))
         {
             possiblyCompositeInlineSchemaForData.Extensions ??= new SortedDictionary<string, IOpenApiExtension>(StringComparer.Ordinal);
@@ -153,36 +155,39 @@ internal sealed class DataSchemaGenerator
 
     private static Type? GetCommonSchemaType(Type schemaOpenType)
     {
+        // TODO: Remove StrongBox usage?
         StrongBox<Type?>? boxedSchemaType = null;
 
         if (schemaOpenType == typeof(IdentifierInRequest<>))
         {
             boxedSchemaType = new StrongBox<Type?>(typeof(IdentifierInRequest));
         }
-        else if (schemaOpenType == typeof(DataInCreateRequest<>))
-        {
-            boxedSchemaType = new StrongBox<Type?>(typeof(ResourceInCreateRequest));
-        }
-        else if (schemaOpenType == typeof(AttributesInCreateRequest<>))
-        {
-            boxedSchemaType = new StrongBox<Type?>(typeof(AttributesInCreateRequest));
-        }
-        else if (schemaOpenType == typeof(RelationshipsInCreateRequest<>))
-        {
-            boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInCreateRequest));
-        }
-        else if (schemaOpenType == typeof(DataInUpdateRequest<>))
-        {
-            boxedSchemaType = new StrongBox<Type?>(typeof(ResourceInUpdateRequest));
-        }
-        else if (schemaOpenType == typeof(AttributesInUpdateRequest<>))
-        {
-            boxedSchemaType = new StrongBox<Type?>(typeof(AttributesInUpdateRequest));
-        }
-        else if (schemaOpenType == typeof(RelationshipsInUpdateRequest<>))
-        {
-            boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInUpdateRequest));
-        }
+        /*
+                else if (schemaOpenType == typeof(DataInCreateRequest<>))
+                {
+                    boxedSchemaType = new StrongBox<Type?>(typeof(ResourceInCreateRequest));
+                }
+                else if (schemaOpenType == typeof(AttributesInCreateRequest<>))
+                {
+                    boxedSchemaType = new StrongBox<Type?>(typeof(AttributesInCreateRequest));
+                }
+                else if (schemaOpenType == typeof(RelationshipsInCreateRequest<>))
+                {
+                    boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInCreateRequest));
+                }
+                else if (schemaOpenType == typeof(DataInUpdateRequest<>))
+                {
+                    boxedSchemaType = new StrongBox<Type?>(typeof(ResourceInUpdateRequest));
+                }
+                else if (schemaOpenType == typeof(AttributesInUpdateRequest<>))
+                {
+                    boxedSchemaType = new StrongBox<Type?>(typeof(AttributesInUpdateRequest));
+                }
+                else if (schemaOpenType == typeof(RelationshipsInUpdateRequest<>))
+                {
+                    boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInUpdateRequest));
+                }
+        */
         else if (schemaOpenType == typeof(IdentifierInResponse<>))
         {
             boxedSchemaType = new StrongBox<Type?>(null);
@@ -200,8 +205,8 @@ internal sealed class DataSchemaGenerator
             boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInResponse));
         }
 
-        ConsistencyGuard.ThrowIf(boxedSchemaType == null);
-        return boxedSchemaType.Value;
+        //ConsistencyGuard.ThrowIf(boxedSchemaType == null);
+        return boxedSchemaType?.Value;
     }
 
     public OpenApiSchemaReference GenerateSchemaForCommonData(Type commonDataSchemaType, SchemaRepository schemaRepository)
@@ -375,6 +380,8 @@ internal sealed class DataSchemaGenerator
 
         SetAbstract(inlineSchemaForFields, resourceSchemaTypeForData);
 
+        // TODO: Generate openapi:discriminator here instead of below, so it comes first in the property list.
+
         if (forAttributes)
         {
             fieldSchemaBuilder.SetMembersOfAttributes(inlineSchemaForFields, forRequestSchema, schemaRepository);
@@ -396,14 +403,16 @@ internal sealed class DataSchemaGenerator
                 GetResourceSchemaTypeForFieldsProperty(resourceSchemaTypeForData, forAttributes ? "Attributes" : "Relationships");
 
             Type? commonFieldsSchemaType = GetCommonSchemaType(resourceSchemaTypeForFields.SchemaOpenType);
-            ConsistencyGuard.ThrowIf(commonFieldsSchemaType == null);
 
-            _ = GenerateSchemaForCommonFields(commonFieldsSchemaType, schemaRepository);
+            if (commonFieldsSchemaType != null)
+            {
+                _ = GenerateSchemaForCommonFields(commonFieldsSchemaType, schemaRepository);
 
-            MapInDiscriminator(resourceSchemaTypeForFields, forRequestSchema, OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
-                schemaRepository);
+                MapInDiscriminator(resourceSchemaTypeForFields, forRequestSchema, OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
+                    schemaRepository);
+            }
 
-            Type baseSchemaType;
+            Type? baseSchemaType;
 
             if (resourceSchemaTypeForFields.ResourceType.BaseType != null)
             {
@@ -417,17 +426,41 @@ internal sealed class DataSchemaGenerator
                 baseSchemaType = commonFieldsSchemaType;
             }
 
-            OpenApiSchemaReference referenceSchemaForBase = schemaRepository.LookupByType(baseSchemaType);
-
-            schemaRepository.Schemas[referenceSchemaForFields.GetReferenceId()] = new OpenApiSchema
+            if (baseSchemaType != null)
             {
-                AllOf =
-                [
-                    referenceSchemaForBase,
-                    inlineSchemaForFields
-                ],
-                AdditionalPropertiesAllowed = false
-            };
+                OpenApiSchemaReference referenceSchemaForBase = schemaRepository.LookupByType(baseSchemaType);
+
+                schemaRepository.Schemas[referenceSchemaForFields.GetReferenceId()] = new OpenApiSchema
+                {
+                    AllOf =
+                    [
+                        referenceSchemaForBase,
+                        inlineSchemaForFields
+                    ],
+                    AdditionalPropertiesAllowed = false
+                };
+            }
+
+            // TODO: Cleanup, reduce code duplication, etc.
+            if (commonFieldsSchemaType == null && resourceSchemaTypeForFields.ResourceType.IsPartOfTypeHierarchy())
+            {
+                if (resourceSchemaTypeForFields.ResourceType.BaseType == null)
+                {
+                    OpenApiSchemaReference referenceSchema =
+                        _resourceTypeSchemaGenerator.GenerateSchema(resourceSchemaTypeForFields.ResourceType, schemaRepository);
+
+                    inlineSchemaForFields.Properties ??= new Dictionary<string, IOpenApiSchema>();
+
+                    inlineSchemaForFields.Properties.Add(OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
+                        referenceSchema.WrapInExtendedSchema());
+
+                    inlineSchemaForFields.Required ??= new SortedSet<string>(StringComparer.Ordinal);
+                    inlineSchemaForFields.Required.Add(OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName);
+                }
+
+                MapInDiscriminator(resourceSchemaTypeForFields, forRequestSchema, OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
+                    schemaRepository);
+            }
         }
     }
 

@@ -215,7 +215,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
         {
             Data = new DataInCreateDebitCardRequest
             {
-                Type = ResourceType.DebitCards,
+                Type = DebitCardResourceType.DebitCards,
                 Attributes = new AttributesInCreateDebitCardRequest
                 {
                     OwnerName = newCard.OwnerName,
@@ -288,7 +288,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
         {
             Data = new DataInUpdateBankAccountRequest
             {
-                Type = ResourceType.BankAccounts,
+                Type = BankAccountResourceType.BankAccounts,
                 Id = existingAccount.StringId,
                 Attributes = new AttributesInUpdateBankAccountRequest
                 {
@@ -483,7 +483,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
                 {
                     Data = new DataInCreateBankAccountRequest
                     {
-                        Type = ResourceType.BankAccounts,
+                        Type = BankAccountResourceType.BankAccounts,
                         Lid = accountLocalId,
                         Attributes = new AttributesInCreateBankAccountRequest
                         {
@@ -495,7 +495,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
                 {
                     Data = new DataInCreateDebitCardRequest
                     {
-                        Type = ResourceType.DebitCards,
+                        Type = DebitCardResourceType.DebitCards,
                         Attributes = new AttributesInCreateDebitCardRequest
                         {
                             OwnerName = newCard.OwnerName,

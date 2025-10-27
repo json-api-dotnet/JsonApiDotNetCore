@@ -57,7 +57,7 @@ public sealed class AttributeTypeTests : IClassFixture<IntegrationTestContext<At
         {
             Data = new DataInCreateTypeContainerRequest
             {
-                Type = ResourceType.TypeContainers,
+                Type = TypeContainerResourceType.TypeContainers,
                 Attributes = new AttributesInCreateTypeContainerRequest
                 {
                     TestBoolean = newContainer.TestBoolean,
@@ -286,7 +286,7 @@ public sealed class AttributeTypeTests : IClassFixture<IntegrationTestContext<At
         {
             Data = new DataInUpdateTypeContainerRequest
             {
-                Type = ResourceType.TypeContainers,
+                Type = TypeContainerResourceType.TypeContainers,
                 Id = existingContainer.StringId!,
                 Attributes = new AttributesInUpdateTypeContainerRequest
                 {
@@ -452,7 +452,7 @@ public sealed class AttributeTypeTests : IClassFixture<IntegrationTestContext<At
         {
             Data = new DataInUpdateTypeContainerRequest
             {
-                Type = ResourceType.TypeContainers,
+                Type = TypeContainerResourceType.TypeContainers,
                 Id = existingContainer.StringId!,
                 Attributes = new AttributesInUpdateTypeContainerRequest()
             }
@@ -520,7 +520,7 @@ public sealed class AttributeTypeTests : IClassFixture<IntegrationTestContext<At
         {
             Data = new DataInUpdateTypeContainerRequest
             {
-                Type = ResourceType.TypeContainers,
+                Type = TypeContainerResourceType.TypeContainers,
                 Id = existingContainer.StringId!,
                 Attributes = new AttributesInUpdateTypeContainerRequest()
             }

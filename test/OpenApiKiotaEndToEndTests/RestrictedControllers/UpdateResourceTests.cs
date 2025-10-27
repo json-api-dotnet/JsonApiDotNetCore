@@ -57,7 +57,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInUpdateWriteOnlyChannelRequest
             {
-                Type = ResourceType.WriteOnlyChannels,
+                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
                 Attributes = new AttributesInUpdateWriteOnlyChannelRequest
                 {
@@ -163,7 +163,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInUpdateWriteOnlyChannelRequest
             {
-                Type = ResourceType.WriteOnlyChannels,
+                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
                 Attributes = new AttributesInUpdateWriteOnlyChannelRequest(),
                 Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest()
@@ -264,7 +264,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInUpdateWriteOnlyChannelRequest
             {
-                Type = ResourceType.WriteOnlyChannels,
+                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
                 Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest
                 {

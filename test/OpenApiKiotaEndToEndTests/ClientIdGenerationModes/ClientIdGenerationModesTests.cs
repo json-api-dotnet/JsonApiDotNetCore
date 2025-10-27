@@ -42,7 +42,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreatePlayerRequest
             {
-                Type = ResourceType.Players,
+                Type = PlayerResourceType.Players,
                 Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
@@ -81,7 +81,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreatePlayerRequest
             {
-                Type = ResourceType.Players,
+                Type = PlayerResourceType.Players,
                 Id = newPlayer.Id,
                 Attributes = new AttributesInCreatePlayerRequest
                 {
@@ -117,7 +117,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Type = ResourceType.Games,
+                Type = GameResourceType.Games,
                 Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
@@ -158,7 +158,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Type = ResourceType.Games,
+                Type = GameResourceType.Games,
                 Id = newGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
@@ -202,7 +202,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Type = ResourceType.Games,
+                Type = GameResourceType.Games,
                 Id = existingGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
@@ -240,7 +240,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreatePlayerGroupRequest
             {
-                Type = ResourceType.PlayerGroups,
+                Type = PlayerGroupResourceType.PlayerGroups,
                 Attributes = new AttributesInCreatePlayerGroupRequest
                 {
                     Name = newPlayerGroup.Name

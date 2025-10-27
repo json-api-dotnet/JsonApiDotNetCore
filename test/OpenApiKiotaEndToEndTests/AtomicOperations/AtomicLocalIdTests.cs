@@ -54,7 +54,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateTeacherRequest
                     {
-                        Type = ResourceType.Teachers,
+                        Type = TeacherResourceType.Teachers,
                         Lid = teacherLocalId,
                         Attributes = new AttributesInCreateTeacherRequest
                         {
@@ -68,7 +68,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateCourseRequest
                     {
-                        Type = ResourceType.Courses,
+                        Type = CourseResourceType.Courses,
                         Id = newCourse.Id,
                         Attributes = new AttributesInCreateCourseRequest
                         {
@@ -100,7 +100,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateStudentRequest
                     {
-                        Type = ResourceType.Students,
+                        Type = StudentResourceType.Students,
                         Lid = studentLocalId,
                         Attributes = new AttributesInCreateStudentRequest
                         {
@@ -114,7 +114,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateEnrollmentRequest
                     {
-                        Type = ResourceType.Enrollments,
+                        Type = EnrollmentResourceType.Enrollments,
                         Lid = enrollmentLocalId,
                         Attributes = new AttributesInCreateEnrollmentRequest
                         {

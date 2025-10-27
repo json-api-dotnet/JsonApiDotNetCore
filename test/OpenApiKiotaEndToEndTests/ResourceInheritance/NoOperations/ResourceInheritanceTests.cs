@@ -513,7 +513,7 @@ public sealed class ResourceInheritanceTests
         {
             Data = new DataInCreateRoadRequest
             {
-                Type = ResourceType.Roads,
+                Type = RoadResourceType.Roads,
                 Attributes = new AttributesInCreateRoadRequest
                 {
                     LengthInMeters = newLengthInMeters
@@ -572,7 +572,7 @@ public sealed class ResourceInheritanceTests
         {
             Data = new DataInCreateFamilyHomeRequest
             {
-                Type = ResourceType.FamilyHomes,
+                Type = BuildingResourceType.FamilyHomes,
                 Attributes = new AttributesInCreateFamilyHomeRequest
                 {
                     SurfaceInSquareMeters = newFamilyHome.SurfaceInSquareMeters!.Value,
@@ -664,7 +664,7 @@ public sealed class ResourceInheritanceTests
         {
             Data = new DataInCreateFamilyHomeRequest
             {
-                Type = ResourceType.FamilyHomes,
+                Type = BuildingResourceType.FamilyHomes,
                 Attributes = new AttributesInCreateFamilyHomeRequest
                 {
                     SurfaceInSquareMeters = newFamilyHome.SurfaceInSquareMeters!.Value,
@@ -725,7 +725,7 @@ public sealed class ResourceInheritanceTests
         {
             Data = new DataInUpdateRoadRequest
             {
-                Type = ResourceType.Roads,
+                Type = RoadResourceType.Roads,
                 Id = existingRoad.StringId!,
                 Attributes = new AttributesInUpdateRoadRequest
                 {
@@ -787,7 +787,7 @@ public sealed class ResourceInheritanceTests
         {
             Data = new DataInUpdateFamilyHomeRequest
             {
-                Type = ResourceType.FamilyHomes,
+                Type = BuildingResourceType.FamilyHomes,
                 Id = existingFamilyHome.StringId!,
                 Attributes = new AttributesInUpdateFamilyHomeRequest
                 {
@@ -887,7 +887,7 @@ public sealed class ResourceInheritanceTests
         {
             Data = new DataInUpdateFamilyHomeRequest
             {
-                Type = ResourceType.FamilyHomes,
+                Type = BuildingResourceType.FamilyHomes,
                 Id = existingFamilyHome.StringId!,
                 Attributes = new AttributesInUpdateFamilyHomeRequest
                 {

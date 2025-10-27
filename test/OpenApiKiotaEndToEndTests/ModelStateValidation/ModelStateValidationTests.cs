@@ -47,7 +47,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     FirstName = firstName,
@@ -88,7 +88,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -127,7 +127,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -166,7 +166,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -205,7 +205,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -244,7 +244,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -286,7 +286,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -331,7 +331,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -370,7 +370,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -411,7 +411,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -450,7 +450,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -489,7 +489,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -528,7 +528,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -567,7 +567,7 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = ResourceType.SocialMediaAccounts,
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     AlternativeId = newAccount.AlternativeId,
