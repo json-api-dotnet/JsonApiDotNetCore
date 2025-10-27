@@ -114,7 +114,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateTagRequest
                     {
-                        Type = ResourceType.Tags,
+                        Type = TagResourceType.Tags,
                         Lid = "new-tag",
                         Attributes = new AttributesInCreateTagRequest
                         {
@@ -127,7 +127,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                     Op = AddOperationCode.Add,
                     Data = new DataInCreatePersonRequest
                     {
-                        Type = ResourceType.People,
+                        Type = PersonResourceType.People,
                         Lid = "new-person",
                         Attributes = new AttributesInCreatePersonRequest
                         {
@@ -155,7 +155,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateTodoItemRequest
                     {
-                        Type = ResourceType.TodoItems,
+                        Type = TodoItemResourceType.TodoItems,
                         Lid = "new-todo-item",
                         Attributes = new AttributesInCreateTodoItemRequest
                         {

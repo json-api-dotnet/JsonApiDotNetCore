@@ -139,7 +139,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         {
             Data = new DataInCreateCountryRequest
             {
-                Type = ResourceType.Countries,
+                Type = CountryResourceType.Countries,
                 Attributes = new AttributesInCreateCountryRequest
                 {
                     Name = newCountry.Name,

@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 
+// TODO: Remove this base type too?
 internal class IdentifierInRequest : IHasMeta
 {
     [Required]

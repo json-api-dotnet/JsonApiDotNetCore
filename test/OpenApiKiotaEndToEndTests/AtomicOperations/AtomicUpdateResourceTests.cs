@@ -59,7 +59,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                     Op = UpdateOperationCode.Update,
                     Data = new DataInUpdateStudentRequest
                     {
-                        Type = ResourceType.Students,
+                        Type = StudentResourceType.Students,
                         Id = existingStudent.StringId!,
                         Attributes = new AttributesInUpdateStudentRequest
                         {
@@ -124,7 +124,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                     },
                     Data = new DataInUpdateStudentRequest
                     {
-                        Type = ResourceType.Students,
+                        Type = StudentResourceType.Students,
                         Id = existingStudent.StringId!,
                         Attributes = new AttributesInUpdateStudentRequest
                         {
@@ -188,7 +188,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                     Op = UpdateOperationCode.Update,
                     Data = new DataInUpdateEnrollmentRequest
                     {
-                        Type = ResourceType.Enrollments,
+                        Type = EnrollmentResourceType.Enrollments,
                         Id = existingEnrollment.StringId!,
                         Attributes = new AttributesInUpdateEnrollmentRequest
                         {

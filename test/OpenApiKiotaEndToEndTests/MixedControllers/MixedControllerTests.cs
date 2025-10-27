@@ -212,7 +212,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         {
             Data = new DataInCreateCupOfCoffeeRequest
             {
-                Type = ResourceType.CupOfCoffees,
+                Type = CupOfCoffeeResourceType.CupOfCoffees,
                 Attributes = new AttributesInCreateCupOfCoffeeRequest
                 {
                     HasSugar = true,
@@ -246,7 +246,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         {
             Data = new DataInCreateCupOfCoffeeRequest
             {
-                Type = ResourceType.CupOfCoffees,
+                Type = CupOfCoffeeResourceType.CupOfCoffees,
                 Attributes = new AttributesInCreateCupOfCoffeeRequest
                 {
                     HasSugar = true,

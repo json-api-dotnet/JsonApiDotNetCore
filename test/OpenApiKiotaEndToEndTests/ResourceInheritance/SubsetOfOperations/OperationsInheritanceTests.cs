@@ -78,7 +78,7 @@ public sealed class OperationsInheritanceTests
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateMansionRequest
                     {
-                        Type = ResourceType.Mansions,
+                        Type = BuildingResourceType.Mansions,
                         Lid = mansionLid,
                         Attributes = new AttributesInCreateMansionRequest
                         {
@@ -109,7 +109,7 @@ public sealed class OperationsInheritanceTests
                     // NOTE: DataInCreateRoomRequest is generated, but as abstract type.
                     Data = new DataInCreateKitchenRequest
                     {
-                        Type = ResourceType.Kitchens,
+                        Type = RoomResourceType.Kitchens,
                         Lid = kitchenLid,
                         Attributes = new AttributesInCreateKitchenRequest
                         {
@@ -134,7 +134,7 @@ public sealed class OperationsInheritanceTests
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateFamilyHomeRequest
                     {
-                        Type = ResourceType.FamilyHomes,
+                        Type = BuildingResourceType.FamilyHomes,
                         Lid = familyHomeLid,
                         Attributes = new AttributesInCreateFamilyHomeRequest
                         {
@@ -149,7 +149,7 @@ public sealed class OperationsInheritanceTests
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateBedroomRequest
                     {
-                        Type = ResourceType.Bedrooms,
+                        Type = RoomResourceType.Bedrooms,
                         Lid = bedroomLid,
                         Attributes = new AttributesInCreateBedroomRequest
                         {
@@ -198,7 +198,7 @@ public sealed class OperationsInheritanceTests
                     },
                     Data = new DataInUpdateFamilyHomeRequest
                     {
-                        Type = ResourceType.FamilyHomes,
+                        Type = BuildingResourceType.FamilyHomes,
                         Lid = familyHomeLid,
                         Attributes = new AttributesInUpdateFamilyHomeRequest
                         {
@@ -317,10 +317,10 @@ public sealed class OperationsInheritanceTests
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateFamilyHomeRequest
                     {
-                        Type = ResourceType.FamilyHomes,
+                        Type = BuildingResourceType.FamilyHomes,
                         Attributes = new AttributesInCreateResidenceRequest
                         {
-                            OpenapiDiscriminator = ResourceType.Residences,
+                            OpenapiDiscriminator = BuildingResourceType.Residences,
                             SurfaceInSquareMeters = newFamilyHomeSurfaceInSquareMeters
                         }
                     }

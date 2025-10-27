@@ -46,7 +46,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateTeacherRequest
                     {
-                        Type = ResourceType.Teachers,
+                        Type = TeacherResourceType.Teachers,
                         Attributes = new AttributesInCreateTeacherRequest
                         {
                             Name = newTeacher.Name,
@@ -107,7 +107,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateEnrollmentRequest
                     {
-                        Type = ResourceType.Enrollments,
+                        Type = EnrollmentResourceType.Enrollments,
                         Attributes = new AttributesInCreateEnrollmentRequest
                         {
                             EnrolledAt = newEnrollment.EnrolledAt
@@ -181,7 +181,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateCourseRequest
                     {
-                        Type = ResourceType.Courses,
+                        Type = CourseResourceType.Courses,
                         Id = newCourse.Id,
                         Attributes = new AttributesInCreateCourseRequest
                         {
