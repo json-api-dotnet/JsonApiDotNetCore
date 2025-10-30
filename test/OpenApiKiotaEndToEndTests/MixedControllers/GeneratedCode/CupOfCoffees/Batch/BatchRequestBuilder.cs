@@ -73,7 +73,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.
         /// <exception cref="global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         public async Task PostAsync(global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.CreateCupOfCoffeeRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Batch.BatchRequestBuilder.BatchRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
-            _ = body ?? throw new ArgumentNullException(nameof(body));
+            if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
@@ -115,7 +115,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToPostRequestInformation(global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.CreateCupOfCoffeeRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Batch.BatchRequestBuilder.BatchRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
-            _ = body ?? throw new ArgumentNullException(nameof(body));
+            if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");

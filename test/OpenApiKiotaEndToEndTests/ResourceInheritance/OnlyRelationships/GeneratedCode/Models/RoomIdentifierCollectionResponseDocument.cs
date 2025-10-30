@@ -54,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
         public static global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
-            _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
+            if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
             return new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomIdentifierCollectionResponseDocument();
         }
 
@@ -78,7 +78,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// <param name="writer">Serialization writer to use to serialize this model</param>
         public virtual void Serialize(ISerializationWriter writer)
         {
-            _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomIdentifierInResponse>("data", Data);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links", Links);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta>("meta", Meta);
