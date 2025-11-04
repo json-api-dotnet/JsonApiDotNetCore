@@ -27,7 +27,7 @@
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <PolyfillVersion>8.9.*</PolyfillVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
-    <ScalarAspNetCoreVersion>2.9.*</ScalarAspNetCoreVersion>
+    <ScalarAspNetCoreVersion>2.10.0</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>9.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
     <TestSdkVersion>18.0.*</TestSdkVersion>
