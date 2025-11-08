@@ -37,8 +37,8 @@ public sealed class ModelStateValidationFakers
         .RuleFor(socialMediaAccount => socialMediaAccount.Planet, faker => faker.Random.Word())
         .RuleFor(socialMediaAccount => socialMediaAccount.NextRevalidation, faker => TimeSpan.FromHours(faker.Random.Number(1, 5)))
         .RuleFor(socialMediaAccount => socialMediaAccount.ValidatedAt, faker => faker.Date.Recent().ToUniversalTime().TruncateToWholeMilliseconds())
-        .RuleFor(socialMediaAccount => socialMediaAccount.ValidatedAtDate, faker => DateOnly.FromDateTime(faker.Date.Recent()))
-        .RuleFor(socialMediaAccount => socialMediaAccount.ValidatedAtTime, faker => TimeOnly.FromDateTime(faker.Date.Recent().TruncateToWholeMilliseconds())));
+        .RuleFor(socialMediaAccount => socialMediaAccount.ValidatedAtDate, faker => faker.Date.RecentDateOnly())
+        .RuleFor(socialMediaAccount => socialMediaAccount.ValidatedAtTime, faker => faker.Date.RecentTimeOnly()));
 
     public Faker<SocialMediaAccount> SocialMediaAccount => _lazySocialMediaAccountFaker.Value;
 }

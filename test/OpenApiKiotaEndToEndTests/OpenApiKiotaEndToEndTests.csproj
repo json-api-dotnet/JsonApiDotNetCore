@@ -30,6 +30,13 @@
       <OutputPath>./%(Name)/GeneratedCode</OutputPath>
       <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
     </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/AttributeTypes/GeneratedSwagger/swagger.g.json">
+      <Name>AttributeTypes</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
     <KiotaReference Include="../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json">
       <Name>ClientIdGenerationModes</Name>
       <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>

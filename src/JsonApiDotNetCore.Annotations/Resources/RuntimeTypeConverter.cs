@@ -53,7 +53,7 @@ public static class RuntimeTypeConverter
         {
             if (!CanContainNull(type))
             {
-                string targetTypeName = type.GetFriendlyTypeName();
+                string targetTypeName = GetFriendlyTypeName(type);
                 throw new FormatException($"Failed to convert 'null' to type '{targetTypeName}'.");
             }
 
@@ -67,7 +67,9 @@ public static class RuntimeTypeConverter
             return value;
         }
 
-        string? stringValue = value is IFormattable cultureAwareValue ? cultureAwareValue.ToString(null, cultureInfo) : value.ToString();
+        string? stringValue = value is IFormattable cultureAwareValue
+            ? cultureAwareValue.ToString(value is DateTime or DateTimeOffset or DateOnly or TimeOnly ? "O" : null, cultureInfo)
+            : value.ToString();
 
         if (string.IsNullOrEmpty(stringValue))
         {
@@ -115,6 +117,11 @@ public static class RuntimeTypeConverter
                 return isNullableTypeRequested ? (TimeOnly?)convertedValue : convertedValue;
             }
 
+            if (nonNullableType == typeof(Uri))
+            {
+                return new Uri(stringValue);
+            }
+
             if (nonNullableType.IsEnum)
             {
                 object convertedValue = Enum.Parse(nonNullableType, stringValue);
@@ -128,8 +135,8 @@ public static class RuntimeTypeConverter
         }
         catch (Exception exception) when (exception is FormatException or OverflowException or InvalidCastException or ArgumentException)
         {
-            string runtimeTypeName = runtimeType.GetFriendlyTypeName();
-            string targetTypeName = type.GetFriendlyTypeName();
+            string runtimeTypeName = GetFriendlyTypeName(runtimeType);
+            string targetTypeName = GetFriendlyTypeName(type);
 
             throw new FormatException($"Failed to convert '{value}' of type '{runtimeTypeName}' to type '{targetTypeName}'.", exception);
         }
@@ -156,5 +163,28 @@ public static class RuntimeTypeConverter
         ArgumentNullException.ThrowIfNull(type);
 
         return type.IsValueType ? DefaultTypeCache.GetOrAdd(type, Activator.CreateInstance) : null;
+    }
+
+    /// <summary>
+    /// Gets the name of a type, including the names of its generic type arguments, without any namespaces.
+    /// <example>
+    /// <code><![CDATA[
+    /// KeyValuePair<TimeSpan, Nullable<DateTimeOffset>>
+    /// ]]></code>
+    /// </example>
+    /// </summary>
+    public static string GetFriendlyTypeName(Type type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+
+        // Based on https://stackoverflow.com/questions/2581642/how-do-i-get-the-type-name-of-a-generic-type-argument.
+
+        if (type.IsGenericType)
+        {
+            string typeArguments = type.GetGenericArguments().Select(GetFriendlyTypeName).Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
+            return $"{type.Name[..type.Name.IndexOf('`')]}<{typeArguments}>";
+        }
+
+        return type.Name;
     }
 }

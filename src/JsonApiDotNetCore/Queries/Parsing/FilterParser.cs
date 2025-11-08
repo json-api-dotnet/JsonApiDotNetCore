@@ -532,7 +532,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             }
             catch (FormatException exception)
             {
-                throw new QueryParseException($"Failed to convert '{stringValue}' of type 'String' to type '{destinationType.Name}'.", position, exception);
+                string destinationTypeName = RuntimeTypeConverter.GetFriendlyTypeName(destinationType);
+                throw new QueryParseException($"Failed to convert '{stringValue}' of type 'String' to type '{destinationTypeName}'.", position, exception);
             }
         };
     }

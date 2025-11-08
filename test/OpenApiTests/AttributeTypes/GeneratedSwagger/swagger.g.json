@@ -1,0 +1,1995 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
+  "paths": {
+    "/typeContainers": {
+      "get": {
+        "tags": [
+          "typeContainers"
+        ],
+        "summary": "Retrieves a collection of typeContainers.",
+        "operationId": "getTypeContainerCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found typeContainers, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/typeContainerCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "typeContainers"
+        ],
+        "summary": "Retrieves a collection of typeContainers without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headTypeContainerCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "typeContainers"
+        ],
+        "summary": "Creates a new typeContainer.",
+        "operationId": "postTypeContainer",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the typeContainer to create.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createTypeContainerRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The typeContainer was successfully created, which resulted in additional changes. The newly created typeContainer is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created typeContainer can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryTypeContainerResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The typeContainer was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/typeContainers/{id}": {
+      "get": {
+        "tags": [
+          "typeContainers"
+        ],
+        "summary": "Retrieves an individual typeContainer by its identifier.",
+        "operationId": "getTypeContainer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the typeContainer to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found typeContainer.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryTypeContainerResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The typeContainer does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "typeContainers"
+        ],
+        "summary": "Retrieves an individual typeContainer by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headTypeContainer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the typeContainer to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The typeContainer does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "typeContainers"
+        ],
+        "summary": "Updates an existing typeContainer.",
+        "operationId": "patchTypeContainer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the typeContainer to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the typeContainer to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateTypeContainerRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The typeContainer was successfully updated, which resulted in additional changes. The updated typeContainer is returned.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryTypeContainerResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The typeContainer was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The typeContainer or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "typeContainers"
+        ],
+        "summary": "Deletes an existing typeContainer by its identifier.",
+        "operationId": "deleteTypeContainer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the typeContainer to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The typeContainer was successfully deleted."
+          },
+          "404": {
+            "description": "The typeContainer does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "attributesInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "typeContainers": "#/components/schemas/attributesInCreateTypeContainerRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateTypeContainerRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "testIPAddress",
+              "testString",
+              "testUri",
+              "testVersion"
+            ],
+            "type": "object",
+            "properties": {
+              "testBoolean": {
+                "type": "boolean"
+              },
+              "testNullableBoolean": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "testByte": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableByte": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testSignedByte": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableSignedByte": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt16": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableInt16": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testUnsignedInt16": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableUnsignedInt16": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt32": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableInt32": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testUnsignedInt32": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableUnsignedInt32": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt64": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "testNullableInt64": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "testUnsignedInt64": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "testNullableUnsignedInt64": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "testInt128": {
+                "type": "string"
+              },
+              "testNullableInt128": {
+                "type": "string",
+                "nullable": true
+              },
+              "testUnsignedInt128": {
+                "type": "string"
+              },
+              "testNullableUnsignedInt128": {
+                "type": "string",
+                "nullable": true
+              },
+              "testBigInteger": {
+                "type": "string"
+              },
+              "testNullableBigInteger": {
+                "type": "string",
+                "nullable": true
+              },
+              "testHalf": {
+                "type": "number",
+                "format": "float"
+              },
+              "testNullableHalf": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "testFloat": {
+                "type": "number",
+                "format": "float"
+              },
+              "testNullableFloat": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "testDouble": {
+                "type": "number",
+                "format": "double"
+              },
+              "testNullableDouble": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "testDecimal": {
+                "type": "number",
+                "format": "double"
+              },
+              "testNullableDecimal": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "testComplex": {
+                "type": "string"
+              },
+              "testNullableComplex": {
+                "type": "string",
+                "nullable": true
+              },
+              "testChar": {
+                "type": "string"
+              },
+              "testNullableChar": {
+                "type": "string",
+                "nullable": true
+              },
+              "testString": {
+                "type": "string"
+              },
+              "testNullableString": {
+                "type": "string",
+                "nullable": true
+              },
+              "testRune": {
+                "maxLength": 4,
+                "type": "string"
+              },
+              "testNullableRune": {
+                "maxLength": 4,
+                "type": "string",
+                "nullable": true
+              },
+              "testDateTimeOffset": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "testNullableDateTimeOffset": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "testDateTime": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "testNullableDateTime": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "testDateOnly": {
+                "type": "string",
+                "format": "date"
+              },
+              "testNullableDateOnly": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "testTimeOnly": {
+                "type": "string",
+                "format": "time"
+              },
+              "testNullableTimeOnly": {
+                "type": "string",
+                "format": "time",
+                "nullable": true
+              },
+              "testTimeSpan": {
+                "type": "string",
+                "format": "duration"
+              },
+              "testNullableTimeSpan": {
+                "type": "string",
+                "format": "duration",
+                "nullable": true
+              },
+              "testEnum": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dayOfWeek"
+                  }
+                ]
+              },
+              "testNullableEnum": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dayOfWeek"
+                  }
+                ],
+                "nullable": true
+              },
+              "testGuid": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "testNullableGuid": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true
+              },
+              "testUri": {
+                "type": "string",
+                "format": "uri"
+              },
+              "testNullableUri": {
+                "type": "string",
+                "format": "uri",
+                "nullable": true
+              },
+              "testIPAddress": {
+                "type": "string",
+                "format": "ipv4"
+              },
+              "testNullableIPAddress": {
+                "type": "string",
+                "format": "ipv4",
+                "nullable": true
+              },
+              "testIPNetwork": {
+                "type": "string"
+              },
+              "testNullableIPNetwork": {
+                "type": "string",
+                "nullable": true
+              },
+              "testVersion": {
+                "type": "string"
+              },
+              "testNullableVersion": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "typeContainers": "#/components/schemas/attributesInTypeContainerResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInTypeContainerResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "testBoolean": {
+                "type": "boolean"
+              },
+              "testNullableBoolean": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "testByte": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableByte": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testSignedByte": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableSignedByte": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt16": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableInt16": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testUnsignedInt16": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableUnsignedInt16": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt32": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableInt32": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testUnsignedInt32": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableUnsignedInt32": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt64": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "testNullableInt64": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "testUnsignedInt64": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "testNullableUnsignedInt64": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "testInt128": {
+                "type": "string"
+              },
+              "testNullableInt128": {
+                "type": "string",
+                "nullable": true
+              },
+              "testUnsignedInt128": {
+                "type": "string"
+              },
+              "testNullableUnsignedInt128": {
+                "type": "string",
+                "nullable": true
+              },
+              "testBigInteger": {
+                "type": "string"
+              },
+              "testNullableBigInteger": {
+                "type": "string",
+                "nullable": true
+              },
+              "testHalf": {
+                "type": "number",
+                "format": "float"
+              },
+              "testNullableHalf": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "testFloat": {
+                "type": "number",
+                "format": "float"
+              },
+              "testNullableFloat": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "testDouble": {
+                "type": "number",
+                "format": "double"
+              },
+              "testNullableDouble": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "testDecimal": {
+                "type": "number",
+                "format": "double"
+              },
+              "testNullableDecimal": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "testComplex": {
+                "type": "string"
+              },
+              "testNullableComplex": {
+                "type": "string",
+                "nullable": true
+              },
+              "testChar": {
+                "type": "string"
+              },
+              "testNullableChar": {
+                "type": "string",
+                "nullable": true
+              },
+              "testString": {
+                "type": "string"
+              },
+              "testNullableString": {
+                "type": "string",
+                "nullable": true
+              },
+              "testRune": {
+                "maxLength": 4,
+                "type": "string"
+              },
+              "testNullableRune": {
+                "maxLength": 4,
+                "type": "string",
+                "nullable": true
+              },
+              "testDateTimeOffset": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "testNullableDateTimeOffset": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "testDateTime": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "testNullableDateTime": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "testDateOnly": {
+                "type": "string",
+                "format": "date"
+              },
+              "testNullableDateOnly": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "testTimeOnly": {
+                "type": "string",
+                "format": "time"
+              },
+              "testNullableTimeOnly": {
+                "type": "string",
+                "format": "time",
+                "nullable": true
+              },
+              "testTimeSpan": {
+                "type": "string",
+                "format": "duration"
+              },
+              "testNullableTimeSpan": {
+                "type": "string",
+                "format": "duration",
+                "nullable": true
+              },
+              "testEnum": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dayOfWeek"
+                  }
+                ]
+              },
+              "testNullableEnum": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dayOfWeek"
+                  }
+                ],
+                "nullable": true
+              },
+              "testGuid": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "testNullableGuid": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true
+              },
+              "testUri": {
+                "type": "string",
+                "format": "uri"
+              },
+              "testNullableUri": {
+                "type": "string",
+                "format": "uri",
+                "nullable": true
+              },
+              "testIPAddress": {
+                "type": "string",
+                "format": "ipv4"
+              },
+              "testNullableIPAddress": {
+                "type": "string",
+                "format": "ipv4",
+                "nullable": true
+              },
+              "testIPNetwork": {
+                "type": "string"
+              },
+              "testNullableIPNetwork": {
+                "type": "string",
+                "nullable": true
+              },
+              "testVersion": {
+                "type": "string"
+              },
+              "testNullableVersion": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "typeContainers": "#/components/schemas/attributesInUpdateTypeContainerRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateTypeContainerRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "testBoolean": {
+                "type": "boolean"
+              },
+              "testNullableBoolean": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "testByte": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableByte": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testSignedByte": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableSignedByte": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt16": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableInt16": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testUnsignedInt16": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableUnsignedInt16": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt32": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableInt32": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testUnsignedInt32": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "testNullableUnsignedInt32": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "testInt64": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "testNullableInt64": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "testUnsignedInt64": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "testNullableUnsignedInt64": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "testInt128": {
+                "type": "string"
+              },
+              "testNullableInt128": {
+                "type": "string",
+                "nullable": true
+              },
+              "testUnsignedInt128": {
+                "type": "string"
+              },
+              "testNullableUnsignedInt128": {
+                "type": "string",
+                "nullable": true
+              },
+              "testBigInteger": {
+                "type": "string"
+              },
+              "testNullableBigInteger": {
+                "type": "string",
+                "nullable": true
+              },
+              "testHalf": {
+                "type": "number",
+                "format": "float"
+              },
+              "testNullableHalf": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "testFloat": {
+                "type": "number",
+                "format": "float"
+              },
+              "testNullableFloat": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "testDouble": {
+                "type": "number",
+                "format": "double"
+              },
+              "testNullableDouble": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "testDecimal": {
+                "type": "number",
+                "format": "double"
+              },
+              "testNullableDecimal": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "testComplex": {
+                "type": "string"
+              },
+              "testNullableComplex": {
+                "type": "string",
+                "nullable": true
+              },
+              "testChar": {
+                "type": "string"
+              },
+              "testNullableChar": {
+                "type": "string",
+                "nullable": true
+              },
+              "testString": {
+                "type": "string"
+              },
+              "testNullableString": {
+                "type": "string",
+                "nullable": true
+              },
+              "testRune": {
+                "maxLength": 4,
+                "type": "string"
+              },
+              "testNullableRune": {
+                "maxLength": 4,
+                "type": "string",
+                "nullable": true
+              },
+              "testDateTimeOffset": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "testNullableDateTimeOffset": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "testDateTime": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "testNullableDateTime": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "testDateOnly": {
+                "type": "string",
+                "format": "date"
+              },
+              "testNullableDateOnly": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "testTimeOnly": {
+                "type": "string",
+                "format": "time"
+              },
+              "testNullableTimeOnly": {
+                "type": "string",
+                "format": "time",
+                "nullable": true
+              },
+              "testTimeSpan": {
+                "type": "string",
+                "format": "duration"
+              },
+              "testNullableTimeSpan": {
+                "type": "string",
+                "format": "duration",
+                "nullable": true
+              },
+              "testEnum": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dayOfWeek"
+                  }
+                ]
+              },
+              "testNullableEnum": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dayOfWeek"
+                  }
+                ],
+                "nullable": true
+              },
+              "testGuid": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "testNullableGuid": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true
+              },
+              "testUri": {
+                "type": "string",
+                "format": "uri"
+              },
+              "testNullableUri": {
+                "type": "string",
+                "format": "uri",
+                "nullable": true
+              },
+              "testIPAddress": {
+                "type": "string",
+                "format": "ipv4"
+              },
+              "testNullableIPAddress": {
+                "type": "string",
+                "format": "ipv4",
+                "nullable": true
+              },
+              "testIPNetwork": {
+                "type": "string"
+              },
+              "testNullableIPNetwork": {
+                "type": "string",
+                "nullable": true
+              },
+              "testVersion": {
+                "type": "string"
+              },
+              "testNullableVersion": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createTypeContainerRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateTypeContainerRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateTypeContainerRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateTypeContainerRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInTypeContainerResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInTypeContainerResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateTypeContainerRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateTypeContainerRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dayOfWeek": {
+        "enum": [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ],
+        "type": "string"
+      },
+      "errorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorResponseDocument": {
+        "required": [
+          "errors",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorTopLevelLinks"
+              }
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/errorObject"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
+      "primaryTypeContainerResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInTypeContainerResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "typeContainers": "#/components/schemas/dataInCreateTypeContainerRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "typeContainers": "#/components/schemas/dataInTypeContainerResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "typeContainers": "#/components/schemas/dataInUpdateTypeContainerRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "typeContainers"
+        ],
+        "type": "string"
+      },
+      "typeContainerCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInTypeContainerResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateTypeContainerRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateTypeContainerRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

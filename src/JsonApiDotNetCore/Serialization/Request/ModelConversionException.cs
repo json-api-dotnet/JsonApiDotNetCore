@@ -15,8 +15,9 @@ public sealed class ModelConversionException : Exception
     public HttpStatusCode? StatusCode { get; }
     public string? SourcePointer { get; }
 
-    public ModelConversionException(RequestAdapterPosition position, string? genericMessage, string? specificMessage, HttpStatusCode? statusCode = null)
-        : base(genericMessage)
+    public ModelConversionException(RequestAdapterPosition position, string? genericMessage, string? specificMessage, HttpStatusCode? statusCode = null,
+        Exception? innerException = null)
+        : base(genericMessage, innerException)
     {
         ArgumentNullException.ThrowIfNull(position);
 
