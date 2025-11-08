@@ -18474,6 +18474,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetDefaultValue
   nameWithType: RuntimeTypeConverter.GetDefaultValue
+- uid: JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName(System.Type)
+  name: GetFriendlyTypeName(Type)
+  href: api/JsonApiDotNetCore.Resources.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_RuntimeTypeConverter_GetFriendlyTypeName_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName(System.Type)
+  fullName: JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName(System.Type)
+  nameWithType: RuntimeTypeConverter.GetFriendlyTypeName(Type)
+- uid: JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName*
+  name: GetFriendlyTypeName
+  href: api/JsonApiDotNetCore.Resources.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_RuntimeTypeConverter_GetFriendlyTypeName_
+  commentId: Overload:JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName
+  nameWithType: RuntimeTypeConverter.GetFriendlyTypeName
 - uid: JsonApiDotNetCore.Resources.TargetedFields
   name: TargetedFields
   href: api/JsonApiDotNetCore.Resources.TargetedFields.html
@@ -20921,15 +20934,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Request.ModelConversionException
   fullName: JsonApiDotNetCore.Serialization.Request.ModelConversionException
   nameWithType: ModelConversionException
-- uid: JsonApiDotNetCore.Serialization.Request.ModelConversionException.#ctor(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition,System.String,System.String,System.Nullable{System.Net.HttpStatusCode})
-  name: ModelConversionException(RequestAdapterPosition, string?, string?, HttpStatusCode?)
-  href: api/JsonApiDotNetCore.Serialization.Request.ModelConversionException.html#JsonApiDotNetCore_Serialization_Request_ModelConversionException__ctor_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterPosition_System_String_System_String_System_Nullable_System_Net_HttpStatusCode__
-  commentId: M:JsonApiDotNetCore.Serialization.Request.ModelConversionException.#ctor(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition,System.String,System.String,System.Nullable{System.Net.HttpStatusCode})
-  name.vb: New(RequestAdapterPosition, String, String, HttpStatusCode?)
-  fullName: JsonApiDotNetCore.Serialization.Request.ModelConversionException.ModelConversionException(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition, string?, string?, System.Net.HttpStatusCode?)
-  fullName.vb: JsonApiDotNetCore.Serialization.Request.ModelConversionException.New(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition, String, String, System.Net.HttpStatusCode?)
-  nameWithType: ModelConversionException.ModelConversionException(RequestAdapterPosition, string?, string?, HttpStatusCode?)
-  nameWithType.vb: ModelConversionException.New(RequestAdapterPosition, String, String, HttpStatusCode?)
+- uid: JsonApiDotNetCore.Serialization.Request.ModelConversionException.#ctor(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition,System.String,System.String,System.Nullable{System.Net.HttpStatusCode},System.Exception)
+  name: ModelConversionException(RequestAdapterPosition, string?, string?, HttpStatusCode?, Exception?)
+  href: api/JsonApiDotNetCore.Serialization.Request.ModelConversionException.html#JsonApiDotNetCore_Serialization_Request_ModelConversionException__ctor_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterPosition_System_String_System_String_System_Nullable_System_Net_HttpStatusCode__System_Exception_
+  commentId: M:JsonApiDotNetCore.Serialization.Request.ModelConversionException.#ctor(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition,System.String,System.String,System.Nullable{System.Net.HttpStatusCode},System.Exception)
+  name.vb: New(RequestAdapterPosition, String, String, HttpStatusCode?, Exception)
+  fullName: JsonApiDotNetCore.Serialization.Request.ModelConversionException.ModelConversionException(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition, string?, string?, System.Net.HttpStatusCode?, System.Exception?)
+  fullName.vb: JsonApiDotNetCore.Serialization.Request.ModelConversionException.New(JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterPosition, String, String, System.Net.HttpStatusCode?, System.Exception)
+  nameWithType: ModelConversionException.ModelConversionException(RequestAdapterPosition, string?, string?, HttpStatusCode?, Exception?)
+  nameWithType.vb: ModelConversionException.New(RequestAdapterPosition, String, String, HttpStatusCode?, Exception)
 - uid: JsonApiDotNetCore.Serialization.Request.ModelConversionException.#ctor*
   name: ModelConversionException
   href: api/JsonApiDotNetCore.Serialization.Request.ModelConversionException.html#JsonApiDotNetCore_Serialization_Request_ModelConversionException__ctor_

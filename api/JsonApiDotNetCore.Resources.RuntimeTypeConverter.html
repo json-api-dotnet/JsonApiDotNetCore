@@ -161,7 +161,7 @@ public static class RuntimeTypeConverter</code></pre>
 
   <h3 id="JsonApiDotNetCore_Resources_RuntimeTypeConverter_CanContainNull_System_Type_" data-uid="JsonApiDotNetCore.Resources.RuntimeTypeConverter.CanContainNull(System.Type)">
   CanContainNull(Type)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/RuntimeTypeConverter.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/RuntimeTypeConverter.cs/#L148"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the specified type is a nullable value type or a reference type.</p>
@@ -246,7 +246,7 @@ public static class RuntimeTypeConverter</code></pre>
 
   <h3 id="JsonApiDotNetCore_Resources_RuntimeTypeConverter_GetDefaultValue_System_Type_" data-uid="JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetDefaultValue(System.Type)">
   GetDefaultValue(Type)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/RuntimeTypeConverter.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/RuntimeTypeConverter.cs/#L161"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the default value for the specified type.</p>
@@ -268,6 +268,45 @@ public static class RuntimeTypeConverter</code></pre>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
     <dd><p>The default value, or <code>null</code> for nullable value types and reference types.</p>
 </dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Resources_RuntimeTypeConverter_GetFriendlyTypeName_" data-uid="JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName*"></a>
+
+  <h3 id="JsonApiDotNetCore_Resources_RuntimeTypeConverter_GetFriendlyTypeName_System_Type_" data-uid="JsonApiDotNetCore.Resources.RuntimeTypeConverter.GetFriendlyTypeName(System.Type)">
+  GetFriendlyTypeName(Type)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/RuntimeTypeConverter.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the name of a type, including the names of its generic type arguments, without any namespaces.
+<example>
+<pre><code class="lang-csharp">KeyValuePair&lt;TimeSpan, Nullable&lt;DateTimeOffset&gt;&gt;</code></pre></example></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string GetFriendlyTypeName(Type type)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>type</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
   </dl>
 
 
