@@ -1,3 +1,4 @@
+using System.Numerics;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -10,21 +11,6 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
     : FilterParser(resourceFactory)
 {
     private static readonly FieldChainPattern SingleToManyRelationshipChain = FieldChainPattern.Parse("M");
-
-    private static readonly HashSet<Type> NumericTypes =
-    [
-        typeof(sbyte),
-        typeof(byte),
-        typeof(short),
-        typeof(ushort),
-        typeof(int),
-        typeof(uint),
-        typeof(long),
-        typeof(ulong),
-        typeof(float),
-        typeof(double),
-        typeof(decimal)
-    ];
 
     protected override bool IsFunction(string name)
     {
@@ -103,6 +89,6 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
     private static bool IsNumericType(Type type)
     {
         Type innerType = Nullable.GetUnderlyingType(type) ?? type;
-        return NumericTypes.Contains(innerType);
+        return innerType.GetInterfaces().Any(@interface => @interface.Name == typeof(INumber<>).Name && @interface.Namespace == typeof(INumber<>).Namespace);
     }
 }

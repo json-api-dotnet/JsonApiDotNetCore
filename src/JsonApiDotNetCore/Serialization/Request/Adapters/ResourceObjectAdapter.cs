@@ -86,13 +86,14 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         {
             if (info == JsonInvalidAttributeInfo.Id)
             {
-                throw new ModelConversionException(state.Position, "Resource ID is read-only.", null);
+                throw new ModelConversionException(state.Position, "Resource ID is read-only.", null, innerException: info.InnerException);
             }
 
-            string typeName = info.AttributeType.GetFriendlyTypeName();
+            string typeName = RuntimeTypeConverter.GetFriendlyTypeName(info.AttributeType);
 
             throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
-                $"Failed to convert attribute '{info.AttributeName}' with value '{info.JsonValue}' of type '{info.JsonType}' to type '{typeName}'.");
+                $"Failed to convert attribute '{info.AttributeName}' with value '{info.JsonValue}' of type '{info.JsonType}' to type '{typeName}'.",
+                innerException: info.InnerException);
         }
     }
 

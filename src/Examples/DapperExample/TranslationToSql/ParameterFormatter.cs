@@ -8,7 +8,7 @@ namespace DapperExample.TranslationToSql;
 /// </summary>
 internal sealed class ParameterFormatter
 {
-    private static readonly HashSet<Type> NumericTypes =
+    private static readonly HashSet<Type> SimpleTypes =
     [
         typeof(bool),
         typeof(int),
@@ -53,7 +53,7 @@ internal sealed class ParameterFormatter
         {
             string value = (string)RuntimeTypeConverter.ConvertType(parameterValue, typeof(string))!;
 
-            if (NumericTypes.Contains(parameterValue.GetType()))
+            if (SimpleTypes.Contains(parameterValue.GetType()))
             {
                 builder.Append(value);
             }

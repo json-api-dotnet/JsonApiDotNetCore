@@ -35,7 +35,9 @@ public class LiteralConstantExpression : IdentifierExpression
     {
         ArgumentNullException.ThrowIfNull(typedValue);
 
-        return typedValue is IFormattable cultureAwareValue ? cultureAwareValue.ToString(null, CultureInfo.InvariantCulture) : typedValue.ToString();
+        return typedValue is IFormattable cultureAwareValue
+            ? cultureAwareValue.ToString(typedValue is DateTime or DateTimeOffset or DateOnly or TimeOnly ? "O" : null, CultureInfo.InvariantCulture)
+            : typedValue.ToString();
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
