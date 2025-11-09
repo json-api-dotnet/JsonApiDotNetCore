@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCoreExample;
@@ -16,6 +16,8 @@ internal sealed class SetOpenApiServerAtBuildTimeFilter(IHttpContextAccessor htt
     {
         if (_httpContextAccessor.HttpContext == null)
         {
+            swaggerDoc.Servers ??= [];
+
             swaggerDoc.Servers.Add(new OpenApiServer
             {
                 Url = "https://localhost:44340"

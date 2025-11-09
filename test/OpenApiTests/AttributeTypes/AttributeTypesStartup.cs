@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Parsing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OpenApiTests.AttributeTypes;
@@ -41,52 +41,52 @@ public sealed class AttributeTypesStartup : OpenApiStartup<AttributeTypesDbConte
 
         options.MapType<Int128>(() => new OpenApiSchema
         {
-            Type = "string"
+            Type = JsonSchemaType.String
         });
 
         options.MapType<UInt128>(() => new OpenApiSchema
         {
-            Type = "string"
+            Type = JsonSchemaType.String
         });
 
         options.MapType<BigInteger>(() => new OpenApiSchema
         {
-            Type = "string"
+            Type = JsonSchemaType.String
         });
 
         options.MapType<Half>(() => new OpenApiSchema
         {
-            Type = "number",
+            Type = JsonSchemaType.Number,
             Format = "float"
         });
 
         options.MapType<Complex>(() => new OpenApiSchema
         {
-            Type = "string"
+            Type = JsonSchemaType.String
         });
 
         options.MapType<Rune>(() => new OpenApiSchema
         {
-            Type = "string",
+            Type = JsonSchemaType.String,
             MaxLength = 4
         });
 
         options.MapType<TimeSpan>(() => new OpenApiSchema
         {
             // Beware that "duration" does not round-trip universally. NSwag and Kiota are incompatible.
-            Type = "string",
+            Type = JsonSchemaType.String,
             Format = "duration"
         });
 
         options.MapType<IPAddress>(() => new OpenApiSchema
         {
-            Type = "string",
+            Type = JsonSchemaType.String,
             Format = "ipv4"
         });
 
         options.MapType<IPNetwork>(() => new OpenApiSchema
         {
-            Type = "string"
+            Type = JsonSchemaType.String
         });
     }
 
