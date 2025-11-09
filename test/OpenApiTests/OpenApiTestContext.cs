@@ -80,10 +80,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     private static JsonElement ParseSwaggerDocument(string content)
     {
-        // Temporary workaround for https://github.com/domaindrivendev/Swashbuckle.AspNetCore/pull/3426.
-        string patchedContent = content.Replace("\"minimum\": 0,1", "\"minimum\": 0.1");
-
-        using JsonDocument jsonDocument = JsonDocument.Parse(patchedContent);
+        using JsonDocument jsonDocument = JsonDocument.Parse(content);
         return jsonDocument.RootElement.Clone();
     }
 
