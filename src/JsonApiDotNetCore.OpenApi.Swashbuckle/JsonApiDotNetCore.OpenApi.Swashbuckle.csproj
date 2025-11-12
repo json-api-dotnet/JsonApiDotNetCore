@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0" />
     <PackageReference Include="SauceControl.InheritDoc" Version="$(InheritDocVersion)" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleFrozenVersion)" />
   </ItemGroup>
