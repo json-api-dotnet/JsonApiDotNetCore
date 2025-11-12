@@ -40,7 +40,7 @@
     <EntityFrameworkCoreFrozenVersion>N/A</EntityFrameworkCoreFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <AspNetCoreVersion>9.0.*</AspNetCoreVersion>
+    <AspNetCoreVersion>10.0.0</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>9.0.*</EntityFrameworkCoreVersion>
   </PropertyGroup>
 
