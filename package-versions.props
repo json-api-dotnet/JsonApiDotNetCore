@@ -28,7 +28,7 @@
     <PolyfillVersion>8.9.*</PolyfillVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <ScalarAspNetCoreVersion>2.9.*</ScalarAspNetCoreVersion>
-    <SwashbuckleVersion>9.*-*</SwashbuckleVersion>
+    <SwashbuckleVersion>10.0.0</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
     <TestSdkVersion>18.0.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
