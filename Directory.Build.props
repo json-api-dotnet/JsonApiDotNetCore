@@ -16,6 +16,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <NoWarn>
+      <!--
+        Temporary workaround: Stable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet.
+        NU1608: Detected package version outside of dependency constraint
+      -->
+      $(NoWarn);NU1608
+    </NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <!--
       Disabled IDE analyzers for "Use collection expression" because they are dangerous in a subtle way.
       For example, a suggestion for the following code is raised:
