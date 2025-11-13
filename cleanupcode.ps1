@@ -28,17 +28,20 @@ if ($revision) {
 
     if ($baseCommitHash -eq $headCommitHash) {
         Write-Output "Running code cleanup on staged/unstaged files."
+        dotnet jb cleanupcode --version
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f staged,modified
         VerifySuccessExitCode
     }
     else {
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash, including staged/unstaged files."
+        dotnet jb cleanupcode --version
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f staged,modified,commits -a $headCommitHash -b $baseCommitHash
         VerifySuccessExitCode
     }
 }
 else {
     Write-Output "Running code cleanup on all files."
+    dotnet jb cleanupcode --version
     dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN
     VerifySuccessExitCode
 }
