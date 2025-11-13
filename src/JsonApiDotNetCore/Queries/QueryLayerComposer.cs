@@ -620,6 +620,6 @@ public class QueryLayerComposer : IQueryLayerComposer
 
     private static AttrAttribute GetIdAttribute(ResourceType resourceType)
     {
-        return resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
+        return resourceType.GetAttributeByPropertyName(nameof(Identifiable<>.Id));
     }
 }
