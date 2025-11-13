@@ -325,7 +325,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
             groupInDatabase.IsPublic.Should().Be(existingGroup.IsPublic);
         });
 
-        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<Guid>();
     }
@@ -373,7 +373,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
             colorInDatabase.DisplayName.Should().Be(newDisplayName);
         });
 
-        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }

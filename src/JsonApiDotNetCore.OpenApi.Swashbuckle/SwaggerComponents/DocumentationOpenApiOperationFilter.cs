@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Net.Http.Headers;
@@ -18,15 +17,15 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 {
-    private const string GetPrimaryName = nameof(BaseJsonApiController<Identifiable<int>, int>.GetAsync);
-    private const string GetSecondaryName = nameof(BaseJsonApiController<Identifiable<int>, int>.GetSecondaryAsync);
-    private const string GetRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.GetRelationshipAsync);
-    private const string PostResourceName = nameof(BaseJsonApiController<Identifiable<int>, int>.PostAsync);
-    private const string PostRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.PostRelationshipAsync);
-    private const string PatchResourceName = nameof(BaseJsonApiController<Identifiable<int>, int>.PatchAsync);
-    private const string PatchRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.PatchRelationshipAsync);
-    private const string DeleteResourceName = nameof(BaseJsonApiController<Identifiable<int>, int>.DeleteAsync);
-    private const string DeleteRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.DeleteRelationshipAsync);
+    private const string GetPrimaryName = nameof(BaseJsonApiController<,>.GetAsync);
+    private const string GetSecondaryName = nameof(BaseJsonApiController<,>.GetSecondaryAsync);
+    private const string GetRelationshipName = nameof(BaseJsonApiController<,>.GetRelationshipAsync);
+    private const string PostResourceName = nameof(BaseJsonApiController<,>.PostAsync);
+    private const string PostRelationshipName = nameof(BaseJsonApiController<,>.PostRelationshipAsync);
+    private const string PatchResourceName = nameof(BaseJsonApiController<,>.PatchAsync);
+    private const string PatchRelationshipName = nameof(BaseJsonApiController<,>.PatchRelationshipAsync);
+    private const string DeleteResourceName = nameof(BaseJsonApiController<,>.DeleteAsync);
+    private const string DeleteRelationshipName = nameof(BaseJsonApiController<,>.DeleteRelationshipAsync);
     private const string PostOperationsName = nameof(BaseJsonApiOperationsController.PostOperationsAsync);
 
     private const string TextCompareETag =

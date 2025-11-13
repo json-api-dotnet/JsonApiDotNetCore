@@ -299,7 +299,7 @@ public partial class ResourceGraphBuilder
 
             if (attribute == null)
             {
-                if (property.Name == nameof(Identifiable<object>.Id))
+                if (property.Name == nameof(Identifiable<>.Id))
                 {
                     // Although strictly not correct, 'id' is added to the list of attributes for convenience.
                     // For example, it enables to filter on ID, without the need to special-case existing logic.

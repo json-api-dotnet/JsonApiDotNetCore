@@ -112,7 +112,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
             workItemInDatabase.DueAt.Should().Be(newWorkItem.DueAt);
         });
 
-        PropertyInfo? property = typeof(WorkItem).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(WorkItem).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<int>();
     }
@@ -160,7 +160,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
             userAccountInDatabase.LastName.Should().Be(newUserAccount.LastName);
         });
 
-        PropertyInfo? property = typeof(UserAccount).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(UserAccount).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<long>();
     }
@@ -205,7 +205,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
             groupInDatabase.Name.Should().Be(newGroup.Name);
         });
 
-        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<Guid>();
     }

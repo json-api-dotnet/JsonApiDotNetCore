@@ -78,7 +78,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             groupInDatabase.Name.Should().Be(groupName);
         });
 
-        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<Guid>();
     }
@@ -132,7 +132,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             groupInDatabase.Name.Should().Be(groupName);
         });
 
-        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<Guid>();
     }
@@ -183,7 +183,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
         });
 
-        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
@@ -234,7 +234,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
         });
 
-        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
@@ -290,7 +290,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             colorInDatabase.DisplayName.Should().Be(defaultName);
         });
 
-        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
@@ -473,7 +473,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
         });
 
-        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<>.Id));
         property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
