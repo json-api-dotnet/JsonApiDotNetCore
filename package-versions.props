@@ -35,6 +35,19 @@
     <XunitVisualStudioVersion>3.1.*</XunitVisualStudioVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>10.0.0</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>10.0.*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>10.0.*-*</EntityFrameworkCoreVersion>
+    <PomeloEntityFrameworkCoreVersion>
+      <!-- Temporary workaround: Unstable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet. -->
+      9.0.*
+    </PomeloEntityFrameworkCoreVersion>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <!-- Published dependencies (only update on major version change) -->
     <EntityFrameworkCoreFrozenVersion>N/A</EntityFrameworkCoreFrozenVersion>
@@ -42,6 +55,7 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>9.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>9.0.*</EntityFrameworkCoreVersion>
+    <PomeloEntityFrameworkCoreVersion>$(EntityFrameworkCoreVersion)</PomeloEntityFrameworkCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -51,5 +65,6 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
+    <PomeloEntityFrameworkCoreVersion>$(EntityFrameworkCoreVersion)</PomeloEntityFrameworkCoreVersion>
   </PropertyGroup>
 </Project>
