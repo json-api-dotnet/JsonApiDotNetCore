@@ -146,9 +146,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 source = queryableHandler.Apply(source);
             }
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618 // Type or member is obsolete
             IQueryableBuilder builder = _resourceDefinitionAccessor.QueryableBuilder;
-#pragma warning restore CS0618
+#pragma warning restore CS0618 // Type or member is obsolete
 
             var context = QueryableBuilderContext.CreateRoot(source, typeof(Queryable), _dbContext.Model, null);
             Expression expression = builder.ApplyQuery(queryLayer, context);
@@ -179,9 +179,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     {
         // EF Core rejects the way we project sparse fieldsets when owned entities are involved, unless the query is explicitly
         // marked as non-tracked (see https://github.com/dotnet/EntityFramework.Docs/issues/2205#issuecomment-1542914439).
-#pragma warning disable CS0618
+#pragma warning disable CS0618 // Type or member is obsolete
         return _resourceDefinitionAccessor.IsReadOnlyRequest ? QueryTrackingBehavior.NoTrackingWithIdentityResolution : null;
-#pragma warning restore CS0618
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     /// <inheritdoc />
