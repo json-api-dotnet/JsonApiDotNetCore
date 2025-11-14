@@ -47,7 +47,11 @@ public sealed partial class QueryStringReader : IQueryStringReader
 
             if (reader != null)
             {
-                LogParameterAccepted(parameterName, parameterValue, reader.GetType().Name);
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    string readerType = reader.GetType().Name;
+                    LogParameterAccepted(parameterName, parameterValue, readerType);
+                }
 
                 if (!reader.AllowEmptyValue && string.IsNullOrEmpty(parameterValue))
                 {
@@ -74,7 +78,8 @@ public sealed partial class QueryStringReader : IQueryStringReader
         }
     }
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Query string parameter '{ParameterName}' with value '{ParameterValue}' was accepted by {ReaderType}.")]
+    [LoggerMessage(Level = LogLevel.Debug, SkipEnabledCheck = true,
+        Message = "Query string parameter '{ParameterName}' with value '{ParameterValue}' was accepted by {ReaderType}.")]
     private partial void LogParameterAccepted(string parameterName, StringValues parameterValue, string readerType);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Query string parameter '{ParameterName}' was successfully read.")]
