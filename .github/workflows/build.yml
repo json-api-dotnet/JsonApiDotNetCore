@@ -48,6 +48,7 @@ jobs:
         dotnet-version: |
           8.0.*
           9.0.*
+          10.0.*
     - name: Show installed versions
       shell: pwsh
       run: |
@@ -159,6 +160,7 @@ jobs:
         dotnet-version: |
           8.0.*
           9.0.*
+          10.0.*
     - name: Git checkout
       uses: actions/checkout@v5
     - name: Restore tools
@@ -218,6 +220,7 @@ jobs:
         dotnet-version: |
           8.0.*
           9.0.*
+          10.0.*
     - name: Git checkout
       uses: actions/checkout@v5
       with:
