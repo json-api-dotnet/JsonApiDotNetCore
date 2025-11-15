@@ -4,7 +4,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -70,72 +70,77 @@ internal sealed class LinksVisibilitySchemaGenerator
         _lazyLinksVisibility = new Lazy<LinksVisibility>(() => new LinksVisibility(options, resourceGraph), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public void UpdateSchemaForTopLevel(Type schemaType, OpenApiSchema fullSchemaForLinksContainer, SchemaRepository schemaRepository)
+    public void UpdateSchemaForTopLevel(Type schemaType, OpenApiSchema inlineSchemaForLinksContainer, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
-        ArgumentNullException.ThrowIfNull(fullSchemaForLinksContainer);
+        ArgumentNullException.ThrowIfNull(inlineSchemaForLinksContainer);
 
         Type lookupType = schemaType.ConstructedToOpenType();
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {
-            UpdateLinksProperty(fullSchemaForLinksContainer, _lazyLinksVisibility.Value.TopLevelLinks, possibleLinkTypes, schemaRepository);
+            UpdateLinksProperty(inlineSchemaForLinksContainer, _lazyLinksVisibility.Value.TopLevelLinks, possibleLinkTypes, schemaRepository);
         }
     }
 
-    public void UpdateSchemaForResource(ResourceSchemaType resourceSchemaType, OpenApiSchema fullSchemaForResourceData, SchemaRepository schemaRepository)
+    public void UpdateSchemaForResource(ResourceSchemaType resourceSchemaType, OpenApiSchema inlineSchemaForResourceData, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(resourceSchemaType);
-        ArgumentNullException.ThrowIfNull(fullSchemaForResourceData);
+        ArgumentNullException.ThrowIfNull(inlineSchemaForResourceData);
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(resourceSchemaType.SchemaOpenType, out LinkTypes possibleLinkTypes))
         {
-            UpdateLinksProperty(fullSchemaForResourceData, _lazyLinksVisibility.Value.ResourceLinks, possibleLinkTypes, schemaRepository);
+            UpdateLinksProperty(inlineSchemaForResourceData, _lazyLinksVisibility.Value.ResourceLinks, possibleLinkTypes, schemaRepository);
         }
     }
 
-    public void UpdateSchemaForRelationship(Type schemaType, OpenApiSchema fullSchemaForRelationship, SchemaRepository schemaRepository)
+    public void UpdateSchemaForRelationship(Type schemaType, OpenApiSchema inlineSchemaForRelationship, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
-        ArgumentNullException.ThrowIfNull(fullSchemaForRelationship);
+        ArgumentNullException.ThrowIfNull(inlineSchemaForRelationship);
 
         Type lookupType = schemaType.ConstructedToOpenType();
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {
-            UpdateLinksProperty(fullSchemaForRelationship, _lazyLinksVisibility.Value.RelationshipLinks, possibleLinkTypes, schemaRepository);
+            UpdateLinksProperty(inlineSchemaForRelationship, _lazyLinksVisibility.Value.RelationshipLinks, possibleLinkTypes, schemaRepository);
         }
     }
 
-    private void UpdateLinksProperty(OpenApiSchema fullSchemaForLinksContainer, LinkTypes visibleLinkTypes, LinkTypes possibleLinkTypes,
+    private void UpdateLinksProperty(OpenApiSchema inlineSchemaForLinksContainer, LinkTypes visibleLinkTypes, LinkTypes possibleLinkTypes,
         SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
-
-        if ((visibleLinkTypes & possibleLinkTypes) == 0)
+        if (inlineSchemaForLinksContainer.Properties != null)
         {
-            fullSchemaForLinksContainer.Required.Remove(JsonApiPropertyName.Links);
-            fullSchemaForLinksContainer.Properties.Remove(JsonApiPropertyName.Links);
+            OpenApiSchemaReference referenceSchemaForLinks =
+                inlineSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema().AsReferenceSchema();
 
-            schemaRepository.Schemas.Remove(referenceSchemaForLinks.Reference.Id);
-        }
-        else if (visibleLinkTypes != possibleLinkTypes)
-        {
-            string linksSchemaId = referenceSchemaForLinks.Reference.Id;
-
-            if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out OpenApiSchema? fullSchemaForLinks))
+            if ((visibleLinkTypes & possibleLinkTypes) == 0)
             {
-                UpdateLinkProperties(fullSchemaForLinks, visibleLinkTypes);
+                inlineSchemaForLinksContainer.Required?.Remove(JsonApiPropertyName.Links);
+                inlineSchemaForLinksContainer.Properties.Remove(JsonApiPropertyName.Links);
+
+                schemaRepository.Schemas.Remove(referenceSchemaForLinks.GetReferenceId());
+            }
+            else if (visibleLinkTypes != possibleLinkTypes)
+            {
+                string linksSchemaId = referenceSchemaForLinks.GetReferenceId();
+
+                if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out IOpenApiSchema? schemaForLinks))
+                {
+                    OpenApiSchema inlineSchemaForLinks = schemaForLinks.AsInlineSchema();
+                    UpdateLinkProperties(inlineSchemaForLinks, visibleLinkTypes);
+                }
             }
         }
     }
 
-    private void UpdateLinkProperties(OpenApiSchema fullSchemaForLinks, LinkTypes availableLinkTypes)
+    private void UpdateLinkProperties(OpenApiSchema inlineSchemaForLinks, LinkTypes availableLinkTypes)
     {
         foreach (string propertyName in LinkTypeToPropertyNamesMap.Where(pair => !availableLinkTypes.HasFlag(pair.Key)).SelectMany(pair => pair.Value))
         {
-            fullSchemaForLinks.Required.Remove(propertyName);
-            fullSchemaForLinks.Properties.Remove(propertyName);
+            inlineSchemaForLinks.Required?.Remove(propertyName);
+            inlineSchemaForLinks.Properties?.Remove(propertyName);
         }
     }
 

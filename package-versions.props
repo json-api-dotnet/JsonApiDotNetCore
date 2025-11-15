@@ -5,7 +5,7 @@
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.4</NewtonsoftJsonFrozenVersion>
-    <SwashbuckleFrozenVersion>9.0.6</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>10.0.1</SwashbuckleFrozenVersion>
     <SystemTextRegularExpressionsFrozenVersion>4.3.1</SystemTextRegularExpressionsFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
@@ -27,7 +27,7 @@
     <PolyfillVersion>9.1.*</PolyfillVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <ScalarAspNetCoreVersion>2.11.*</ScalarAspNetCoreVersion>
-    <SwashbuckleVersion>9.*-*</SwashbuckleVersion>
+    <SwashbuckleVersion>10.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
     <TestSdkVersion>18.0.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
