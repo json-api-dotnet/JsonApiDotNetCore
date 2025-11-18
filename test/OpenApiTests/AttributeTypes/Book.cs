@@ -14,7 +14,7 @@ public sealed class Book : Identifiable<int>
 
     // Only visible in GET
     [Attr(Capabilities = AttrCapabilities.AllowView)]
-    public string ISBN { get; set; } = null!;
+    public string Isbn { get; set; } = null!;
 
     // Only visible in GET
     [Attr(Capabilities = AttrCapabilities.AllowView)]
@@ -31,4 +31,10 @@ public sealed class Book : Identifiable<int>
     // No visibility or modifiers whatsoever
     [Attr(Capabilities = AttrCapabilities.None)]
     public string SecretCode { get; set; } = null!;
+
+    [HasOne(Capabilities = HasOneCapabilities.AllowView)]
+    public Author? Author { get; set; }
+
+    [HasMany(Capabilities = HasManyCapabilities.AllowSet)]
+    public ISet<Review> Reviews { get; set; } = new HashSet<Review>();
 }

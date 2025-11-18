@@ -3,13 +3,12 @@ using JsonApiDotNetCore.Resources.Annotations;
 using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
+using RequestType = OpenApiTests.AttributeTypes.CapabilitiesUtils.RequestType;
 
 namespace OpenApiTests.AttributeTypes;
 
 public sealed class AttributeCapabilitiesTests : IClassFixture<OpenApiTestContext<AttributeTypesStartup, AttributeTypesDbContext>>
 {
-    private enum RequestType{ Response, Create, Update }
-
     private static readonly Dictionary<RequestType, AttrCapabilities> CapabilitiesByRequestType = new()
     {
         { RequestType.Response, AttrCapabilities.AllowView },
@@ -26,10 +25,21 @@ public sealed class AttributeCapabilitiesTests : IClassFixture<OpenApiTestContex
 
     private static readonly Dictionary<AttrCapabilities, List<string>> BookModelAttrsByCapability = new()
     {
-        { AttrCapabilities.AllowView,   ["title", "isbn", "publishedOn"] },
-        { AttrCapabilities.AllowChange, ["title", "internalNotes"] },
+        {
+            AttrCapabilities.AllowView, [
+                "title",
+                "isbn",
+                "publishedOn"
+            ]
+        },
+        {
+            AttrCapabilities.AllowChange, [
+                "title",
+                "internalNotes"
+            ]
+        },
         { AttrCapabilities.AllowCreate, ["draftContent"] },
-        { AttrCapabilities.None,        ["secretCode"] }
+        { AttrCapabilities.None, ["secretCode"] }
     };
 
     private readonly OpenApiTestContext<AttributeTypesStartup, AttributeTypesDbContext> _testContext;
@@ -55,6 +65,7 @@ public sealed class AttributeCapabilitiesTests : IClassFixture<OpenApiTestContex
         JsonElement attrs = document.Should().ContainPath(path);
 
         IList<string> bookExpectedAttrs = BookModelAttrsByCapability[CapabilitiesByRequestType[requestType]];
+
         IList<string> bookUnexpectedAttrs = BookModelAttrsByCapability.SelectMany(kvPair => kvPair.Value)
             .Except(bookExpectedAttrs).ToList();
 
@@ -63,6 +74,7 @@ public sealed class AttributeCapabilitiesTests : IClassFixture<OpenApiTestContex
         {
             attrs.Should().ContainProperty(attrName);
         }
+
         foreach (string attrName in bookUnexpectedAttrs)
         {
             attrs.Should().NotContainPath($"properties.{attrName}");
