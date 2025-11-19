@@ -12,7 +12,6 @@
     <VersionPrefix>5.9.2</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
     <OpenApiPreviewNumber>7</OpenApiPreviewNumber>
-    <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
   <PropertyGroup>
