@@ -423,6 +423,3 @@ FodyWeavers.xsd
 **/.idea/**/httpRequests/
 **/.idea/**/dataSources/
 !**/.idea/**/codeStyles/*
-
-# Workaround for https://github.com/microsoft/kiota/issues/4228
-kiota-lock.json
