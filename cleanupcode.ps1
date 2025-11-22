@@ -13,7 +13,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 dotnet tool restore
 dotnet restore
 
-$solutionFile = 'JsonApiDotNetCore.slnx'
+$solutionFile = 'JsonApiDotNetCore.sln'
 
 if ($revision) {
     $headCommitHash = git rev-parse HEAD

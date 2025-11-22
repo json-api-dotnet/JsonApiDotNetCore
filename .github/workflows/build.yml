@@ -23,7 +23,7 @@ concurrency:
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  SOLUTION_FILE: JsonApiDotNetCore.slnx
+  SOLUTION_FILE: JsonApiDotNetCore.sln
 
 jobs:
   build-and-test:
