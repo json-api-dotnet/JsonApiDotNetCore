@@ -6,7 +6,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 dotnet tool restore
 
-$solutionFile = 'JsonApiDotNetCore.sln'
+$solutionFile = 'JsonApiDotNetCore.slnx'
 $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
 $resultPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.html')
 

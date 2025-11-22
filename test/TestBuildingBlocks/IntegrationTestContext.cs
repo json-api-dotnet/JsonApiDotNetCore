@@ -183,7 +183,13 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         {
             // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
             // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
-            builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}");
+            builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}"
+#if !NET10_0_OR_GREATER
+                // This only works when Startup class lives in the TestBuildingBlocks project.
+                // See https://github.com/dotnet/aspnetcore/issues/61304#issuecomment-2796228582.
+                , "*.slnx"
+#endif
+            );
         }
 
         protected override IHostBuilder CreateHostBuilder()
