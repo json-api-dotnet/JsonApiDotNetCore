@@ -23,6 +23,7 @@ concurrency:
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  SOLUTION_FILE: JsonApiDotNetCore.sln
 
 jobs:
   build-and-test:
@@ -124,12 +125,11 @@ jobs:
         # This contains the git tag name on release; in that case, we build the docs without publishing them.
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
       run: |
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandUseErrorActionPreference = $true
         cd docs
         & ./generate-examples.ps1
         dotnet docfx docfx.json --warningsAsErrors true
-        if ($LastExitCode -ne 0) {
-            Write-Error "docfx failed with exit code $LastExitCode."
-        }
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/
@@ -171,7 +171,7 @@ jobs:
         $inspectCodeOutputPath = Join-Path $env:RUNNER_TEMP 'jetbrains-inspectcode-results.xml'
         Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         dotnet jb inspectcode --version
-        dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+        dotnet jb inspectcode $env:SOLUTION_FILE --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     - name: Upload output to artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -241,14 +241,14 @@ jobs:
 
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
         dotnet jb cleanupcode --version
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
       if: ${{ github.event_name == 'push' || github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
       shell: pwsh
       run: |
         Write-Output 'Running code cleanup on all files.'
         dotnet jb cleanupcode --version
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN --fail-on-diff --print-diff
+        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
     timeout-minutes: 60

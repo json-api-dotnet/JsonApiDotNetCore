@@ -1,4 +1,6 @@
-#Requires -Version 7.3
+#Requires -Version 7.4
+$ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $false
 
 # This script generates HTTP response files (*.json) for .ps1 files in ./request-examples
 
