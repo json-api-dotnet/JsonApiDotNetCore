@@ -14,7 +14,7 @@ dotnet tool restore
 dotnet restore /p:NuGetAudit=false
 dotnet build --no-restore --configuration Release /p:RunAnalyzers=false
 
-$solutionFile = 'JsonApiDotNetCore.sln'
+$solutionFile = 'JsonApiDotNetCore.slnx'
 
 if ($revision) {
     $headCommitHash = git rev-parse HEAD
