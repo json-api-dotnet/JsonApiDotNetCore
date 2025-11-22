@@ -1,3 +1,0 @@
-# Workaround for incorrect nullability in NSwag generated clients.
-[*Client.cs]
-dotnet_diagnostic.CS8765.severity = none
