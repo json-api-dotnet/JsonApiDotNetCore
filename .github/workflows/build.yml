@@ -128,8 +128,11 @@ jobs:
         $ErrorActionPreference = "Stop"
         $PSNativeCommandUseErrorActionPreference = $true
         cd docs
+        $zipFile = [IO.Path]::Combine($env:TEMP, 'docfx-net10-binaries.zip')
+        Invoke-WebRequest -Uri 'https://github.com/json-api-dotnet/docfx/raw/refs/heads/dotnet10-rtm/net10-binaries.zip' -Method 'GET' -OutFile $zipFile
+        Expand-Archive $zipFile -Force
         & ./generate-examples.ps1
-        dotnet docfx docfx.json --warningsAsErrors true
+        dotnet exec docfx-net10-binaries/docfx.dll docfx.json --warningsAsErrors true
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/

@@ -15,6 +15,16 @@ $PSNativeCommandUseErrorActionPreference = $true
 # Workaround for bug at https://github.com/PowerShell/PowerShell/issues/23875#issuecomment-2672336383
 $PSDefaultParameterValues['Remove-Item:ProgressAction'] = 'SilentlyContinue'
 
+function EnsureDocfxBinaries() {
+    # Temporary workaround until a proper DocFX build supporting .NET 10 is available.
+    $zipFile = [IO.Path]::Combine($env:TEMP, 'docfx-net10-binaries.zip')
+
+    if (!(Test-Path -Path 'docfx-net10-binaries')) {
+        Invoke-WebRequest -Uri 'https://github.com/json-api-dotnet/docfx/raw/refs/heads/dotnet10-rtm/net10-binaries.zip' -Method 'GET' -OutFile $zipFile
+        Expand-Archive $zipFile -Force
+    }
+}
+
 function EnsureHttpServerIsInstalled {
     if ((Get-Command "npm" -ErrorAction SilentlyContinue) -eq $null) {
         throw "Unable to find npm in your PATH. please install Node.js first."
@@ -45,6 +55,7 @@ function EnsureHttpServerIsInstalled {
     }
 }
 
+EnsureDocfxBinaries
 EnsureHttpServerIsInstalled
 
 if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
@@ -58,7 +69,7 @@ if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
 dotnet tool restore
 
 $env:DOCFX_SOURCE_BRANCH_NAME="dev"
-dotnet docfx docfx.json --warningsAsErrors true
+dotnet exec docfx-net10-binaries/docfx.dll -- docfx.json --warningsAsErrors true
 
 Copy-Item -Force home/*.html _site/
 Copy-Item -Force home/*.ico _site/
