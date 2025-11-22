@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.AtomicOperations;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IAtomicOperationFilter" />
 public class DefaultOperationFilter : IAtomicOperationFilter
 {
     /// <inheritdoc />

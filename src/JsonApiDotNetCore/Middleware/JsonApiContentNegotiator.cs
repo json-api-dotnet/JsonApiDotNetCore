@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.Middleware;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiContentNegotiator" />
 [PublicAPI]
 public class JsonApiContentNegotiator : IJsonApiContentNegotiator
 {
