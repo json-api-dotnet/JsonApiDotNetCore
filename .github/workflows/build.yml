@@ -58,6 +58,8 @@ jobs:
         Write-Host "Active .NET SDK: $(dotnet --version)"
     - name: Git checkout
       uses: actions/checkout@v6
+      with:
+        persist-credentials: false
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore packages
@@ -166,6 +168,8 @@ jobs:
           10.0.*
     - name: Git checkout
       uses: actions/checkout@v6
+      with:
+        persist-credentials: false
     - name: Restore tools
       run: dotnet tool restore
     - name: InspectCode
@@ -228,6 +232,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v6
       with:
+        persist-credentials: false
         fetch-depth: 2
     - name: Restore tools
       run: dotnet tool restore
