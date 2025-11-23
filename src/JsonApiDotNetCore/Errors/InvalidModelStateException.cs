@@ -134,7 +134,7 @@ public sealed class InvalidModelStateException(
 
     private static string? ResolveSourcePointerInAttribute(PropertySegment segment, AttrAttribute attribute, IResourceGraph resourceGraph)
     {
-        string sourcePointer = attribute.Property.Name == nameof(Identifiable<object>.Id)
+        string sourcePointer = attribute.Property.Name == nameof(Identifiable<>.Id)
             ? $"{segment.SourcePointer ?? "/data"}/{attribute.PublicName}"
             : $"{segment.SourcePointer ?? "/data"}/attributes/{attribute.PublicName}";
 

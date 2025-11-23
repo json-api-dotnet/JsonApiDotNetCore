@@ -540,7 +540,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private ConstantValueConverter GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
-        if (attribute is { Property.Name: nameof(Identifiable<object>.Id) })
+        if (attribute is { Property.Name: nameof(Identifiable<>.Id) })
         {
             return (stringValue, position) =>
             {

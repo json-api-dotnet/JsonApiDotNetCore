@@ -4,7 +4,7 @@ namespace JsonApiDotNetCore.Resources;
 
 internal static class IdentifiableExtensions
 {
-    private const string IdPropertyName = nameof(Identifiable<object>.Id);
+    private const string IdPropertyName = nameof(Identifiable<>.Id);
 
     public static object GetTypedId(this IIdentifiable identifiable)
     {

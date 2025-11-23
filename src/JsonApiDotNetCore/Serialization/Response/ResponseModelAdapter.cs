@@ -247,7 +247,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         foreach (AttrAttribute attr in resourceType.Attributes)
         {
-            if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<object>.Id))
+            if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<>.Id))
             {
                 continue;
             }

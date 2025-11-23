@@ -7,7 +7,7 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 /// </summary>
 internal abstract class TableSourceNode(string? alias) : SqlTreeNode
 {
-    public const string IdColumnName = nameof(Identifiable<object>.Id);
+    public const string IdColumnName = nameof(Identifiable<>.Id);
 
     public abstract IReadOnlyList<ColumnNode> Columns { get; }
     public string? Alias { get; } = alias;

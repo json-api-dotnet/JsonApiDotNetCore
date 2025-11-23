@@ -12,7 +12,16 @@
     <VersionPrefix>5.9.2</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
     <OpenApiPreviewNumber>7</OpenApiPreviewNumber>
-    <NuGetAuditMode>direct</NuGetAuditMode>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>
+      <!--
+        Temporary workaround: Stable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet.
+        NU1608: Detected package version outside of dependency constraint
+      -->
+      $(NoWarn);NU1608
+    </NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

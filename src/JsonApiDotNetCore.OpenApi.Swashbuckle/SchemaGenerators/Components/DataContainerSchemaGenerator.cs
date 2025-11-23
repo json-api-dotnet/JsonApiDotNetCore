@@ -2,7 +2,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -27,49 +27,44 @@ internal sealed class DataContainerSchemaGenerator
         _resourceGraph = resourceGraph;
     }
 
-    public OpenApiSchema GenerateSchemaForCommonResourceDataInResponse(SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchemaForCommonResourceDataInResponse(SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         return _dataSchemaGenerator.GenerateSchemaForCommonData(typeof(ResourceInResponse), schemaRepository);
     }
 
-    public OpenApiSchema GenerateSchema(Type dataContainerSchemaType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
+    public void GenerateSchema(Type dataContainerSchemaType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
         SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(dataContainerSchemaType);
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(dataContainerSchemaType, out OpenApiSchema referenceSchemaForData))
+        if (!schemaRepository.TryLookupByTypeSafe(dataContainerSchemaType, out _))
         {
-            return referenceSchemaForData;
-        }
+            Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerSchemaType, resourceType);
 
-        Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerSchemaType, resourceType);
-
-        if (schemaRepository.TryLookupByType(dataConstructedType, out _))
-        {
-            return referenceSchemaForData;
-        }
-
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, dataConstructedType);
-
-        if (canIncludeRelated)
-        {
-            var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
-
-            if (resourceSchemaType.SchemaOpenType == typeof(DataInResponse<>))
+            if (!schemaRepository.TryLookupByTypeSafe(dataConstructedType, out _))
             {
-                // Ensure all reachable related resource types in response schemas are generated upfront.
-                // This is needed to make includes work when not all endpoints are exposed.
-                GenerateReachableRelatedTypesInResponse(dataConstructedType, schemaRepository);
+                using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, dataConstructedType);
+
+                if (canIncludeRelated)
+                {
+                    var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
+
+                    if (resourceSchemaType.SchemaOpenType == typeof(DataInResponse<>))
+                    {
+                        // Ensure all reachable related resource types in response schemas are generated upfront.
+                        // This is needed to make includes work when not all endpoints are exposed.
+                        GenerateReachableRelatedTypesInResponse(dataConstructedType, schemaRepository);
+                    }
+                }
+
+                OpenApiSchemaReference referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, forRequestSchema, schemaRepository);
+                traceScope.TraceSucceeded(referenceSchemaForData.GetReferenceId());
             }
         }
-
-        referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, forRequestSchema, schemaRepository);
-        traceScope.TraceSucceeded(referenceSchemaForData.Reference.Id);
-        return referenceSchemaForData;
     }
 
     private static Type GetElementTypeOfDataProperty(Type dataContainerConstructedType, ResourceType resourceType)

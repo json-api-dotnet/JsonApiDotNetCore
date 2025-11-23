@@ -3254,5 +3254,10 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "operations"
+    }
+  ]
 }

@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
+#pragma warning disable CA1873 // Avoid potentially expensive logging
+
 namespace TestBuildingBlocks;
 
 /// <summary>

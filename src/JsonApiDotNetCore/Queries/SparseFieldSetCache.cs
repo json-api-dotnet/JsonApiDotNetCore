@@ -94,7 +94,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
+        AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<>.Id));
         var inputExpression = new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
 
         // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
