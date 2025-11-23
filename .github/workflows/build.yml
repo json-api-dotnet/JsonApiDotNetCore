@@ -265,7 +265,7 @@ jobs:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Download artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
     - name: Publish to GitHub Packages
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
