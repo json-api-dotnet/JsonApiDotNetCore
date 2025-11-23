@@ -117,7 +117,7 @@ jobs:
       run: dotnet pack --no-build --configuration Release --output ${{ github.workspace }}/artifacts/packages /p:VersionSuffix=${{ env.PACKAGE_VERSION_SUFFIX }}
     - name: Upload packages to artifacts
       if: ${{ matrix.os == 'ubuntu-latest' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: packages
         path: artifacts/packages
@@ -142,7 +142,7 @@ jobs:
         Copy-Item -Recurse home/assets/* _site/styles/
     - name: Upload documentation to artifacts
       if: ${{ matrix.os == 'ubuntu-latest' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: documentation
         path: docs/_site
@@ -180,7 +180,7 @@ jobs:
         dotnet jb inspectcode --version
         dotnet jb inspectcode $env:SOLUTION_FILE --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     - name: Upload output to artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: InspectCode-${{ matrix.os }}
         path: ${{ env.INSPECT_CODE_OUTPUT_PATH }}
