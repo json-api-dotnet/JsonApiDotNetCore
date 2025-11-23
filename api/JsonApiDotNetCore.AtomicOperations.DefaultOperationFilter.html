@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class DefaultOperationFilter ">
       
-      <meta name="description" content="Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.">
+      <meta name="description" content="Determines whether an operation in an atomic:operations request can be used. For non-operations requests, see .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -100,7 +100,7 @@ Class DefaultOperationFilter  <a class="header-action link-secondary" title="Vie
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.</p>
+  <div class="markdown summary"><p>Determines whether an operation in an atomic:operations request can be used. For non-operations requests, see <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiEndpointFilter.html">IJsonApiEndpointFilter</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -156,6 +156,10 @@ Class DefaultOperationFilter  <a class="header-action link-secondary" title="Vie
 
 
 
+  <h2 id="JsonApiDotNetCore_AtomicOperations_DefaultOperationFilter_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>The default implementation relies on the usage of <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceAttribute_GenerateControllerEndpoints">GenerateControllerEndpoints</a>. If you're using explicit
+(non-generated) controllers, register your own implementation to indicate which operations are accessible.</p>
+</div>
 
 
   <h2 class="section" id="methods">Methods

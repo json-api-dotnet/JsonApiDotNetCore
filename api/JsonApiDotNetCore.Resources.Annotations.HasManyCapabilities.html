@@ -123,30 +123,39 @@ public enum HasManyCapabilities</code></pre>
 </h2>
   <dl class="parameters">
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_All"><code>All = AllowView | AllowInclude | AllowFilter | AllowSet | AllowAdd | AllowRemove</code></dt>
-    <dd></dd>
+  
+  <dd></dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowAdd"><code>AllowAdd = 16</code></dt>
-    <dd><p>Whether or not POST requests can add to the to-many relationship. Attempts to add when disabled will return an HTTP 422 response.</p>
+  
+  <dd><p>Whether or not POST requests can add to the to-many relationship. Attempts to add when disabled will return an HTTP 422 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowFilter"><code>AllowFilter = 4</code></dt>
-    <dd><p>Whether or not the to-many relationship can be used in the <code>count()</code> and <code>has()</code> functions as part of the <code>filter</code> query string
+  
+  <dd><p>Whether or not the to-many relationship can be used in the <code>count()</code> and <code>has()</code> functions as part of the <code>filter</code> query string
 parameter. Attempts to use it when disabled will return an HTTP 400 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowInclude"><code>AllowInclude = 2</code></dt>
-    <dd><p>Whether or not the relationship can be included. Attempts to use it in the <code>include</code> query string parameter when disabled will return an HTTP
+  
+  <dd><p>Whether or not the relationship can be included. Attempts to use it in the <code>include</code> query string parameter when disabled will return an HTTP
 400 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowRemove"><code>AllowRemove = 32</code></dt>
-    <dd><p>Whether or not DELETE requests can remove from the to-many relationship. Attempts to remove when disabled will return an HTTP 422 response.</p>
+  
+  <dd><p>Whether or not DELETE requests can remove from the to-many relationship. Attempts to remove when disabled will return an HTTP 422 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowSet"><code>AllowSet = 8</code></dt>
-    <dd><p>Whether or not POST and PATCH requests can replace the relationship. Attempts to replace when disabled will return an HTTP 422 response.</p>
+  
+  <dd><p>Whether or not POST and PATCH requests can replace the relationship. Attempts to replace when disabled will return an HTTP 422 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowView"><code>AllowView = 1</code></dt>
-    <dd><p>Whether or not the relationship can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
+  <dd><p>Whether or not the relationship can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
 disabled will return an HTTP 400 response. Otherwise, the relationship (and its related resources, when included) are silently omitted.</p>
+<p>Note this setting does not affect retrieving the related resources directly.</p>
 </dd>
+  
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_None"><code>None = 0</code></dt>
-    <dd></dd>
+  
+  <dd></dd>
   </dl>
 
 

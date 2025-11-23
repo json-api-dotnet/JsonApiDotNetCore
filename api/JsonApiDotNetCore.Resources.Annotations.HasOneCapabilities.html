@@ -123,20 +123,26 @@ public enum HasOneCapabilities</code></pre>
 </h2>
   <dl class="parameters">
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_All"><code>All = AllowView | AllowInclude | AllowSet</code></dt>
-    <dd></dd>
+  
+  <dd></dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowInclude"><code>AllowInclude = 2</code></dt>
-    <dd><p>Whether or not the relationship can be included. Attempts to use it in the <code>include</code> query string parameter when disabled will return an HTTP
+  
+  <dd><p>Whether or not the relationship can be included. Attempts to use it in the <code>include</code> query string parameter when disabled will return an HTTP
 400 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowSet"><code>AllowSet = 4</code></dt>
-    <dd><p>Whether or not POST and PATCH requests can replace the relationship. Attempts to replace when disabled will return an HTTP 422 response.</p>
+  
+  <dd><p>Whether or not POST and PATCH requests can replace the relationship. Attempts to replace when disabled will return an HTTP 422 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowView"><code>AllowView = 1</code></dt>
-    <dd><p>Whether or not the relationship can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
+  <dd><p>Whether or not the relationship can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
 disabled will return an HTTP 400 response. Otherwise, the relationship (and its related resources, when included) are silently omitted.</p>
+<p>Note this setting does not affect retrieving the related resources directly.</p>
 </dd>
+  
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_None"><code>None = 0</code></dt>
-    <dd></dd>
+  
+  <dd></dd>
   </dl>
 
 

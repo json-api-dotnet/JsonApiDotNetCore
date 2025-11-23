@@ -122,13 +122,16 @@ public enum ClientIdGenerationMode</code></pre>
 </h2>
   <dl class="parameters">
     <dt id="JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Allowed"><code>Allowed = 1</code></dt>
-    <dd><p>Allows a client to create a resource with a client-supplied ID, but does not require it.</p>
+  
+  <dd><p>Allows a client to create a resource with a client-supplied ID, but does not require it.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Forbidden"><code>Forbidden = 0</code></dt>
-    <dd><p>Returns an HTTP 403 (Forbidden) response if a client attempts to create a resource with a client-supplied ID.</p>
+  
+  <dd><p>Returns an HTTP 403 (Forbidden) response if a client attempts to create a resource with a client-supplied ID.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Required"><code>Required = 2</code></dt>
-    <dd><p>Returns an HTTP 422 (Unprocessable Content) response if a client attempts to create a resource without a client-supplied ID.</p>
+  
+  <dd><p>Returns an HTTP 422 (Unprocessable Content) response if a client attempts to create a resource without a client-supplied ID.</p>
 </dd>
   </dl>
 

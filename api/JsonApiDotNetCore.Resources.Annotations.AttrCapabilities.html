@@ -123,27 +123,34 @@ public enum AttrCapabilities</code></pre>
 </h2>
   <dl class="parameters">
     <dt id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_All"><code>All = AllowView | AllowCreate | AllowChange | AllowFilter | AllowSort</code></dt>
-    <dd></dd>
+  
+  <dd></dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowChange"><code>AllowChange = 4</code></dt>
-    <dd><p>Whether or not PATCH requests can update the attribute value. Attempts to update when disabled will return an HTTP 422 response.</p>
+  
+  <dd><p>Whether or not PATCH requests can update the attribute value. Attempts to update when disabled will return an HTTP 422 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowCreate"><code>AllowCreate = 2</code></dt>
-    <dd><p>Whether or not POST requests can assign the attribute value. Attempts to assign when disabled will return an HTTP 422 response.</p>
+  
+  <dd><p>Whether or not POST requests can assign the attribute value. Attempts to assign when disabled will return an HTTP 422 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowFilter"><code>AllowFilter = 8</code></dt>
-    <dd><p>Whether or not the attribute can be filtered on. Attempts to use it in the <code>filter</code> query string parameter when disabled will return an HTTP 400
+  
+  <dd><p>Whether or not the attribute can be filtered on. Attempts to use it in the <code>filter</code> query string parameter when disabled will return an HTTP 400
 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowSort"><code>AllowSort = 16</code></dt>
-    <dd><p>Whether or not the attribute can be sorted on. Attempts to use it in the <code>sort</code> query string parameter when disabled will return an HTTP 400
+  
+  <dd><p>Whether or not the attribute can be sorted on. Attempts to use it in the <code>sort</code> query string parameter when disabled will return an HTTP 400
 response.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowView"><code>AllowView = 1</code></dt>
-    <dd><p>Whether or not the attribute value can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
+  
+  <dd><p>Whether or not the attribute value can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
 disabled will return an HTTP 400 response. Otherwise, the attribute is silently omitted.</p>
 </dd>
     <dt id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_None"><code>None = 0</code></dt>
-    <dd></dd>
+  
+  <dd></dd>
   </dl>
 
 
