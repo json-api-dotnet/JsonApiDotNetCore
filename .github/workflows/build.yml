@@ -104,7 +104,7 @@ jobs:
         Logging__LogLevel__Microsoft.Extensions.Hosting.Internal.Host: 'None'
         Logging__LogLevel__Microsoft.EntityFrameworkCore.Database.Command: 'None'
         Logging__LogLevel__JsonApiDotNetCore: 'None'
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true"
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;annotations-title=@test (@framework);annotations-message=@error\n@trace;summary-include-passed=false"
     - name: Upload coverage to codecov.io
       if: ${{ matrix.os == 'ubuntu-latest' }}
       env:
