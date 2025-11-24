@@ -17,7 +17,7 @@
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
-    <GitHubActionsTestLoggerVersion>3.0.0</GitHubActionsTestLoggerVersion>
+    <GitHubActionsTestLoggerVersion>3.0.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <KiotaVersion>1.*</KiotaVersion>
     <MicrosoftApiServerVersion>10.0.*</MicrosoftApiServerVersion>
