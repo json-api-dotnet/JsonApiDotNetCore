@@ -40,7 +40,7 @@
     <PackageReference Include="Humanizer.Core" Version="$(HumanizerFrozenVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCoreFrozenVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkCoreFrozenVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" Condition="'$(TargetFramework)' == 'net8.0'" NoWarn="$(NoWarn);NU1510">
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" Condition="'$(TargetFramework)' == 'net8.0'" NoWarn="$(NoWarn);NU1510">
       <!--
         Microsoft.EntityFrameworkCore 8.0.0 depends on Microsoft.Extensions.Caching.Memory 8.0.0, which is vulnerable.
         This package reference silences the vulnerability warning and suppresses the NU1510 warning that the dependency will not appear in our NuGet package.
