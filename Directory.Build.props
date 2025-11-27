@@ -9,7 +9,7 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <VersionPrefix>5.9.2</VersionPrefix>
+    <VersionPrefix>5.10.0</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
     <OpenApiPreviewNumber>7</OpenApiPreviewNumber>
   </PropertyGroup>
