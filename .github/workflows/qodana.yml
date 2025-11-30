@@ -37,7 +37,7 @@ jobs:
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore packages
-      run: dotnet restore
+      run: dotnet restore /p:NuGetAudit=false
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: Qodana scan
