@@ -211,7 +211,7 @@ jobs:
         }
 
   cleanup-code:
-    timeout-minutes: 60
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
