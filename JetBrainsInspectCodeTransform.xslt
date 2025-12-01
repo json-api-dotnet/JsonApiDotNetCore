@@ -24,6 +24,7 @@
           <table style="width:100%">
             <tr>
               <th>File</th>
+              <th>Target Framework</th>
               <th>Line Number</th>
               <th>Type</th>
               <th>Message</th>
@@ -32,6 +33,9 @@
               <tr>
                 <td>
                   <xsl:value-of select="@File"/>
+                </td>
+                <td>
+                  <xsl:value-of select="@TargetFramework"/>
                 </td>
                 <td>
                   <xsl:value-of select="@Line"/>

@@ -178,7 +178,7 @@ jobs:
         $inspectCodeOutputPath = Join-Path $env:RUNNER_TEMP 'jetbrains-inspectcode-results.xml'
         Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         dotnet jb inspectcode --version
-        dotnet jb inspectcode $env:SOLUTION_FILE --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --properties:NuGetAudit=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+        dotnet jb inspectcode $env:SOLUTION_FILE --build --no-updates --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --properties:NuGetAudit=false --severity=WARNING --verbosity=WARN --disable-settings-layers=GlobalAll --disable-settings-layers=GlobalPerProduct --disable-settings-layers=SolutionPersonal --disable-settings-layers=ProjectPersonal
     - name: Upload output to artifacts
       uses: actions/upload-artifact@v5
       with:
@@ -199,7 +199,7 @@ jobs:
                             $issueType = $xml.report.IssueTypes.SelectSingleNode("IssueType[@Id='$($_.TypeId)']")
                             $severity = $_.Severity ?? $issueType.Severity
 
-                            Write-Output "[$severity] $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
+                            Write-Output "[$severity] ($($_.TargetFramework)) $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
                         })
                     })
                 }
@@ -238,6 +238,8 @@ jobs:
       run: dotnet tool restore
     - name: Restore packages
       run: dotnet restore /p:NuGetAudit=false
+    - name: Build
+      run: dotnet build --no-restore --configuration Release /p:RunAnalyzers=false
     - name: CleanupCode (on PR diff)
       if: ${{ github.event_name == 'pull_request' }}
       shell: pwsh
@@ -249,14 +251,14 @@ jobs:
 
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
         dotnet jb cleanupcode --version
-        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --properties:NuGetAudit=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --no-updates --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --properties:NuGetAudit=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
       if: ${{ github.event_name == 'push' || github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
       shell: pwsh
       run: |
         Write-Output 'Running code cleanup on all files.'
         dotnet jb cleanupcode --version
-        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --properties:NuGetAudit=false --jb --verbosity=WARN --fail-on-diff --print-diff
+        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --no-updates --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --properties:NuGetAudit=false --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
     timeout-minutes: 60
