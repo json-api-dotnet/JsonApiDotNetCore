@@ -11,7 +11,7 @@ $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbra
 $resultPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.html')
 
 dotnet jb inspectcode --version
-dotnet jb inspectcode $solutionFile --build --no-updates --dotnetcoresdk=$(dotnet --version) --output="$outputPath" --format="xml" --settings=WarningSeverities.DotSettings --properties:Configuration=Release --properties:RunAnalyzers=false --properties:NuGetAudit=false --severity=WARNING --verbosity=WARN --disable-settings-layers=GlobalAll --disable-settings-layers=GlobalPerProduct --disable-settings-layers=SolutionPersonal --disable-settings-layers=ProjectPersonal
+dotnet jb inspectcode $solutionFile --build --no-updates --dotnetcoresdk=$(dotnet --version) --output="$outputPath" --format="xml" --settings=WarningSeverities.DotSettings --properties:"Configuration=Release;RunAnalyzers=false;NuGetAudit=false" --severity=WARNING --verbosity=WARN --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
 
 [xml]$xml = Get-Content "$outputPath"
 if ($xml.report.Issues -and $xml.report.Issues.Project) {
