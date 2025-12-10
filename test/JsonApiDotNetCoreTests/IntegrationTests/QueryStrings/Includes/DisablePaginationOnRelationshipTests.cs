@@ -218,7 +218,7 @@ public sealed class DisablePaginationOnRelationshipTests : IClassFixture<Integra
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private sealed class ReminderDefinition(PaginationToggle paginationToggle, IResourceGraph resourceGraph)
-        : JsonApiResourceDefinition<Reminder, int>(resourceGraph)
+        : JsonApiResourceDefinition<Reminder, long>(resourceGraph)
     {
         private readonly PaginationToggle _paginationToggle = paginationToggle;
 

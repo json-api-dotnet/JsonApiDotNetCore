@@ -28,8 +28,8 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
 
         testContext.ConfigureServices(services =>
         {
-            services.AddResourceService<SoftDeletionAwareResourceService<Company, int>>();
-            services.AddResourceService<SoftDeletionAwareResourceService<Department, int>>();
+            services.AddResourceService<SoftDeletionAwareResourceService<Company, long>>();
+            services.AddResourceService<SoftDeletionAwareResourceService<Department, long>>();
         });
 
         testContext.PostConfigureServices(services => services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime))));

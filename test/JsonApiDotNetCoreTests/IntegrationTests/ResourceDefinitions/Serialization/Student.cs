@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization")]
-public sealed class Student : Identifiable<int>
+public sealed class Student : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

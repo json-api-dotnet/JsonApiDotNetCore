@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
-public sealed class WaterSlide : Identifiable<int>
+public sealed class WaterSlide : Identifiable<long>
 {
     [Attr]
     public decimal LengthInMeters { get; set; }

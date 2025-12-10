@@ -576,5 +576,5 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.Access)]
-    private sealed class Person : Identifiable<int>;
+    private sealed class Person : Identifiable<long>;
 }

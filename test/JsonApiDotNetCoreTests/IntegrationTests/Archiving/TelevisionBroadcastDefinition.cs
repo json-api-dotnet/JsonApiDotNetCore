@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class TelevisionBroadcastDefinition(
     IResourceGraph resourceGraph, TelevisionDbContext dbContext, IJsonApiRequest request, IEnumerable<IQueryConstraintProvider> constraintProviders)
-    : JsonApiResourceDefinition<TelevisionBroadcast, int>(resourceGraph)
+    : JsonApiResourceDefinition<TelevisionBroadcast, long>(resourceGraph)
 {
     private readonly TelevisionDbContext _dbContext = dbContext;
     private readonly IJsonApiRequest _request = request;

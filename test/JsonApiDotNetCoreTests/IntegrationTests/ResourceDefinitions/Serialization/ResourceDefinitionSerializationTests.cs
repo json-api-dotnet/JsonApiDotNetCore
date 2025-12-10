@@ -366,7 +366,7 @@ public sealed class ResourceDefinitionSerializationTests
             socialSecurityNumber.Should().Be(newSocialSecurityNumber);
         });
 
-        int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+        long newStudentId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

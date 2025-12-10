@@ -6,4 +6,4 @@ namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOn;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 [Resource(PublicName = "empties", ControllerNamespace = "OpenApiTests.ResourceFieldValidation")]
-public class NrtOnEmpty : Identifiable<int>;
+public class NrtOnEmpty : Identifiable<long>;

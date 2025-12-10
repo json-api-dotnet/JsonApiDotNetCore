@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships")]
-public sealed class Customer : Identifiable<int>
+public sealed class Customer : Identifiable<long>
 {
     [Attr]
     public string EmailAddress { get; set; } = null!;

@@ -393,7 +393,7 @@ public sealed class LinkInclusionTests
         }
     }
 
-    private sealed class ExampleResource : Identifiable<int>;
+    private sealed class ExampleResource : Identifiable<long>;
 
     private sealed class FakeHttpContextAccessor : IHttpContextAccessor
     {

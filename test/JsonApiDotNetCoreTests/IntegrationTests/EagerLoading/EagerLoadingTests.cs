@@ -240,7 +240,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be("(unspecified)");
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("secondaryDoorColor").WhoseValue.Should().BeNull();
 
-        int newBuildingId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+        long newBuildingId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -6,4 +6,4 @@ namespace DiscoveryTests;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class PrivateResourceDefinition(IResourceGraph resourceGraph)
-    : JsonApiResourceDefinition<PrivateResource, int>(resourceGraph);
+    : JsonApiResourceDefinition<PrivateResource, long>(resourceGraph);

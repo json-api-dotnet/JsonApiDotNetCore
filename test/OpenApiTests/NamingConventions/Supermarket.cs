@@ -6,7 +6,7 @@ namespace OpenApiTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.NamingConventions")]
-public sealed class Supermarket : Identifiable<int>
+public sealed class Supermarket : Identifiable<long>
 {
     [Attr]
     public string NameOfCity { get; set; } = null!;

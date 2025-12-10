@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading")]
-public sealed class Constellation : Identifiable<int>
+public sealed class Constellation : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class Person : Identifiable<int>
+public sealed class Person : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

@@ -19,16 +19,16 @@ public sealed class QueryExpressionRewriterTests
     // @formatter:wrap_before_first_method_call true
 
     private static readonly IResourceGraph ResourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-        .Add<Blog, int>()
-        .Add<BlogPost, int>()
-        .Add<Label, int>()
-        .Add<Comment, int>()
-        .Add<WebAccount, int>()
-        .Add<Human, int>()
-        .Add<Man, int>()
-        .Add<Woman, int>()
-        .Add<AccountPreferences, int>()
-        .Add<LoginAttempt, int>()
+        .Add<Blog, long>()
+        .Add<BlogPost, long>()
+        .Add<Label, long>()
+        .Add<Comment, long>()
+        .Add<WebAccount, long>()
+        .Add<Human, long>()
+        .Add<Man, long>()
+        .Add<Woman, long>()
+        .Add<AccountPreferences, long>()
+        .Add<LoginAttempt, long>()
         .Build();
 
     // @formatter:wrap_chained_method_calls restore

@@ -11,10 +11,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 public sealed class BuildingRepository(
     ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
     IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
-    : EntityFrameworkCoreRepository<Building, int>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
+    : EntityFrameworkCoreRepository<Building, long>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
         resourceDefinitionAccessor)
 {
-    public override async Task<Building> GetForCreateAsync(Type resourceClrType, int id, CancellationToken cancellationToken)
+    public override async Task<Building> GetForCreateAsync(Type resourceClrType, long id, CancellationToken cancellationToken)
     {
         Building building = await base.GetForCreateAsync(resourceClrType, id, cancellationToken);
 

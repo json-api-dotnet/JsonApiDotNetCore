@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 // The constructor parameters will be resolved from the container, which means you can take on any dependency that is also defined in the container.
 public sealed class StudentDefinition(IResourceGraph resourceGraph, IEncryptionService encryptionService, ResourceDefinitionHitCounter hitCounter)
-    : HitCountingResourceDefinition<Student, int>(resourceGraph, hitCounter)
+    : HitCountingResourceDefinition<Student, long>(resourceGraph, hitCounter)
 {
     private readonly IEncryptionService _encryptionService = encryptionService;
 

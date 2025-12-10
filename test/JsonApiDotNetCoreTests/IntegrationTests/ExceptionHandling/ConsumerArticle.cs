@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling")]
-public sealed class ConsumerArticle : Identifiable<int>
+public sealed class ConsumerArticle : Identifiable<long>
 {
     [Attr]
     public string Code { get; set; } = null!;

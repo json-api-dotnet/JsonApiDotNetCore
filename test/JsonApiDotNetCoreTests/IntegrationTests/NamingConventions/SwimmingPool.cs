@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
-public sealed class SwimmingPool : Identifiable<int>
+public sealed class SwimmingPool : Identifiable<long>
 {
     [Attr]
     public bool IsIndoor { get; set; }

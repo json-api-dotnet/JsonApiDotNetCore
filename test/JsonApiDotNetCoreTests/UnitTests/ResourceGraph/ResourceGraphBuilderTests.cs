@@ -22,7 +22,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
         // Act
-        builder.Add<ResourceWithAttribute, int>();
+        builder.Add<ResourceWithAttribute, long>();
 
         // Assert
         IResourceGraph resourceGraph = builder.Build();
@@ -39,7 +39,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
         // Act
-        builder.Add<ResourceWithAttribute, int>();
+        builder.Add<ResourceWithAttribute, long>();
 
         // Assert
         IResourceGraph resourceGraph = builder.Build();
@@ -57,7 +57,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
         // Act
-        builder.Add<ResourceWithAttribute, int>();
+        builder.Add<ResourceWithAttribute, long>();
 
         // Assert
         IResourceGraph resourceGraph = builder.Build();
@@ -75,7 +75,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
         // Act
-        builder.Add<ResourceWithAttribute, int>();
+        builder.Add<ResourceWithAttribute, long>();
 
         // Assert
         IResourceGraph resourceGraph = builder.Build();
@@ -91,10 +91,10 @@ public sealed class ResourceGraphBuilderTests
         // Arrange
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<ResourceWithHasOneRelationship, int>("duplicate");
+        builder.Add<ResourceWithHasOneRelationship, long>("duplicate");
 
         // Act
-        Action action = () => builder.Add<ResourceWithAttribute, int>("duplicate");
+        Action action = () => builder.Add<ResourceWithAttribute, long>("duplicate");
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
@@ -109,7 +109,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
         // Act
-        Action action = () => builder.Add<ResourceWithDuplicateAttrPublicName, int>();
+        Action action = () => builder.Add<ResourceWithDuplicateAttrPublicName, long>();
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"Properties '{typeof(ResourceWithDuplicateAttrPublicName)}.Value1' and " +
@@ -124,7 +124,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
         // Act
-        Action action = () => builder.Add<ResourceWithDuplicateRelationshipPublicName, int>();
+        Action action = () => builder.Add<ResourceWithDuplicateRelationshipPublicName, long>();
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
@@ -140,7 +140,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
         // Act
-        Action action = () => builder.Add<ResourceWithDuplicateAttrRelationshipPublicName, int>();
+        Action action = () => builder.Add<ResourceWithDuplicateAttrRelationshipPublicName, long>();
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
@@ -169,8 +169,8 @@ public sealed class ResourceGraphBuilderTests
         // Arrange
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<ResourceWithHasOneRelationship, int>();
-        builder.Add<ResourceWithAttribute, int>();
+        builder.Add<ResourceWithHasOneRelationship, long>();
+        builder.Add<ResourceWithAttribute, long>();
 
         // Act
         builder.Remove<ResourceWithHasOneRelationship>();
@@ -186,7 +186,7 @@ public sealed class ResourceGraphBuilderTests
         // Arrange
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<ResourceWithAttribute, int>();
+        builder.Add<ResourceWithAttribute, long>();
 
         // Act
         builder.Remove<ResourceWithHasManyRelationship>();
@@ -202,7 +202,7 @@ public sealed class ResourceGraphBuilderTests
         // Arrange
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<ResourceWithAttribute, int>();
+        builder.Add<ResourceWithAttribute, long>();
 
         // Act
         builder.Remove(typeof(NonResource));
@@ -219,7 +219,7 @@ public sealed class ResourceGraphBuilderTests
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
-        builder.Add<ResourceWithHasOneRelationship, int>();
+        builder.Add<ResourceWithHasOneRelationship, long>();
 
         // Act
         Action action = () => builder.Build();
@@ -236,7 +236,7 @@ public sealed class ResourceGraphBuilderTests
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
-        builder.Add<ResourceWithHasManyRelationship, int>();
+        builder.Add<ResourceWithHasManyRelationship, long>();
 
         // Act
         Action action = () => builder.Build();
@@ -253,8 +253,8 @@ public sealed class ResourceGraphBuilderTests
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
-        builder.Add<AbstractBaseResource, int>();
-        builder.Add<DerivedAlternateAttributeName, int>();
+        builder.Add<AbstractBaseResource, long>();
+        builder.Add<DerivedAlternateAttributeName, long>();
 
         // Act
         Action action = () => builder.Build();
@@ -271,8 +271,8 @@ public sealed class ResourceGraphBuilderTests
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
-        builder.Add<AbstractBaseResource, int>();
-        builder.Add<DerivedAlternateToOneRelationshipName, int>();
+        builder.Add<AbstractBaseResource, long>();
+        builder.Add<DerivedAlternateToOneRelationshipName, long>();
 
         // Act
         Action action = () => builder.Build();
@@ -289,8 +289,8 @@ public sealed class ResourceGraphBuilderTests
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
-        builder.Add<AbstractBaseResource, int>();
-        builder.Add<DerivedAlternateToManyRelationshipName, int>();
+        builder.Add<AbstractBaseResource, long>();
+        builder.Add<DerivedAlternateToManyRelationshipName, long>();
 
         // Act
         Action action = () => builder.Build();
@@ -347,7 +347,7 @@ public sealed class ResourceGraphBuilderTests
         var builder = new ResourceGraphBuilder(options, loggerFactory);
 
         // Act
-        builder.Add<ResourceWithHasOneRelationship, int>();
+        builder.Add<ResourceWithHasOneRelationship, long>();
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
@@ -418,21 +418,21 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithHasOneRelationship : Identifiable<int>
+    private sealed class ResourceWithHasOneRelationship : Identifiable<long>
     {
         [HasOne]
         public ResourceWithAttribute? PrimaryChild { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithHasManyRelationship : Identifiable<int>
+    private sealed class ResourceWithHasManyRelationship : Identifiable<long>
     {
         [HasMany]
         public ISet<ResourceWithAttribute> Children { get; set; } = new HashSet<ResourceWithAttribute>();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithAttribute : Identifiable<int>
+    private sealed class ResourceWithAttribute : Identifiable<long>
     {
         [Attr]
         public string? PrimaryValue { get; set; }
@@ -445,7 +445,7 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithDuplicateAttrPublicName : Identifiable<int>
+    private sealed class ResourceWithDuplicateAttrPublicName : Identifiable<long>
     {
         [Attr(PublicName = "duplicate")]
         public string? Value1 { get; set; }
@@ -455,7 +455,7 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithDuplicateRelationshipPublicName : Identifiable<int>
+    private sealed class ResourceWithDuplicateRelationshipPublicName : Identifiable<long>
     {
         [HasOne(PublicName = "duplicate")]
         public ResourceWithHasOneRelationship? PrimaryChild { get; set; }
@@ -465,7 +465,7 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithDuplicateAttrRelationshipPublicName : Identifiable<int>
+    private sealed class ResourceWithDuplicateAttrRelationshipPublicName : Identifiable<long>
     {
         [Attr(PublicName = "duplicate")]
         public string? Value { get; set; }
@@ -509,7 +509,7 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public abstract class AbstractBaseResource : Identifiable<int>
+    public abstract class AbstractBaseResource : Identifiable<long>
     {
         [Attr(PublicName = "baseValue")]
         public virtual int Value { get; set; }

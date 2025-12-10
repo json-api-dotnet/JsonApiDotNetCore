@@ -15,7 +15,7 @@ partial class TownsController
     private readonly CustomRouteDbContext _dbContext;
 
     [ActivatorUtilitiesConstructor]
-    public TownsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Town, int> resourceService,
+    public TownsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Town, long> resourceService,
         CustomRouteDbContext dbContext)
         : base(options, resourceGraph, loggerFactory, resourceService)
     {

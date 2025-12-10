@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings")]
-public sealed class Comment : Identifiable<int>
+public sealed class Comment : Identifiable<long>
 {
     [Attr]
     public string Text { get; set; } = null!;

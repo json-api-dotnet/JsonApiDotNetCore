@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers")]
-public sealed class Sofa : Identifiable<int>
+public sealed class Sofa : Identifiable<long>
 {
     [Attr]
     public int SeatCount { get; set; }

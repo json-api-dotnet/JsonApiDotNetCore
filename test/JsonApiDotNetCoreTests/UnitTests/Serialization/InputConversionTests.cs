@@ -243,17 +243,17 @@ public sealed class InputConversionTests : IDisposable
     }
 
     private DocumentAdapter CreateDocumentAdapter<TResource>(Func<IResourceGraph, JsonApiRequest> createRequest)
-        where TResource : Identifiable<int>
+        where TResource : Identifiable<long>
     {
         var options = new JsonApiOptions();
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource, int>().Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource, long>().Build();
         options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
 
         var resourceFactory = new ResourceFactory(_serviceProvider);
         var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, _serviceProvider);
 
         _serviceProvider.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-        _serviceProvider.AddService(typeof(IResourceDefinition<TResource, int>), new JsonApiResourceDefinition<TResource, int>(resourceGraph));
+        _serviceProvider.AddService(typeof(IResourceDefinition<TResource, long>), new JsonApiResourceDefinition<TResource, long>(resourceGraph));
 
         JsonApiRequest request = createRequest(resourceGraph);
         var targetedFields = new TargetedFields();
@@ -281,7 +281,7 @@ public sealed class InputConversionTests : IDisposable
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ResourceWithVariousDataTypes : Identifiable<int>
+    public sealed class ResourceWithVariousDataTypes : Identifiable<long>
     {
         [Attr]
         public bool Boolean { get; set; }
