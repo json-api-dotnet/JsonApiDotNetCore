@@ -23,7 +23,7 @@ The library will configure routes for all auto-generated and hand-written contro
 ```c#
 // Auto-generated
 [Resource]
-public class OrderSummary : Identifiable<int>
+public class OrderSummary : identifiable<long>
 {
 }
 

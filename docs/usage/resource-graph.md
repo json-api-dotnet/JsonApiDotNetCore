@@ -73,7 +73,7 @@ builder.Services.AddJsonApi(resources: resourceGraphBuilder =>
 2. The `PublicName` property when a model is decorated with a `ResourceAttribute`.
 ```c#
 [Resource(PublicName = "individuals")]
-public class Person : Identifiable<int>
+public class Person : identifiable<long>
 {
 }
 ```
@@ -81,7 +81,7 @@ public class Person : Identifiable<int>
 3. The configured naming convention (by default this is camel-case), after pluralization.
 ```c#
 // this will be registered as "people"
-public class Person : Identifiable<int>
+public class Person : identifiable<long>
 {
 }
 ```

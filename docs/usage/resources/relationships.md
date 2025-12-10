@@ -13,7 +13,7 @@ This exposes a to-one relationship.
 ```c#
 #nullable enable
 
-public class TodoItem : Identifiable<int>
+public class TodoItem : identifiable<long>
 {
     [HasOne]
     public Person? Owner { get; set; }
@@ -36,13 +36,13 @@ The next example defines that each car requires an engine, while an engine is op
 ```c#
 #nullable enable
 
-public sealed class Car : Identifiable<int>
+public sealed class Car : identifiable<long>
 {
     [HasOne]
     public Engine Engine { get; set; } = null!;
 }
 
-public sealed class Engine : Identifiable<int>
+public sealed class Engine : identifiable<long>
 {
     [HasOne]
     public Car? Car { get; set; }
@@ -123,13 +123,13 @@ The next example defines that each car optionally has an engine, while an engine
 ```c#
 #nullable enable
 
-public sealed class Car : Identifiable<int>
+public sealed class Car : identifiable<long>
 {
     [HasOne]
     public Engine? Engine { get; set; }
 }
 
-public sealed class Engine : Identifiable<int>
+public sealed class Engine : identifiable<long>
 {
     [HasOne]
     public Car? Car { get; set; }
@@ -204,7 +204,7 @@ CREATE UNIQUE INDEX "IX_Cars_EngineId" ON "Cars" ("EngineId");
 This exposes a to-many relationship.
 
 ```c#
-public class Person : Identifiable<int>
+public class Person : identifiable<long>
 {
     [HasMany]
     public ICollection<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
@@ -236,7 +236,7 @@ However, under the covers it would use the join type and Entity Framework Core's
 ```c#
 #nullable disable
 
-public class Article : Identifiable<int>
+public class Article : identifiable<long>
 {
     // tells Entity Framework Core to ignore this property
     [NotMapped]
@@ -261,7 +261,7 @@ There are two ways the exposed relationship name is determined:
 2. Individually using the attribute's constructor.
 ```c#
 #nullable enable
-public class TodoItem : Identifiable<int>
+public class TodoItem : identifiable<long>
 {
     [HasOne(PublicName = "item-owner")]
     public Person Owner { get; set; } = null!;
@@ -294,7 +294,7 @@ Otherwise, the relationship (and its related resources, when included) are silen
 ```c#
 #nullable enable
 
-public class User : Identifiable<int>
+public class User : identifiable<long>
 {
     [HasOne(Capabilities = ~HasOneCapabilities.AllowView)]
     public LoginAccount Account { get; set; } = null!;
@@ -308,7 +308,7 @@ Indicates whether the relationship can be included. When not allowed and used in
 ```c#
 #nullable enable
 
-public class User : Identifiable<int>
+public class User : identifiable<long>
 {
     [HasMany(Capabilities = ~HasManyCapabilities.AllowInclude)]
     public ISet<Group> Groups { get; set; } = new HashSet<Group>();
@@ -322,7 +322,7 @@ For to-many relationships only. Indicates whether it can be used in the `count()
 ```c#
 #nullable enable
 
-public class User : Identifiable<int>
+public class User : identifiable<long>
 {
     [HasMany(Capabilities = HasManyCapabilities.AllowFilter)]
     public ISet<Group> Groups { get; set; } = new HashSet<Group>();
@@ -336,7 +336,7 @@ Indicates whether POST and PATCH requests can replace the relationship. When sen
 ```c#
 #nullable enable
 
-public class User : Identifiable<int>
+public class User : identifiable<long>
 {
     [HasOne(Capabilities = ~HasOneCapabilities.AllowSet)]
     public LoginAccount Account { get; set; } = null!;
@@ -350,7 +350,7 @@ For to-many relationships only. Indicates whether POST requests can add resource
 ```c#
 #nullable enable
 
-public class User : Identifiable<int>
+public class User : identifiable<long>
 {
     [HasMany(Capabilities = ~HasManyCapabilities.AllowAdd)]
     public ISet<Group> Groups { get; set; } = new HashSet<Group>();
@@ -364,7 +364,7 @@ For to-many relationships only. Indicates whether DELETE requests can remove res
 ```c#
 #nullable enable
 
-public class User : Identifiable<int>
+public class User : identifiable<long>
 {
     [HasMany(Capabilities = ~HasManyCapabilities.AllowRemove)]
     public ISet<Group> Groups { get; set; } = new HashSet<Group>();
@@ -380,7 +380,7 @@ Relationships can be marked to disallow including them using the `?include=` que
 ```c#
 #nullable enable
 
-public class TodoItem : Identifiable<int>
+public class TodoItem : identifiable<long>
 {
     [HasOne(CanInclude: false)]
     public Person? Owner { get; set; }
@@ -397,7 +397,7 @@ So for the calculated property to be evaluated correctly, the related entity mus
 ```c#
 #nullable enable
 
-public class ShippingAddress : Identifiable<int>
+public class ShippingAddress : identifiable<long>
 {
     [Attr]
     public string Street { get; set; } = null!;

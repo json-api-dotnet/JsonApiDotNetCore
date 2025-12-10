@@ -140,7 +140,7 @@ Then on your model, pass in the set of endpoints to expose (the ones that you've
 ```c#
 [Resource(GenerateControllerEndpoints =
     JsonApiEndpoints.Create | JsonApiEndpoints.Delete)]
-public class Article : Identifiable<int>
+public class Article : identifiable<long>
 {
     // ...
 }
