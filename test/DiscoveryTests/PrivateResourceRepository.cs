@@ -11,5 +11,5 @@ namespace DiscoveryTests;
 public sealed class PrivateResourceRepository(
     ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
     IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
-    : EntityFrameworkCoreRepository<PrivateResource, int>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
-        resourceDefinitionAccessor);
+    : EntityFrameworkCoreRepository<PrivateResource, long>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders,
+        loggerFactory, resourceDefinitionAccessor);

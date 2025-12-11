@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships")]
-public sealed class Order : Identifiable<int>
+public sealed class Order : Identifiable<long>
 {
     [Attr]
     public decimal Amount { get; set; }

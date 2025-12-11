@@ -27,7 +27,7 @@ public class QueryStringParserBenchmarks : IDisposable
             EnableLegacyFilterNotation = true
         };
 
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<QueryableResource, int>("alt-resource-name").Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<QueryableResource, long>("alt-resource-name").Build();
 
         var request = new JsonApiRequest
         {

@@ -9,7 +9,7 @@ public sealed class IdentifiableTests
     [Fact]
     public void Can_Set_StringId_To_Value_Type()
     {
-        var resource = new IntId
+        var resource = new LongId
         {
             StringId = "1"
         };
@@ -20,7 +20,7 @@ public sealed class IdentifiableTests
     [Fact]
     public void Setting_StringId_To_Null_Sets_Id_As_Default()
     {
-        var resource = new IntId
+        var resource = new LongId
         {
             StringId = null
         };
@@ -31,16 +31,16 @@ public sealed class IdentifiableTests
     [Fact]
     public void GetStringId_Returns_Null_If_Object_Is_Default()
     {
-        var resource = new IntId();
+        var resource = new LongId();
 
         string? stringId = resource.ExposedGetStringId(0);
 
         stringId.Should().BeNull();
     }
 
-    private sealed class IntId : Identifiable<int>
+    private sealed class LongId : Identifiable<long>
     {
-        public string? ExposedGetStringId(int value)
+        public string? ExposedGetStringId(long value)
         {
             return GetStringId(value);
         }

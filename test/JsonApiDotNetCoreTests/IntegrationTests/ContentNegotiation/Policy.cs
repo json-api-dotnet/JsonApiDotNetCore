@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation")]
-public sealed class Policy : Identifiable<int>
+public sealed class Policy : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

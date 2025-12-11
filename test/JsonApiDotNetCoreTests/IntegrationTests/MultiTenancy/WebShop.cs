@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy")]
-public sealed class WebShop : Identifiable<int>, IHasTenant
+public sealed class WebShop : Identifiable<long>, IHasTenant
 {
     [Attr]
     public string Url { get; set; } = null!;

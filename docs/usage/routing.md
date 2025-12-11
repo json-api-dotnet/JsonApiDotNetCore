@@ -23,15 +23,15 @@ The library will configure routes for all auto-generated and hand-written contro
 ```c#
 // Auto-generated
 [Resource]
-public class OrderSummary : Identifiable<int>
+public class OrderSummary : identifiable<long>
 {
 }
 
 // Hand-written
-public class OrderLineController : JsonApiController<OrderLine, int>
+public class OrderLineController : JsonApiController<OrderLine, long>
 {
     public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService<OrderLine, int> resourceService)
+        ILoggerFactory loggerFactory, IResourceService<OrderLine, long> resourceService)
         : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
@@ -74,10 +74,10 @@ partial class OrderSummariesController
 // Hand-written
 [DisableRoutingConvention]
 [Route("custom/route/lines-in-order")]
-public class OrderLineController : JsonApiController<OrderLine, int>
+public class OrderLineController : JsonApiController<OrderLine, long>
 {
     public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService<OrderLine, int> resourceService)
+        ILoggerFactory loggerFactory, IResourceService<OrderLine, long> resourceService)
         : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }

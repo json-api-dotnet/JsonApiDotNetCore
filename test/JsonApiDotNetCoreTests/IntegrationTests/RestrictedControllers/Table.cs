@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Command, ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers")]
-public sealed class Table : Identifiable<int>
+public sealed class Table : Identifiable<long>
 {
     [Attr]
     public int LegCount { get; set; }

@@ -12,7 +12,7 @@ To make JsonApiDotNetCore return an error when such a property is missing on res
 Example:
 
 ```c#
-public sealed class User : Identifiable<int>
+public sealed class User : identifiable<long>
 {
     [Attr]
     [Required]
@@ -35,7 +35,7 @@ Example:
 ```c#
 #nullable disable
 
-public sealed class Label : Identifiable<int>
+public sealed class Label : identifiable<long>
 {
     [Attr]
     [Required]
@@ -69,7 +69,7 @@ Example:
 ```c#
 #nullable enable
 
-public sealed class Label : Identifiable<int>
+public sealed class Label : identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

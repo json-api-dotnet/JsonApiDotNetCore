@@ -21,7 +21,7 @@ public abstract class DeserializationBenchmarkBase : IDisposable
     protected DeserializationBenchmarkBase()
     {
         var options = new JsonApiOptions();
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource, int>().Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource, long>().Build();
         options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
         SerializerReadOptions = ((IJsonApiOptions)options).SerializerReadOptions;
 
@@ -29,7 +29,7 @@ public abstract class DeserializationBenchmarkBase : IDisposable
         var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, _serviceProvider);
 
         _serviceProvider.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-        _serviceProvider.AddService(typeof(IResourceDefinition<IncomingResource, int>), new JsonApiResourceDefinition<IncomingResource, int>(resourceGraph));
+        _serviceProvider.AddService(typeof(IResourceDefinition<IncomingResource, long>), new JsonApiResourceDefinition<IncomingResource, long>(resourceGraph));
 
         // ReSharper disable once VirtualMemberCallInConstructor
         JsonApiRequest request = CreateJsonApiRequest(resourceGraph);
@@ -71,7 +71,7 @@ public abstract class DeserializationBenchmarkBase : IDisposable
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class IncomingResource : Identifiable<int>
+    public sealed class IncomingResource : Identifiable<long>
     {
         [Attr]
         public bool Attribute01 { get; set; }

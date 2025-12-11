@@ -24,9 +24,9 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         testContext.ConfigureServices(services =>
         {
-            services.AddResourceRepository<ResultCapturingRepository<Blog, int>>();
-            services.AddResourceRepository<ResultCapturingRepository<BlogPost, int>>();
-            services.AddResourceRepository<ResultCapturingRepository<WebAccount, int>>();
+            services.AddResourceRepository<ResultCapturingRepository<Blog, long>>();
+            services.AddResourceRepository<ResultCapturingRepository<BlogPost, long>>();
+            services.AddResourceRepository<ResultCapturingRepository<WebAccount, long>>();
 
             services.AddSingleton<ResourceCaptureStore>();
         });

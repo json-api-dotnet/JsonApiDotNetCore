@@ -6,7 +6,7 @@ namespace GettingStarted.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class Person : Identifiable<int>
+public sealed class Person : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

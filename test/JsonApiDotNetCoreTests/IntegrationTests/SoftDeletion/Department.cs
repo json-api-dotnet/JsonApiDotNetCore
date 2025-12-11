@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion")]
-public sealed class Department : Identifiable<int>, ISoftDeletable
+public sealed class Department : Identifiable<long>, ISoftDeletable
 {
     [Attr]
     public string Name { get; set; } = null!;

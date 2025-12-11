@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.EagerLoading")]
-public sealed class Building : Identifiable<int>
+public sealed class Building : Identifiable<long>
 {
     [Attr]
     public string Number { get; set; } = null!;

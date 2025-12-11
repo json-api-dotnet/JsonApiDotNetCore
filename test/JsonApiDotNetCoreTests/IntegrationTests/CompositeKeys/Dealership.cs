@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys")]
-public sealed class Dealership : Identifiable<int>
+public sealed class Dealership : Identifiable<long>
 {
     [Attr]
     public string Address { get; set; } = null!;

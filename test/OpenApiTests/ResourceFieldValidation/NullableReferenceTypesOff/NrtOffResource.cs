@@ -9,7 +9,7 @@ namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOff;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(PublicName = "resources", ControllerNamespace = "OpenApiTests.ResourceFieldValidation")]
-public sealed class NrtOffResource : Identifiable<int>
+public sealed class NrtOffResource : Identifiable<long>
 {
     [Attr]
     public string ReferenceType { get; set; }

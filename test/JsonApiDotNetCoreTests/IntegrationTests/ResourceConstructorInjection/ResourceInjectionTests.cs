@@ -189,7 +189,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
             resource.Attributes.Should().ContainKey("isOpen").WhoseValue.Should().Be(false);
         });
 
-        int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+        long newCertificateId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -303,7 +303,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Cannot_delete_unknown_resource()
     {
         // Arrange
-        string officeId = Unknown.StringId.For<PostOffice, int>();
+        string officeId = Unknown.StringId.For<PostOffice, long>();
 
         string route = $"/postOffices/{officeId}";
 

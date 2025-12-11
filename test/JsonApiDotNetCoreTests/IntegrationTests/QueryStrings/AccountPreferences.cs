@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings")]
-public sealed class AccountPreferences : Identifiable<int>
+public sealed class AccountPreferences : Identifiable<long>
 {
     [Attr]
     public bool UseDarkTheme { get; set; }

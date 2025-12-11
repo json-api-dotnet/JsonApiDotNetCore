@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers")]
-public sealed class Pillow : Identifiable<int>
+public sealed class Pillow : Identifiable<long>
 {
     [Attr]
     public string Color { get; set; } = null!;

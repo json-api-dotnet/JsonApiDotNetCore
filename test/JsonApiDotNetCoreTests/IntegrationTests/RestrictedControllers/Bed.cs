@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Query, ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers")]
-public sealed class Bed : Identifiable<int>
+public sealed class Bed : Identifiable<long>
 {
     [Attr]
     public bool IsDouble { get; set; }

@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(GenerateControllerEndpoints = NoRelationshipEndpoints, ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers")]
-public sealed class Chair : Identifiable<int>
+public sealed class Chair : Identifiable<long>
 {
     private const JsonApiEndpoints NoRelationshipEndpoints = JsonApiEndpoints.GetCollection | JsonApiEndpoints.GetSingle | JsonApiEndpoints.Post |
         JsonApiEndpoints.Patch | JsonApiEndpoints.Delete;

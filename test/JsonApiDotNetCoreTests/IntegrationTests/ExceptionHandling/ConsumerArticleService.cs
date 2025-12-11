@@ -14,13 +14,13 @@ public sealed class ConsumerArticleService(
     IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options,
     ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<ConsumerArticle> resourceChangeTracker,
     IResourceDefinitionAccessor resourceDefinitionAccessor)
-    : JsonApiResourceService<ConsumerArticle, int>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
+    : JsonApiResourceService<ConsumerArticle, long>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
         resourceChangeTracker, resourceDefinitionAccessor)
 {
     private const string SupportEmailAddress = "company@email.com";
     internal const string UnavailableArticlePrefix = "X";
 
-    public override async Task<ConsumerArticle> GetAsync(int id, CancellationToken cancellationToken)
+    public override async Task<ConsumerArticle> GetAsync(long id, CancellationToken cancellationToken)
     {
         ConsumerArticle consumerArticle = await base.GetAsync(id, cancellationToken);
 

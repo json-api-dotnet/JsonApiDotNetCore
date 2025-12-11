@@ -6,7 +6,7 @@ namespace MultiDbContextExample.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class ResourceB : Identifiable<int>
+public sealed class ResourceB : Identifiable<long>
 {
     [Attr]
     public string? NameB { get; set; }

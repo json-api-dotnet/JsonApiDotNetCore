@@ -54,7 +54,7 @@ You can manually construct the graph.
 ```c#
 // Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =>
-    resourceGraphBuilder.Add<Person, int>());
+    resourceGraphBuilder.Add<Person, long>());
 ```
 
 ## Resource Name
@@ -66,14 +66,14 @@ The public resource name is exposed through the `type` member in the JSON:API pa
 // Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =>
 {
-    resourceGraphBuilder.Add<Person, int>(publicName: "individuals");
+    resourceGraphBuilder.Add<Person, long>(publicName: "individuals");
 });
 ```
 
 2. The `PublicName` property when a model is decorated with a `ResourceAttribute`.
 ```c#
 [Resource(PublicName = "individuals")]
-public class Person : Identifiable<int>
+public class Person : identifiable<long>
 {
 }
 ```
@@ -81,7 +81,7 @@ public class Person : Identifiable<int>
 3. The configured naming convention (by default this is camel-case), after pluralization.
 ```c#
 // this will be registered as "people"
-public class Person : Identifiable<int>
+public class Person : identifiable<long>
 {
 }
 ```
