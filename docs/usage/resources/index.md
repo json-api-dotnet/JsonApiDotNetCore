@@ -18,7 +18,7 @@ public class Person : identifiable<long>
 {
     [Key]
     [Column("PersonID")]
-    public override int Id { get; set; }
+    public override long Id { get; set; }
 }
 ```
 

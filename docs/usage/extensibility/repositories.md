@@ -5,9 +5,9 @@ If you only need minor changes you can override the methods defined in `EntityFr
 
 ```c#
 // Program.cs
-builder.Services.AddScoped<IResourceRepository<Article, int>, ArticleRepository>();
-builder.Services.AddScoped<IResourceReadRepository<Article, int>, ArticleRepository>();
-builder.Services.AddScoped<IResourceWriteRepository<Article, int>, ArticleRepository>();
+builder.Services.AddScoped<IResourceRepository<Article, long>, ArticleRepository>();
+builder.Services.AddScoped<IResourceReadRepository<Article, long>, ArticleRepository>();
+builder.Services.AddScoped<IResourceWriteRepository<Article, long>, ArticleRepository>();
 ```
 
 In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
@@ -26,7 +26,7 @@ A sample implementation that performs authorization might look like this.
 All of the methods in EntityFrameworkCoreRepository will use the `GetAll()` method to get the `DbSet<TResource>`, so this is a good method to apply filters such as user or tenant authorization.
 
 ```c#
-public class ArticleRepository : EntityFrameworkCoreRepository<Article, int>
+public class ArticleRepository : EntityFrameworkCoreRepository<Article, long>
 {
     private readonly IAuthenticationService _authenticationService;
 

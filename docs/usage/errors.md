@@ -34,9 +34,9 @@ This handler is also the place to choose the log level and message, based on the
 ```c#
 public class ProductOutOfStockException : Exception
 {
-    public int ProductId { get; }
+    public long ProductId { get; }
 
-    public ProductOutOfStockException(int productId)
+    public ProductOutOfStockException(long productId)
     {
         ProductId = productId;
     }

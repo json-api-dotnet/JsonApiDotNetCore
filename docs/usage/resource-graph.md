@@ -54,7 +54,7 @@ You can manually construct the graph.
 ```c#
 // Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =>
-    resourceGraphBuilder.Add<Person, int>());
+    resourceGraphBuilder.Add<Person, long>());
 ```
 
 ## Resource Name
@@ -66,7 +66,7 @@ The public resource name is exposed through the `type` member in the JSON:API pa
 // Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =>
 {
-    resourceGraphBuilder.Add<Person, int>(publicName: "individuals");
+    resourceGraphBuilder.Add<Person, long>(publicName: "individuals");
 });
 ```
 
