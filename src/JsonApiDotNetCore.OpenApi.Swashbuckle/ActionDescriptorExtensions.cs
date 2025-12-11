@@ -1,33 +1,39 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal static class ActionDescriptorExtensions
 {
-    public static MethodInfo GetActionMethod(this ActionDescriptor descriptor)
+    public static MethodInfo? TryGetActionMethod(this ActionDescriptor descriptor)
     {
         ArgumentNullException.ThrowIfNull(descriptor);
 
-        return ((ControllerActionDescriptor)descriptor).MethodInfo;
-    }
+        if (descriptor is ControllerActionDescriptor controllerActionDescriptor)
+        {
+            return controllerActionDescriptor.MethodInfo;
+        }
 
-    public static TFilterMetaData? GetFilterMetadata<TFilterMetaData>(this ActionDescriptor descriptor)
-        where TFilterMetaData : IFilterMetadata
-    {
-        ArgumentNullException.ThrowIfNull(descriptor);
-
-        return descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter).OfType<TFilterMetaData>().FirstOrDefault();
+        return descriptor.EndpointMetadata.OfType<MethodInfo>().FirstOrDefault();
     }
 
     public static ControllerParameterDescriptor? GetBodyParameterDescriptor(this ActionDescriptor descriptor)
     {
         ArgumentNullException.ThrowIfNull(descriptor);
 
-        return (ControllerParameterDescriptor?)descriptor.Parameters.FirstOrDefault(parameterDescriptor =>
+        ParameterDescriptor? parameterDescriptor = descriptor.Parameters.FirstOrDefault(parameterDescriptor =>
             parameterDescriptor.BindingInfo?.BindingSource == BindingSource.Body);
+
+        if (parameterDescriptor != null)
+        {
+            var controllerParameterDescriptor = parameterDescriptor as ControllerParameterDescriptor;
+            ConsistencyGuard.ThrowIf(controllerParameterDescriptor == null);
+
+            return controllerParameterDescriptor;
+        }
+
+        return null;
     }
 }

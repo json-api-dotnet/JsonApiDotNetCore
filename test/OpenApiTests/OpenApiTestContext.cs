@@ -28,7 +28,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         return await _lazySwaggerDocument.Value;
     }
 
-    private async Task<JsonElement> CreateSwaggerDocumentAsync()
+    internal async Task<JsonElement> CreateSwaggerDocumentAsync()
     {
         string content = await GetAsync("/swagger/v1/swagger.json");
 
@@ -86,10 +86,25 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     private static async Task WriteToDiskAsync(string path, JsonElement jsonElement)
     {
-        string directory = Path.GetDirectoryName(path)!;
-        Directory.CreateDirectory(directory);
+        while (true)
+        {
+            try
+            {
+                string directory = Path.GetDirectoryName(path)!;
+                Directory.CreateDirectory(directory);
 
-        string contents = jsonElement.ToString();
-        await File.WriteAllTextAsync(path, contents);
+                string contents = jsonElement.ToString();
+                await File.WriteAllTextAsync(path, contents);
+
+                return;
+            }
+            catch (IOException)
+            {
+                // This sometimes happens when running tests locally.
+                // Multi-targeted projects should not use the same output path.
+
+                await Task.Delay(TimeSpan.FromMilliseconds(50));
+            }
+        }
     }
 }

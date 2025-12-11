@@ -5,7 +5,7 @@
 # To connect to pgAdmin, open http://localhost:5050 and login with user "admin@admin.com", password "postgres". Use hostname "db" when registering the server.
 
 param(
-    [switch] $UI=$False
+    [switch] $UI=$false
 )
 
 docker container stop jsonapi-postgresql-db

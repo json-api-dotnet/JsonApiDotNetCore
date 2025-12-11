@@ -47,31 +47,31 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.Gener
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
         public static global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.AtomicOperation CreateFromDiscriminatorValue(IParseNode parseNode)
         {
-            _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
+            if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
             var mappingValue = parseNode.GetChildNode("openapi:discriminator")?.GetStringValue();
             return mappingValue switch
             {
-                "addBathroom" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateBathroomOperation(),
-                "addBedroom" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateBedroomOperation(),
-                "addFamilyHome" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateFamilyHomeOperation(),
-                "addKitchen" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateKitchenOperation(),
-                "addLivingRoom" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateLivingRoomOperation(),
-                "addMansion" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateMansionOperation(),
-                "addResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateResidenceOperation(),
-                "addRoom" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateRoomOperation(),
-                "addToFamilyHomeRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.AddToFamilyHomeRoomsRelationshipOperation(),
-                "addToilet" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateToiletOperation(),
-                "removeFromMansionRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.RemoveFromMansionRoomsRelationshipOperation(),
-                "removeFromMansionStaff" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.RemoveFromMansionStaffRelationshipOperation(),
-                "updateBathroomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateBathroomResidenceRelationshipOperation(),
-                "updateBedroomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateBedroomResidenceRelationshipOperation(),
-                "updateFamilyHome" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateFamilyHomeOperation(),
-                "updateKitchenResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateKitchenResidenceRelationshipOperation(),
-                "updateLivingRoomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateLivingRoomResidenceRelationshipOperation(),
-                "updateMansion" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateMansionOperation(),
-                "updateResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateResidenceOperation(),
-                "updateRoomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateRoomResidenceRelationshipOperation(),
-                "updateToiletResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateToiletResidenceRelationshipOperation(),
+                "addToFamilyHomeRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.AddToFamilyHomeRoomsRelationshipOperation(),
+                "createBathroomOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateBathroomOperation(),
+                "createBedroomOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateBedroomOperation(),
+                "createFamilyHomeOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateFamilyHomeOperation(),
+                "createKitchenOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateKitchenOperation(),
+                "createLivingRoomOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateLivingRoomOperation(),
+                "createMansionOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateMansionOperation(),
+                "createResidenceOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateResidenceOperation(),
+                "createRoomOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateRoomOperation(),
+                "createToiletOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.CreateToiletOperation(),
+                "removeFromMansionRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.RemoveFromMansionRoomsRelationshipOperation(),
+                "removeFromMansionStaffRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.RemoveFromMansionStaffRelationshipOperation(),
+                "updateBathroomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateBathroomResidenceRelationshipOperation(),
+                "updateBedroomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateBedroomResidenceRelationshipOperation(),
+                "updateFamilyHomeOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateFamilyHomeOperation(),
+                "updateKitchenResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateKitchenResidenceRelationshipOperation(),
+                "updateLivingRoomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateLivingRoomResidenceRelationshipOperation(),
+                "updateMansionOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateMansionOperation(),
+                "updateResidenceOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateResidenceOperation(),
+                "updateRoomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateRoomResidenceRelationshipOperation(),
+                "updateToiletResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.UpdateToiletResidenceRelationshipOperation(),
                 _ => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.AtomicOperation(),
             };
         }
@@ -95,7 +95,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.Gener
         /// <param name="writer">Serialization writer to use to serialize this model</param>
         public virtual void Serialize(ISerializationWriter writer)
         {
-            _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteStringValue("openapi:discriminator", OpenapiDiscriminator);
         }

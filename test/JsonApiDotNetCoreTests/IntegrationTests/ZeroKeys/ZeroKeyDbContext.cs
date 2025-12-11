@@ -18,7 +18,7 @@ public sealed class ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options)
     {
         builder.Entity<Game>()
             .HasMany(game => game.Maps)
-            .WithOne(map => map.Game!);
+            .WithOne(map => map.Game);
 
         builder.Entity<Player>()
             .HasOne(player => player.ActiveGame)

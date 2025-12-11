@@ -54,9 +54,9 @@ public sealed class JsonApiMiddlewareTests
         // @formatter:wrap_before_first_method_call true
 
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-            .Add<TodoItem, int>()
-            .Add<Person, int>()
-            .Add<ItemTag, int>()
+            .Add<TodoItem, long>()
+            .Add<Person, long>()
+            .Add<ItemTag, long>()
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -180,17 +180,17 @@ public sealed class JsonApiMiddlewareTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Itself)]
-    private sealed class Person : Identifiable<int>;
+    private sealed class Person : Identifiable<long>;
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ItemTag : Identifiable<int>
+    private sealed class ItemTag : Identifiable<long>
     {
         [HasMany]
         public ISet<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class TodoItem : Identifiable<int>
+    private sealed class TodoItem : Identifiable<long>
     {
         [HasOne]
         public Person? Owner { get; set; }

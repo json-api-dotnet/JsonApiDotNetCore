@@ -1,13 +1,14 @@
-using System.Reflection;
 using System.Text.Json;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
@@ -37,6 +38,8 @@ internal sealed class OpenApiOperationIdSelector
         [typeof(OperationsRequestDocument)] = AtomicOperationsIdTemplate
     };
 
+    private static readonly Func<ApiDescription, string> DefaultOperationIdSelector = new SwaggerGeneratorOptions().OperationIdSelector;
+
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly IJsonApiOptions _options;
 
@@ -53,34 +56,42 @@ internal sealed class OpenApiOperationIdSelector
     {
         ArgumentNullException.ThrowIfNull(endpoint);
 
-        MethodInfo actionMethod = endpoint.ActionDescriptor.GetActionMethod();
-        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+        var actionMethod = JsonApiActionMethod.TryCreate(endpoint.ActionDescriptor);
 
-        string template = GetTemplate(endpoint);
-        return ApplyTemplate(template, primaryResourceType, endpoint);
+        if (actionMethod is not null and not CustomResourceActionMethod)
+        {
+            ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ControllerType);
+
+            string template = GetTemplate(endpoint);
+            return ApplyTemplate(template, primaryResourceType, endpoint);
+        }
+
+        return DefaultOperationIdSelector(endpoint);
     }
 
     private static string GetTemplate(ApiDescription endpoint)
     {
-        Type bodyType = GetBodyType(endpoint);
-        ConsistencyGuard.ThrowIf(!SchemaOpenTypeToOpenApiOperationIdTemplateMap.TryGetValue(bodyType, out string? template));
+        Type documentType = GetDocumentType(endpoint);
+        ConsistencyGuard.ThrowIf(!SchemaOpenTypeToOpenApiOperationIdTemplateMap.TryGetValue(documentType, out string? template));
         return template;
     }
 
-    private static Type GetBodyType(ApiDescription endpoint)
+    private static Type GetDocumentType(ApiDescription endpoint)
     {
-        var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
+        ProducesResponseTypeAttribute? producesResponseTypeAttribute = endpoint.ActionDescriptor.FilterDescriptors
+            .Select(filterDescriptor => filterDescriptor.Filter).OfType<ProducesResponseTypeAttribute>().FirstOrDefault();
+
         ConsistencyGuard.ThrowIf(producesResponseTypeAttribute == null);
 
         ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
-        Type bodyType = (requestBodyDescriptor?.ParameterType ?? producesResponseTypeAttribute.Type).ConstructedToOpenType();
+        Type documentOpenType = (requestBodyDescriptor?.ParameterType ?? producesResponseTypeAttribute.Type).ConstructedToOpenType();
 
-        if (bodyType == typeof(CollectionResponseDocument<>) && endpoint.ParameterDescriptions.Count > 0)
+        if (documentOpenType == typeof(CollectionResponseDocument<>) && endpoint.ParameterDescriptions.Count > 0)
         {
-            bodyType = typeof(SecondaryResponseDocument<>);
+            documentOpenType = typeof(SecondaryResponseDocument<>);
         }
 
-        return bodyType;
+        return documentOpenType;
     }
 
     private string ApplyTemplate(string openApiOperationIdTemplate, ResourceType? resourceType, ApiDescription endpoint)

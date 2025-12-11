@@ -38,7 +38,7 @@ public sealed class TypeLocatorTests
         Type? idType = typeLocator.LookupIdType(type);
 
         // Assert
-        idType.Should().Be<int>();
+        idType.Should().Be<long>();
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public sealed class TypeLocatorTests
         // Assert
         descriptor.Should().NotBeNull();
         descriptor.ResourceClrType.Should().Be(resourceClrType);
-        descriptor.IdClrType.Should().Be<int>();
+        descriptor.IdClrType.Should().Be<long>();
     }
 
     [Fact]

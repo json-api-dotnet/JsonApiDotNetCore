@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;netstandard1.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net8.0;netstandard1.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RootNamespace>JsonApiDotNetCore</RootNamespace>
@@ -46,5 +46,7 @@
 
   <ItemGroup>
     <PackageReference Include="SauceControl.InheritDoc" Version="$(InheritDocVersion)" PrivateAssets="All" />
+    <PackageReference Include="System.Text.RegularExpressions" Condition="'$(TargetFramework)' == 'netstandard1.0'"
+      Version="$(SystemTextRegularExpressionsFrozenVersion)" />
   </ItemGroup>
 </Project>

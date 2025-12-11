@@ -50,7 +50,7 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Type.Should().Be("people");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.Owner.StringId);
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
 
         store.SqlCommands.Should().HaveCount(1);
 
@@ -95,7 +95,7 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
 
         responseDocument.Data.Value.Should().BeNull();
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
 
         store.SqlCommands.Should().HaveCount(1);
 
@@ -141,8 +141,8 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
-        responseDocument.Data.ManyValue[0].Id.Should().Be(todoItem.Tags.ElementAt(0).StringId);
-        responseDocument.Data.ManyValue[1].Id.Should().Be(todoItem.Tags.ElementAt(1).StringId);
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItem.Tags.ElementAt(0).StringId);
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItem.Tags.ElementAt(1).StringId);
 
         responseDocument.Meta.Should().ContainTotal(2);
 

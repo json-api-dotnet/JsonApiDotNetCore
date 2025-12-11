@@ -587,25 +587,23 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
             schemasElement.Should().ContainPath("atomicOperation.discriminator.mapping").With(mappingElement =>
             {
-                mappingElement.Should().ContainPath("addStaffMember").ShouldBeSchemaReferenceId("createStaffMemberOperation");
-                mappingElement.Should().ContainPath("addSupermarket").ShouldBeSchemaReferenceId("createSupermarketOperation");
-                mappingElement.Should().ContainPath("addToSupermarketCashiers").ShouldBeSchemaReferenceId("addToSupermarketCashiersRelationshipOperation");
-
-                mappingElement.Should().ContainPath("removeFromSupermarketCashiers")
-                    .ShouldBeSchemaReferenceId("removeFromSupermarketCashiersRelationshipOperation");
-
-                mappingElement.Should().ContainPath("removeStaffMember").ShouldBeSchemaReferenceId("deleteStaffMemberOperation");
-                mappingElement.Should().ContainPath("removeSupermarket").ShouldBeSchemaReferenceId("deleteSupermarketOperation");
-                mappingElement.Should().ContainPath("updateStaffMember").ShouldBeSchemaReferenceId("updateStaffMemberOperation");
-                mappingElement.Should().ContainPath("updateSupermarket").ShouldBeSchemaReferenceId("updateSupermarketOperation");
-
-                mappingElement.Should().ContainPath("updateSupermarketBackupStoreManager")
-                    .ShouldBeSchemaReferenceId("updateSupermarketBackupStoreManagerRelationshipOperation");
-
-                mappingElement.Should().ContainPath("updateSupermarketCashiers").ShouldBeSchemaReferenceId("updateSupermarketCashiersRelationshipOperation");
-
-                mappingElement.Should().ContainPath("updateSupermarketStoreManager")
-                    .ShouldBeSchemaReferenceId("updateSupermarketStoreManagerRelationshipOperation");
+                foreach (string discriminator in (string[])
+                [
+                    "createStaffMemberOperation",
+                    "createSupermarketOperation",
+                    "addToSupermarketCashiersRelationshipOperation",
+                    "removeFromSupermarketCashiersRelationshipOperation",
+                    "deleteStaffMemberOperation",
+                    "deleteSupermarketOperation",
+                    "updateStaffMemberOperation",
+                    "updateSupermarketOperation",
+                    "updateSupermarketBackupStoreManagerRelationshipOperation",
+                    "updateSupermarketCashiersRelationshipOperation",
+                    "updateSupermarketStoreManagerRelationshipOperation"
+                ])
+                {
+                    mappingElement.Should().ContainPath(discriminator).ShouldBeSchemaReferenceId(discriminator);
+                }
             });
 
             schemasElement.Should().ContainPath("createSupermarketOperation.allOf[1].properties").With(propertiesElement =>

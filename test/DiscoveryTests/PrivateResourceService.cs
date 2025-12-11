@@ -14,5 +14,5 @@ public sealed class PrivateResourceService(
     IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options,
     ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<PrivateResource> resourceChangeTracker,
     IResourceDefinitionAccessor resourceDefinitionAccessor)
-    : JsonApiResourceService<PrivateResource, int>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
+    : JsonApiResourceService<PrivateResource, long>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
         resourceChangeTracker, resourceDefinitionAccessor);

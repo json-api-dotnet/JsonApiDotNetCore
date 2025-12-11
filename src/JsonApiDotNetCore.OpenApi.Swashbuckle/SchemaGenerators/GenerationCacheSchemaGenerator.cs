@@ -1,9 +1,7 @@
-using System.Reflection;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
@@ -18,71 +16,65 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
-    private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
 
-    public GenerationCacheSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, IActionDescriptorCollectionProvider defaultProvider,
-        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
+    public GenerationCacheSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, IActionDescriptorCollectionProvider defaultProvider)
     {
         ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(defaultProvider);
-        ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
 
         _schemaGenerationTracer = schemaGenerationTracer;
         _defaultProvider = defaultProvider;
-        _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
     }
 
     public bool HasAtomicOperationsEndpoint(SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        OpenApiSchema fullSchema = GenerateFullSchema(schemaRepository);
+        OpenApiSchema inlineSchema = GenerateInlineSchema(schemaRepository);
 
-        var hasAtomicOperationsEndpoint = (OpenApiBoolean)fullSchema.Properties[HasAtomicOperationsEndpointPropertyName].Default;
-        return hasAtomicOperationsEndpoint.Value;
+        return inlineSchema.Properties != null &&
+            inlineSchema.Properties.TryGetValue(HasAtomicOperationsEndpointPropertyName, out IOpenApiSchema? propertyValue) && (bool)propertyValue.Default!;
     }
 
-    private OpenApiSchema GenerateFullSchema(SchemaRepository schemaRepository)
+    private OpenApiSchema GenerateInlineSchema(SchemaRepository schemaRepository)
     {
-        if (schemaRepository.Schemas.TryGetValue(SchemaId, out OpenApiSchema? fullSchema))
+        if (schemaRepository.Schemas.TryGetValue(SchemaId, out IOpenApiSchema? existingSchema))
         {
-            return fullSchema;
+            return existingSchema.AsInlineSchema();
         }
 
         using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
 
         bool hasAtomicOperationsEndpoint = EvaluateHasAtomicOperationsEndpoint();
 
-        fullSchema = new OpenApiSchema
+        var inlineSchema = new OpenApiSchema
         {
-            Type = "object",
-            Properties = new Dictionary<string, OpenApiSchema>
+            Type = JsonSchemaType.Object,
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
-                [HasAtomicOperationsEndpointPropertyName] = new()
+                [HasAtomicOperationsEndpointPropertyName] = new OpenApiSchema
                 {
-                    Type = "boolean",
-                    Default = new OpenApiBoolean(hasAtomicOperationsEndpoint)
+                    Type = JsonSchemaType.Boolean,
+                    Default = hasAtomicOperationsEndpoint
                 }
             }
         };
 
-        schemaRepository.AddDefinition(SchemaId, fullSchema);
+        schemaRepository.AddDefinition(SchemaId, inlineSchema);
 
         traceScope.TraceSucceeded(SchemaId);
-        return fullSchema;
+        return inlineSchema;
     }
 
     private bool EvaluateHasAtomicOperationsEndpoint()
     {
-        IEnumerable<ActionDescriptor> actionDescriptors =
-            _defaultProvider.ActionDescriptors.Items.Where(JsonApiActionDescriptorCollectionProvider.IsVisibleJsonApiEndpoint);
+        IEnumerable<ActionDescriptor> descriptors = _defaultProvider.ActionDescriptors.Items.Where(JsonApiActionDescriptorCollectionProvider.IsVisibleEndpoint);
 
-        foreach (ActionDescriptor actionDescriptor in actionDescriptors)
+        foreach (ActionDescriptor descriptor in descriptors)
         {
-            MethodInfo actionMethod = actionDescriptor.GetActionMethod();
-            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
+            var actionMethod = JsonApiActionMethod.TryCreate(descriptor);
 
-            if (endpointMetadataContainer.RequestMetadata is AtomicOperationsRequestMetadata)
+            if (actionMethod is OperationsActionMethod)
             {
                 return true;
             }

@@ -1,9 +1,7 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -13,26 +11,6 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 /// </summary>
 internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSchemaGenerator
 {
-    private static readonly Type[] RequestDocumentSchemaTypes =
-    [
-        typeof(CreateRequestDocument<>),
-        typeof(UpdateRequestDocument<>),
-        typeof(ToOneInRequest<>),
-        typeof(NullableToOneInRequest<>),
-        typeof(ToManyInRequest<>)
-    ];
-
-    private static readonly Type[] ResponseDocumentSchemaTypes =
-    [
-        typeof(CollectionResponseDocument<>),
-        typeof(PrimaryResponseDocument<>),
-        typeof(SecondaryResponseDocument<>),
-        typeof(NullableSecondaryResponseDocument<>),
-        typeof(IdentifierResponseDocument<>),
-        typeof(NullableIdentifierResponseDocument<>),
-        typeof(IdentifierCollectionResponseDocument<>)
-    ];
-
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
@@ -53,26 +31,28 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
 
     public override bool CanGenerate(Type schemaType)
     {
-        Type schemaOpenType = schemaType.ConstructedToOpenType();
-        return RequestDocumentSchemaTypes.Contains(schemaOpenType) || ResponseDocumentSchemaTypes.Contains(schemaOpenType);
+        return JsonApiSchemaFacts.IsRequestDocumentSchemaType(schemaType) || JsonApiSchemaFacts.IsResponseDocumentSchemaType(schemaType);
     }
 
-    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
+    protected override OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         var resourceSchemaType = ResourceSchemaType.Create(schemaType, _resourceGraph);
-        bool isRequestSchema = RequestDocumentSchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
+        bool isRequestSchema = JsonApiSchemaFacts.IsRequestDocumentSchemaType(resourceSchemaType.SchemaOpenType);
 
-        _ = _dataContainerSchemaGenerator.GenerateSchema(schemaType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
+        _dataContainerSchemaGenerator.GenerateSchema(schemaType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
 
-        OpenApiSchema? referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
-        OpenApiSchema inlineSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id].UnwrapLastExtendedSchema();
+        OpenApiSchemaReference referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository).AsReferenceSchema();
+
+        OpenApiSchema inlineSchemaForDocument =
+            schemaRepository.Schemas[referenceSchemaForDocument.GetReferenceId()].UnwrapLastExtendedSchema().AsInlineSchema();
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {
-            inlineSchemaForDocument.Properties[JsonApiPropertyName.Data].Nullable = true;
+            inlineSchemaForDocument.Properties ??= new Dictionary<string, IOpenApiSchema>();
+            inlineSchemaForDocument.Properties[JsonApiPropertyName.Data].AsInlineSchema().SetNullable(true);
         }
 
         return referenceSchemaForDocument;

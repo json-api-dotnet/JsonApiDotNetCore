@@ -3,9 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace JsonApiDotNetCoreExample.Controllers;
 
 [Route("[controller]")]
+[Tags("nonJsonApi")]
 public sealed class NonJsonApiController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet(Name = "welcomeGet")]
+    [HttpHead(Name = "welcomeHead")]
+    [EndpointDescription("Returns a single-element JSON array.")]
+    [ProducesResponseType<List<string>>(StatusCodes.Status200OK, "application/json")]
     public IActionResult Get()
     {
         string[] result = ["Welcome!"];
@@ -14,12 +18,15 @@ public sealed class NonJsonApiController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostAsync()
+    [EndpointDescription("Returns a greeting text, based on your name.")]
+    [Consumes("application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
+    [ProducesResponseType<string>(StatusCodes.Status400BadRequest, "text/plain")]
+    public async Task<IActionResult> PostAsync([FromBody] string? name)
     {
-        using var reader = new StreamReader(Request.Body, leaveOpen: true);
-        string name = await reader.ReadToEndAsync();
+        await Task.Yield();
 
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             return BadRequest("Please send your name.");
         }
@@ -29,14 +36,18 @@ public sealed class NonJsonApiController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Put([FromBody] string name)
+    [EndpointDescription("Returns another greeting text.")]
+    [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
+    public IActionResult Put([FromQuery] string? name)
     {
         string result = $"Hi, {name}";
         return Ok(result);
     }
 
     [HttpPatch]
-    public IActionResult Patch(string name)
+    [EndpointDescription("Wishes you a good day.")]
+    [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
+    public IActionResult Patch([FromHeader] string? name)
     {
         string result = $"Good day, {name}";
         return Ok(result);

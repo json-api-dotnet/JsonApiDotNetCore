@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
-using JsonApiDotNetCore.QueryStrings.FieldChains;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings;
@@ -56,12 +55,17 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
 
         try
         {
-            ResourceFieldChainExpression? scope = GetScope(parameterName);
+            IncludeExpression? scopeInclude = GetScope(parameterName);
             parameterNameIsValid = true;
 
-            SortExpression sort = GetSort(parameterValue.ToString(), scope);
-            var expressionInScope = new ExpressionInScope(scope, sort);
-            _constraints.Add(expressionInScope);
+            foreach (ResourceFieldChainExpression? scopeChain in scopeInclude == null
+                ? FieldChainInGlobalScope
+                : IncludeChainConverter.Instance.GetRelationshipChains(scopeInclude))
+            {
+                SortExpression sort = GetSort(parameterValue.ToString(), scopeChain);
+                var expressionInScope = new ExpressionInScope(scopeChain, sort);
+                _constraints.Add(expressionInScope);
+            }
         }
         catch (QueryParseException exception)
         {
@@ -70,10 +74,9 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
         }
     }
 
-    private ResourceFieldChainExpression? GetScope(string parameterName)
+    private IncludeExpression? GetScope(string parameterName)
     {
-        QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType,
-            BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None);
+        QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
 
         if (parameterScope.Scope == null)
         {

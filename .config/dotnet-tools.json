@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2025.1.4",
+      "version": "2025.3.0.3",
       "commands": [
         "jb"
       ],
@@ -17,21 +17,21 @@
       "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.4.7",
+      "version": "5.5.0",
       "commands": [
         "reportgenerator"
       ],
       "rollForward": false
     },
     "docfx": {
-      "version": "2.78.2",
+      "version": "2.78.4",
       "commands": [
         "docfx"
       ],
       "rollForward": false
     },
     "microsoft.openapi.kiota": {
-      "version": "1.27.0",
+      "version": "1.29.0",
       "commands": [
         "kiota"
       ],

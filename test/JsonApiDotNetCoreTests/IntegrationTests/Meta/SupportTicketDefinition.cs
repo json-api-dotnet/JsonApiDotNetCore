@@ -5,7 +5,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class SupportTicketDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
-    : HitCountingResourceDefinition<SupportTicket, int>(resourceGraph, hitCounter)
+    : HitCountingResourceDefinition<SupportTicket, long>(resourceGraph, hitCounter)
 {
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.GetMeta;
 

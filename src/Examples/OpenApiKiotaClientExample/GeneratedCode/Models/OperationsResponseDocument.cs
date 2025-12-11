@@ -54,7 +54,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
         public static global::OpenApiKiotaClientExample.GeneratedCode.Models.OperationsResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
-            _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
+            if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
             return new global::OpenApiKiotaClientExample.GeneratedCode.Models.OperationsResponseDocument();
         }
 
@@ -78,7 +78,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         /// <param name="writer">Serialization writer to use to serialize this model</param>
         public virtual void Serialize(ISerializationWriter writer)
         {
-            _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<global::OpenApiKiotaClientExample.GeneratedCode.Models.AtomicResult>("atomic:results", AtomicResults);
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks>("links", Links);
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);

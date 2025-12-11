@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings")]
-public sealed class LoginAttempt : Identifiable<int>
+public sealed class LoginAttempt : Identifiable<long>
 {
     [Attr]
     public DateTimeOffset TriedAt { get; set; }

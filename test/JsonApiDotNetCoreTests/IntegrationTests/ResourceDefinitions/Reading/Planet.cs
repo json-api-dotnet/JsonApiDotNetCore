@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading")]
-public sealed class Planet : Identifiable<int>
+public sealed class Planet : Identifiable<long>
 {
     [Attr]
     public string PublicName { get; set; } = null!;

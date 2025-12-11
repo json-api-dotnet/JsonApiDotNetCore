@@ -219,23 +219,17 @@ The following links explain what this project provides, why it exists, and how y
 The following chart should help you pick the best version, based on your environment.
 See also our [versioning policy](./VERSIONING_POLICY.md).
 
-| JsonApiDotNetCore | Status       | .NET     | Entity Framework Core |
-| ----------------- | ------------ | -------- | --------------------- |
-| master            | Preview      | 9        | 9                     |
-|                   |              | 8        | 8, 9                  |
-| 5.7.0+            | Stable       | 9        | 9                     |
-|                   |              | 8        | 8, 9                  |
-| 5.5.0-5.6.0       | Stable       | 9        | 9                     |
-|                   |              | 8        | 8, 9                  |
-|                   |              | 7        | 7                     |
-|                   |              | 6        | 6, 7                  |
-| 5.0.3-5.4.0       | Stable       | 7        | 7                     |
-|                   |              | 6        | 6, 7                  |
-| 5.0.0-5.0.2       | Stable       | 6        | 6                     |
-| 4.x               | Stable       | 6        | 5                     |
-|                   |              | 5        | 5                     |
-|                   |              | Core 3.1 | 3.1, 5                |
-| 3.x               | Stable       | Core 2.x | 2.x                   |
+| .NET     | Entity Framework Core | JsonApiDotNetCore | Status         |
+| -------- | --------------------- | ----------------- | -------------- |
+| 10       | 10                    | 5.10.0+           | Stable         |
+| 9        | 9                     | 5.5.0+            | Stable         |
+| 8        | 8, 9                  | 5.5.0+            | Stable         |
+| 7        | 7                     | 5.0.3 - 5.6.0     | Out of support |
+| 6        | 7                     | 5.0.3 - 5.6.0     | Out of support |
+| 6        | 6                     | 5.0.0 - 5.6.0     | Out of support |
+| 5        | 5                     | 4.x               | Out of support |
+| Core 3.1 | 3.1, 5                | 4.x               | Out of support |
+| Core 2.x | 2.x                   | 3.x               | Out of support |
 
 ## Trying out the latest build
 

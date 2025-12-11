@@ -47,36 +47,36 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
         public static global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AtomicOperation CreateFromDiscriminatorValue(IParseNode parseNode)
         {
-            _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
+            if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
             var mappingValue = parseNode.GetChildNode("openapi:discriminator")?.GetStringValue();
             return mappingValue switch
             {
-                "addCourse" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateCourseOperation(),
-                "addEnrollment" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateEnrollmentOperation(),
-                "addStudent" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateStudentOperation(),
-                "addTeacher" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateTeacherOperation(),
-                "addToCourseEnrollments" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToCourseEnrollmentsRelationshipOperation(),
-                "addToCourseTaughtBy" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToCourseTaughtByRelationshipOperation(),
-                "addToStudentEnrollments" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToStudentEnrollmentsRelationshipOperation(),
-                "addToTeacherMentors" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToTeacherMentorsRelationshipOperation(),
-                "addToTeacherTeaches" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToTeacherTeachesRelationshipOperation(),
-                "removeCourse" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DeleteCourseOperation(),
-                "removeEnrollment" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DeleteEnrollmentOperation(),
-                "removeFromStudentEnrollments" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RemoveFromStudentEnrollmentsRelationshipOperation(),
-                "removeFromTeacherMentors" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RemoveFromTeacherMentorsRelationshipOperation(),
-                "removeFromTeacherTeaches" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RemoveFromTeacherTeachesRelationshipOperation(),
-                "removeTeacher" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DeleteTeacherOperation(),
-                "updateCourse" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateCourseOperation(),
-                "updateCourseEnrollments" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateCourseEnrollmentsRelationshipOperation(),
-                "updateEnrollment" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateEnrollmentOperation(),
-                "updateEnrollmentCourse" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateEnrollmentCourseRelationshipOperation(),
-                "updateEnrollmentStudent" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateEnrollmentStudentRelationshipOperation(),
-                "updateStudent" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateStudentOperation(),
-                "updateStudentEnrollments" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateStudentEnrollmentsRelationshipOperation(),
-                "updateStudentMentor" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateStudentMentorRelationshipOperation(),
-                "updateTeacher" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateTeacherOperation(),
-                "updateTeacherMentors" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateTeacherMentorsRelationshipOperation(),
-                "updateTeacherTeaches" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateTeacherTeachesRelationshipOperation(),
+                "addToCourseEnrollmentsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToCourseEnrollmentsRelationshipOperation(),
+                "addToCourseTaughtByRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToCourseTaughtByRelationshipOperation(),
+                "addToStudentEnrollmentsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToStudentEnrollmentsRelationshipOperation(),
+                "addToTeacherMentorsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToTeacherMentorsRelationshipOperation(),
+                "addToTeacherTeachesRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AddToTeacherTeachesRelationshipOperation(),
+                "createCourseOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateCourseOperation(),
+                "createEnrollmentOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateEnrollmentOperation(),
+                "createStudentOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateStudentOperation(),
+                "createTeacherOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateTeacherOperation(),
+                "deleteCourseOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DeleteCourseOperation(),
+                "deleteEnrollmentOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DeleteEnrollmentOperation(),
+                "deleteTeacherOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DeleteTeacherOperation(),
+                "removeFromStudentEnrollmentsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RemoveFromStudentEnrollmentsRelationshipOperation(),
+                "removeFromTeacherMentorsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RemoveFromTeacherMentorsRelationshipOperation(),
+                "removeFromTeacherTeachesRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RemoveFromTeacherTeachesRelationshipOperation(),
+                "updateCourseEnrollmentsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateCourseEnrollmentsRelationshipOperation(),
+                "updateCourseOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateCourseOperation(),
+                "updateEnrollmentCourseRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateEnrollmentCourseRelationshipOperation(),
+                "updateEnrollmentOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateEnrollmentOperation(),
+                "updateEnrollmentStudentRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateEnrollmentStudentRelationshipOperation(),
+                "updateStudentEnrollmentsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateStudentEnrollmentsRelationshipOperation(),
+                "updateStudentMentorRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateStudentMentorRelationshipOperation(),
+                "updateStudentOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateStudentOperation(),
+                "updateTeacherMentorsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateTeacherMentorsRelationshipOperation(),
+                "updateTeacherOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateTeacherOperation(),
+                "updateTeacherTeachesRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.UpdateTeacherTeachesRelationshipOperation(),
                 _ => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AtomicOperation(),
             };
         }
@@ -100,7 +100,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         /// <param name="writer">Serialization writer to use to serialize this model</param>
         public virtual void Serialize(ISerializationWriter writer)
         {
-            _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteStringValue("openapi:discriminator", OpenapiDiscriminator);
         }

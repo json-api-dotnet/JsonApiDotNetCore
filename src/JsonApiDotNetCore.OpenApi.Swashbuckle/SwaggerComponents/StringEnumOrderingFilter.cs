@@ -1,8 +1,7 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using JetBrains.Annotations;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -24,31 +23,32 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
 
     private sealed class OpenApiEnumVisitor : OpenApiVisitorBase
     {
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(IOpenApiSchema schema)
         {
-            if (HasSortAnnotation(schema))
+            if (schema is OpenApiSchema { Extensions: not null } inlineSchema && HasSortAnnotation(inlineSchema.Extensions))
             {
-                if (schema.Enum.Count > 1)
-                {
-                    OrderEnumMembers(schema);
-                }
+                OrderEnumMembers(inlineSchema);
             }
 
-            schema.Extensions.Remove(RequiresSortKey);
+            schema.Extensions?.Remove(RequiresSortKey);
         }
 
-        private static bool HasSortAnnotation(OpenApiSchema schema)
+        private static bool HasSortAnnotation(IDictionary<string, IOpenApiExtension> schemaExtensions)
         {
             // Order our own enums, but don't touch enums from user-defined resource attributes.
-            return schema.Extensions.TryGetValue(RequiresSortKey, out IOpenApiExtension? extension) && extension is OpenApiBoolean { Value: true };
+            return schemaExtensions.TryGetValue(RequiresSortKey, out IOpenApiExtension? extension) &&
+                extension is JsonNodeExtension { Node: JsonValue value } && value.GetValueKind() == JsonValueKind.True;
         }
 
-        private static void OrderEnumMembers(OpenApiSchema schema)
+        private static void OrderEnumMembers(OpenApiSchema inlineSchema)
         {
-            List<IOpenApiAny> ordered = schema.Enum.OfType<OpenApiString>().OrderBy(openApiString => openApiString.Value).Cast<IOpenApiAny>().ToList();
-            ConsistencyGuard.ThrowIf(ordered.Count != schema.Enum.Count);
+            if (inlineSchema.Enum is { Count: > 1 })
+            {
+                List<JsonNode> ordered = inlineSchema.Enum.OrderBy(node => node.ToString()).ToList();
+                ConsistencyGuard.ThrowIf(ordered.Count != inlineSchema.Enum.Count);
 
-            schema.Enum = ordered;
+                inlineSchema.Enum = ordered;
+            }
         }
     }
 }

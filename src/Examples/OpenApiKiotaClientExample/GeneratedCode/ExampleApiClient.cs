@@ -10,6 +10,7 @@ using Microsoft.Kiota.Serialization.Json;
 using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
 using OpenApiKiotaClientExample.GeneratedCode.Api;
+using OpenApiKiotaClientExample.GeneratedCode.NonJsonApi;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -26,6 +27,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode
         public global::OpenApiKiotaClientExample.GeneratedCode.Api.ApiRequestBuilder Api
         {
             get => new global::OpenApiKiotaClientExample.GeneratedCode.Api.ApiRequestBuilder(PathParameters, RequestAdapter);
+        }
+
+        /// <summary>The NonJsonApi property</summary>
+        public global::OpenApiKiotaClientExample.GeneratedCode.NonJsonApi.NonJsonApiRequestBuilder NonJsonApi
+        {
+            get => new global::OpenApiKiotaClientExample.GeneratedCode.NonJsonApi.NonJsonApiRequestBuilder(PathParameters, RequestAdapter);
         }
 
         /// <summary>

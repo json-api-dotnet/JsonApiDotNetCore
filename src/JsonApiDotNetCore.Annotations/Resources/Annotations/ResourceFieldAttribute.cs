@@ -129,6 +129,11 @@ public abstract class ResourceFieldAttribute : Attribute
         return _publicName ?? (_property != null ? _property.Name : base.ToString());
     }
 
+    public string ToFullString()
+    {
+        return $"{_type?.PublicName}:{ToString()}";
+    }
+
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {

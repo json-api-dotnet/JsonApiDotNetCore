@@ -17,7 +17,7 @@ public sealed class SerializationDbContext(DbContextOptions<SerializationDbConte
     {
         builder.Entity<Scholarship>()
             .HasMany(scholarship => scholarship.Participants)
-            .WithOne(student => student.Scholarship!);
+            .WithOne(student => student.Scholarship);
 
         base.OnModelCreating(builder);
     }

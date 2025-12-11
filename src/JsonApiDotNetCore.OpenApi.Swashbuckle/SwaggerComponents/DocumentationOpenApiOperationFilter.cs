@@ -1,16 +1,14 @@
 using System.Net;
-using System.Reflection;
 using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -18,15 +16,15 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 {
-    private const string GetPrimaryName = nameof(BaseJsonApiController<Identifiable<int>, int>.GetAsync);
-    private const string GetSecondaryName = nameof(BaseJsonApiController<Identifiable<int>, int>.GetSecondaryAsync);
-    private const string GetRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.GetRelationshipAsync);
-    private const string PostResourceName = nameof(BaseJsonApiController<Identifiable<int>, int>.PostAsync);
-    private const string PostRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.PostRelationshipAsync);
-    private const string PatchResourceName = nameof(BaseJsonApiController<Identifiable<int>, int>.PatchAsync);
-    private const string PatchRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.PatchRelationshipAsync);
-    private const string DeleteResourceName = nameof(BaseJsonApiController<Identifiable<int>, int>.DeleteAsync);
-    private const string DeleteRelationshipName = nameof(BaseJsonApiController<Identifiable<int>, int>.DeleteRelationshipAsync);
+    private const string GetPrimaryName = nameof(BaseJsonApiController<,>.GetAsync);
+    private const string GetSecondaryName = nameof(BaseJsonApiController<,>.GetSecondaryAsync);
+    private const string GetRelationshipName = nameof(BaseJsonApiController<,>.GetRelationshipAsync);
+    private const string PostResourceName = nameof(BaseJsonApiController<,>.PostAsync);
+    private const string PostRelationshipName = nameof(BaseJsonApiController<,>.PostRelationshipAsync);
+    private const string PatchResourceName = nameof(BaseJsonApiController<,>.PatchAsync);
+    private const string PatchRelationshipName = nameof(BaseJsonApiController<,>.PatchRelationshipAsync);
+    private const string DeleteResourceName = nameof(BaseJsonApiController<,>.DeleteAsync);
+    private const string DeleteRelationshipName = nameof(BaseJsonApiController<,>.DeleteRelationshipAsync);
     private const string PostOperationsName = nameof(BaseJsonApiOperationsController.PostOperationsAsync);
 
     private const string TextCompareETag =
@@ -76,14 +74,23 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
         bool hasHeadVerb = context.ApiDescription.HttpMethod == "HEAD";
 
-        if (hasHeadVerb)
+        if (hasHeadVerb && operation.Responses != null)
         {
-            operation.Responses.Clear();
+            foreach (IOpenApiResponse response in operation.Responses.Values)
+            {
+                response.Content?.Clear();
+            }
         }
 
-        MethodInfo actionMethod = context.ApiDescription.ActionDescriptor.GetActionMethod();
+        var actionMethod = JsonApiActionMethod.TryCreate(context.ApiDescription.ActionDescriptor);
+
+        if (actionMethod is not OperationsActionMethod and not BuiltinResourceActionMethod)
+        {
+            return;
+        }
+
         string actionName = context.MethodInfo.Name;
-        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(context.MethodInfo.ReflectedType);
 
         if (resourceType != null)
         {
@@ -162,7 +169,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void ApplyGetPrimary(OpenApiOperation operation, ResourceType resourceType, bool hasHeadVerb)
     {
-        if (operation.Parameters.Count == 0)
+        if (operation.Parameters == null || operation.Parameters.Count == 0)
         {
             if (hasHeadVerb)
             {
@@ -213,7 +220,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
 
-            SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to retrieve.");
+            SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularName} to retrieve.");
             AddQueryStringParameters(operation, false);
             AddRequestHeaderIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
@@ -256,7 +263,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         string singularName = resourceType.PublicName.Singularize();
 
         SetOperationSummary(operation, $"Updates an existing {singularName}.");
-        SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to update.");
+        SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularName} to update.");
         AddQueryStringParameters(operation, false);
 
         SetRequestBodyDescription(operation.RequestBody,
@@ -279,7 +286,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         string singularName = resourceType.PublicName.Singularize();
 
         SetOperationSummary(operation, $"Deletes an existing {singularName} by its identifier.");
-        SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to delete.");
+        SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularName} to delete.");
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent, $"The {singularName} was successfully deleted.");
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
     }
@@ -317,7 +324,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
 
-        SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
+        SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
         AddQueryStringParameters(operation, false);
         AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
@@ -359,7 +366,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
 
-        SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
+        SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
         AddQueryStringParameters(operation, true);
         AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
@@ -372,7 +379,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         string rightName = relationship.RightType.PublicName;
 
         SetOperationSummary(operation, $"Adds existing {rightName} to the {relationship} relationship of an individual {singularLeftName}.");
-        SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} to add {rightName} to.");
+        SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularLeftName} to add {rightName} to.");
         SetRequestBodyDescription(operation.RequestBody, $"The identities of the {rightName} to add to the {relationship} relationship.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
@@ -397,7 +404,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
                     : $"Assigns an existing {rightName} to the {relationship} relationship of an individual {singularLeftName}."
                 : $"Assigns existing {rightName} to the {relationship} relationship of an individual {singularLeftName}.");
 
-        SetParameterDescription(operation.Parameters[0],
+        SetParameterDescription(operation.Parameters, 0,
             isOptional
                 ? $"The identifier of the {singularLeftName} whose {relationship} relationship to assign or clear."
                 : $"The identifier of the {singularLeftName} whose {relationship} relationship to assign.");
@@ -424,7 +431,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         string rightName = relationship.RightType.PublicName;
 
         SetOperationSummary(operation, $"Removes existing {rightName} from the {relationship} relationship of an individual {singularLeftName}.");
-        SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} to remove {rightName} from.");
+        SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularLeftName} to remove {rightName} from.");
         SetRequestBodyDescription(operation.RequestBody, $"The identities of the {rightName} to remove from the {relationship} relationship.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
@@ -454,25 +461,35 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         operation.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
-    private static void SetParameterDescription(OpenApiParameter parameter, string description)
+    private static void SetParameterDescription(IList<IOpenApiParameter>? parameters, int index, string description)
     {
+        ConsistencyGuard.ThrowIf(parameters is null);
+
+        IOpenApiParameter parameter = parameters[index];
         parameter.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
-    private static void SetRequestBodyDescription(OpenApiRequestBody requestBody, string description)
+    private static void SetRequestBodyDescription(IOpenApiRequestBody? requestBody, string description)
     {
+        ConsistencyGuard.ThrowIf(requestBody is null);
+
         requestBody.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
-    private static void SetResponseDescription(OpenApiResponses responses, HttpStatusCode statusCode, string description)
+    private static void SetResponseDescription(OpenApiResponses? responses, HttpStatusCode statusCode, string description)
     {
+        ConsistencyGuard.ThrowIf(responses is null);
+
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
         response.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
-    private static void SetResponseHeaderETag(OpenApiResponses responses, HttpStatusCode statusCode)
+    private static void SetResponseHeaderETag(OpenApiResponses? responses, HttpStatusCode statusCode)
     {
+        ConsistencyGuard.ThrowIf(responses is null);
+
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        response.Headers ??= new SortedDictionary<string, IOpenApiHeader>(StringComparer.Ordinal);
 
         response.Headers[HeaderNames.ETag] = new OpenApiHeader
         {
@@ -480,14 +497,17 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "string"
+                Type = JsonSchemaType.String
             }
         };
     }
 
-    private static void SetResponseHeaderContentLength(OpenApiResponses responses, HttpStatusCode statusCode)
+    private static void SetResponseHeaderContentLength(OpenApiResponses? responses, HttpStatusCode statusCode)
     {
+        ConsistencyGuard.ThrowIf(responses is null);
+
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        response.Headers ??= new SortedDictionary<string, IOpenApiHeader>(StringComparer.Ordinal);
 
         response.Headers[HeaderNames.ContentLength] = new OpenApiHeader
         {
@@ -495,15 +515,18 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "integer",
+                Type = JsonSchemaType.Integer,
                 Format = "int64"
             }
         };
     }
 
-    private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode, string resourceName)
+    private static void SetResponseHeaderLocation(OpenApiResponses? responses, HttpStatusCode statusCode, string resourceName)
     {
+        ConsistencyGuard.ThrowIf(responses is null);
+
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        response.Headers ??= new SortedDictionary<string, IOpenApiHeader>(StringComparer.Ordinal);
 
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {
@@ -511,7 +534,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Format = "uri"
             }
         };
@@ -521,13 +544,13 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
     {
         string responseCode = ((int)statusCode).ToString();
 
-        if (!responses.TryGetValue(responseCode, out OpenApiResponse? response))
+        if (!responses.TryGetValue(responseCode, out IOpenApiResponse? response) || response is not OpenApiResponse)
         {
             response = new OpenApiResponse();
             responses.Add(responseCode, response);
         }
 
-        return response;
+        return (OpenApiResponse)response;
     }
 
     private static void AddQueryStringParameters(OpenApiOperation operation, bool isRelationshipEndpoint)
@@ -542,20 +565,21 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         // - This makes NSwag produce a C# client with method signature: GetAsync(IDictionary<string, string?>? query)
         //     when combined with <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes> in the project file.
 
+        operation.Parameters ??= new List<IOpenApiParameter>();
+
         operation.Parameters.Add(new OpenApiParameter
         {
             In = ParameterLocation.Query,
             Name = "query",
             Schema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema
                 {
-                    Type = "string",
-                    Nullable = true
+                    Type = JsonSchemaType.String | JsonSchemaType.Null
                 },
                 // Prevent SwaggerUI from producing sample, which fails when used because unknown query string parameters are blocked by default.
-                Example = new OpenApiString(string.Empty)
+                Example = string.Empty
             },
             Description = isRelationshipEndpoint ? RelationshipQueryStringParameters : ResourceQueryStringParameters
         });
@@ -563,6 +587,8 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void AddRequestHeaderIfNoneMatch(OpenApiOperation operation)
     {
+        operation.Parameters ??= new List<IOpenApiParameter>();
+
         operation.Parameters.Add(new OpenApiParameter
         {
             In = ParameterLocation.Header,
@@ -570,7 +596,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Description = "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             Schema = new OpenApiSchema
             {
-                Type = "string"
+                Type = JsonSchemaType.String
             }
         });
     }

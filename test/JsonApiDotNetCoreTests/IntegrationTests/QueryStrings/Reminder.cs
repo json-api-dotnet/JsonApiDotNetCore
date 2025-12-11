@@ -6,8 +6,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings")]
-public sealed class Reminder : Identifiable<int>
+public sealed class Reminder : Identifiable<long>
 {
     [Attr]
     public DateTime RemindsAt { get; set; }
+
+    [HasOne]
+    public Appointment? Appointment { get; set; }
 }

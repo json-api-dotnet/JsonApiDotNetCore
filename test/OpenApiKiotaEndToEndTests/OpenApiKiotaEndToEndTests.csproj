@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
@@ -30,6 +30,13 @@
       <OutputPath>./%(Name)/GeneratedCode</OutputPath>
       <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
     </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/AttributeTypes/GeneratedSwagger/swagger.g.json">
+      <Name>AttributeTypes</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
     <KiotaReference Include="../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json">
       <Name>ClientIdGenerationModes</Name>
       <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
@@ -44,8 +51,22 @@
       <OutputPath>./%(Name)/GeneratedCode</OutputPath>
       <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
     </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/IdObfuscation/GeneratedSwagger/swagger.g.json">
+      <Name>IdObfuscation</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
     <KiotaReference Include="../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json">
       <Name>Links</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/MixedControllers/GeneratedSwagger/swagger.g.json">
+      <Name>MixedControllers</Name>
       <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>./%(Name)/GeneratedCode</OutputPath>

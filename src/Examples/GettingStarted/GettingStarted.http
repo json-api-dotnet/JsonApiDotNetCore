@@ -1,0 +1,85 @@
+@hostAddress = http://localhost:14141
+
+### Get all books with their authors.
+
+GET {{hostAddress}}/api/books?include=author
+
+### Get the first two books.
+
+GET {{hostAddress}}/api/books?page[size]=2
+
+### Filter books whose title contains whitespace, sort descending by publication year.
+
+GET {{hostAddress}}/api/books?filter=contains(title,'%20')&sort=-publishYear
+
+### Get only the titles of all books.
+
+GET {{hostAddress}}/api/books?fields[books]=title
+
+### Get the names of all people.
+
+GET {{hostAddress}}/api/people?fields[people]=name
+
+### Create a new person.
+
+POST {{hostAddress}}/api/people
+Content-Type: application/vnd.api+json
+
+{
+  "data": {
+    "type": "people",
+    "attributes": {
+      "name": "Alice"
+    }
+  }
+}
+
+### Create a new book, authored by the created person.
+
+POST {{hostAddress}}/api/books
+Content-Type: application/vnd.api+json
+
+{
+  "data": {
+    "type": "books",
+    "attributes": {
+      "title": "Getting started with JSON:API",
+      "publishYear": 2000
+    },
+    "relationships": {
+      "author": {
+        "data": {
+          "type": "people",
+          "id": "4"
+        }
+      }
+    }
+  }
+}
+
+### Change the publication year and author of the book with ID 1.
+
+PATCH {{hostAddress}}/api/books/1
+Content-Type: application/vnd.api+json
+
+{
+  "data": {
+    "type": "books",
+    "id": "1",
+    "attributes": {
+      "publishYear": 1820
+    },
+    "relationships": {
+      "author": {
+        "data": {
+          "type": "people",
+          "id": "4"
+        }
+      }
+    }
+  }
+}
+
+### Delete the book with ID 1.
+
+DELETE {{hostAddress}}/api/books/1

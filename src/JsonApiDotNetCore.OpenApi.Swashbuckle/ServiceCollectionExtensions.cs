@@ -28,14 +28,9 @@ public static class ServiceCollectionExtensions
 
         AddCustomApiExplorer(services);
         AddCustomSwaggerComponents(services);
-        AddSwaggerGenerator(services);
+        AddSwaggerGenerator(services, configureSwaggerGenOptions);
 
-        if (configureSwaggerGenOptions != null)
-        {
-            services.Configure(configureSwaggerGenOptions);
-        }
-
-        services.AddSingleton<IJsonApiContentNegotiator, OpenApiContentNegotiator>();
+        services.Replace(ServiceDescriptor.Singleton<IJsonApiContentNegotiator, OpenApiContentNegotiator>());
         services.TryAddSingleton<IJsonApiRequestAccessor, JsonApiRequestAccessor>();
         services.Replace(ServiceDescriptor.Singleton<IJsonApiApplicationBuilderEvents, OpenApiApplicationBuilderEvents>());
     }
@@ -50,7 +45,6 @@ public static class ServiceCollectionExtensions
 
     private static void AddCustomApiExplorer(IServiceCollection services)
     {
-        services.TryAddSingleton<OpenApiEndpointConvention>();
         services.TryAddSingleton<JsonApiRequestFormatMetadataProvider>();
         services.TryAddSingleton<JsonApiEndpointMetadataProvider>();
         services.TryAddSingleton<JsonApiActionDescriptorCollectionProvider>();
@@ -68,15 +62,19 @@ public static class ServiceCollectionExtensions
 
         AddApiExplorer(services);
 
-        services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>());
     }
 
     private static void AddApiExplorer(IServiceCollection services)
     {
-        // The code below was copied from the implementation of MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(),
+        // This call was copied from the implementation of MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(),
         // so we don't need to take IMvcCoreBuilder as an input parameter.
-
         services.TryAddEnumerable(ServiceDescriptor.Transient<IApiDescriptionProvider, DefaultApiDescriptionProvider>());
+
+        // This call ensures that Minimal API endpoints appear in Swashbuckle.
+        // Don't be fooled to believe this call is redundant: When running from Visual Studio, a startup filter is injected
+        // that also calls this. But that doesn't happen when running from the command line or from an integration test.
+        services.AddEndpointsApiExplorer();
     }
 
     private static void AddCustomSwaggerComponents(IServiceCollection services)
@@ -87,14 +85,14 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<JsonApiSchemaIdSelector>();
     }
 
-    private static void AddSwaggerGenerator(IServiceCollection services)
+    private static void AddSwaggerGenerator(IServiceCollection services, Action<SwaggerGenOptions>? configureSwaggerGenOptions)
     {
         AddSchemaGenerators(services);
 
         services.TryAddSingleton<RelationshipTypeFactory>();
-        services.AddSingleton<IDocumentDescriptionLinkProvider, OpenApiDescriptionLinkProvider>();
+        services.Replace(ServiceDescriptor.Singleton<IDocumentDescriptionLinkProvider, OpenApiDescriptionLinkProvider>());
 
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(configureSwaggerGenOptions);
         services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
     }
 

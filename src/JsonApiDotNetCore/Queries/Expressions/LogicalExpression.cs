@@ -52,9 +52,7 @@ public class LogicalExpression : FilterExpression
     {
         ArgumentNullException.ThrowIfNull(filters);
 
-        // Workaround for https://youtrack.jetbrains.com/issue/RSRP-496512/Invalid-Use-collection-expression-suggestion.
-        // ReSharper disable once UseCollectionExpression
-        ImmutableArray<FilterExpression> terms = filters.WhereNotNull().ToImmutableArray();
+        ImmutableArray<FilterExpression> terms = [.. filters.WhereNotNull()];
 
         return terms.Length > 1 ? new LogicalExpression(@operator, terms) : terms.FirstOrDefault();
     }
@@ -80,7 +78,7 @@ public class LogicalExpression : FilterExpression
 
         builder.Append(Operator.ToString().Camelize());
         builder.Append('(');
-        builder.Append(string.Join(",", Terms.Select(term => toFullString ? term.ToFullString() : term.ToString())));
+        builder.Append(string.Join(',', Terms.Select(term => toFullString ? term.ToFullString() : term.ToString())));
         builder.Append(')');
 
         return builder.ToString();

@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace Benchmarks.QueryString;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class QueryableResource : Identifiable<int>
+public sealed class QueryableResource : Identifiable<long>
 {
     [Attr(PublicName = "alt-attr-name")]
     public string? Name { get; set; }

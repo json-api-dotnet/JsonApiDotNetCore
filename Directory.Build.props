@@ -9,10 +9,19 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <VersionPrefix>5.7.2</VersionPrefix>
+    <VersionPrefix>5.10.1</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
-    <OpenApiPreviewNumber>3</OpenApiPreviewNumber>
-    <NuGetAuditMode>direct</NuGetAuditMode>
+    <OpenApiPreviewNumber>8</OpenApiPreviewNumber>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>
+      <!--
+        Temporary workaround: Stable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet.
+        NU1608: Detected package version outside of dependency constraint
+      -->
+      $(NoWarn);NU1608
+    </NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -54,7 +63,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2024.3.*" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.*" PrivateAssets="All" />
     <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.*" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>

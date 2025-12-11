@@ -40,7 +40,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
         public static global::OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
-            _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
+            if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
             var mappingValue = parseNode.GetChildNode("openapi:discriminator")?.GetStringValue();
             return mappingValue switch
             {
@@ -69,7 +69,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         /// <param name="writer">Serialization writer to use to serialize this model</param>
         public virtual void Serialize(ISerializationWriter writer)
         {
-            _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteEnumValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceType>("openapi:discriminator", OpenapiDiscriminator);
         }
     }

@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering")]
-public sealed class FilterableResource : Identifiable<int>
+public sealed class FilterableResource : Identifiable<long>
 {
     [Attr]
     public string SomeString { get; set; } = string.Empty;

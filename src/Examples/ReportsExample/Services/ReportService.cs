@@ -5,7 +5,7 @@ using ReportsExample.Models;
 namespace ReportsExample.Services;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class ReportService : IGetAllService<Report, int>
+public class ReportService : IGetAllService<Report, long>
 {
     public Task<IReadOnlyCollection<Report>> GetAsync(CancellationToken cancellationToken)
     {

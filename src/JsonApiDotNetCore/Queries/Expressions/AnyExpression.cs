@@ -56,9 +56,9 @@ public class AnyExpression : FilterExpression
 
         builder.Append(Keywords.Any);
         builder.Append('(');
-        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute);
+        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute.ToString());
         builder.Append(',');
-        builder.Append(string.Join(",", Constants.Select(constant => toFullString ? constant.ToFullString() : constant.ToString()).OrderBy(value => value)));
+        builder.Append(string.Join(',', Constants.Select(constant => toFullString ? constant.ToFullString() : constant.ToString()).Order()));
         builder.Append(')');
 
         return builder.ToString();

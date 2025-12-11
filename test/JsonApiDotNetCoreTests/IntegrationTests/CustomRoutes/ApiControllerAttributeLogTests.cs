@@ -16,11 +16,11 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
 
         _loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
 
-        ConfigureLogging(options =>
+        ConfigureLogging(builder =>
         {
-            options.AddProvider(_loggerProvider);
+            builder.AddProvider(_loggerProvider);
 
-            options.Services.AddSingleton(_loggerProvider);
+            builder.Services.AddSingleton(_loggerProvider);
         });
     }
 

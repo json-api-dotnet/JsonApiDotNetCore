@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
-public sealed class DivingBoard : Identifiable<int>
+public sealed class DivingBoard : Identifiable<long>
 {
     [Attr]
     [Range(1, 20)]

@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -19,29 +19,29 @@ internal sealed class MetaSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(SchemaType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByTypeSafe(SchemaType, out OpenApiSchemaReference? referenceSchema))
         {
             return referenceSchema;
         }
 
         using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, SchemaType);
 
-        var fullSchema = new OpenApiSchema
+        var inlineSchema = new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             AdditionalProperties = new OpenApiSchema
             {
-                Nullable = true
+                Type = JsonSchemaType.Null
             }
         };
 
         string schemaId = _schemaIdSelector.GetMetaSchemaId();
 
-        referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        referenceSchema = schemaRepository.AddDefinition(schemaId, inlineSchema);
         schemaRepository.RegisterType(SchemaType, schemaId);
 
         traceScope.TraceSucceeded(schemaId);

@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState")]
-public sealed class SystemVolume : Identifiable<int>
+public sealed class SystemVolume : Identifiable<long>
 {
     [Attr]
     public string? Name { get; set; }

@@ -55,7 +55,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
         if (field.IsViewBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
-            throw new QueryParseException($"Retrieving the {kind} '{field.PublicName}' is not allowed.", position);
+            throw new QueryParseException($"Retrieving the {kind} '{field}' is not allowed.", position);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings")]
-public abstract class Human : Identifiable<int>
+public abstract class Human : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

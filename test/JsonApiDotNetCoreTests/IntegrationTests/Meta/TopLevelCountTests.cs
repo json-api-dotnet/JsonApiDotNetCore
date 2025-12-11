@@ -122,7 +122,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
     }
 
     [Fact]
@@ -160,6 +160,6 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
     }
 }

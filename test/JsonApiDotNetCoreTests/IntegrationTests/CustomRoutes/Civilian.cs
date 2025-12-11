@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes")]
-public sealed class Civilian : Identifiable<int>
+public sealed class Civilian : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

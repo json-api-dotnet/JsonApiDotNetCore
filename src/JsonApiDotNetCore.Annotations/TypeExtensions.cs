@@ -30,27 +30,4 @@ internal static class TypeExtensions
     {
         return isLeftGeneric ? right.IsGenericType && right.GetGenericTypeDefinition() == left : left == right;
     }
-
-    /// <summary>
-    /// Gets the name of a type, including the names of its generic type arguments.
-    /// <example>
-    /// <code><![CDATA[
-    /// KeyValuePair<TimeSpan, Nullable<DateTimeOffset>>
-    /// ]]></code>
-    /// </example>
-    /// </summary>
-    public static string GetFriendlyTypeName(this Type type)
-    {
-        ArgumentNullException.ThrowIfNull(type);
-
-        // Based on https://stackoverflow.com/questions/2581642/how-do-i-get-the-type-name-of-a-generic-type-argument.
-
-        if (type.IsGenericType)
-        {
-            string typeArguments = type.GetGenericArguments().Select(GetFriendlyTypeName).Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
-            return $"{type.Name[..type.Name.IndexOf('`')]}<{typeArguments}>";
-        }
-
-        return type.Name;
-    }
 }

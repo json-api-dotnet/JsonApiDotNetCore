@@ -59,7 +59,7 @@ public class SortElementExpression : QueryExpression
             builder.Append('-');
         }
 
-        builder.Append(toFullString ? Target.ToFullString() : Target);
+        builder.Append(toFullString ? Target.ToFullString() : Target.ToString());
 
         return builder.ToString();
     }

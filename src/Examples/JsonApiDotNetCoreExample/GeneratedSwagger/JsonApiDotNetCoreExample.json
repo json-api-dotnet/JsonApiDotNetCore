@@ -10,6 +10,143 @@
     }
   ],
   "paths": {
+    "/NonJsonApi": {
+      "get": {
+        "tags": [
+          "nonJsonApi"
+        ],
+        "description": "Returns a single-element JSON array.",
+        "operationId": "welcomeGet",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nonJsonApi"
+        ],
+        "description": "Returns a single-element JSON array.",
+        "operationId": "welcomeHead",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "nonJsonApi"
+        ],
+        "description": "Returns a greeting text, based on your name.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "nonJsonApi"
+        ],
+        "description": "Returns another greeting text.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "nonJsonApi"
+        ],
+        "description": "Wishes you a good day.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "nonJsonApi"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/operations": {
       "post": {
         "tags": [
@@ -207,19 +344,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -494,19 +631,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -810,19 +947,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -988,19 +1125,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1406,19 +1543,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1584,19 +1721,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1970,19 +2107,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2257,19 +2394,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2573,19 +2710,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2751,19 +2888,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3137,19 +3274,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3424,19 +3561,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3740,19 +3877,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3918,19 +4055,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4176,19 +4313,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4354,19 +4491,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4612,19 +4749,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4790,19 +4927,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -5254,29 +5391,29 @@
         "discriminator": {
           "propertyName": "openapi:discriminator",
           "mapping": {
-            "addPerson": "#/components/schemas/createPersonOperation",
-            "addTag": "#/components/schemas/createTagOperation",
-            "addToPersonAssignedTodoItems": "#/components/schemas/addToPersonAssignedTodoItemsRelationshipOperation",
-            "addToPersonOwnedTodoItems": "#/components/schemas/addToPersonOwnedTodoItemsRelationshipOperation",
-            "addToTagTodoItems": "#/components/schemas/addToTagTodoItemsRelationshipOperation",
-            "addToTodoItemTags": "#/components/schemas/addToTodoItemTagsRelationshipOperation",
-            "addTodoItem": "#/components/schemas/createTodoItemOperation",
-            "removeFromPersonAssignedTodoItems": "#/components/schemas/removeFromPersonAssignedTodoItemsRelationshipOperation",
-            "removeFromPersonOwnedTodoItems": "#/components/schemas/removeFromPersonOwnedTodoItemsRelationshipOperation",
-            "removeFromTagTodoItems": "#/components/schemas/removeFromTagTodoItemsRelationshipOperation",
-            "removeFromTodoItemTags": "#/components/schemas/removeFromTodoItemTagsRelationshipOperation",
-            "removePerson": "#/components/schemas/deletePersonOperation",
-            "removeTag": "#/components/schemas/deleteTagOperation",
-            "removeTodoItem": "#/components/schemas/deleteTodoItemOperation",
-            "updatePerson": "#/components/schemas/updatePersonOperation",
-            "updatePersonAssignedTodoItems": "#/components/schemas/updatePersonAssignedTodoItemsRelationshipOperation",
-            "updatePersonOwnedTodoItems": "#/components/schemas/updatePersonOwnedTodoItemsRelationshipOperation",
-            "updateTag": "#/components/schemas/updateTagOperation",
-            "updateTagTodoItems": "#/components/schemas/updateTagTodoItemsRelationshipOperation",
-            "updateTodoItem": "#/components/schemas/updateTodoItemOperation",
-            "updateTodoItemAssignee": "#/components/schemas/updateTodoItemAssigneeRelationshipOperation",
-            "updateTodoItemOwner": "#/components/schemas/updateTodoItemOwnerRelationshipOperation",
-            "updateTodoItemTags": "#/components/schemas/updateTodoItemTagsRelationshipOperation"
+            "addToPersonAssignedTodoItemsRelationshipOperation": "#/components/schemas/addToPersonAssignedTodoItemsRelationshipOperation",
+            "addToPersonOwnedTodoItemsRelationshipOperation": "#/components/schemas/addToPersonOwnedTodoItemsRelationshipOperation",
+            "addToTagTodoItemsRelationshipOperation": "#/components/schemas/addToTagTodoItemsRelationshipOperation",
+            "addToTodoItemTagsRelationshipOperation": "#/components/schemas/addToTodoItemTagsRelationshipOperation",
+            "createPersonOperation": "#/components/schemas/createPersonOperation",
+            "createTagOperation": "#/components/schemas/createTagOperation",
+            "createTodoItemOperation": "#/components/schemas/createTodoItemOperation",
+            "deletePersonOperation": "#/components/schemas/deletePersonOperation",
+            "deleteTagOperation": "#/components/schemas/deleteTagOperation",
+            "deleteTodoItemOperation": "#/components/schemas/deleteTodoItemOperation",
+            "removeFromPersonAssignedTodoItemsRelationshipOperation": "#/components/schemas/removeFromPersonAssignedTodoItemsRelationshipOperation",
+            "removeFromPersonOwnedTodoItemsRelationshipOperation": "#/components/schemas/removeFromPersonOwnedTodoItemsRelationshipOperation",
+            "removeFromTagTodoItemsRelationshipOperation": "#/components/schemas/removeFromTagTodoItemsRelationshipOperation",
+            "removeFromTodoItemTagsRelationshipOperation": "#/components/schemas/removeFromTodoItemTagsRelationshipOperation",
+            "updatePersonAssignedTodoItemsRelationshipOperation": "#/components/schemas/updatePersonAssignedTodoItemsRelationshipOperation",
+            "updatePersonOperation": "#/components/schemas/updatePersonOperation",
+            "updatePersonOwnedTodoItemsRelationshipOperation": "#/components/schemas/updatePersonOwnedTodoItemsRelationshipOperation",
+            "updateTagOperation": "#/components/schemas/updateTagOperation",
+            "updateTagTodoItemsRelationshipOperation": "#/components/schemas/updateTagTodoItemsRelationshipOperation",
+            "updateTodoItemAssigneeRelationshipOperation": "#/components/schemas/updateTodoItemAssigneeRelationshipOperation",
+            "updateTodoItemOperation": "#/components/schemas/updateTodoItemOperation",
+            "updateTodoItemOwnerRelationshipOperation": "#/components/schemas/updateTodoItemOwnerRelationshipOperation",
+            "updateTodoItemTagsRelationshipOperation": "#/components/schemas/updateTodoItemTagsRelationshipOperation"
           }
         },
         "x-abstract": true
@@ -8579,5 +8716,22 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "nonJsonApi"
+    },
+    {
+      "name": "operations"
+    },
+    {
+      "name": "people"
+    },
+    {
+      "name": "tags"
+    },
+    {
+      "name": "todoItems"
+    }
+  ]
 }

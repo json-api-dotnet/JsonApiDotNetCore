@@ -119,7 +119,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         responseDocument.Data.SingleValue.Type.Should().Be("SwimmingPools");
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("IsIndoor").WhoseValue.Should().Be(newPool.IsIndoor);
 
-        int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+        long newPoolId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
         string poolLink = $"{route}/{newPoolId}";
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("WaterSlides").WhoseValue.With(value =>

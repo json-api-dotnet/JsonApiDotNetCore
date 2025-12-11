@@ -47,7 +47,7 @@ Resource-specific metadata can be added by implementing `IResourceDefinition<TRe
 ```c#
 #nullable enable
 
-public class PersonDefinition : JsonApiResourceDefinition<Person, int>
+public class PersonDefinition : JsonApiResourceDefinition<Person, long>
 {
     public PersonDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)

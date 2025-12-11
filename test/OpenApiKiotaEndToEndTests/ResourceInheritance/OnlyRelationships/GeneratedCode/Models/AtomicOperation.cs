@@ -47,34 +47,34 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
         public static global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AtomicOperation CreateFromDiscriminatorValue(IParseNode parseNode)
         {
-            _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
+            if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
             var mappingValue = parseNode.GetChildNode("openapi:discriminator")?.GetStringValue();
             return mappingValue switch
             {
-                "addToDistrictBuildings" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToDistrictBuildingsRelationshipOperation(),
-                "addToDistrictRoads" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToDistrictRoadsRelationshipOperation(),
-                "addToFamilyHomeRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToFamilyHomeRoomsRelationshipOperation(),
-                "addToMansionRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToMansionRoomsRelationshipOperation(),
-                "addToMansionStaff" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToMansionStaffRelationshipOperation(),
-                "addToResidenceRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToResidenceRoomsRelationshipOperation(),
-                "removeFromDistrictBuildings" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromDistrictBuildingsRelationshipOperation(),
-                "removeFromDistrictRoads" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromDistrictRoadsRelationshipOperation(),
-                "removeFromFamilyHomeRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromFamilyHomeRoomsRelationshipOperation(),
-                "removeFromMansionRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromMansionRoomsRelationshipOperation(),
-                "removeFromMansionStaff" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromMansionStaffRelationshipOperation(),
-                "removeFromResidenceRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromResidenceRoomsRelationshipOperation(),
-                "updateBathroomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateBathroomResidenceRelationshipOperation(),
-                "updateBedroomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateBedroomResidenceRelationshipOperation(),
-                "updateDistrictBuildings" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateDistrictBuildingsRelationshipOperation(),
-                "updateDistrictRoads" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateDistrictRoadsRelationshipOperation(),
-                "updateFamilyHomeRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateFamilyHomeRoomsRelationshipOperation(),
-                "updateKitchenResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateKitchenResidenceRelationshipOperation(),
-                "updateLivingRoomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateLivingRoomResidenceRelationshipOperation(),
-                "updateMansionRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateMansionRoomsRelationshipOperation(),
-                "updateMansionStaff" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateMansionStaffRelationshipOperation(),
-                "updateResidenceRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateResidenceRoomsRelationshipOperation(),
-                "updateRoomResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateRoomResidenceRelationshipOperation(),
-                "updateToiletResidence" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateToiletResidenceRelationshipOperation(),
+                "addToDistrictBuildingsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToDistrictBuildingsRelationshipOperation(),
+                "addToDistrictRoadsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToDistrictRoadsRelationshipOperation(),
+                "addToFamilyHomeRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToFamilyHomeRoomsRelationshipOperation(),
+                "addToMansionRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToMansionRoomsRelationshipOperation(),
+                "addToMansionStaffRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToMansionStaffRelationshipOperation(),
+                "addToResidenceRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AddToResidenceRoomsRelationshipOperation(),
+                "removeFromDistrictBuildingsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromDistrictBuildingsRelationshipOperation(),
+                "removeFromDistrictRoadsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromDistrictRoadsRelationshipOperation(),
+                "removeFromFamilyHomeRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromFamilyHomeRoomsRelationshipOperation(),
+                "removeFromMansionRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromMansionRoomsRelationshipOperation(),
+                "removeFromMansionStaffRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromMansionStaffRelationshipOperation(),
+                "removeFromResidenceRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RemoveFromResidenceRoomsRelationshipOperation(),
+                "updateBathroomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateBathroomResidenceRelationshipOperation(),
+                "updateBedroomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateBedroomResidenceRelationshipOperation(),
+                "updateDistrictBuildingsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateDistrictBuildingsRelationshipOperation(),
+                "updateDistrictRoadsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateDistrictRoadsRelationshipOperation(),
+                "updateFamilyHomeRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateFamilyHomeRoomsRelationshipOperation(),
+                "updateKitchenResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateKitchenResidenceRelationshipOperation(),
+                "updateLivingRoomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateLivingRoomResidenceRelationshipOperation(),
+                "updateMansionRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateMansionRoomsRelationshipOperation(),
+                "updateMansionStaffRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateMansionStaffRelationshipOperation(),
+                "updateResidenceRoomsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateResidenceRoomsRelationshipOperation(),
+                "updateRoomResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateRoomResidenceRelationshipOperation(),
+                "updateToiletResidenceRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.UpdateToiletResidenceRelationshipOperation(),
                 _ => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.AtomicOperation(),
             };
         }
@@ -98,7 +98,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// <param name="writer">Serialization writer to use to serialize this model</param>
         public virtual void Serialize(ISerializationWriter writer)
         {
-            _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteStringValue("openapi:discriminator", OpenapiDiscriminator);
         }

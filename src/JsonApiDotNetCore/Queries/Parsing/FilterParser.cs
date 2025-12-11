@@ -452,7 +452,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         if (derivedType == null)
         {
-            throw new QueryParseException($"Resource type '{derivedTypeName}' does not exist or does not derive from '{baseType.PublicName}'.", position);
+            throw new QueryParseException($"Resource type '{derivedTypeName}' does not exist or does not derive from '{baseType}'.", position);
         }
 
         return derivedType;
@@ -532,14 +532,15 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             }
             catch (FormatException exception)
             {
-                throw new QueryParseException($"Failed to convert '{stringValue}' of type 'String' to type '{destinationType.Name}'.", position, exception);
+                string destinationTypeName = RuntimeTypeConverter.GetFriendlyTypeName(destinationType);
+                throw new QueryParseException($"Failed to convert '{stringValue}' of type 'String' to type '{destinationTypeName}'.", position, exception);
             }
         };
     }
 
     private ConstantValueConverter GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
-        if (attribute is { Property.Name: nameof(Identifiable<object>.Id) })
+        if (attribute is { Property.Name: nameof(Identifiable<>.Id) })
         {
             return (stringValue, position) =>
             {
@@ -571,7 +572,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         if (field.IsFilterBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
-            throw new QueryParseException($"Filtering on {kind} '{field.PublicName}' is not allowed.", position);
+            throw new QueryParseException($"Filtering on {kind} '{field}' is not allowed.", position);
         }
     }
 

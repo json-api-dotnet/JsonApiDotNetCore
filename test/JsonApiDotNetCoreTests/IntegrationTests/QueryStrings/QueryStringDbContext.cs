@@ -28,12 +28,16 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
     {
         builder.Entity<WebAccount>()
             .HasMany(webAccount => webAccount.Posts)
-            .WithOne(blogPost => blogPost.Author!);
+            .WithOne(blogPost => blogPost.Author);
 
         builder.Entity<Man>()
             .HasOne(man => man.Wife)
             .WithOne(woman => woman.Husband)
             .HasForeignKey<Man>();
+
+        builder.Entity<Calendar>()
+            .HasMany(calendar => calendar.Appointments)
+            .WithOne(appointment => appointment.Calendar);
 
         base.OnModelCreating(builder);
     }

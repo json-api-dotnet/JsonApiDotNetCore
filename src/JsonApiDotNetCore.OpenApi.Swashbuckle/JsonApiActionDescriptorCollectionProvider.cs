@@ -1,193 +1,353 @@
+using System.Collections.Concurrent;
+using System.Net;
 using System.Reflection;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 /// <summary>
-/// Adds JsonApiDotNetCore metadata to <see cref="ControllerActionDescriptor" />s if available. This translates to updating response types in
-/// <see cref="ProducesResponseTypeAttribute" /> and performing an expansion for secondary and relationship endpoints. For example:
-/// <code><![CDATA[
+/// Adds OpenAPI metadata (consumes, produces) to <see cref="ActionDescriptor" />s and performs endpoint expansion for secondary and relationship
+/// endpoints. For example: <code><![CDATA[
 /// /article/{id}/{relationshipName} -> /article/{id}/author, /article/{id}/revisions, etc.
 /// ]]></code>
 /// </summary>
 internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
 {
-    private static readonly string DefaultMediaType = JsonApiMediaType.Default.ToString();
+    private const int FilterScope = 10;
+    private static readonly Type ErrorDocumentType = typeof(ErrorResponseDocument);
 
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
+    private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
+    private readonly ConcurrentDictionary<int, Lazy<ActionDescriptorCollection>> _versionedActionDescriptorCache = new();
 
-    public ActionDescriptorCollection ActionDescriptors => GetActionDescriptors();
+    public ActionDescriptorCollection ActionDescriptors =>
+        _versionedActionDescriptorCache.GetOrAdd(_defaultProvider.ActionDescriptors.Version, LazyGetActionDescriptors).Value;
 
-    public JsonApiActionDescriptorCollectionProvider(IActionDescriptorCollectionProvider defaultProvider,
+    public JsonApiActionDescriptorCollectionProvider(IActionDescriptorCollectionProvider defaultProvider, IControllerResourceMapping controllerResourceMapping,
         JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
     {
         ArgumentNullException.ThrowIfNull(defaultProvider);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
         ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
 
         _defaultProvider = defaultProvider;
+        _controllerResourceMapping = controllerResourceMapping;
         _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
     }
 
-    private ActionDescriptorCollection GetActionDescriptors()
+    private Lazy<ActionDescriptorCollection> LazyGetActionDescriptors(int version)
     {
-        List<ActionDescriptor> newDescriptors = _defaultProvider.ActionDescriptors.Items.ToList();
-        ActionDescriptor[] endpoints = newDescriptors.Where(IsVisibleJsonApiEndpoint).ToArray();
-
-        foreach (ActionDescriptor endpoint in endpoints)
-        {
-            MethodInfo actionMethod = endpoint.GetActionMethod();
-            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
-
-            List<ActionDescriptor> replacementDescriptorsForEndpoint =
-            [
-                .. AddJsonApiMetadataToAction(endpoint, endpointMetadataContainer.RequestMetadata),
-                .. AddJsonApiMetadataToAction(endpoint, endpointMetadataContainer.ResponseMetadata)
-            ];
-
-            if (replacementDescriptorsForEndpoint.Count > 0)
-            {
-                newDescriptors.InsertRange(newDescriptors.IndexOf(endpoint), replacementDescriptorsForEndpoint);
-                newDescriptors.Remove(endpoint);
-            }
-        }
-
-        int descriptorVersion = _defaultProvider.ActionDescriptors.Version;
-        return new ActionDescriptorCollection(newDescriptors.AsReadOnly(), descriptorVersion);
+        // https://andrewlock.net/making-getoradd-on-concurrentdictionary-thread-safe-using-lazy/
+        return new Lazy<ActionDescriptorCollection>(() => GetActionDescriptors(version), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    internal static bool IsVisibleJsonApiEndpoint(ActionDescriptor descriptor)
+    private ActionDescriptorCollection GetActionDescriptors(int version)
     {
-        // Only if in a convention ApiExplorer.IsVisible was set to false, the ApiDescriptionActionData will not be present.
-        return descriptor is ControllerActionDescriptor controllerAction && controllerAction.Properties.ContainsKey(typeof(ApiDescriptionActionData));
-    }
+        List<ActionDescriptor> descriptors = [];
 
-    private static List<ActionDescriptor> AddJsonApiMetadataToAction(ActionDescriptor endpoint, IJsonApiEndpointMetadata? jsonApiEndpointMetadata)
-    {
-        switch (jsonApiEndpointMetadata)
+        foreach (ActionDescriptor descriptor in _defaultProvider.ActionDescriptors.Items)
         {
-            case PrimaryResponseMetadata primaryMetadata:
+            if (!descriptor.EndpointMetadata.OfType<IHttpMethodMetadata>().SelectMany(metadata => metadata.HttpMethods).Any())
             {
-                UpdateProducesResponseTypeAttribute(endpoint, primaryMetadata.DocumentType);
-                return [];
+                // Technically incorrect: when no verbs, the endpoint is exposed on all verbs. But Swashbuckle hides it anyway.
+                continue;
             }
-            case PrimaryRequestMetadata primaryMetadata:
-            {
-                UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType, null);
-                return [];
-            }
-            case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
-            {
-                return Expand(endpoint, nonPrimaryEndpointMetadata,
-                    (expandedEndpoint, documentType, _) => UpdateProducesResponseTypeAttribute(expandedEndpoint, documentType));
-            }
-            case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and RelationshipRequestMetadata:
-            {
-                return Expand(endpoint, nonPrimaryEndpointMetadata, UpdateBodyParameterDescriptor);
-            }
-            case AtomicOperationsRequestMetadata:
-            {
-                UpdateBodyParameterDescriptor(endpoint, typeof(OperationsRequestDocument), null);
-                return [];
-            }
-            case AtomicOperationsResponseMetadata:
-            {
-                UpdateProducesResponseTypeAttribute(endpoint, typeof(OperationsResponseDocument));
-                return [];
-            }
-            default:
-            {
-                return [];
-            }
-        }
-    }
 
-    private static void UpdateProducesResponseTypeAttribute(ActionDescriptor endpoint, Type responseDocumentType)
-    {
-        ProducesResponseTypeAttribute? attribute = null;
+            var actionMethod = JsonApiActionMethod.TryCreate(descriptor);
 
-        if (ProducesJsonApiResponseDocument(endpoint))
-        {
-            var producesResponse = endpoint.GetFilterMetadata<ProducesResponseTypeAttribute>();
-
-            if (producesResponse != null)
+            if (actionMethod != null)
             {
-                attribute = producesResponse;
-            }
-        }
-
-        ConsistencyGuard.ThrowIf(attribute == null);
-        attribute.Type = responseDocumentType;
-    }
-
-    private static bool ProducesJsonApiResponseDocument(ActionDescriptor endpoint)
-    {
-        var produces = endpoint.GetFilterMetadata<ProducesAttribute>();
-
-        if (produces != null)
-        {
-            foreach (string contentType in produces.ContentTypes)
-            {
-                if (MediaTypeHeaderValue.TryParse(contentType, out MediaTypeHeaderValue? headerValue))
+                if (!IsVisibleEndpoint(descriptor))
                 {
-                    if (headerValue.MediaType.Equals(DefaultMediaType, StringComparison.OrdinalIgnoreCase))
+                    continue;
+                }
+
+                ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ControllerType);
+
+                if (actionMethod is BuiltinResourceActionMethod builtinResourceActionMethod)
+                {
+                    ConsistencyGuard.ThrowIf(resourceType == null);
+
+                    if (ShouldSuppressEndpoint(builtinResourceActionMethod.Endpoint, resourceType))
                     {
-                        return true;
+                        continue;
                     }
                 }
+
+                ActionDescriptor[] replacementDescriptors = SetEndpointMetadata(descriptor);
+                descriptors.AddRange(replacementDescriptors);
+
+                continue;
+            }
+
+            descriptors.Add(descriptor);
+        }
+
+        return new ActionDescriptorCollection(descriptors.AsReadOnly(), version);
+    }
+
+    internal static bool IsVisibleEndpoint(ActionDescriptor descriptor)
+    {
+        // Only if in a convention ApiExplorer.IsVisible was set to false, the ApiDescriptionActionData will not be present.
+        return descriptor is ControllerActionDescriptor controllerDescriptor && controllerDescriptor.Properties.ContainsKey(typeof(ApiDescriptionActionData));
+    }
+
+    private static bool ShouldSuppressEndpoint(JsonApiEndpoints endpoint, ResourceType resourceType)
+    {
+        if (!IsEndpointAvailable(endpoint, resourceType))
+        {
+            return true;
+        }
+
+        if (IsSecondaryOrRelationshipEndpoint(endpoint))
+        {
+            if (resourceType.Relationships.Count == 0)
+            {
+                return true;
+            }
+
+            if (endpoint is JsonApiEndpoints.DeleteRelationship or JsonApiEndpoints.PostRelationship)
+            {
+                return !resourceType.Relationships.OfType<HasManyAttribute>().Any();
             }
         }
 
         return false;
     }
 
-    private static List<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,
-        Action<ActionDescriptor, Type, string> expansionCallback)
+    private static bool IsEndpointAvailable(JsonApiEndpoints endpoint, ResourceType resourceType)
     {
-        List<ActionDescriptor> expansion = [];
+        JsonApiEndpoints availableEndpoints = GetGeneratedControllerEndpoints(resourceType);
 
-        foreach ((string relationshipName, Type documentType) in metadata.DocumentTypesByRelationshipName)
+        if (availableEndpoints == JsonApiEndpoints.None)
         {
-            if (genericEndpoint.AttributeRouteInfo == null)
-            {
-                throw new NotSupportedException("Only attribute routing is supported for JsonApiDotNetCore endpoints.");
-            }
-
-            ActionDescriptor expandedEndpoint = Clone(genericEndpoint);
-
-            RemovePathParameter(expandedEndpoint.Parameters, "relationshipName");
-
-            ExpandTemplate(expandedEndpoint.AttributeRouteInfo!, relationshipName);
-
-            expansionCallback(expandedEndpoint, documentType, relationshipName);
-
-            expansion.Add(expandedEndpoint);
+            // Auto-generated controllers are disabled, so we can't know what to hide.
+            // It is assumed that a handwritten JSON:API controller only provides action methods for what it supports.
+            // To accomplish that, derive from BaseJsonApiController instead of JsonApiController.
+            return true;
         }
 
-        return expansion;
+        // For an overridden JSON:API action method in a partial class to show up, it's flag must be turned on in [Resource].
+        // Otherwise, it is considered to be an action method that throws because the endpoint is unavailable.
+        return IncludesEndpoint(endpoint, availableEndpoints);
     }
 
-    private static void UpdateBodyParameterDescriptor(ActionDescriptor endpoint, Type documentType, string? parameterName)
+    private static JsonApiEndpoints GetGeneratedControllerEndpoints(ResourceType resourceType)
     {
-        ControllerParameterDescriptor? requestBodyDescriptor = endpoint.GetBodyParameterDescriptor();
+        var resourceAttribute = resourceType.ClrType.GetCustomAttribute<ResourceAttribute>();
+        return resourceAttribute?.GenerateControllerEndpoints ?? JsonApiEndpoints.None;
+    }
+
+    private static bool IncludesEndpoint(JsonApiEndpoints endpoint, JsonApiEndpoints availableEndpoints)
+    {
+        bool? isIncluded = null;
+
+        if (endpoint == JsonApiEndpoints.GetCollection)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetCollection);
+        }
+        else if (endpoint == JsonApiEndpoints.GetSingle)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetSingle);
+        }
+        else if (endpoint == JsonApiEndpoints.GetSecondary)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetSecondary);
+        }
+        else if (endpoint == JsonApiEndpoints.GetRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetRelationship);
+        }
+        else if (endpoint == JsonApiEndpoints.Post)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.Post);
+        }
+        else if (endpoint == JsonApiEndpoints.PostRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.PostRelationship);
+        }
+        else if (endpoint == JsonApiEndpoints.Patch)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.Patch);
+        }
+        else if (endpoint == JsonApiEndpoints.PatchRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.PatchRelationship);
+        }
+        else if (endpoint == JsonApiEndpoints.Delete)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.Delete);
+        }
+        else if (endpoint == JsonApiEndpoints.DeleteRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.DeleteRelationship);
+        }
+
+        ConsistencyGuard.ThrowIf(isIncluded == null);
+        return isIncluded.Value;
+    }
+
+    private static bool IsSecondaryOrRelationshipEndpoint(JsonApiEndpoints endpoint)
+    {
+        return endpoint is JsonApiEndpoints.GetSecondary or JsonApiEndpoints.GetRelationship or JsonApiEndpoints.PostRelationship or
+            JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship;
+    }
+
+    private ActionDescriptor[] SetEndpointMetadata(ActionDescriptor descriptor)
+    {
+        Dictionary<RelationshipAttribute, ActionDescriptor> descriptorsByRelationship = [];
+        bool isNonPrimaryEndpoint = false;
+
+        JsonApiEndpointMetadata endpointMetadata = _jsonApiEndpointMetadataProvider.Get(descriptor);
+
+        switch (endpointMetadata.RequestMetadata)
+        {
+            case AtomicOperationsRequestMetadata atomicOperationsRequestMetadata:
+            {
+                SetConsumes(descriptor, atomicOperationsRequestMetadata.DocumentType, JsonApiMediaType.AtomicOperations);
+                UpdateRequestBodyParameterDescriptor(descriptor, atomicOperationsRequestMetadata.DocumentType, null);
+
+                break;
+            }
+            case PrimaryRequestMetadata primaryRequestMetadata:
+            {
+                SetConsumes(descriptor, primaryRequestMetadata.DocumentType, JsonApiMediaType.Default);
+                UpdateRequestBodyParameterDescriptor(descriptor, primaryRequestMetadata.DocumentType, null);
+
+                break;
+            }
+            case RelationshipRequestMetadata relationshipRequestMetadata:
+            {
+                ConsistencyGuard.ThrowIf(descriptor.AttributeRouteInfo == null);
+                isNonPrimaryEndpoint = true;
+
+                foreach ((RelationshipAttribute relationship, Type documentType) in relationshipRequestMetadata.DocumentTypesByRelationship)
+                {
+                    ActionDescriptor relationshipDescriptor = Clone(descriptor);
+
+                    RemovePathParameter(relationshipDescriptor.Parameters, "relationshipName");
+                    ExpandTemplate(relationshipDescriptor.AttributeRouteInfo!, relationship.PublicName);
+                    SetConsumes(descriptor, documentType, JsonApiMediaType.Default);
+                    UpdateRequestBodyParameterDescriptor(relationshipDescriptor, documentType, relationship.PublicName);
+
+                    descriptorsByRelationship[relationship] = relationshipDescriptor;
+                }
+
+                break;
+            }
+        }
+
+        switch (endpointMetadata.ResponseMetadata)
+        {
+            case AtomicOperationsResponseMetadata atomicOperationsResponseMetadata:
+            {
+                SetProduces(descriptor, atomicOperationsResponseMetadata.DocumentType);
+
+                SetProducesResponseTypes(descriptor, atomicOperationsResponseMetadata.DocumentType, atomicOperationsResponseMetadata.SuccessStatusCodes,
+                    atomicOperationsResponseMetadata.ErrorStatusCodes);
+
+                break;
+            }
+            case PrimaryResponseMetadata primaryResponseMetadata:
+            {
+                SetProduces(descriptor, primaryResponseMetadata.DocumentType);
+
+                SetProducesResponseTypes(descriptor, primaryResponseMetadata.DocumentType, primaryResponseMetadata.SuccessStatusCodes,
+                    primaryResponseMetadata.ErrorStatusCodes);
+
+                break;
+            }
+            case NonPrimaryResponseMetadata nonPrimaryResponseMetadata:
+            {
+                isNonPrimaryEndpoint = true;
+
+                foreach ((RelationshipAttribute relationship, Type documentType) in nonPrimaryResponseMetadata.DocumentTypesByRelationship)
+                {
+                    SetNonPrimaryResponseMetadata(descriptor, descriptorsByRelationship, relationship, documentType,
+                        nonPrimaryResponseMetadata.SuccessStatusCodes, nonPrimaryResponseMetadata.ErrorStatusCodes);
+                }
+
+                break;
+            }
+            case EmptyRelationshipResponseMetadata emptyRelationshipResponseMetadata:
+            {
+                isNonPrimaryEndpoint = true;
+
+                foreach (RelationshipAttribute relationship in emptyRelationshipResponseMetadata.Relationships)
+                {
+                    SetNonPrimaryResponseMetadata(descriptor, descriptorsByRelationship, relationship, null,
+                        emptyRelationshipResponseMetadata.SuccessStatusCodes, emptyRelationshipResponseMetadata.ErrorStatusCodes);
+                }
+
+                break;
+            }
+        }
+
+        return isNonPrimaryEndpoint ? descriptorsByRelationship.Values.ToArray() : [descriptor];
+    }
+
+    private static void SetConsumes(ActionDescriptor descriptor, Type requestType, JsonApiMediaType mediaType)
+    {
+        RemoveFiltersForRequestBody(descriptor);
+
+        // This value doesn't actually appear in the OpenAPI document, but is only used to invoke
+        // JsonApiRequestFormatMetadataProvider.GetSupportedContentTypes(), which determines the actual request content type.
+        string contentType = mediaType.ToString();
+
+        if (descriptor is ControllerActionDescriptor controllerActionDescriptor &&
+            controllerActionDescriptor.MethodInfo.GetCustomAttributes<ConsumesAttribute>().Any())
+        {
+            // A custom JSON:API action method with [Consumes] on it. Hide the attribute from Swashbuckle, so it uses our data in API Explorer.
+            controllerActionDescriptor.MethodInfo = new MethodInfoWrapper(controllerActionDescriptor.MethodInfo, [typeof(ConsumesAttribute)]);
+        }
+
+        descriptor.FilterDescriptors.Add(new FilterDescriptor(new ConsumesAttribute(requestType, contentType), FilterScope));
+    }
+
+    private static void RemoveFiltersForRequestBody(ActionDescriptor descriptor)
+    {
+        // Custom action methods that take a request body are expected to be annotated with [Consumes].
+        // We add the CLR type, so that an IIdentifiable type is lifted to a JSON:API type, which is why the existing annotation must be replaced.
+
+        foreach (FilterDescriptor filterDescriptor in descriptor.FilterDescriptors.ToArray())
+        {
+            if (filterDescriptor.Filter is ConsumesAttribute)
+            {
+                descriptor.FilterDescriptors.Remove(filterDescriptor);
+            }
+        }
+    }
+
+    private static void UpdateRequestBodyParameterDescriptor(ActionDescriptor descriptor, Type documentType, string? parameterName)
+    {
+        ControllerParameterDescriptor? requestBodyDescriptor = descriptor.GetBodyParameterDescriptor();
 
         if (requestBodyDescriptor == null)
         {
-            MethodInfo actionMethod = endpoint.GetActionMethod();
+            MethodInfo? actionMethod = descriptor.TryGetActionMethod();
+            ConsistencyGuard.ThrowIf(actionMethod == null);
 
             throw new InvalidConfigurationException(
                 $"The action method '{actionMethod}' on type '{actionMethod.ReflectedType?.FullName}' contains no parameter with a [FromBody] attribute.");
         }
+
+        descriptor.EndpointMetadata.Add(new ConsumesAttribute(JsonApiMediaType.Default.ToString()));
 
         requestBodyDescriptor.ParameterType = documentType;
         requestBodyDescriptor.ParameterInfo = new ParameterInfoWrapper(requestBodyDescriptor.ParameterInfo, documentType, parameterName);
@@ -218,8 +378,100 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         parameters.Remove(descriptor);
     }
 
-    private static void ExpandTemplate(AttributeRouteInfo route, string expansionParameter)
+    private static void ExpandTemplate(AttributeRouteInfo route, string parameterName)
     {
-        route.Template = route.Template!.Replace("{relationshipName}", expansionParameter);
+        route.Template = route.Template!.Replace("{relationshipName}", parameterName);
+    }
+
+    private static void SetProduces(ActionDescriptor descriptor, Type? documentType)
+    {
+        IReadOnlyList<string> contentTypes = OpenApiContentTypeProvider.Instance.GetResponseContentTypes(documentType);
+
+        if (contentTypes.Count > 0)
+        {
+            descriptor.FilterDescriptors.Add(new FilterDescriptor(new ProducesAttribute(contentTypes[0]), FilterScope));
+        }
+    }
+
+    private static void SetProducesResponseTypes(ActionDescriptor descriptor, Type? documentType, IReadOnlyCollection<HttpStatusCode> successStatusCodes,
+        IReadOnlyCollection<HttpStatusCode> errorStatusCodes)
+    {
+        foreach (HttpStatusCode statusCode in successStatusCodes.Order())
+        {
+            RemoveFiltersForStatusCode(descriptor, statusCode);
+
+            descriptor.FilterDescriptors.Add(documentType == null || StatusCodeHasNoResponseBody(statusCode)
+                ? new FilterDescriptor(new ProducesResponseTypeAttribute(typeof(void), (int)statusCode), FilterScope)
+                : new FilterDescriptor(new ProducesResponseTypeAttribute(documentType, (int)statusCode), FilterScope));
+        }
+
+        string? errorContentType = null;
+
+        if (documentType == null)
+        {
+            IReadOnlyList<string> errorContentTypes = OpenApiContentTypeProvider.Instance.GetResponseContentTypes(ErrorDocumentType);
+            ConsistencyGuard.ThrowIf(errorContentTypes.Count == 0);
+            errorContentType = errorContentTypes[0];
+        }
+
+        foreach (HttpStatusCode statusCode in errorStatusCodes.Order())
+        {
+            RemoveFiltersForStatusCode(descriptor, statusCode);
+
+            descriptor.FilterDescriptors.Add(errorContentType != null
+                ? new FilterDescriptor(new ProducesResponseTypeAttribute(ErrorDocumentType, (int)statusCode, errorContentType), FilterScope)
+                : new FilterDescriptor(new ProducesResponseTypeAttribute(ErrorDocumentType, (int)statusCode), FilterScope));
+        }
+    }
+
+    private static void RemoveFiltersForStatusCode(ActionDescriptor descriptor, HttpStatusCode statusCode)
+    {
+        // Custom action methods are expected to be annotated with [ProducesResponseType] to express (1) the return type(s) on success and
+        // (2) possible error status codes. We add the CLR types, so that IIdentifiable types are lifted to JSON:API types, which is why
+        // the existing annotations must be replaced.
+
+        foreach (FilterDescriptor filterDescriptor in descriptor.FilterDescriptors.ToArray())
+        {
+            if (filterDescriptor.Filter is ProducesResponseTypeAttribute produces && produces.StatusCode == (int)statusCode)
+            {
+                descriptor.FilterDescriptors.Remove(filterDescriptor);
+            }
+        }
+    }
+
+    private static bool StatusCodeHasNoResponseBody(HttpStatusCode statusCode)
+    {
+        int value = (int)statusCode;
+
+        if (value < 200)
+        {
+            return true;
+        }
+
+        if (value is >= 300 and < 400)
+        {
+            return true;
+        }
+
+        return statusCode is HttpStatusCode.NoContent or HttpStatusCode.ResetContent;
+    }
+
+    private static void SetNonPrimaryResponseMetadata(ActionDescriptor descriptor,
+        Dictionary<RelationshipAttribute, ActionDescriptor> descriptorsByRelationship, RelationshipAttribute relationship, Type? documentType,
+        IReadOnlyCollection<HttpStatusCode> successStatusCodes, IReadOnlyCollection<HttpStatusCode> errorStatusCodes)
+    {
+        ConsistencyGuard.ThrowIf(descriptor.AttributeRouteInfo == null);
+
+        if (!descriptorsByRelationship.TryGetValue(relationship, out ActionDescriptor? relationshipDescriptor))
+        {
+            relationshipDescriptor = Clone(descriptor);
+            RemovePathParameter(relationshipDescriptor.Parameters, "relationshipName");
+        }
+
+        ExpandTemplate(relationshipDescriptor.AttributeRouteInfo!, relationship.PublicName);
+        SetProduces(relationshipDescriptor, documentType);
+        SetProducesResponseTypes(relationshipDescriptor, documentType, successStatusCodes, errorStatusCodes);
+
+        descriptorsByRelationship[relationship] = relationshipDescriptor;
     }
 }

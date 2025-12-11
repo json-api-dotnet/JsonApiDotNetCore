@@ -63,7 +63,7 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
 
         foreach (DataProperty property in dataContract.ObjectProperties)
         {
-            if (property.MemberInfo.Name == nameof(Identifiable<object>.Id))
+            if (property.MemberInfo.Name == nameof(Identifiable<>.Id))
             {
                 // Schemas of JsonApiDotNetCore resources will obtain an Id property through inheritance of a resource identifier type.
                 continue;

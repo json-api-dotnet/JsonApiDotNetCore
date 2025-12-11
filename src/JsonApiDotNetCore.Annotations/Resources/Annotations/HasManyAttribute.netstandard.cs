@@ -11,4 +11,7 @@ public sealed class HasManyAttribute : RelationshipAttribute
 {
     /// <summary />
     public HasManyCapabilities Capabilities { get; set; }
+
+    /// <summary />
+    public bool DisablePagination { get; set; }
 }

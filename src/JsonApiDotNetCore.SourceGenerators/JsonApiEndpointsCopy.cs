@@ -1,6 +1,9 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.SourceGenerators;
 
 // IMPORTANT: A copy of this type exists in the JsonApiDotNetCore project. Keep these in sync when making changes.
+[PublicAPI]
 [Flags]
 public enum JsonApiEndpointsCopy
 {

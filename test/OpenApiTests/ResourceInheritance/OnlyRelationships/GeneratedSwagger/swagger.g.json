@@ -150,19 +150,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -408,19 +408,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -666,19 +666,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1084,19 +1084,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1502,19 +1502,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1920,19 +1920,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2178,19 +2178,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2436,19 +2436,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2854,19 +2854,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3361,19 +3361,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3779,19 +3779,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4037,19 +4037,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4365,30 +4365,30 @@
         "discriminator": {
           "propertyName": "openapi:discriminator",
           "mapping": {
-            "addToDistrictBuildings": "#/components/schemas/addToDistrictBuildingsRelationshipOperation",
-            "addToDistrictRoads": "#/components/schemas/addToDistrictRoadsRelationshipOperation",
-            "addToFamilyHomeRooms": "#/components/schemas/addToFamilyHomeRoomsRelationshipOperation",
-            "addToMansionRooms": "#/components/schemas/addToMansionRoomsRelationshipOperation",
-            "addToMansionStaff": "#/components/schemas/addToMansionStaffRelationshipOperation",
-            "addToResidenceRooms": "#/components/schemas/addToResidenceRoomsRelationshipOperation",
-            "removeFromDistrictBuildings": "#/components/schemas/removeFromDistrictBuildingsRelationshipOperation",
-            "removeFromDistrictRoads": "#/components/schemas/removeFromDistrictRoadsRelationshipOperation",
-            "removeFromFamilyHomeRooms": "#/components/schemas/removeFromFamilyHomeRoomsRelationshipOperation",
-            "removeFromMansionRooms": "#/components/schemas/removeFromMansionRoomsRelationshipOperation",
-            "removeFromMansionStaff": "#/components/schemas/removeFromMansionStaffRelationshipOperation",
-            "removeFromResidenceRooms": "#/components/schemas/removeFromResidenceRoomsRelationshipOperation",
-            "updateBathroomResidence": "#/components/schemas/updateBathroomResidenceRelationshipOperation",
-            "updateBedroomResidence": "#/components/schemas/updateBedroomResidenceRelationshipOperation",
-            "updateDistrictBuildings": "#/components/schemas/updateDistrictBuildingsRelationshipOperation",
-            "updateDistrictRoads": "#/components/schemas/updateDistrictRoadsRelationshipOperation",
-            "updateFamilyHomeRooms": "#/components/schemas/updateFamilyHomeRoomsRelationshipOperation",
-            "updateKitchenResidence": "#/components/schemas/updateKitchenResidenceRelationshipOperation",
-            "updateLivingRoomResidence": "#/components/schemas/updateLivingRoomResidenceRelationshipOperation",
-            "updateMansionRooms": "#/components/schemas/updateMansionRoomsRelationshipOperation",
-            "updateMansionStaff": "#/components/schemas/updateMansionStaffRelationshipOperation",
-            "updateResidenceRooms": "#/components/schemas/updateResidenceRoomsRelationshipOperation",
-            "updateRoomResidence": "#/components/schemas/updateRoomResidenceRelationshipOperation",
-            "updateToiletResidence": "#/components/schemas/updateToiletResidenceRelationshipOperation"
+            "addToDistrictBuildingsRelationshipOperation": "#/components/schemas/addToDistrictBuildingsRelationshipOperation",
+            "addToDistrictRoadsRelationshipOperation": "#/components/schemas/addToDistrictRoadsRelationshipOperation",
+            "addToFamilyHomeRoomsRelationshipOperation": "#/components/schemas/addToFamilyHomeRoomsRelationshipOperation",
+            "addToMansionRoomsRelationshipOperation": "#/components/schemas/addToMansionRoomsRelationshipOperation",
+            "addToMansionStaffRelationshipOperation": "#/components/schemas/addToMansionStaffRelationshipOperation",
+            "addToResidenceRoomsRelationshipOperation": "#/components/schemas/addToResidenceRoomsRelationshipOperation",
+            "removeFromDistrictBuildingsRelationshipOperation": "#/components/schemas/removeFromDistrictBuildingsRelationshipOperation",
+            "removeFromDistrictRoadsRelationshipOperation": "#/components/schemas/removeFromDistrictRoadsRelationshipOperation",
+            "removeFromFamilyHomeRoomsRelationshipOperation": "#/components/schemas/removeFromFamilyHomeRoomsRelationshipOperation",
+            "removeFromMansionRoomsRelationshipOperation": "#/components/schemas/removeFromMansionRoomsRelationshipOperation",
+            "removeFromMansionStaffRelationshipOperation": "#/components/schemas/removeFromMansionStaffRelationshipOperation",
+            "removeFromResidenceRoomsRelationshipOperation": "#/components/schemas/removeFromResidenceRoomsRelationshipOperation",
+            "updateBathroomResidenceRelationshipOperation": "#/components/schemas/updateBathroomResidenceRelationshipOperation",
+            "updateBedroomResidenceRelationshipOperation": "#/components/schemas/updateBedroomResidenceRelationshipOperation",
+            "updateDistrictBuildingsRelationshipOperation": "#/components/schemas/updateDistrictBuildingsRelationshipOperation",
+            "updateDistrictRoadsRelationshipOperation": "#/components/schemas/updateDistrictRoadsRelationshipOperation",
+            "updateFamilyHomeRoomsRelationshipOperation": "#/components/schemas/updateFamilyHomeRoomsRelationshipOperation",
+            "updateKitchenResidenceRelationshipOperation": "#/components/schemas/updateKitchenResidenceRelationshipOperation",
+            "updateLivingRoomResidenceRelationshipOperation": "#/components/schemas/updateLivingRoomResidenceRelationshipOperation",
+            "updateMansionRoomsRelationshipOperation": "#/components/schemas/updateMansionRoomsRelationshipOperation",
+            "updateMansionStaffRelationshipOperation": "#/components/schemas/updateMansionStaffRelationshipOperation",
+            "updateResidenceRoomsRelationshipOperation": "#/components/schemas/updateResidenceRoomsRelationshipOperation",
+            "updateRoomResidenceRelationshipOperation": "#/components/schemas/updateRoomResidenceRelationshipOperation",
+            "updateToiletResidenceRelationshipOperation": "#/components/schemas/updateToiletResidenceRelationshipOperation"
           }
         },
         "x-abstract": true
@@ -6190,5 +6190,40 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "bathrooms"
+    },
+    {
+      "name": "bedrooms"
+    },
+    {
+      "name": "districts"
+    },
+    {
+      "name": "familyHomes"
+    },
+    {
+      "name": "kitchens"
+    },
+    {
+      "name": "livingRooms"
+    },
+    {
+      "name": "mansions"
+    },
+    {
+      "name": "operations"
+    },
+    {
+      "name": "residences"
+    },
+    {
+      "name": "rooms"
+    },
+    {
+      "name": "toilets"
+    }
+  ]
 }

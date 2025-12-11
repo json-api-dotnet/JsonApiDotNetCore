@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class ConstellationDefinition(
     IResourceGraph resourceGraph, IClientSettingsProvider clientSettingsProvider, ResourceDefinitionHitCounter hitCounter)
-    : HitCountingResourceDefinition<Constellation, int>(resourceGraph, hitCounter)
+    : HitCountingResourceDefinition<Constellation, long>(resourceGraph, hitCounter)
 {
     private readonly IClientSettingsProvider _clientSettingsProvider = clientSettingsProvider;
 

@@ -79,8 +79,8 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
                 value.Should().NotBeNull();
                 value.Data.ManyValue.Should().HaveCount(2);
                 value.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
-                value.Data.ManyValue[0].Id.Should().Be(todoItems[0].Tags.ElementAt(0).StringId);
-                value.Data.ManyValue[1].Id.Should().Be(todoItems[0].Tags.ElementAt(1).StringId);
+                value.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[0].Tags.ElementAt(0).StringId);
+                value.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[0].Tags.ElementAt(1).StringId);
             });
         });
 
@@ -109,8 +109,8 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
                 value.Should().NotBeNull();
                 value.Data.ManyValue.Should().HaveCount(2);
                 value.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
-                value.Data.ManyValue[0].Id.Should().Be(todoItems[1].Tags.ElementAt(0).StringId);
-                value.Data.ManyValue[1].Id.Should().Be(todoItems[1].Tags.ElementAt(1).StringId);
+                value.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[1].Tags.ElementAt(0).StringId);
+                value.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[1].Tags.ElementAt(1).StringId);
             });
         });
 

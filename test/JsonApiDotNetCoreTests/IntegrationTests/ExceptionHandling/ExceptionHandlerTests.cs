@@ -22,12 +22,12 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         testContext.UseController<ThrowingArticlesController>();
         testContext.UseController<ConsumerArticlesController>();
 
-        testContext.ConfigureLogging(options =>
+        testContext.ConfigureLogging(builder =>
         {
             var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
-            options.AddProvider(loggerProvider);
+            builder.AddProvider(loggerProvider);
 
-            options.Services.AddSingleton(loggerProvider);
+            builder.Services.AddSingleton(loggerProvider);
         });
 
         testContext.ConfigureServices(services =>

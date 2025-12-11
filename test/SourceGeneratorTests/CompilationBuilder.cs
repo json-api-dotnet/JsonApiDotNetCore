@@ -12,8 +12,8 @@ internal sealed class CompilationBuilder
     private static readonly CSharpCompilationOptions DefaultOptions =
         new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithSpecificDiagnosticOptions(new Dictionary<string, ReportDiagnostic>
         {
-            // Suppress warning for version conflict on Microsoft.Extensions.Logging.Abstractions:
-            // JsonApiDotNetCore indirectly depends on v6 (via Entity Framework Core 6), whereas Entity Framework Core 7 depends on v7.
+            // Suppress warning for version conflict on Microsoft.AspNetCore.Mvc.Core:
+            // JsonApiDotNetCore indirectly depends on v8 (via FrameworkReference), whereas v9 is used when running tests on .NET 9.
             ["CS1701"] = ReportDiagnostic.Suppress
         });
 
@@ -60,7 +60,7 @@ internal sealed class CompilationBuilder
         return this;
     }
 
-    public CompilationBuilder WithJsonApiDotNetCoreReferences()
+    private void WithJsonApiDotNetCoreReferences()
     {
         foreach (PortableExecutableReference reference in new[]
         {
@@ -71,8 +71,6 @@ internal sealed class CompilationBuilder
         {
             _references.Add(reference);
         }
-
-        return this;
     }
 
     public CompilationBuilder WithSourceCode(string source)

@@ -30,7 +30,7 @@ public sealed class CompositeDbContext(DbContextOptions<CompositeDbContext> opti
 
         builder.Entity<Dealership>()
             .HasMany(dealership => dealership.Inventory)
-            .WithOne(car => car.Dealership!);
+            .WithOne(car => car.Dealership);
 
         builder.Entity<Car>()
             .HasMany(car => car.PreviousDealerships)

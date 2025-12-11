@@ -8,7 +8,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation;
 
 internal sealed class HexadecimalCodec
 {
-    public int Decode(string? value)
+    // This implementation is deliberately simple for demonstration purposes.
+    // Consider using something more robust, such as https://github.com/sqids/sqids-dotnet.
+    public static HexadecimalCodec Instance { get; } = new();
+
+    private HexadecimalCodec()
+    {
+    }
+
+    public long Decode(string? value)
     {
         if (value == null)
         {
@@ -25,7 +33,7 @@ internal sealed class HexadecimalCodec
         }
 
         string stringValue = FromHexString(value[1..]);
-        return int.Parse(stringValue);
+        return long.Parse(stringValue, CultureInfo.InvariantCulture);
     }
 
     private static string FromHexString(string hexString)
@@ -35,7 +43,7 @@ internal sealed class HexadecimalCodec
         for (int index = 0; index < hexString.Length; index += 2)
         {
             string hexChar = hexString.Substring(index, 2);
-            byte bt = byte.Parse(hexChar, NumberStyles.HexNumber);
+            byte bt = byte.Parse(hexChar, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
             bytes.Add(bt);
         }
 
@@ -43,14 +51,14 @@ internal sealed class HexadecimalCodec
         return new string(chars);
     }
 
-    public string? Encode(int value)
+    public string? Encode(long value)
     {
         if (value == 0)
         {
             return null;
         }
 
-        string stringValue = value.ToString();
+        string stringValue = value.ToString(CultureInfo.InvariantCulture);
         return $"x{ToHexString(stringValue)}";
     }
 
@@ -60,7 +68,7 @@ internal sealed class HexadecimalCodec
 
         foreach (byte bt in Encoding.ASCII.GetBytes(value))
         {
-            builder.Append(bt.ToString("X2"));
+            builder.Append(bt.ToString("X2", CultureInfo.InvariantCulture));
         }
 
         return builder.ToString();

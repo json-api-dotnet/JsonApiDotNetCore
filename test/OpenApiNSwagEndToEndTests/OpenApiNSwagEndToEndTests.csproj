@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
@@ -20,7 +20,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
     <PackageReference Include="NSwag.ApiDescription.Client" Version="$(NSwagApiClientVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="$(MicrosoftApiClientVersion)" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -28,14 +27,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="..\OpenApiTests\ClientIdGenerationModes\GeneratedSwagger\swagger.g.json">
-      <Name>ClientIdGenerationModes</Name>
+    <OpenApiReference Include="..\OpenApiTests\AtomicOperations\GeneratedSwagger\swagger.g.json">
+      <Name>AtomicOperations</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\swagger.g.json">
-      <Name>ModelStateValidation</Name>
+    <OpenApiReference Include="..\OpenApiTests\AttributeTypes\GeneratedSwagger\swagger.g.json">
+      <Name>AttributeTypes</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ClientIdGenerationModes\GeneratedSwagger\swagger.g.json">
+      <Name>ClientIdGenerationModes</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
@@ -47,14 +52,8 @@
       <OutputPath>%(ClassName).cs</OutputPath>
       <NSwagWrapResponses>true</NSwagWrapResponses>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\swagger.g.json">
-      <Name>QueryStrings</Name>
-      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
-      <ClassName>%(Name)Client</ClassName>
-      <OutputPath>%(ClassName).cs</OutputPath>
-    </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\RestrictedControllers\GeneratedSwagger\swagger.g.json">
-      <Name>RestrictedControllers</Name>
+    <OpenApiReference Include="..\OpenApiTests\IdObfuscation\GeneratedSwagger\swagger.g.json">
+      <Name>IdObfuscation</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
@@ -65,8 +64,26 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\AtomicOperations\GeneratedSwagger\swagger.g.json">
-      <Name>AtomicOperations</Name>
+    <OpenApiReference Include="..\OpenApiTests\MixedControllers\GeneratedSwagger\swagger.g.json">
+      <Name>MixedControllers</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\swagger.g.json">
+      <Name>ModelStateValidation</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\swagger.g.json">
+      <Name>QueryStrings</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\NoOperations\GeneratedSwagger\swagger.g.json">
+      <Name>NoOperationsInheritance</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
@@ -77,20 +94,20 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\SubsetOfVarious\GeneratedSwagger\swagger.g.json">
-      <Name>SubsetOfVariousInheritance</Name>
-      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
-      <ClassName>%(Name)Client</ClassName>
-      <OutputPath>%(ClassName).cs</OutputPath>
-    </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\SubsetOfOperations\GeneratedSwagger\swagger.g.json">
       <Name>SubsetOfOperationsInheritance</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\NoOperations\GeneratedSwagger\swagger.g.json">
-      <Name>NoOperationsInheritance</Name>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\SubsetOfVarious\GeneratedSwagger\swagger.g.json">
+      <Name>SubsetOfVariousInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\RestrictedControllers\GeneratedSwagger\swagger.g.json">
+      <Name>RestrictedControllers</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>

@@ -110,7 +110,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
         public async Task<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.PrimaryCountryResponseDocument?> PatchAsync(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.UpdateCountryRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.CountriesItemRequestBuilder.CountriesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
-            _ = body ?? throw new ArgumentNullException(nameof(body));
+            if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
@@ -168,7 +168,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToPatchRequestInformation(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.UpdateCountryRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.CountriesItemRequestBuilder.CountriesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
-            _ = body ?? throw new ArgumentNullException(nameof(body));
+            if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");

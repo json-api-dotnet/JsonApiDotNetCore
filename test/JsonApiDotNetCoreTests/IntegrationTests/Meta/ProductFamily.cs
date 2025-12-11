@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Meta")]
-public sealed class ProductFamily : Identifiable<int>
+public sealed class ProductFamily : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

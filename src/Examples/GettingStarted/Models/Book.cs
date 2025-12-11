@@ -6,7 +6,7 @@ namespace GettingStarted.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class Book : Identifiable<int>
+public sealed class Book : Identifiable<long>
 {
     [Attr]
     public string Title { get; set; } = null!;

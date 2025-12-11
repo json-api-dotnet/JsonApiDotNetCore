@@ -168,27 +168,27 @@
         "discriminator": {
           "propertyName": "openapi:discriminator",
           "mapping": {
-            "addBathroom": "#/components/schemas/createBathroomOperation",
-            "addBedroom": "#/components/schemas/createBedroomOperation",
-            "addFamilyHome": "#/components/schemas/createFamilyHomeOperation",
-            "addKitchen": "#/components/schemas/createKitchenOperation",
-            "addLivingRoom": "#/components/schemas/createLivingRoomOperation",
-            "addMansion": "#/components/schemas/createMansionOperation",
-            "addResidence": "#/components/schemas/createResidenceOperation",
-            "addRoom": "#/components/schemas/createRoomOperation",
-            "addToFamilyHomeRooms": "#/components/schemas/addToFamilyHomeRoomsRelationshipOperation",
-            "addToilet": "#/components/schemas/createToiletOperation",
-            "removeFromMansionRooms": "#/components/schemas/removeFromMansionRoomsRelationshipOperation",
-            "removeFromMansionStaff": "#/components/schemas/removeFromMansionStaffRelationshipOperation",
-            "updateBathroomResidence": "#/components/schemas/updateBathroomResidenceRelationshipOperation",
-            "updateBedroomResidence": "#/components/schemas/updateBedroomResidenceRelationshipOperation",
-            "updateFamilyHome": "#/components/schemas/updateFamilyHomeOperation",
-            "updateKitchenResidence": "#/components/schemas/updateKitchenResidenceRelationshipOperation",
-            "updateLivingRoomResidence": "#/components/schemas/updateLivingRoomResidenceRelationshipOperation",
-            "updateMansion": "#/components/schemas/updateMansionOperation",
-            "updateResidence": "#/components/schemas/updateResidenceOperation",
-            "updateRoomResidence": "#/components/schemas/updateRoomResidenceRelationshipOperation",
-            "updateToiletResidence": "#/components/schemas/updateToiletResidenceRelationshipOperation"
+            "addToFamilyHomeRoomsRelationshipOperation": "#/components/schemas/addToFamilyHomeRoomsRelationshipOperation",
+            "createBathroomOperation": "#/components/schemas/createBathroomOperation",
+            "createBedroomOperation": "#/components/schemas/createBedroomOperation",
+            "createFamilyHomeOperation": "#/components/schemas/createFamilyHomeOperation",
+            "createKitchenOperation": "#/components/schemas/createKitchenOperation",
+            "createLivingRoomOperation": "#/components/schemas/createLivingRoomOperation",
+            "createMansionOperation": "#/components/schemas/createMansionOperation",
+            "createResidenceOperation": "#/components/schemas/createResidenceOperation",
+            "createRoomOperation": "#/components/schemas/createRoomOperation",
+            "createToiletOperation": "#/components/schemas/createToiletOperation",
+            "removeFromMansionRoomsRelationshipOperation": "#/components/schemas/removeFromMansionRoomsRelationshipOperation",
+            "removeFromMansionStaffRelationshipOperation": "#/components/schemas/removeFromMansionStaffRelationshipOperation",
+            "updateBathroomResidenceRelationshipOperation": "#/components/schemas/updateBathroomResidenceRelationshipOperation",
+            "updateBedroomResidenceRelationshipOperation": "#/components/schemas/updateBedroomResidenceRelationshipOperation",
+            "updateFamilyHomeOperation": "#/components/schemas/updateFamilyHomeOperation",
+            "updateKitchenResidenceRelationshipOperation": "#/components/schemas/updateKitchenResidenceRelationshipOperation",
+            "updateLivingRoomResidenceRelationshipOperation": "#/components/schemas/updateLivingRoomResidenceRelationshipOperation",
+            "updateMansionOperation": "#/components/schemas/updateMansionOperation",
+            "updateResidenceOperation": "#/components/schemas/updateResidenceOperation",
+            "updateRoomResidenceRelationshipOperation": "#/components/schemas/updateRoomResidenceRelationshipOperation",
+            "updateToiletResidenceRelationshipOperation": "#/components/schemas/updateToiletResidenceRelationshipOperation"
           }
         },
         "x-abstract": true
@@ -3254,5 +3254,10 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "operations"
+    }
+  ]
 }

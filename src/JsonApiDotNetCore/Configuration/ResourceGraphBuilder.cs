@@ -130,7 +130,7 @@ public partial class ResourceGraphBuilder
             if (resourceType.FindAttributeByPublicName(attribute.PublicName) == null)
             {
                 throw new InvalidConfigurationException(
-                    $"Attribute '{attribute.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                    $"Attribute '{attribute}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }
@@ -142,7 +142,7 @@ public partial class ResourceGraphBuilder
             if (resourceType.FindRelationshipByPublicName(relationship.PublicName) == null)
             {
                 throw new InvalidConfigurationException(
-                    $"Relationship '{relationship.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                    $"Relationship '{relationship}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }
@@ -165,6 +165,32 @@ public partial class ResourceGraphBuilder
     private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
     {
         return entityType is { IsPropertyBag: true, HasSharedClrType: true };
+    }
+
+    /// <summary>
+    /// Removes a JSON:API resource.
+    /// </summary>
+    /// <typeparam name="TResource">
+    /// The resource CLR type.
+    /// </typeparam>
+    public ResourceGraphBuilder Remove<TResource>()
+        where TResource : class, IIdentifiable
+    {
+        return Remove(typeof(TResource));
+    }
+
+    /// <summary>
+    /// Removes a JSON:API resource.
+    /// </summary>
+    /// <param name="resourceClrType">
+    /// The resource CLR type.
+    /// </param>
+    public ResourceGraphBuilder Remove(Type resourceClrType)
+    {
+        ArgumentNullException.ThrowIfNull(resourceClrType);
+
+        _resourceTypesByClrType.Remove(resourceClrType);
+        return this;
     }
 
     /// <summary>
@@ -273,7 +299,7 @@ public partial class ResourceGraphBuilder
 
             if (attribute == null)
             {
-                if (property.Name == nameof(Identifiable<object>.Id))
+                if (property.Name == nameof(Identifiable<>.Id))
                 {
                     // Although strictly not correct, 'id' is added to the list of attributes for convenience.
                     // For example, it enables to filter on ID, without the need to special-case existing logic.

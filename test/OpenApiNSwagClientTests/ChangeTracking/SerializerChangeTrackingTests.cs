@@ -751,7 +751,7 @@ public sealed class SerializerChangeTrackingTests
             {
               "atomic:operations": [
                 {
-                  "openapi:discriminator": "updateStaffMember",
+                  "openapi:discriminator": "updateStaffMemberOperation",
                   "op": "update",
                   "data": {
                     "type": "staffMembers",
@@ -762,7 +762,7 @@ public sealed class SerializerChangeTrackingTests
                   }
                 },
                 {
-                  "openapi:discriminator": "updateStaffMember",
+                  "openapi:discriminator": "updateStaffMemberOperation",
                   "op": "update",
                   "data": {
                     "type": "staffMembers",
@@ -773,7 +773,7 @@ public sealed class SerializerChangeTrackingTests
                   }
                 },
                 {
-                  "openapi:discriminator": "updateSupermarket",
+                  "openapi:discriminator": "updateSupermarketOperation",
                   "op": "update",
                   "data": {
                     "type": "supermarkets",
@@ -784,7 +784,7 @@ public sealed class SerializerChangeTrackingTests
                   }
                 },
                 {
-                  "openapi:discriminator": "updateSupermarket",
+                  "openapi:discriminator": "updateSupermarketOperation",
                   "op": "update",
                   "data": {
                     "type": "supermarkets",
@@ -802,13 +802,11 @@ public sealed class SerializerChangeTrackingTests
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class ComplexType : NotifyPropertySet
     {
-        private DateTime? _nullableDateTime;
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? NullableDateTime
         {
-            get => _nullableDateTime;
-            set => SetProperty(ref _nullableDateTime, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public NestedType? NestedType { get; set; }
@@ -817,21 +815,18 @@ public sealed class SerializerChangeTrackingTests
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class NestedType : NotifyPropertySet
     {
-        private int? _nullableInt;
-        private string? _nullableString;
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? NullableInt
         {
-            get => _nullableInt;
-            set => SetProperty(ref _nullableInt, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string? NullableString
         {
-            get => _nullableString;
-            set => SetProperty(ref _nullableString, value);
+            get;
+            set => SetProperty(ref field, value);
         }
     }
 

@@ -85,7 +85,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
         if (sparseFieldSet == null)
         {
             // We add ID to an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
-            AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
+            AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<>.Id));
             return new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
         }
 

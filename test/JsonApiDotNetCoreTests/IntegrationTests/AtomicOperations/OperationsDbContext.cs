@@ -21,7 +21,7 @@ public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> op
     {
         builder.Entity<MusicTrack>()
             .HasOne(musicTrack => musicTrack.Lyric)
-            .WithOne(lyric => lyric.Track!)
+            .WithOne(lyric => lyric.Track)
             .HasForeignKey<MusicTrack>("LyricId");
 
         builder.Entity<MusicTrack>()

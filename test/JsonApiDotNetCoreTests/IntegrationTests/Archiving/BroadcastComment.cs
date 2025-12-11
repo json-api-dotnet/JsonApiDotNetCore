@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Archiving")]
-public sealed class BroadcastComment : Identifiable<int>
+public sealed class BroadcastComment : Identifiable<long>
 {
     [Attr]
     public string Text { get; set; } = null!;

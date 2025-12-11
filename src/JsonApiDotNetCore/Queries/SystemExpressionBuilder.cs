@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-#pragma warning disable AV1008
+#pragma warning disable AV1008 // Class should not be static
 
 namespace JsonApiDotNetCore.Queries;
 

@@ -142,7 +142,7 @@ public class SortParser : QueryExpressionParser, ISortParser
 
         if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
-            throw new QueryParseException($"Sorting on attribute '{attribute.PublicName}' is not allowed.", position);
+            throw new QueryParseException($"Sorting on attribute '{attribute}' is not allowed.", position);
         }
     }
 }

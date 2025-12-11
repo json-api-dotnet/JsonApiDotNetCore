@@ -577,11 +577,11 @@ public sealed class ResponseModelAdapterTests
         // @formatter:wrap_before_first_method_call true
 
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-            .Add<Article, int>()
-            .Add<Person, int>()
-            .Add<Blog, int>()
-            .Add<Food, int>()
-            .Add<Song, int>()
+            .Add<Article, long>()
+            .Add<Person, long>()
+            .Add<Blog, long>()
+            .Add<Food, long>()
+            .Add<Song, long>()
             .Build();
 
         // @formatter:wrap_chained_method_calls restore

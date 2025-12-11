@@ -204,7 +204,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                     {
                         object? attributeValue;
 
-                        if (property.Name == nameof(Identifiable<object>.Id))
+                        if (property.Name == nameof(Identifiable<>.Id))
                         {
                             attributeValue = JsonInvalidAttributeInfo.Id;
                         }
@@ -214,7 +214,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                             {
                                 attributeValue = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);
                             }
-                            catch (JsonException)
+                            catch (JsonException exception)
                             {
                                 // Inside a JsonConverter there is no way to know where in the JSON object tree we are. And the serializer
                                 // is unable to provide the correct position either. So we avoid an exception and postpone producing an error
@@ -222,7 +222,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                                 var jsonElement = ReadSubTree<JsonElement>(ref reader, options);
 
                                 attributeValue = new JsonInvalidAttributeInfo(attributeName, property.PropertyType, jsonElement.ToString(),
-                                    jsonElement.ValueKind);
+                                    jsonElement.ValueKind, exception);
                             }
                         }
 

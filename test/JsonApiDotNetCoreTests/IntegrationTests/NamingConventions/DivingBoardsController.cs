@@ -6,5 +6,5 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
 
 public sealed class DivingBoardsController(
-    IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<DivingBoard, int> resourceService)
-    : JsonApiController<DivingBoard, int>(options, resourceGraph, loggerFactory, resourceService);
+    IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<DivingBoard, long> resourceService)
+    : JsonApiController<DivingBoard, long>(options, resourceGraph, loggerFactory, resourceService);

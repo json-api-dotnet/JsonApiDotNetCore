@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Archiving")]
-public sealed class TelevisionNetwork : Identifiable<int>
+public sealed class TelevisionNetwork : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

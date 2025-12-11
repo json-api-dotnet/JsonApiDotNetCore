@@ -7,7 +7,7 @@ namespace ReportsExample.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(GenerateControllerEndpoints = JsonApiEndpoints.GetCollection)]
-public sealed class Report : Identifiable<int>
+public sealed class Report : Identifiable<long>
 {
     [Attr]
     public string Title { get; set; } = null!;

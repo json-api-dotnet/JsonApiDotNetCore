@@ -7,10 +7,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.EagerLoading")]
-public sealed class Building : Identifiable<int>
+public sealed class Building : Identifiable<long>
 {
-    private string? _tempPrimaryDoorColor;
-
     [Attr]
     public string Number { get; set; } = null!;
 
@@ -24,7 +22,7 @@ public sealed class Building : Identifiable<int>
     {
         get
         {
-            if (_tempPrimaryDoorColor == null && PrimaryDoor == null)
+            if (field == null && PrimaryDoor == null)
             {
                 // The ASP.NET model validator reads the value of this required property, to ensure it is not null.
                 // When creating a resource, BuildingDefinition ensures a value is assigned. But when updating a resource
@@ -33,7 +31,7 @@ public sealed class Building : Identifiable<int>
                 return null!;
             }
 
-            return _tempPrimaryDoorColor ?? PrimaryDoor!.Color;
+            return field ?? PrimaryDoor!.Color;
         }
         set
         {
@@ -41,7 +39,7 @@ public sealed class Building : Identifiable<int>
             {
                 // A request body is being deserialized. At this time, related entities have not been loaded yet.
                 // We cache the assigned value in a private field, so it can be used later.
-                _tempPrimaryDoorColor = value;
+                field = value;
             }
             else
             {

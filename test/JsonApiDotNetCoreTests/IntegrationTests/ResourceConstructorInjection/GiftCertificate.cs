@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection")]
-public sealed class GiftCertificate(InjectionDbContext injectionDbContext) : Identifiable<int>
+public sealed class GiftCertificate(InjectionDbContext injectionDbContext) : Identifiable<long>
 {
     private readonly TimeProvider _timeProvider = injectionDbContext.TimeProvider;
 
