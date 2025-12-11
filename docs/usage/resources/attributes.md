@@ -5,7 +5,7 @@ If you want an attribute on your model to be publicly available, add the `AttrAt
 ```c#
 #nullable enable
 
-public class Person : identifiable<long>
+public class Person : Identifiable<long>
 {
     [Attr]
     public string? FirstName { get; set; }
@@ -24,7 +24,7 @@ There are two ways the exposed attribute name is determined:
 2. Individually using the attribute's constructor.
 ```c#
 #nullable enable
-public class Person : identifiable<long>
+public class Person : Identifiable<long>
 {
     [Attr(PublicName = "first-name")]
     public string? FirstName { get; set; }
@@ -51,7 +51,7 @@ Otherwise, the attribute is silently omitted.
 ```c#
 #nullable enable
 
-public class User : identifiable<long>
+public class User : Identifiable<long>
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; } = null!;
@@ -65,7 +65,7 @@ Indicates whether the attribute can be filtered on. When not allowed and used in
 ```c#
 #nullable enable
 
-public class Person : identifiable<long>
+public class Person : Identifiable<long>
 {
     [Attr(Capabilities = AttrCapabilities.AllowFilter)]
     public string? FirstName { get; set; }
@@ -79,7 +79,7 @@ Indicates whether the attribute can be sorted on. When not allowed and used in `
 ```c#
 #nullable enable
 
-public class Person : identifiable<long>
+public class Person : Identifiable<long>
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowSort)]
     public string? FirstName { get; set; }
@@ -93,7 +93,7 @@ Indicates whether POST requests can assign the attribute value. When sent but no
 ```c#
 #nullable enable
 
-public class Person : identifiable<long>
+public class Person : Identifiable<long>
 {
     [Attr(Capabilities = AttrCapabilities.AllowCreate)]
     public string? CreatorName { get; set; }
@@ -107,7 +107,7 @@ Indicates whether PATCH requests can update the attribute value. When sent but n
 ```c#
 #nullable enable
 
-public class Person : identifiable<long>
+public class Person : Identifiable<long>
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string? FirstName { get; set; };
@@ -124,7 +124,7 @@ You can also use [global options](~/usage/options.md#customize-serializer-option
 ```c#
 #nullable enable
 
-public class Foo : identifiable<long>
+public class Foo : Identifiable<long>
 {
     [Attr]
     public Bar? Bar { get; set; }
@@ -146,7 +146,7 @@ and retrieval.
 ```c#
 #nullable enable
 
-public class Foo : identifiable<long>
+public class Foo : Identifiable<long>
 {
     [Attr]
     [NotMapped]
