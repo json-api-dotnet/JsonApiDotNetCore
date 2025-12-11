@@ -93,9 +93,9 @@
 <p>If you want to use a data access technology other than Entity Framework Core, you can create an implementation of <code>IResourceRepository&lt;TResource, TId&gt;</code>.
 If you only need minor changes you can override the methods defined in <code>EntityFrameworkCoreRepository&lt;TResource, TId&gt;</code>.</p>
 <pre><code class="lang-c#">// Program.cs
-builder.Services.AddScoped&lt;IResourceRepository&lt;Article, int&gt;, ArticleRepository&gt;();
-builder.Services.AddScoped&lt;IResourceReadRepository&lt;Article, int&gt;, ArticleRepository&gt;();
-builder.Services.AddScoped&lt;IResourceWriteRepository&lt;Article, int&gt;, ArticleRepository&gt;();
+builder.Services.AddScoped&lt;IResourceRepository&lt;Article, long&gt;, ArticleRepository&gt;();
+builder.Services.AddScoped&lt;IResourceReadRepository&lt;Article, long&gt;, ArticleRepository&gt;();
+builder.Services.AddScoped&lt;IResourceWriteRepository&lt;Article, long&gt;, ArticleRepository&gt;();
 </code></pre>
 <p>In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.</p>
@@ -108,7 +108,7 @@ builder.Services.AddResourceRepository&lt;ArticleRepository&gt;();
 </div>
 <p>A sample implementation that performs authorization might look like this.</p>
 <p>All of the methods in EntityFrameworkCoreRepository will use the <code>GetAll()</code> method to get the <code>DbSet&lt;TResource&gt;</code>, so this is a good method to apply filters such as user or tenant authorization.</p>
-<pre><code class="lang-c#">public class ArticleRepository : EntityFrameworkCoreRepository&lt;Article, int&gt;
+<pre><code class="lang-c#">public class ArticleRepository : EntityFrameworkCoreRepository&lt;Article, long&gt;
 {
     private readonly IAuthenticationService _authenticationService;
 

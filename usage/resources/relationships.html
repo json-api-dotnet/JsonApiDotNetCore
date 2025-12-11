@@ -98,7 +98,7 @@ The left side of a relationship is where the relationship is declared, the right
 <p>This exposes a to-one relationship.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class TodoItem : Identifiable&lt;int&gt;
+public class TodoItem : Identifiable&lt;long&gt;
 {
     [HasOne]
     public Person? Owner { get; set; }
@@ -114,13 +114,13 @@ to create a foreign key column.</strong></p>
 <p>The next example defines that each car requires an engine, while an engine is optionally linked to a car.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public sealed class Car : Identifiable&lt;int&gt;
+public sealed class Car : Identifiable&lt;long&gt;
 {
     [HasOne]
     public Engine Engine { get; set; } = null!;
 }
 
-public sealed class Engine : Identifiable&lt;int&gt;
+public sealed class Engine : Identifiable&lt;long&gt;
 {
     [HasOne]
     public Car? Car { get; set; }
@@ -185,13 +185,13 @@ Therefore the general advice is to map the delete behavior of optional one-to-on
 <p>The next example defines that each car optionally has an engine, while an engine is optionally linked to a car.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public sealed class Car : Identifiable&lt;int&gt;
+public sealed class Car : Identifiable&lt;long&gt;
 {
     [HasOne]
     public Engine? Engine { get; set; }
 }
 
-public sealed class Engine : Identifiable&lt;int&gt;
+public sealed class Engine : Identifiable&lt;long&gt;
 {
     [HasOne]
     public Car? Car { get; set; }
@@ -253,7 +253,7 @@ CREATE UNIQUE INDEX &quot;IX_Cars_EngineId&quot; ON &quot;Cars&quot; (&quot;Engi
 </code></pre>
 <h2 id="hasmany">HasMany</h2>
 <p>This exposes a to-many relationship.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">public class Person : Identifiable&lt;long&gt;
 {
     [HasMany]
     public ICollection&lt;TodoItem&gt; TodoItems { get; set; } = new HashSet&lt;TodoItem&gt;();
@@ -275,7 +275,7 @@ which would expose the relationship to the client the same way as any other <cod
 However, under the covers it would use the join type and Entity Framework Core's APIs to get and set the relationship.</p>
 <pre><code class="lang-c#">#nullable disable
 
-public class Article : Identifiable&lt;int&gt;
+public class Article : Identifiable&lt;long&gt;
 {
     // tells Entity Framework Core to ignore this property
     [NotMapped]
@@ -298,7 +298,7 @@ public class Article : Identifiable&lt;int&gt;
 </li>
 </ol>
 <pre><code class="lang-c#">#nullable enable
-public class TodoItem : Identifiable&lt;int&gt;
+public class TodoItem : Identifiable&lt;long&gt;
 {
     [HasOne(PublicName = &quot;item-owner&quot;)]
     public Person Owner { get; set; } = null!;
@@ -322,7 +322,7 @@ Otherwise, the relationship (and its related resources, when included) are silen
 </div>
 <pre><code class="lang-c#">#nullable enable
 
-public class User : Identifiable&lt;int&gt;
+public class User : Identifiable&lt;long&gt;
 {
     [HasOne(Capabilities = ~HasOneCapabilities.AllowView)]
     public LoginAccount Account { get; set; } = null!;
@@ -332,7 +332,7 @@ public class User : Identifiable&lt;int&gt;
 <p>Indicates whether the relationship can be included. When not allowed and used in <code>?include=</code>, an HTTP 400 is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class User : Identifiable&lt;int&gt;
+public class User : Identifiable&lt;long&gt;
 {
     [HasMany(Capabilities = ~HasManyCapabilities.AllowInclude)]
     public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
@@ -342,7 +342,7 @@ public class User : Identifiable&lt;int&gt;
 <p>For to-many relationships only. Indicates whether it can be used in the <code>count()</code> and <code>has()</code> filter functions. When not allowed and used in <code>?filter=</code>, an HTTP 400 is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class User : Identifiable&lt;int&gt;
+public class User : Identifiable&lt;long&gt;
 {
     [HasMany(Capabilities = HasManyCapabilities.AllowFilter)]
     public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
@@ -352,7 +352,7 @@ public class User : Identifiable&lt;int&gt;
 <p>Indicates whether POST and PATCH requests can replace the relationship. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class User : Identifiable&lt;int&gt;
+public class User : Identifiable&lt;long&gt;
 {
     [HasOne(Capabilities = ~HasOneCapabilities.AllowSet)]
     public LoginAccount Account { get; set; } = null!;
@@ -362,7 +362,7 @@ public class User : Identifiable&lt;int&gt;
 <p>For to-many relationships only. Indicates whether POST requests can add resources to the relationship. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class User : Identifiable&lt;int&gt;
+public class User : Identifiable&lt;long&gt;
 {
     [HasMany(Capabilities = ~HasManyCapabilities.AllowAdd)]
     public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
@@ -372,7 +372,7 @@ public class User : Identifiable&lt;int&gt;
 <p>For to-many relationships only. Indicates whether DELETE requests can remove resources from the relationship. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class User : Identifiable&lt;int&gt;
+public class User : Identifiable&lt;long&gt;
 {
     [HasMany(Capabilities = ~HasManyCapabilities.AllowRemove)]
     public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
@@ -383,7 +383,7 @@ public class User : Identifiable&lt;int&gt;
 <p>Relationships can be marked to disallow including them using the <code>?include=</code> query string parameter. When not allowed, it results in an HTTP 400 response.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class TodoItem : Identifiable&lt;int&gt;
+public class TodoItem : Identifiable&lt;long&gt;
 {
     [HasOne(CanInclude: false)]
     public Person? Owner { get; set; }
@@ -395,7 +395,7 @@ public class TodoItem : Identifiable&lt;int&gt;
 So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using <code>EagerLoad</code>, for example:</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class ShippingAddress : Identifiable&lt;int&gt;
+public class ShippingAddress : Identifiable&lt;long&gt;
 {
     [Attr]
     public string Street { get; set; } = null!;

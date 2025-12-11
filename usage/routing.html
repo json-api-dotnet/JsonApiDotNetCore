@@ -106,15 +106,15 @@ builder.Services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; options.Namespace 
 <p>The library will configure routes for all auto-generated and hand-written controllers in your project. By default, routes are camel-cased. This is based on the <a href="https://jsonapi.org/recommendations/">recommendations</a> outlined in the JSON:API spec.</p>
 <pre><code class="lang-c#">// Auto-generated
 [Resource]
-public class OrderSummary : Identifiable&lt;int&gt;
+public class OrderSummary : Identifiable&lt;long&gt;
 {
 }
 
 // Hand-written
-public class OrderLineController : JsonApiController&lt;OrderLine, int&gt;
+public class OrderLineController : JsonApiController&lt;OrderLine, long&gt;
 {
     public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService&lt;OrderLine, int&gt; resourceService)
+        ILoggerFactory loggerFactory, IResourceService&lt;OrderLine, long&gt; resourceService)
         : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
@@ -144,10 +144,10 @@ partial class OrderSummariesController
 // Hand-written
 [DisableRoutingConvention]
 [Route(&quot;custom/route/lines-in-order&quot;)]
-public class OrderLineController : JsonApiController&lt;OrderLine, int&gt;
+public class OrderLineController : JsonApiController&lt;OrderLine, long&gt;
 {
     public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService&lt;OrderLine, int&gt; resourceService)
+        ILoggerFactory loggerFactory, IResourceService&lt;OrderLine, long&gt; resourceService)
         : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }

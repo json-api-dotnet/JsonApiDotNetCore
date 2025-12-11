@@ -96,7 +96,7 @@
 <p>When ModelState validation is enabled, non-nullable value types will <strong>not</strong> trigger a validation error when omitted in the request body.
 To make JsonApiDotNetCore return an error when such a property is missing on resource creation, declare it as nullable and annotate it with <code>[Required]</code>.</p>
 <p>Example:</p>
-<pre><code class="lang-c#">public sealed class User : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">public sealed class User : Identifiable&lt;long&gt;
 {
     [Attr]
     [Required]
@@ -111,7 +111,7 @@ To make JsonApiDotNetCore return an error when such a property is missing on res
 <p>Example:</p>
 <pre><code class="lang-c#">#nullable disable
 
-public sealed class Label : Identifiable&lt;int&gt;
+public sealed class Label : Identifiable&lt;long&gt;
 {
     [Attr]
     [Required]
@@ -138,7 +138,7 @@ public sealed class Label : Identifiable&lt;int&gt;
 <p>Example:</p>
 <pre><code class="lang-c#">#nullable enable
 
-public sealed class Label : Identifiable&lt;int&gt;
+public sealed class Label : Identifiable&lt;long&gt;
 {
     [Attr]
     public string Name { get; set; } = null!;

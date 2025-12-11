@@ -93,7 +93,7 @@
 <p>If you want an attribute on your model to be publicly available, add the <code>AttrAttribute</code>.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
     [Attr]
     public string? FirstName { get; set; }
@@ -111,7 +111,7 @@ public class Person : Identifiable&lt;int&gt;
 </li>
 </ol>
 <pre><code class="lang-c#">#nullable enable
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
     [Attr(PublicName = &quot;first-name&quot;)]
     public string? FirstName { get; set; }
@@ -128,7 +128,7 @@ public class Person : Identifiable&lt;int&gt;
 Otherwise, the attribute is silently omitted.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class User : Identifiable&lt;int&gt;
+public class User : Identifiable&lt;long&gt;
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; } = null!;
@@ -138,7 +138,7 @@ public class User : Identifiable&lt;int&gt;
 <p>Indicates whether the attribute can be filtered on. When not allowed and used in <code>?filter=</code>, an HTTP 400 is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowFilter)]
     public string? FirstName { get; set; }
@@ -148,7 +148,7 @@ public class Person : Identifiable&lt;int&gt;
 <p>Indicates whether the attribute can be sorted on. When not allowed and used in <code>?sort=</code>, an HTTP 400 is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowSort)]
     public string? FirstName { get; set; }
@@ -158,7 +158,7 @@ public class Person : Identifiable&lt;int&gt;
 <p>Indicates whether POST requests can assign the attribute value. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowCreate)]
     public string? CreatorName { get; set; }
@@ -168,7 +168,7 @@ public class Person : Identifiable&lt;int&gt;
 <p>Indicates whether PATCH requests can update the attribute value. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string? FirstName { get; set; };
@@ -181,7 +181,7 @@ so you should use their APIs to specify serialization format.
 You can also use <a href="../options.html#customize-serializer-options">global options</a> to control the <code>JsonSerializer</code> behavior.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class Foo : Identifiable&lt;int&gt;
+public class Foo : Identifiable&lt;long&gt;
 {
     [Attr]
     public Bar? Bar { get; set; }
@@ -200,7 +200,7 @@ The first member is the concrete type that you will directly interact with in yo
 and retrieval.</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class Foo : Identifiable&lt;int&gt;
+public class Foo : Identifiable&lt;long&gt;
 {
     [Attr]
     [NotMapped]

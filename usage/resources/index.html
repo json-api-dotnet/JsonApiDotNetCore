@@ -100,11 +100,11 @@
 <p>Earlier versions of JsonApiDotNetCore allowed a short-hand notation when <code>TId</code> is of type <code>int</code>. This was removed in v5.</p>
 </div>
 <p>If you need to attach annotations or attributes on the <code>Id</code> property, you can override the virtual property.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">public class Person : Identifiable&lt;long&gt;
 {
     [Key]
     [Column(&quot;PersonID&quot;)]
-    public override int Id { get; set; }
+    public override long Id { get; set; }
 }
 </code></pre>
 <p>If your resource must inherit from another class, you can always implement the interface yourself.

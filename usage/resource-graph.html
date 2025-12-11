@@ -127,7 +127,7 @@ builder.Services.AddJsonApi&lt;AppDbContext&gt;(discovery: discovery =&gt; disco
 <p>You can manually construct the graph.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =&gt;
-    resourceGraphBuilder.Add&lt;Person, int&gt;());
+    resourceGraphBuilder.Add&lt;Person, long&gt;());
 </code></pre>
 <h2 id="resource-name">Resource Name</h2>
 <p>The public resource name is exposed through the <code>type</code> member in the JSON:API payload. This can be configured using the following approaches (in order of priority):</p>
@@ -137,14 +137,14 @@ builder.Services.AddJsonApi(resources: resourceGraphBuilder =&gt;
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =&gt;
 {
-    resourceGraphBuilder.Add&lt;Person, int&gt;(publicName: &quot;individuals&quot;);
+    resourceGraphBuilder.Add&lt;Person, long&gt;(publicName: &quot;individuals&quot;);
 });
 </code></pre>
 <ol start="2">
 <li>The <code>PublicName</code> property when a model is decorated with a <code>ResourceAttribute</code>.</li>
 </ol>
 <pre><code class="lang-c#">[Resource(PublicName = &quot;individuals&quot;)]
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
 }
 </code></pre>
@@ -152,7 +152,7 @@ public class Person : Identifiable&lt;int&gt;
 <li>The configured naming convention (by default this is camel-case), after pluralization.</li>
 </ol>
 <pre><code class="lang-c#">// this will be registered as &quot;people&quot;
-public class Person : Identifiable&lt;int&gt;
+public class Person : Identifiable&lt;long&gt;
 {
 }
 </code></pre>

@@ -183,10 +183,10 @@ partial class ArticlesController
 Likewise, to provide write-only access, inherit from <code>JsonApiCommandController</code>, which blocks all GET and HEAD requests.</p>
 <p>You can even make your own mix of allowed routes by calling the alternate constructor of <code>JsonApiController</code> and injecting the set of service implementations available.
 In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable <code>IResourceService</code> implementation, so simply inject the implementation that is available.</p>
-<pre><code class="lang-c#">public class ReportsController : JsonApiController&lt;Report, int&gt;
+<pre><code class="lang-c#">public class ReportsController : JsonApiController&lt;Report, long&gt;
 {
     public ReportsController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IGetAllService&lt;Report, int&gt; getAllService)
+        ILoggerFactory loggerFactory, IGetAllService&lt;Report, long&gt; getAllService)
         : base(options, resourceGraph, loggerFactory, getAll: getAllService)
     {
     }

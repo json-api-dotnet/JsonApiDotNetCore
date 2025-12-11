@@ -127,7 +127,7 @@ public sealed class CopyrightResponseMeta : IResponseMeta
 <p>Resource-specific metadata can be added by implementing <code>IResourceDefinition&lt;TResource, TId&gt;.GetMeta</code> (or overriding it on <code>JsonApiResourceDefinition&lt;TResource, TId&gt;</code>):</p>
 <pre><code class="lang-c#">#nullable enable
 
-public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
+public class PersonDefinition : JsonApiResourceDefinition&lt;Person, long&gt;
 {
     public PersonDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
