@@ -169,8 +169,8 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchKind_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)">
-  MatchTextExpression(ResourceFieldChainExpression, LiteralConstantExpression, TextMatchKind)
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchKind_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)">
+  MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchKind)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -178,12 +178,12 @@ public class MatchTextExpression : FilterExpression</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue, TextMatchKind matchKind)</code></pre>
+    <pre><code class="lang-csharp hljs">public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression textValue, TextMatchKind matchKind)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>targetAttribute</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><code>matchTarget</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
     <dd></dd>
     <dt><code>textValue</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html">LiteralConstantExpression</a></dt>
     <dd></dd>
@@ -238,19 +238,19 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
 
 
-  <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TargetAttribute_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute*"></a>
+  <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchTarget_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TargetAttribute" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute">
-  TargetAttribute
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchTarget" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget">
+  MatchTarget
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The attribute whose value to match. Chain format: an optional list of to-one relationships, followed by an attribute.</p>
+  <div class="markdown level1 summary"><p>The function or attribute whose value to match. Attribute chain format: an optional list of to-one relationships, followed by an attribute.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceFieldChainExpression TargetAttribute { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryExpression MatchTarget { get; }</code></pre>
   </div>
 
 
@@ -259,7 +259,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
     <dd></dd>
   </dl>
 
@@ -277,7 +277,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The text to match the attribute's value against.</p>
+  <div class="markdown level1 summary"><p>The text to match against.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

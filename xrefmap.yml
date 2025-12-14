@@ -6430,15 +6430,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.AnyExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression
   nameWithType: AnyExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression})
-  name: AnyExpression(ResourceFieldChainExpression, IImmutableSet<LiteralConstantExpression>)
-  href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression})
-  name.vb: New(ResourceFieldChainExpression, IImmutableSet(Of LiteralConstantExpression))
-  fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression.AnyExpression(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, System.Collections.Immutable.IImmutableSet<JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression>)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.AnyExpression.New(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, System.Collections.Immutable.IImmutableSet(Of JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression))
-  nameWithType: AnyExpression.AnyExpression(ResourceFieldChainExpression, IImmutableSet<LiteralConstantExpression>)
-  nameWithType.vb: AnyExpression.New(ResourceFieldChainExpression, IImmutableSet(Of LiteralConstantExpression))
+- uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression})
+  name: AnyExpression(QueryExpression, IImmutableSet<LiteralConstantExpression>)
+  href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression})
+  name.vb: New(QueryExpression, IImmutableSet(Of LiteralConstantExpression))
+  fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression.AnyExpression(JsonApiDotNetCore.Queries.Expressions.QueryExpression, System.Collections.Immutable.IImmutableSet<JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression>)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.AnyExpression.New(JsonApiDotNetCore.Queries.Expressions.QueryExpression, System.Collections.Immutable.IImmutableSet(Of JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression))
+  nameWithType: AnyExpression.AnyExpression(QueryExpression, IImmutableSet<LiteralConstantExpression>)
+  nameWithType.vb: AnyExpression.New(QueryExpression, IImmutableSet(Of LiteralConstantExpression))
 - uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor*
   name: AnyExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression__ctor_
@@ -6507,19 +6507,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression.GetHashCode
   nameWithType: AnyExpression.GetHashCode
-- uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute
-  name: TargetAttribute
-  href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression_TargetAttribute
-  commentId: P:JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute
-  fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute
-  nameWithType: AnyExpression.TargetAttribute
-- uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute*
-  name: TargetAttribute
-  href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression_TargetAttribute_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute
+- uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget
+  name: MatchTarget
+  href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression_MatchTarget
+  commentId: P:JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget
+  fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget
+  nameWithType: AnyExpression.MatchTarget
+- uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget*
+  name: MatchTarget
+  href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression_MatchTarget_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute
-  nameWithType: AnyExpression.TargetAttribute
+  fullName: JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget
+  nameWithType: AnyExpression.MatchTarget
 - uid: JsonApiDotNetCore.Queries.Expressions.AnyExpression.ToFullString
   name: ToFullString()
   href: api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html#JsonApiDotNetCore_Queries_Expressions_AnyExpression_ToFullString
@@ -7675,15 +7675,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression
   nameWithType: MatchTextExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  name: MatchTextExpression(ResourceFieldChainExpression, LiteralConstantExpression, TextMatchKind)
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchKind_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  name.vb: New(ResourceFieldChainExpression, LiteralConstantExpression, TextMatchKind)
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTextExpression(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.New(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  nameWithType: MatchTextExpression.MatchTextExpression(ResourceFieldChainExpression, LiteralConstantExpression, TextMatchKind)
-  nameWithType.vb: MatchTextExpression.New(ResourceFieldChainExpression, LiteralConstantExpression, TextMatchKind)
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
+  name: MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchKind)
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchKind_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
+  name.vb: New(QueryExpression, LiteralConstantExpression, TextMatchKind)
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTextExpression(JsonApiDotNetCore.Queries.Expressions.QueryExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.New(JsonApiDotNetCore.Queries.Expressions.QueryExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
+  nameWithType: MatchTextExpression.MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchKind)
+  nameWithType.vb: MatchTextExpression.New(QueryExpression, LiteralConstantExpression, TextMatchKind)
 - uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor*
   name: MatchTextExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_
@@ -7752,19 +7752,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind
   nameWithType: MatchTextExpression.MatchKind
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute
-  name: TargetAttribute
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TargetAttribute
-  commentId: P:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute
-  nameWithType: MatchTextExpression.TargetAttribute
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute*
-  name: TargetAttribute
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TargetAttribute_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget
+  name: MatchTarget
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchTarget
+  commentId: P:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget
+  nameWithType: MatchTextExpression.MatchTarget
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget*
+  name: MatchTarget
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchTarget_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute
-  nameWithType: MatchTextExpression.TargetAttribute
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget
+  nameWithType: MatchTextExpression.MatchTarget
 - uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue
   name: TextValue
   href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TextValue

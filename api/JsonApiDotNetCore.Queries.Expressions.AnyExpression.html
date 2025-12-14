@@ -161,8 +161,8 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_Expressions_AnyExpression__ctor_" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression})">
-  AnyExpression(ResourceFieldChainExpression, IImmutableSet&lt;LiteralConstantExpression&gt;)
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression})">
+  AnyExpression(QueryExpression, IImmutableSet&lt;LiteralConstantExpression&gt;)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -170,12 +170,12 @@ public class AnyExpression : FilterExpression</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AnyExpression(ResourceFieldChainExpression targetAttribute, IImmutableSet&lt;LiteralConstantExpression&gt; constants)</code></pre>
+    <pre><code class="lang-csharp hljs">public AnyExpression(QueryExpression matchTarget, IImmutableSet&lt;LiteralConstantExpression&gt; constants)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>targetAttribute</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><code>matchTarget</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
     <dd></dd>
     <dt><code>constants</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.immutable.iimmutableset-1">IImmutableSet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html">LiteralConstantExpression</a>&gt;</dt>
     <dd></dd>
@@ -228,19 +228,19 @@ public class AnyExpression : FilterExpression</code></pre>
 
 
 
-  <a id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_TargetAttribute_" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute*"></a>
+  <a id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_MatchTarget_" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_TargetAttribute" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute">
-  TargetAttribute
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_MatchTarget" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.MatchTarget">
+  MatchTarget
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The attribute whose value to compare. Chain format: an optional list of to-one relationships, followed by an attribute.</p>
+  <div class="markdown level1 summary"><p>The function or attribute whose value to compare. Attribute chain format: an optional list of to-one relationships, followed by an attribute.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceFieldChainExpression TargetAttribute { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryExpression MatchTarget { get; }</code></pre>
   </div>
 
 
@@ -249,7 +249,7 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
     <dd></dd>
   </dl>
 
