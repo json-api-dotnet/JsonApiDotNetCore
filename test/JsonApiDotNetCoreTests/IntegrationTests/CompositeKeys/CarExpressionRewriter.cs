@@ -50,12 +50,15 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
 
     public override QueryExpression? VisitAny(AnyExpression expression, object? argument)
     {
-        PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
-
-        if (IsCarId(property))
+        if (expression.MatchTarget is ResourceFieldChainExpression targetAttributeChain)
         {
-            string[] carStringIds = expression.Constants.Select(constant => (string)constant.TypedValue).ToArray();
-            return RewriteFilterOnCarStringIds(expression.TargetAttribute, carStringIds);
+            PropertyInfo property = targetAttributeChain.Fields[^1].Property;
+
+            if (IsCarId(property))
+            {
+                string[] carStringIds = expression.Constants.Select(constant => (string)constant.TypedValue).ToArray();
+                return RewriteFilterOnCarStringIds(targetAttributeChain, carStringIds);
+            }
         }
 
         return base.VisitAny(expression, argument);
@@ -63,11 +66,14 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
 
     public override QueryExpression? VisitMatchText(MatchTextExpression expression, object? argument)
     {
-        PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
-
-        if (IsCarId(property))
+        if (expression.MatchTarget is ResourceFieldChainExpression targetAttributeChain)
         {
-            throw new NotSupportedException("Partial text matching on Car IDs is not possible.");
+            PropertyInfo property = targetAttributeChain.Fields[^1].Property;
+
+            if (IsCarId(property))
+            {
+                throw new NotSupportedException("Partial text matching on Car IDs is not possible.");
+            }
         }
 
         return base.VisitMatchText(expression, argument);

@@ -7,14 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.IsUpperCase;
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Decrypt;
 
-public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class DecryptFilterTests : IClassFixture<IntegrationTestContext<TestableStartup<DecryptDbContext>, DecryptDbContext>>
 {
-    private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
+    private readonly IntegrationTestContext<TestableStartup<DecryptDbContext>, DecryptDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();
 
-    public IsUpperCaseFilterTests(IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+    public DecryptFilterTests(IntegrationTestContext<TestableStartup<DecryptDbContext>, DecryptDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -22,28 +22,29 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
 
         testContext.ConfigureServices(services =>
         {
-            services.AddTransient<IFilterParser, IsUpperCaseFilterParser>();
-            services.AddTransient<IWhereClauseBuilder, IsUpperCaseWhereClauseBuilder>();
+            services.AddTransient<IFilterParser, DecryptFilterParser>();
+            services.AddTransient<IWhereClauseBuilder, DecryptWhereClauseBuilder>();
         });
     }
 
     [Fact]
-    public async Task Can_filter_casing_at_primary_endpoint()
+    public async Task Can_filter_on_encrypted_column_at_primary_endpoint()
     {
         // Arrange
         List<Blog> blogs = _fakers.Blog.GenerateList(2);
 
-        blogs[0].Title = blogs[0].Title.ToLowerInvariant();
-        blogs[1].Title = blogs[1].Title.ToUpperInvariant();
+        blogs[0].Title = Convert.ToBase64String("something-else"u8);
+        blogs[1].Title = Convert.ToBase64String("two"u8);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
+            await dbContext.DeclareDecryptFunctionAsync();
             await dbContext.ClearTableAsync<Blog>();
             dbContext.Blogs.AddRange(blogs);
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/blogs?filter=isUpperCase(title)";
+        const string route = "/blogs?filter=any(decrypt(title),'one','two','three')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -57,31 +58,32 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Can_filter_casing_in_compound_expression_at_secondary_endpoint()
+    public async Task Can_filter_on_encrypted_column_in_compound_expression_at_secondary_endpoint()
     {
         // Arrange
         Blog blog = _fakers.Blog.GenerateOne();
         blog.Posts = _fakers.BlogPost.GenerateList(4);
 
-        blog.Posts[0].Caption = blog.Posts[0].Caption.ToUpperInvariant();
-        blog.Posts[0].Url = blog.Posts[0].Url.ToUpperInvariant();
+        blog.Posts[0].Caption = Convert.ToBase64String("the-needle-in-the-haystack"u8);
+        blog.Posts[0].Url = Convert.ToBase64String("https://www.domain.org"u8);
 
-        blog.Posts[1].Caption = blog.Posts[1].Caption.ToUpperInvariant();
-        blog.Posts[1].Url = blog.Posts[1].Url.ToLowerInvariant();
+        blog.Posts[1].Caption = Convert.ToBase64String("the-needle-in-the-haystack"u8);
+        blog.Posts[1].Url = Convert.ToBase64String("https://www.domain.com"u8);
 
-        blog.Posts[2].Caption = blog.Posts[1].Caption.ToLowerInvariant();
-        blog.Posts[2].Url = blog.Posts[1].Url.ToUpperInvariant();
+        blog.Posts[2].Caption = Convert.ToBase64String("something-else"u8);
+        blog.Posts[2].Url = Convert.ToBase64String("https://www.domain.org"u8);
 
-        blog.Posts[3].Caption = blog.Posts[2].Caption.ToLowerInvariant();
-        blog.Posts[3].Url = blog.Posts[2].Url.ToLowerInvariant();
+        blog.Posts[3].Caption = Convert.ToBase64String("something-else"u8);
+        blog.Posts[3].Url = Convert.ToBase64String("https://www.domain.com"u8);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
+            await dbContext.DeclareDecryptFunctionAsync();
             dbContext.Blogs.Add(blog);
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/blogs/{blog.StringId}/posts?filter=and(isUpperCase(caption),not(isUpperCase(url)))";
+        string route = $"/blogs/{blog.StringId}/posts?filter=and(contains(decrypt(caption),'needle'),not(endsWith(decrypt(url),'.org')))";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -95,25 +97,26 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Can_filter_casing_in_included_resources()
+    public async Task Can_filter_on_encrypted_column_in_included_resources()
     {
         // Arrange
         List<Blog> blogs = _fakers.Blog.GenerateList(2);
-        blogs[0].Title = blogs[0].Title.ToLowerInvariant();
-        blogs[1].Title = blogs[1].Title.ToUpperInvariant();
+        blogs[0].Title = Convert.ToBase64String("one"u8);
+        blogs[1].Title = Convert.ToBase64String("two"u8);
 
         blogs[1].Posts = _fakers.BlogPost.GenerateList(2);
-        blogs[1].Posts[0].Caption = blogs[1].Posts[0].Caption.ToLowerInvariant();
-        blogs[1].Posts[1].Caption = blogs[1].Posts[1].Caption.ToUpperInvariant();
+        blogs[1].Posts[0].Caption = Convert.ToBase64String("first-value"u8);
+        blogs[1].Posts[1].Caption = Convert.ToBase64String("second-value"u8);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
+            await dbContext.DeclareDecryptFunctionAsync();
             await dbContext.ClearTableAsync<Blog>();
             dbContext.Blogs.AddRange(blogs);
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/blogs?filter=isUpperCase(title)&include=posts&filter[posts]=isUpperCase(caption)";
+        const string route = "/blogs?filter=equals(decrypt(title),'two')&include=posts&filter[posts]=startsWith(decrypt(caption),'second')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

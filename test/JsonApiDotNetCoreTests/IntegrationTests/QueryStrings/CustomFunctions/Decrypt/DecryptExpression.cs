@@ -1,35 +1,33 @@
 using System.Text;
 using JsonApiDotNetCore.Queries.Expressions;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.IsUpperCase;
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Decrypt;
 
 /// <summary>
-/// This expression allows to test if the value of a JSON:API attribute is upper case. It represents the "isUpperCase" filter function, resulting from
-/// text such as:
+/// This expression allows to call the user-defined "decrypt_column_value" database function. It represents the "decrypt" function, resulting from text
+/// such as:
 /// <c>
-/// isUpperCase(title)
+/// decrypt(title)
 /// </c>
 /// , or:
 /// <c>
-/// isUpperCase(owner.lastName)
+/// decrypt(owner.lastName)
 /// </c>
 /// .
 /// </summary>
-internal sealed class IsUpperCaseExpression : FilterExpression
+internal sealed class DecryptExpression(ResourceFieldChainExpression targetAttribute) : FunctionExpression
 {
-    public const string Keyword = "isUpperCase";
+    public const string Keyword = "decrypt";
 
     /// <summary>
-    /// The string attribute whose value to inspect. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// The CLR type this function returns, which is always <see cref="string" />.
     /// </summary>
-    public ResourceFieldChainExpression TargetAttribute { get; }
+    public override Type ReturnType { get; } = typeof(string);
 
-    public IsUpperCaseExpression(ResourceFieldChainExpression targetAttribute)
-    {
-        ArgumentNullException.ThrowIfNull(targetAttribute);
-
-        TargetAttribute = targetAttribute;
-    }
+    /// <summary>
+    /// The string attribute to decrypt. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
+    public ResourceFieldChainExpression TargetAttribute { get; } = targetAttribute;
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
@@ -70,7 +68,7 @@ internal sealed class IsUpperCaseExpression : FilterExpression
             return false;
         }
 
-        var other = (IsUpperCaseExpression)obj;
+        var other = (DecryptExpression)obj;
 
         return TargetAttribute.Equals(other.TargetAttribute);
     }

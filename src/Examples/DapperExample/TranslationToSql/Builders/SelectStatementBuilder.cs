@@ -678,13 +678,13 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     public override SqlTreeNode VisitMatchText(MatchTextExpression expression, TableAccessorNode tableAccessor)
     {
-        var column = (ColumnNode)Visit(expression.TargetAttribute, tableAccessor);
+        var column = (ColumnNode)Visit(expression.MatchTarget, tableAccessor);
         return new LikeNode(column, expression.MatchKind, (string)expression.TextValue.TypedValue);
     }
 
     public override SqlTreeNode VisitAny(AnyExpression expression, TableAccessorNode tableAccessor)
     {
-        var column = (ColumnNode)Visit(expression.TargetAttribute, tableAccessor);
+        var column = (ColumnNode)Visit(expression.MatchTarget, tableAccessor);
 
         ReadOnlyCollection<ParameterNode> parameters =
             VisitSequence<LiteralConstantExpression, ParameterNode>(expression.Constants.OrderBy(constant => constant.TypedValue), tableAccessor);
