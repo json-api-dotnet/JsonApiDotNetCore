@@ -121,6 +121,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "has(posts,^", "Filter function expected.")]
     [InlineData("filter", "contains^)", "( expected.")]
     [InlineData("filter", "contains(title,'a'^,'b')", ") expected.")]
+    [InlineData("filter", "contains(^equals(title,'x'),'a')", "Function that returns type 'String' expected.")]
     [InlineData("filter", "contains(title,^null)", "Value between quotes expected.")]
     [InlineData("filter[posts]", "contains(author^,null)",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
@@ -128,6 +129,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "any(^null,'a','b')", "Field name expected.")]
     [InlineData("filter", "any(^'a','b','c')", "Field name expected.")]
     [InlineData("filter", "any(title,'b','c',^)", "Value between quotes expected.")]
+    [InlineData("filter", "any(equals(title,'x'),^'b')", "Failed to convert 'b' of type 'String' to type 'Boolean'.")]
     [InlineData("filter", "any(title^)", ", expected.")]
     [InlineData("filter[posts]", "any(author^,'a','b')",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
@@ -201,6 +203,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "endsWith(title,'this')", null)]
     [InlineData("filter", "any(title,'this')", null)]
     [InlineData("filter", "any(title,'that','there','this')", null)]
+    [InlineData("filter", "any(equals(title,'x'),'true')", null)]
     [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null)]
     [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))",
         "posts")]

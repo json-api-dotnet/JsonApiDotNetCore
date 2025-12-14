@@ -24,12 +24,12 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 public class MatchTextExpression : FilterExpression
 {
     /// <summary>
-    /// The attribute whose value to match. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// The function or attribute whose value to match. Attribute chain format: an optional list of to-one relationships, followed by an attribute.
     /// </summary>
-    public ResourceFieldChainExpression TargetAttribute { get; }
+    public QueryExpression MatchTarget { get; }
 
     /// <summary>
-    /// The text to match the attribute's value against.
+    /// The text to match against.
     /// </summary>
     public LiteralConstantExpression TextValue { get; }
 
@@ -38,12 +38,12 @@ public class MatchTextExpression : FilterExpression
     /// </summary>
     public TextMatchKind MatchKind { get; }
 
-    public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue, TextMatchKind matchKind)
+    public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression textValue, TextMatchKind matchKind)
     {
-        ArgumentNullException.ThrowIfNull(targetAttribute);
+        ArgumentNullException.ThrowIfNull(matchTarget);
         ArgumentNullException.ThrowIfNull(textValue);
 
-        TargetAttribute = targetAttribute;
+        MatchTarget = matchTarget;
         TextValue = textValue;
         MatchKind = matchKind;
     }
@@ -71,8 +71,8 @@ public class MatchTextExpression : FilterExpression
         builder.Append('(');
 
         builder.Append(toFullString
-            ? string.Join(',', TargetAttribute.ToFullString(), TextValue.ToFullString())
-            : string.Join(',', TargetAttribute.ToString(), TextValue.ToString()));
+            ? string.Join(',', MatchTarget.ToFullString(), TextValue.ToFullString())
+            : string.Join(',', MatchTarget.ToString(), TextValue.ToString()));
 
         builder.Append(')');
 
@@ -93,11 +93,11 @@ public class MatchTextExpression : FilterExpression
 
         var other = (MatchTextExpression)obj;
 
-        return TargetAttribute.Equals(other.TargetAttribute) && TextValue.Equals(other.TextValue) && MatchKind == other.MatchKind;
+        return MatchTarget.Equals(other.MatchTarget) && TextValue.Equals(other.TextValue) && MatchKind == other.MatchKind;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(TargetAttribute, TextValue, MatchKind);
+        return HashCode.Combine(MatchTarget, TextValue, MatchKind);
     }
 }
