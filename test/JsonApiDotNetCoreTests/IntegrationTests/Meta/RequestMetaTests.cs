@@ -120,7 +120,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                                 id = t1.StringId,
                                 meta = GetExampleMetaData()
                             },
-                            new {
+                            new
+                            {
                                 type = "supportTickets",
                                 id = t2.StringId,
                                 meta = GetExampleMetaData()
@@ -292,7 +293,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            var updated = await db.SupportTickets.FirstAsync(t => t.Id == existingTicket.Id);
+            SupportTicket updated = await db.SupportTickets.FirstAsync(t => t.Id == existingTicket.Id);
             updated.Description.Should().Be(existingTicket.Description);
         });
     }
@@ -420,7 +421,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            var ticket = await db.SupportTickets
+            SupportTicket ticket = await db.SupportTickets
                 .Include(t => t.ProductFamily)
                 .FirstAsync();
 
@@ -540,7 +541,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
         store.Document.Should().NotBeNull();
         ValidateMetaData(store.Document.Meta);
-        var op = store.Document.Operations![0];
+        AtomicOperationObject? op = store.Document.Operations![0];
         op.Should().NotBeNull();
         ValidateMetaData(op.Meta);
         op.Data.SingleValue.Should().NotBeNull();
@@ -548,7 +549,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            var dbTicket = await db.SupportTickets.Include(t => t.ProductFamily).FirstAsync(t => t.Id == ticket.Id);
+            SupportTicket dbTicket = await db.SupportTickets.Include(t => t.ProductFamily).FirstAsync(t => t.Id == ticket.Id);
             dbTicket.ProductFamily!.Id.Should().Be(family.Id);
         });
     }
@@ -599,7 +600,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     },
                     meta = GetExampleMetaData()
                 }
-             },
+            },
             meta = GetExampleMetaData()
         };
 
@@ -608,15 +609,18 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
         store.Document.Should().NotBeNull();
         ValidateMetaData(store.Document.Meta);
-        var op = store.Document.Operations![0];
+        AtomicOperationObject? op = store.Document.Operations![0];
         op.Should().NotBeNull();
         ValidateMetaData(op.Meta);
-        foreach (var data in op.Data.ManyValue!)
+
+        foreach (ResourceObject data in op.Data.ManyValue!)
+        {
             ValidateMetaData(data.Meta);
+        }
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            var dbFamily = await db.ProductFamilies.Include(f => f.Tickets).FirstAsync(f => f.Id == family.Id);
+            ProductFamily dbFamily = await db.ProductFamilies.Include(f => f.Tickets).FirstAsync(f => f.Id == family.Id);
             dbFamily.Tickets.Should().ContainSingle(t => t.Id == ticket1.Id);
             dbFamily.Tickets.Should().ContainSingle(t => t.Id == ticket2.Id);
         });
@@ -677,15 +681,18 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
         store.Document.Should().NotBeNull();
         ValidateMetaData(store.Document.Meta);
-        var op = store.Document.Operations![0];
+        AtomicOperationObject? op = store.Document.Operations![0];
         op.Should().NotBeNull();
         ValidateMetaData(op.Meta);
-        foreach (var data in op.Data.ManyValue!)
+
+        foreach (ResourceObject data in op.Data.ManyValue!)
+        {
             ValidateMetaData(data.Meta);
+        }
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            var dbFamily = await db.ProductFamilies.Include(f => f.Tickets).FirstAsync(f => f.Id == family.Id);
+            ProductFamily dbFamily = await db.ProductFamilies.Include(f => f.Tickets).FirstAsync(f => f.Id == family.Id);
             dbFamily.Tickets.Should().ContainSingle(t => t.Id == ticket1.Id);
             dbFamily.Tickets.Should().ContainSingle(t => t.Id == ticket2.Id);
         });
@@ -699,7 +706,12 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         ProductFamily family = _fakers.ProductFamily.GenerateOne();
         SupportTicket ticket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket ticket2 = _fakers.SupportTicket.GenerateOne();
-        family.Tickets = new List<SupportTicket> { ticket1, ticket2 };
+
+        family.Tickets = new List<SupportTicket>
+        {
+            ticket1,
+            ticket2
+        };
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
@@ -712,27 +724,27 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         {
             atomic__operations = new[]
             {
-            new
-            {
-                op = "remove",
-                @ref = new
+                new
                 {
-                    type = "productFamilies",
-                    id = family.StringId,
-                    relationship = "tickets"
-                },
-                data = new[]
-                {
-                    new
+                    op = "remove",
+                    @ref = new
                     {
-                        type = "supportTickets",
-                        id = ticket1.StringId,
-                        meta = GetExampleMetaData()
-                    }
-                },
-                meta = GetExampleMetaData()
-            }
-        },
+                        type = "productFamilies",
+                        id = family.StringId,
+                        relationship = "tickets"
+                    },
+                    data = new[]
+                    {
+                        new
+                        {
+                            type = "supportTickets",
+                            id = ticket1.StringId,
+                            meta = GetExampleMetaData()
+                        }
+                    },
+                    meta = GetExampleMetaData()
+                }
+            },
             meta = GetExampleMetaData()
         };
 
@@ -741,15 +753,18 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
         store.Document.Should().NotBeNull();
         ValidateMetaData(store.Document.Meta);
-        var op = store.Document.Operations![0];
+        AtomicOperationObject? op = store.Document.Operations![0];
         op.Should().NotBeNull();
         ValidateMetaData(op.Meta);
-        foreach (var data in op.Data.ManyValue!)
+
+        foreach (ResourceObject data in op.Data.ManyValue!)
+        {
             ValidateMetaData(data.Meta);
+        }
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            var dbFamily = await db.ProductFamilies.Include(f => f.Tickets).FirstAsync(f => f.Id == family.Id);
+            ProductFamily dbFamily = await db.ProductFamilies.Include(f => f.Tickets).FirstAsync(f => f.Id == family.Id);
             dbFamily.Tickets.Should().NotContain(t => t.Id == ticket1.Id);
             dbFamily.Tickets.Should().ContainSingle(t => t.Id == ticket2.Id);
         });
