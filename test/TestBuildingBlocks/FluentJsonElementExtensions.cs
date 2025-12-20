@@ -18,7 +18,7 @@ public static class FluentJsonElementExtensions
     [CustomAssertion]
     public static SchemaReferenceIdContainer ShouldBeSchemaReferenceId(this JsonElement source, string value)
     {
-        string schemaReferenceId = GetSchemaReferenceId(source);
+        string schemaReferenceId = source.GetSchemaReferenceId();
         schemaReferenceId.Should().Be(value);
 
         return new SchemaReferenceIdContainer(value);
@@ -38,7 +38,7 @@ public static class FluentJsonElementExtensions
     [CustomAssertion]
     public static void WithSchemaReferenceId(this JsonElement subject, [InstantHandle] Action<string> continuation)
     {
-        string schemaReferenceId = GetSchemaReferenceId(subject);
+        string schemaReferenceId = subject.GetSchemaReferenceId();
 
         continuation(schemaReferenceId);
     }
