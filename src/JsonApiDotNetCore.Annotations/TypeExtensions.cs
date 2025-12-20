@@ -7,7 +7,7 @@ internal static class TypeExtensions
     /// </summary>
     public static bool IsOrImplementsInterface<TInterface>(this Type? source)
     {
-        return IsOrImplementsInterface(source, typeof(TInterface));
+        return source.IsOrImplementsInterface(typeof(TInterface));
     }
 
     /// <summary>
