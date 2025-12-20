@@ -64,7 +64,11 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 {
                     productFamily = new
                     {
-                        data = new { type = "productFamilies", id = family.StringId },
+                        data = new
+                        {
+                            type = "productFamilies",
+                            id = family.StringId
+                        },
                         meta = GetExampleMetaData()
                     }
                 },
@@ -110,8 +114,17 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     {
                         data = new[]
                         {
-                            new { type = "supportTickets", id = t1.StringId, meta = GetExampleMetaData() },
-                            new { type = "supportTickets", id = t2.StringId, meta = GetExampleMetaData() }
+                            new
+                            {
+                                type = "supportTickets",
+                                id = t1.StringId,
+                                meta = GetExampleMetaData()
+                            },
+                            new {
+                                type = "supportTickets",
+                                id = t2.StringId,
+                                meta = GetExampleMetaData()
+                            }
                         },
                         meta = GetExampleMetaData()
                     }
@@ -152,7 +165,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 type = "supportTickets",
                 attributes = new
                 {
-                    description = existingTicket.Description,
+                    description = existingTicket.Description
                 },
                 relationships = new
                 {
@@ -358,7 +371,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         type = "supportTickets",
                         attributes = new
                         {
-                            description = existingTicket.Description,
+                            description = existingTicket.Description
                         },
                         relationships = new
                         {
@@ -501,24 +514,24 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         {
             atomic__operations = new[]
             {
-            new
-            {
-                op = "update",
-                @ref = new
+                new
                 {
-                    type = "supportTickets",
-                    id = ticket.StringId,
-                    relationship = "productFamily"
-                },
-                data = new
-                {
-                    type = "productFamilies",
-                    id = family.StringId,
+                    op = "update",
+                    @ref = new
+                    {
+                        type = "supportTickets",
+                        id = ticket.StringId,
+                        relationship = "productFamily"
+                    },
+                    data = new
+                    {
+                        type = "productFamilies",
+                        id = family.StringId,
+                        meta = GetExampleMetaData()
+                    },
                     meta = GetExampleMetaData()
-                },
-                meta = GetExampleMetaData()
-            }
-        },
+                }
+            },
             meta = GetExampleMetaData()
         };
 
@@ -571,8 +584,18 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     },
                     data = new[]
                     {
-                        new { type = "supportTickets", id = ticket1.StringId, meta = GetExampleMetaData() },
-                        new { type = "supportTickets", id = ticket2.StringId, meta = GetExampleMetaData() }
+                        new
+                        {
+                            type = "supportTickets",
+                            id = ticket1.StringId,
+                            meta = GetExampleMetaData()
+                        },
+                        new
+                        {
+                            type = "supportTickets",
+                            id = ticket2.StringId,
+                            meta = GetExampleMetaData()
+                        }
                     },
                     meta = GetExampleMetaData()
                 }
@@ -630,8 +653,18 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     },
                     data = new[]
                     {
-                        new { type = "supportTickets", id = ticket1.StringId, meta = GetExampleMetaData() },
-                        new { type = "supportTickets", id = ticket2.StringId, meta = GetExampleMetaData() }
+                        new
+                        {
+                            type = "supportTickets",
+                            id = ticket1.StringId,
+                            meta = GetExampleMetaData()
+                        },
+                        new
+                        {
+                            type = "supportTickets",
+                            id = ticket2.StringId,
+                            meta = GetExampleMetaData()
+                        }
                     },
                     meta = GetExampleMetaData()
                 }
@@ -690,7 +723,12 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 },
                 data = new[]
                 {
-                    new { type = "supportTickets", id = ticket1.StringId, meta = GetExampleMetaData() }
+                    new
+                    {
+                        type = "supportTickets",
+                        id = ticket1.StringId,
+                        meta = GetExampleMetaData()
+                    }
                 },
                 meta = GetExampleMetaData()
             }
