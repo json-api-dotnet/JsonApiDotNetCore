@@ -90,7 +90,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
     public override Expression VisitMatchText(MatchTextExpression expression, QueryClauseBuilderContext context)
     {
-        Expression property = Visit(expression.TargetAttribute, context);
+        Expression property = Visit(expression.MatchTarget, context);
 
         if (property.Type != typeof(string))
         {
@@ -109,7 +109,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
     public override Expression VisitAny(AnyExpression expression, QueryClauseBuilderContext context)
     {
-        Expression property = Visit(expression.TargetAttribute, context);
+        Expression property = Visit(expression.MatchTarget, context);
 
         var valueList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(property.Type))!;
 

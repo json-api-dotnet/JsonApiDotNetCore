@@ -5,7 +5,7 @@
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.4</NewtonsoftJsonFrozenVersion>
-    <SwashbuckleFrozenVersion>10.0.1</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>10.1.0</SwashbuckleFrozenVersion>
     <SystemTextRegularExpressionsFrozenVersion>4.3.1</SystemTextRegularExpressionsFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
@@ -24,10 +24,10 @@
     <MiniValidationVersion>0.9.*</MiniValidationVersion>
     <NSwagApiClientVersion>14.6.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <PolyfillVersion>9.3.*</PolyfillVersion>
+    <PolyfillVersion>9.4.*</PolyfillVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <ScalarAspNetCoreVersion>2.11.*</ScalarAspNetCoreVersion>
-    <SwashbuckleVersion>[10.0.*-*,10.0.2)</SwashbuckleVersion>
+    <SwashbuckleVersion>10.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
     <TestSdkVersion>18.0.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>

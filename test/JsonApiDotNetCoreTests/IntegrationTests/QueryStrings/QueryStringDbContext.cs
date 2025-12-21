@@ -26,6 +26,12 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        ConfigureModel(builder);
+        base.OnModelCreating(builder);
+    }
+
+    internal static void ConfigureModel(ModelBuilder builder)
+    {
         builder.Entity<WebAccount>()
             .HasMany(webAccount => webAccount.Posts)
             .WithOne(blogPost => blogPost.Author);
@@ -38,7 +44,5 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
         builder.Entity<Calendar>()
             .HasMany(calendar => calendar.Appointments)
             .WithOne(appointment => appointment.Calendar);
-
-        base.OnModelCreating(builder);
     }
 }
