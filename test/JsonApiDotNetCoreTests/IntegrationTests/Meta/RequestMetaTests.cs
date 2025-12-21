@@ -77,9 +77,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             meta = GetExampleMetaData()
         };
 
-        (HttpResponseMessage response, _) =
-            await _testContext.ExecutePatchAsync<Document>(
-                $"/supportTickets/{ticket.StringId}", body);
+        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>($"/supportTickets/{ticket.StringId}", body);
 
         response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
         ValidateMetaData(store.Document!.Meta);
@@ -135,9 +133,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             meta = GetExampleMetaData()
         };
 
-        (HttpResponseMessage response, _) =
-            await _testContext.ExecutePatchAsync<Document>(
-                $"/productFamilies/{family.StringId}", body);
+        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>($"/productFamilies/{family.StringId}", body);
 
         response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
         ValidateMetaData(store.Document!.Meta);
@@ -421,9 +417,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            SupportTicket ticket = await db.SupportTickets
-                .Include(supportTicket => supportTicket.ProductFamily)
-                .FirstAsync();
+            SupportTicket ticket = await db.SupportTickets.Include(supportTicket => supportTicket.ProductFamily).FirstAsync();
 
             ticket.ProductFamily.Should().NotBeNull();
         });
@@ -549,7 +543,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            SupportTicket dbTicket = await db.SupportTickets.Include(supportTicket => supportTicket.ProductFamily).FirstAsync(supportTicket => supportTicket.Id == ticket.Id);
+            SupportTicket dbTicket = await db.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
+                .FirstAsync(supportTicket => supportTicket.Id == ticket.Id);
+
             dbTicket.ProductFamily!.Id.Should().Be(family.Id);
         });
     }
@@ -620,7 +616,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets).FirstAsync(productFamily => productFamily.Id == family.Id);
+            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets)
+                .FirstAsync(productFamily => productFamily.Id == family.Id);
+
             dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket1.Id);
             dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket2.Id);
         });
@@ -692,7 +690,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets).FirstAsync(productFamily => productFamily.Id == family.Id);
+            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets)
+                .FirstAsync(productFamily => productFamily.Id == family.Id);
+
             dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket1.Id);
             dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket2.Id);
         });
@@ -764,7 +764,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets).FirstAsync(productFamily => productFamily.Id == family.Id);
+            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets)
+                .FirstAsync(productFamily => productFamily.Id == family.Id);
+
             dbFamily.Tickets.Should().NotContain(supportTicket => supportTicket.Id == ticket1.Id);
             dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket2.Id);
         });
