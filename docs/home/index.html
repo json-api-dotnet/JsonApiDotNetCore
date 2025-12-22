@@ -189,7 +189,7 @@ public class Article : Identifiable&lt;long&gt;
 {
     [Attr]
     [MaxLength(30)]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowFilter)]
     public string? Summary { get; set; }
@@ -205,7 +205,7 @@ public class Article : Identifiable&lt;long&gt;
     public DateTimeOffset LastModifiedAt { get; set; }
 
     [HasOne]
-    public Person Author { get; set; } = null!;
+    public required required Person Author { get; set; }
 
     [HasOne]
     public Person? Reviewer { get; set; }

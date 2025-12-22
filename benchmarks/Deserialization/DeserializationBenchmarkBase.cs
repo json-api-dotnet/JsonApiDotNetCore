@@ -89,7 +89,7 @@ public abstract class DeserializationBenchmarkBase : IDisposable
         public float? Attribute05 { get; set; }
 
         [Attr]
-        public string Attribute06 { get; set; } = null!;
+        public required string Attribute06 { get; set; }
 
         [Attr]
         public DateTime? Attribute07 { get; set; }
@@ -104,33 +104,33 @@ public abstract class DeserializationBenchmarkBase : IDisposable
         public DayOfWeek Attribute10 { get; set; }
 
         [HasOne]
-        public IncomingResource Single1 { get; set; } = null!;
+        public required IncomingResource Single1 { get; set; }
 
         [HasOne]
-        public IncomingResource Single2 { get; set; } = null!;
+        public required IncomingResource Single2 { get; set; }
 
         [HasOne]
-        public IncomingResource Single3 { get; set; } = null!;
+        public required IncomingResource Single3 { get; set; }
 
         [HasOne]
-        public IncomingResource Single4 { get; set; } = null!;
+        public required IncomingResource Single4 { get; set; }
 
         [HasOne]
-        public IncomingResource Single5 { get; set; } = null!;
+        public required IncomingResource Single5 { get; set; }
 
         [HasMany]
-        public ISet<IncomingResource> Multi1 { get; set; } = null!;
+        public required ISet<IncomingResource> Multi1 { get; set; }
 
         [HasMany]
-        public ISet<IncomingResource> Multi2 { get; set; } = null!;
+        public required ISet<IncomingResource> Multi2 { get; set; }
 
         [HasMany]
-        public ISet<IncomingResource> Multi3 { get; set; } = null!;
+        public required ISet<IncomingResource> Multi3 { get; set; }
 
         [HasMany]
-        public ISet<IncomingResource> Multi4 { get; set; } = null!;
+        public required ISet<IncomingResource> Multi4 { get; set; }
 
         [HasMany]
-        public ISet<IncomingResource> Multi5 { get; set; } = null!;
+        public required ISet<IncomingResource> Multi5 { get; set; }
     }
 }

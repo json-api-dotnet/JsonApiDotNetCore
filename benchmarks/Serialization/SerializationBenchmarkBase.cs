@@ -73,7 +73,7 @@ public abstract class SerializationBenchmarkBase
         public float? Attribute05 { get; set; }
 
         [Attr]
-        public string Attribute06 { get; set; } = null!;
+        public required string Attribute06 { get; set; }
 
         [Attr]
         public DateTime? Attribute07 { get; set; }
@@ -88,33 +88,33 @@ public abstract class SerializationBenchmarkBase
         public DayOfWeek Attribute10 { get; set; }
 
         [HasOne]
-        public OutgoingResource Single1 { get; set; } = null!;
+        public required OutgoingResource Single1 { get; set; }
 
         [HasOne]
-        public OutgoingResource Single2 { get; set; } = null!;
+        public required OutgoingResource Single2 { get; set; }
 
         [HasOne]
-        public OutgoingResource Single3 { get; set; } = null!;
+        public required OutgoingResource Single3 { get; set; }
 
         [HasOne]
-        public OutgoingResource Single4 { get; set; } = null!;
+        public required OutgoingResource Single4 { get; set; }
 
         [HasOne]
-        public OutgoingResource Single5 { get; set; } = null!;
+        public required OutgoingResource Single5 { get; set; }
 
         [HasMany]
-        public ISet<OutgoingResource> Multi1 { get; set; } = null!;
+        public required ISet<OutgoingResource> Multi1 { get; set; }
 
         [HasMany]
-        public ISet<OutgoingResource> Multi2 { get; set; } = null!;
+        public required ISet<OutgoingResource> Multi2 { get; set; }
 
         [HasMany]
-        public ISet<OutgoingResource> Multi3 { get; set; } = null!;
+        public required ISet<OutgoingResource> Multi3 { get; set; }
 
         [HasMany]
-        public ISet<OutgoingResource> Multi4 { get; set; } = null!;
+        public required ISet<OutgoingResource> Multi4 { get; set; }
 
         [HasMany]
-        public ISet<OutgoingResource> Multi5 { get; set; } = null!;
+        public required ISet<OutgoingResource> Multi5 { get; set; }
     }
 }
