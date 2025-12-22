@@ -9,13 +9,13 @@ namespace DapperExample.Models;
 public sealed class LoginAccount : Identifiable<long>
 {
     [Attr]
-    public string UserName { get; set; } = null!;
+    public required string UserName { get; set; }
 
     public DateTimeOffset? LastUsedAt { get; set; }
 
     [HasOne]
-    public AccountRecovery Recovery { get; set; } = null!;
+    public required AccountRecovery Recovery { get; set; }
 
     [HasOne]
-    public Person Person { get; set; } = null!;
+    public required Person Person { get; set; }
 }

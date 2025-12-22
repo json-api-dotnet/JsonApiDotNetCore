@@ -11,7 +11,7 @@ public sealed class Tag : Identifiable<long>
 {
     [Attr]
     [MinLength(1)]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasOne]
     public RgbColor? Color { get; set; }

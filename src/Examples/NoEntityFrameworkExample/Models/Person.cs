@@ -14,7 +14,7 @@ public sealed class Person : Identifiable<long>
     public string? FirstName { get; set; }
 
     [Attr]
-    public string LastName { get; set; } = null!;
+    public required string LastName { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView)]
     [NotMapped]

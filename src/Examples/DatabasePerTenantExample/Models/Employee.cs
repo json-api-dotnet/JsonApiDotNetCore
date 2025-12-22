@@ -9,11 +9,11 @@ namespace DatabasePerTenantExample.Models;
 public sealed class Employee : Identifiable<Guid>
 {
     [Attr]
-    public string FirstName { get; set; } = null!;
+    public required string FirstName { get; set; }
 
     [Attr]
-    public string LastName { get; set; } = null!;
+    public required string LastName { get; set; }
 
     [Attr]
-    public string CompanyName { get; set; } = null!;
+    public required string CompanyName { get; set; }
 }

@@ -9,7 +9,7 @@ namespace GettingStarted.Models;
 public sealed class Person : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public ICollection<Book> Books { get; set; } = new List<Book>();

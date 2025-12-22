@@ -19,7 +19,7 @@ public sealed class RgbColor : Identifiable<int?>
     }
 
     [HasOne]
-    public Tag Tag { get; set; } = null!;
+    public required Tag Tag { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView)]
     [NotMapped]

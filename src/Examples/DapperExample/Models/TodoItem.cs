@@ -10,7 +10,7 @@ namespace DapperExample.Models;
 public sealed class TodoItem : Identifiable<long>
 {
     [Attr]
-    public string Description { get; set; } = null!;
+    public required string Description { get; set; }
 
     [Attr]
     [Required]
@@ -26,7 +26,7 @@ public sealed class TodoItem : Identifiable<long>
     public DateTimeOffset? LastModifiedAt { get; set; }
 
     [HasOne]
-    public Person Owner { get; set; } = null!;
+    public required Person Owner { get; set; }
 
     [HasOne]
     public Person? Assignee { get; set; }

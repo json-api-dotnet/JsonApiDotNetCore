@@ -13,7 +13,7 @@ public sealed class Person : Identifiable<long>
     public string? FirstName { get; set; }
 
     [Attr]
-    public string LastName { get; set; } = null!;
+    public required string LastName { get; set; }
 
     // Mistakenly includes AllowFilter, so we can test for the error produced.
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowFilter)]
