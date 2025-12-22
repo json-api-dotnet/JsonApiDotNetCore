@@ -41,7 +41,7 @@ The following steps describe how to create a JSON:API project.
    public class Person : Identifiable<long>
    {
        [Attr] public string? FirstName { get; set; }
-       [Attr] public string LastName { get; set; } = null!;
+       [Attr] public required string LastName { get; set; }
        [HasMany] public ISet<Person> Children { get; set; } = new HashSet<Person>();
    }
    ```

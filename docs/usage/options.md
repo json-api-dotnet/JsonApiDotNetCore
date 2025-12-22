@@ -141,13 +141,13 @@ public class Person : Identifiable<long>
 {
     [Attr]
     [MinLength(3)]
-    public string FirstName { get; set; } = null!;
+    public required string FirstName { get; set; }
 
     [Attr]
     [Required]
     public int? Age { get; set; }
 
     [HasOne]
-    public LoginAccount Account { get; set; } = null!;
+    public required LoginAccount Account { get; set; }
 }
 ```

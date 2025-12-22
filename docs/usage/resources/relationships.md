@@ -39,7 +39,7 @@ The next example defines that each car requires an engine, while an engine is op
 public sealed class Car : Identifiable<long>
 {
     [HasOne]
-    public Engine Engine { get; set; } = null!;
+    public required Engine Engine { get; set; }
 }
 
 public sealed class Engine : Identifiable<long>
@@ -264,7 +264,7 @@ There are two ways the exposed relationship name is determined:
 public class TodoItem : Identifiable<long>
 {
     [HasOne(PublicName = "item-owner")]
-    public Person Owner { get; set; } = null!;
+    public required Person Owner { get; set; }
 }
 ```
 
@@ -297,7 +297,7 @@ Otherwise, the relationship (and its related resources, when included) are silen
 public class User : Identifiable<long>
 {
     [HasOne(Capabilities = ~HasOneCapabilities.AllowView)]
-    public LoginAccount Account { get; set; } = null!;
+    public required LoginAccount Account { get; set; }
 }
 ```
 
@@ -339,7 +339,7 @@ Indicates whether POST and PATCH requests can replace the relationship. When sen
 public class User : Identifiable<long>
 {
     [HasOne(Capabilities = ~HasOneCapabilities.AllowSet)]
-    public LoginAccount Account { get; set; } = null!;
+    public required LoginAccount Account { get; set; }
 }
 ```
 
@@ -400,7 +400,7 @@ So for the calculated property to be evaluated correctly, the related entity mus
 public class ShippingAddress : Identifiable<long>
 {
     [Attr]
-    public string Street { get; set; } = null!;
+    public required string Street { get; set; }
 
     [Attr]
     public string? CountryName => Country?.DisplayName;
@@ -412,7 +412,7 @@ public class ShippingAddress : Identifiable<long>
 
 public class Country
 {
-    public string IsoCode { get; set; } = null!;
-    public string DisplayName { get; set; } = null!;
+    public required string IsoCode { get; set; }
+    public required string DisplayName { get; set; }
 }
 ```
