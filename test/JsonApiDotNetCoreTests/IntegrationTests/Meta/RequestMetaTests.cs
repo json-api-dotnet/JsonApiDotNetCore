@@ -4,7 +4,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using JsonApiDotNetCore.Serialization.Response;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -42,24 +41,29 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     [Fact]
     public async Task Accepts_meta_in_patch_resource_request_with_to_one_relationship()
     {
+        // Assert
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        SupportTicket ticket = _fakers.SupportTicket.GenerateOne();
-        ProductFamily family = _fakers.ProductFamily.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var resourceMeta = _fakers.ResourceMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            db.ProductFamilies.Add(family);
-            db.SupportTickets.Add(ticket);
+            db.ProductFamilies.Add(existingFamily);
+            db.SupportTickets.Add(existingTicket);
             await db.SaveChangesAsync();
         });
 
-        var body = new
+        var requestBody = new
         {
             data = new
             {
                 type = "supportTickets",
-                id = ticket.StringId,
+                id = existingTicket.StringId,
                 relationships = new
                 {
                     productFamily = new
@@ -67,45 +71,94 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         data = new
                         {
                             type = "productFamilies",
-                            id = family.StringId
+                            id = existingFamily.StringId
                         },
-                        meta = GetExampleMetaData()
+                        meta = relationshipMeta
                     }
                 },
-                meta = GetExampleMetaData()
+                meta = resourceMeta
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
-        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>($"/supportTickets/{ticket.StringId}", body);
+        string route = $"/supportTickets/{existingTicket.StringId}";
 
+        // Act
+        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
-        ValidateMetaData(store.Document!.Meta);
-        ValidateMetaData(store.Document.Data.SingleValue!.Meta);
+
+        store.Document.Should().NotBeNull();
+
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Data.Should().NotBeNull();
+        store.Document.Data.SingleValue.Should().NotBeNull();
+        store.Document.Data.SingleValue.Meta.Should().HaveCount(resourceMeta.Count);
+        store.Document.Data.SingleValue.Meta.Should().ContainKey("editedBy").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)resourceMeta["editedBy"]);
+        });
+        store.Document.Data.SingleValue.Meta.Should().ContainKey("revision").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)resourceMeta["revision"]);
+        });
+
+        store.Document.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+
+            value.Meta.Should().HaveCount(relationshipMeta.Count);
+            value.Meta.Should().ContainKey("source").WhoseValue.With(val =>
+            {
+                JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be((string)relationshipMeta["source"]);
+            });
+            value.Meta.Should().ContainKey("confidence").WhoseValue.With(val =>
+            {
+                JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+                element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
+            });
+        });
     }
 
     [Fact]
     public async Task Accepts_meta_in_patch_resource_request_with_to_many_relationship()
     {
+        // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        ProductFamily family = _fakers.ProductFamily.GenerateOne();
-        SupportTicket t1 = _fakers.SupportTicket.GenerateOne();
-        SupportTicket t2 = _fakers.SupportTicket.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var resourceMeta = _fakers.ResourceMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.Generate();
+        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.Generate();
 
-        await _testContext.RunOnDatabaseAsync(async db =>
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            db.ProductFamilies.Add(family);
-            db.SupportTickets.AddRange(t1, t2);
-            await db.SaveChangesAsync();
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
+            await dbContext.SaveChangesAsync();
         });
 
-        var body = new
+        var requestBody = new
         {
             data = new
             {
                 type = "productFamilies",
-                id = family.StringId,
+                id = existingFamily.StringId,
                 relationships = new
                 {
                     tickets = new
@@ -115,28 +168,99 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                             new
                             {
                                 type = "supportTickets",
-                                id = t1.StringId,
-                                meta = GetExampleMetaData()
+                                id = existingTicket1.StringId,
+                                meta = identifierMeta1
                             },
                             new
                             {
                                 type = "supportTickets",
-                                id = t2.StringId,
-                                meta = GetExampleMetaData()
+                                id = existingTicket2.StringId,
+                                meta = identifierMeta2
                             }
                         },
-                        meta = GetExampleMetaData()
+                        meta = relationshipMeta
                     }
                 },
-                meta = GetExampleMetaData()
+                meta = resourceMeta
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
-        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>($"/productFamilies/{family.StringId}", body);
+        string route = $"/productFamilies/{existingFamily.StringId}";
 
+        // Act
+        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
-        ValidateMetaData(store.Document!.Meta);
+
+        store.Document.Should().NotBeNull();
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        // resource meta explicit validation
+        store.Document.Data.SingleValue.Should().NotBeNull();
+        store.Document.Data.SingleValue.Meta.Should().HaveCount(resourceMeta.Count);
+        store.Document.Data.SingleValue.Meta.Should().ContainKey("editedBy").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)resourceMeta["editedBy"]);
+        });
+        store.Document.Data.SingleValue.Meta.Should().ContainKey("revision").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)resourceMeta["revision"]);
+        });
+
+        // relationship meta validation
+        store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
+        store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Meta.Should().HaveCount(relationshipMeta.Count);
+            value.Meta.Should().ContainKey("source").WhoseValue.With(val =>
+            {
+                JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be((string)relationshipMeta["source"]);
+            });
+            value.Meta.Should().ContainKey("confidence").WhoseValue.With(val =>
+            {
+                JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+                element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
+            });
+
+            value.Data.ManyValue.Should().HaveCount(2);
+
+            value.Data.ManyValue[0].Meta.Should().HaveCount(identifierMeta1.Count);
+            value.Data.ManyValue[0].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetInt32().Should().Be((int)identifierMeta1["index"]);
+            });
+            value.Data.ManyValue[0].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be((string)identifierMeta1["optionalNote"]);
+            });
+
+            value.Data.ManyValue[1].Meta.Should().HaveCount(identifierMeta2.Count);
+            value.Data.ManyValue[1].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetInt32().Should().Be((int)identifierMeta2["index"]);
+            });
+            value.Data.ManyValue[1].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be((string)identifierMeta2["optionalNote"]);
+            });
+        });
     }
 
     [Fact]
@@ -145,13 +269,14 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
 
-        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+        string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.ProductFamilies.Add(existingProductFamily);
+            dbContext.ProductFamilies.Add(existingFamily);
             await dbContext.SaveChangesAsync();
         });
 
@@ -162,7 +287,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 type = "supportTickets",
                 attributes = new
                 {
-                    description = existingTicket.Description
+                    description = newTicketDescription
                 },
                 relationships = new
                 {
@@ -171,12 +296,12 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         data = new
                         {
                             type = "productFamilies",
-                            id = existingProductFamily.StringId
+                            id = existingFamily.StringId
                         }
                     }
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
         const string route = "/supportTickets";
@@ -188,11 +313,24 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         store.Document.Should().NotBeNull();
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
         store.Document.Data.SingleValue.Should().NotBeNull();
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
-        store.Document.Data.SingleValue.Relationships.Should().HaveCount(1);
-
-        ValidateMetaData(store.Document.Meta);
+        store.Document.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
+            value.Data.SingleValue.Type.Should().Be("productFamilies");
+            value.Data.SingleValue.Id.Should().Be(existingFamily.StringId);
+        });
     }
 
     [Fact]
@@ -201,13 +339,14 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
 
-        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            existingTicket.ProductFamily = existingProductFamily;
+            existingTicket.ProductFamily = existingFamily;
             dbContext.SupportTickets.Add(existingTicket);
             await dbContext.SaveChangesAsync();
         });
@@ -215,7 +354,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         var requestBody = new
         {
             data = (object?)null,
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
         string route = $"/supportTickets/{existingTicket.StringId}/relationships/productFamily";
@@ -227,17 +366,16 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
+
         store.Document.Data.SingleValue.Should().BeNull();
 
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
-            SupportTicket supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
-                .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
-
-            supportTicketInDatabase.ProductFamily.Should().BeNull();
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
         });
-
-        ValidateMetaData(store.Document.Meta);
     }
 
     [Fact]
@@ -245,6 +383,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        var documentMeta = _fakers.DocumentMeta.Generate();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
 
@@ -272,7 +412,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     }
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
         const string route = "/operations";
@@ -285,13 +425,26 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        ValidateMetaData(store.Document.Meta);
-
-        await _testContext.RunOnDatabaseAsync(async db =>
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
-            SupportTicket updated = await db.SupportTickets.FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
-            updated.Description.Should().Be(existingTicket.Description);
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
         });
+
+        store.Document.Operations.Should().HaveCount(1);
+
+        AtomicOperationObject? operation = store.Document.Operations[0];
+        operation.Should().NotBeNull();
+        operation.Data.Should().NotBeNull();
+
+        ResourceObject? resource = operation.Data.SingleValue;
+        resource.Should().NotBeNull();
+        resource.Type.Should().Be("supportTickets");
+        resource.Id.Should().Be(existingTicket.StringId);
+        resource.Attributes.Should().NotBeNull();
+        resource.Attributes.Should().ContainKey("description");
     }
 
     [Fact]
@@ -299,6 +452,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        var documentMeta = _fakers.DocumentMeta.Generate();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
 
@@ -322,7 +477,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     }
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
         const string route = "/operations";
@@ -336,9 +491,14 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         responseDocument.Should().BeEmpty();
 
         store.Document.Should().NotBeNull();
-        store.Document.Meta.Should().NotBeNull();
 
-        ValidateMetaData(store.Document.Meta);
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
     }
 
     [Fact]
@@ -347,12 +507,16 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
-        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var resourceMeta = _fakers.ResourceMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+
+        string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.ProductFamilies.Add(existingProductFamily);
+            dbContext.ProductFamilies.Add(existingFamily);
             await dbContext.SaveChangesAsync();
         });
 
@@ -368,7 +532,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         type = "supportTickets",
                         attributes = new
                         {
-                            description = existingTicket.Description
+                            description = newTicketDescription
                         },
                         relationships = new
                         {
@@ -377,15 +541,16 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                                 data = new
                                 {
                                     type = "productFamilies",
-                                    id = existingProductFamily.StringId
+                                    id = existingFamily.StringId
                                 },
-                                meta = GetExampleMetaData()
+                                meta = relationshipMeta
                             }
-                        }
+                        },
+                        meta = resourceMeta
                     }
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
         const string route = "/operations";
@@ -397,29 +562,52 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         store.Document.Should().NotBeNull();
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
         store.Document.Operations.Should().NotBeNull();
         store.Document.Operations.Should().HaveCount(1);
 
         AtomicOperationObject? operation = store.Document.Operations[0];
         operation.Should().NotBeNull();
+
         operation.Data.Should().NotBeNull();
         operation.Data.SingleValue.Should().NotBeNull();
 
-        IDictionary<string, RelationshipObject?>? relationships = operation.Data.SingleValue.Relationships;
-        relationships.Should().NotBeNull();
-        relationships.Should().ContainKey("productFamily");
-
-        RelationshipObject? relationship = relationships["productFamily"];
-        relationship.Should().NotBeNull();
-        relationship.Meta.Should().NotBeNull();
-
-        ValidateMetaData(relationship.Meta);
-
-        await _testContext.RunOnDatabaseAsync(async db =>
+        // resource/meta validation on operation data (resourceMeta -> relationshipMeta mapping)
+        operation.Data.SingleValue.Meta.Should().HaveCount(relationshipMeta.Count);
+        operation.Data.SingleValue.Meta.Should().ContainKey("editedBy").WhoseValue.With(val =>
         {
-            SupportTicket ticket = await db.SupportTickets.Include(supportTicket => supportTicket.ProductFamily).FirstAsync();
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)resourceMeta["editedBy"]);
+        });
+        operation.Data.SingleValue.Meta.Should().ContainKey("revision").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetDouble().Should().Be((int)resourceMeta["revision"]);
+        });
 
-            ticket.ProductFamily.Should().NotBeNull();
+        operation.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Meta.Should().NotBeNull();
+            value.Meta.Should().HaveCount(relationshipMeta.Count);
+            value.Meta.Should().ContainKey("source").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be((string)relationshipMeta["source"]);
+            });
+            value.Meta.Should().ContainKey("confidence").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
+            });
         });
     }
 
@@ -429,12 +617,16 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var resourceMeta = _fakers.ResourceMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
-        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            existingTicket.ProductFamily = existingProductFamily;
+            existingTicket.ProductFamily = existingFamily;
             dbContext.SupportTickets.Add(existingTicket);
             await dbContext.SaveChangesAsync();
         });
@@ -454,13 +646,15 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         {
                             productFamily = new
                             {
-                                data = (object?)null
+                                data = (object?)null,
+                                meta = relationshipMeta
                             }
                         }
                     },
-                    meta = GetExampleMetaData()
+                    meta = resourceMeta
                 }
-            }
+            },
+            meta = documentMeta
         };
 
         const string route = "/operations";
@@ -472,21 +666,53 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
         store.Document.Operations.Should().NotBeNull();
         store.Document.Operations.Should().HaveCount(1);
 
         AtomicOperationObject? operation = store.Document.Operations[0];
         operation.Should().NotBeNull();
-        operation.Meta.Should().NotBeNull();
 
-        ValidateMetaData(operation.Meta);
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        // operation meta explicit validation (resourceMeta)
+        operation.Meta.Should().HaveCount(resourceMeta.Count);
+        operation.Meta.Should().ContainKey("editedBy").WhoseValue.With(val =>
         {
-            SupportTicket supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
-                .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)resourceMeta["editedBy"]);
+        });
+        operation.Meta.Should().ContainKey("revision").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)resourceMeta["revision"]);
+        });
 
-            supportTicketInDatabase.ProductFamily.Should().BeNull();
+        operation.Data.Should().NotBeNull();
+
+        operation.Data.SingleValue.Should().NotBeNull();
+        operation.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Meta.Should().NotBeNull();
+
+            value.Meta.Should().HaveCount(relationshipMeta.Count);
+            value.Meta.Should().ContainKey("source").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be((string)relationshipMeta["source"]);
+            });
+            value.Meta.Should().ContainKey("confidence").WhoseValue.With(v =>
+            {
+                JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+                element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
+            });
         });
     }
 
@@ -495,13 +721,17 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     {
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        SupportTicket ticket = _fakers.SupportTicket.GenerateOne();
-        ProductFamily family = _fakers.ProductFamily.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var resourceMeta = _fakers.ResourceMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async db =>
         {
-            db.ProductFamilies.Add(family);
-            db.SupportTickets.Add(ticket);
+            db.ProductFamilies.Add(existingFamily);
+            db.SupportTickets.Add(existingTicket);
             await db.SaveChangesAsync();
         });
 
@@ -515,55 +745,92 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     @ref = new
                     {
                         type = "supportTickets",
-                        id = ticket.StringId,
+                        id = existingTicket.StringId,
                         relationship = "productFamily"
                     },
                     data = new
                     {
                         type = "productFamilies",
-                        id = family.StringId,
-                        meta = GetExampleMetaData()
+                        id = existingFamily.StringId,
+                        meta = relationshipMeta
                     },
-                    meta = GetExampleMetaData()
+                    meta = resourceMeta
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
+        const string route = "/operations";
+
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
         store.Document.Should().NotBeNull();
-        ValidateMetaData(store.Document.Meta);
-        AtomicOperationObject? op = store.Document.Operations![0];
-        op.Should().NotBeNull();
-        ValidateMetaData(op.Meta);
-        op.Data.SingleValue.Should().NotBeNull();
-        ValidateMetaData(op.Data.SingleValue.Meta);
 
-        await _testContext.RunOnDatabaseAsync(async db =>
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
-            SupportTicket dbTicket = await db.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
-                .FirstAsync(supportTicket => supportTicket.Id == ticket.Id);
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
 
-            dbTicket.ProductFamily!.Id.Should().Be(family.Id);
+        store.Document.Operations.Should().NotBeNull();
+
+        AtomicOperationObject? op = store.Document.Operations[0];
+        op.Should().NotBeNull();
+
+        // operation meta explicit validation (resourceMeta)
+        op.Meta.Should().HaveCount(resourceMeta.Count);
+        op.Meta.Should().ContainKey("editedBy").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)resourceMeta["editedBy"]);
+        });
+        op.Meta.Should().ContainKey("revision").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)resourceMeta["revision"]);
+        });
+
+        op.Data.SingleValue.Should().NotBeNull();
+        op.Data.SingleValue.Meta.Should().NotBeNull();
+
+        // data meta explicit validation (relationshipMeta)
+        op.Data.SingleValue.Meta.Should().HaveCount(relationshipMeta.Count);
+        op.Data.SingleValue.Meta.Should().ContainKey("source").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)relationshipMeta["source"]);
+        });
+        op.Data.SingleValue.Meta.Should().ContainKey("confidence").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
         });
     }
 
     [Fact]
     public async Task Accepts_meta_in_update_to_many_relationship_operation()
     {
+        // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        ProductFamily family = _fakers.ProductFamily.GenerateOne();
-        SupportTicket ticket1 = _fakers.SupportTicket.GenerateOne();
-        SupportTicket ticket2 = _fakers.SupportTicket.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.Generate();
+        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.Generate();
 
-        await _testContext.RunOnDatabaseAsync(async db =>
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            db.ProductFamilies.Add(family);
-            db.SupportTickets.AddRange(ticket1, ticket2);
-            await db.SaveChangesAsync();
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
+            await dbContext.SaveChangesAsync();
         });
 
         var requestBody = new
@@ -576,7 +843,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     @ref = new
                     {
                         type = "productFamilies",
-                        id = family.StringId,
+                        id = existingFamily.StringId,
                         relationship = "tickets"
                     },
                     data = new[]
@@ -584,60 +851,106 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         new
                         {
                             type = "supportTickets",
-                            id = ticket1.StringId,
-                            meta = GetExampleMetaData()
+                            id = existingTicket1.StringId,
+                            meta = identifierMeta1
                         },
                         new
                         {
                             type = "supportTickets",
-                            id = ticket2.StringId,
-                            meta = GetExampleMetaData()
+                            id = existingTicket2.StringId,
+                            meta = identifierMeta2
                         }
                     },
-                    meta = GetExampleMetaData()
+                    meta = relationshipMeta
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
+        const string route = "/operations";
 
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
         store.Document.Should().NotBeNull();
-        ValidateMetaData(store.Document.Meta);
-        AtomicOperationObject? op = store.Document.Operations![0];
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Operations.Should().NotBeNull();
+
+        AtomicOperationObject? op = store.Document.Operations[0];
         op.Should().NotBeNull();
-        ValidateMetaData(op.Meta);
 
-        foreach (ResourceObject data in op.Data.ManyValue!)
+        // op meta explicit validation (relationshipMeta)
+        op.Meta.Should().HaveCount(relationshipMeta.Count);
+        op.Meta.Should().ContainKey("source").WhoseValue.With(val =>
         {
-            ValidateMetaData(data.Meta);
-        }
-
-        await _testContext.RunOnDatabaseAsync(async db =>
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)relationshipMeta["source"]);
+        });
+        op.Meta.Should().ContainKey("confidence").WhoseValue.With(val =>
         {
-            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets)
-                .FirstAsync(productFamily => productFamily.Id == family.Id);
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
+        });
 
-            dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket1.Id);
-            dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket2.Id);
+        op.Data.ManyValue.Should().NotBeNull();
+        op.Data.ManyValue.Should().HaveCount(2);
+
+        op.Data.ManyValue[0].Meta.Should().HaveCount(identifierMeta1.Count);
+        op.Data.ManyValue[0].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta1["index"]);
+        });
+        op.Data.ManyValue[0].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta1["optionalNote"]);
+        });
+
+        op.Data.ManyValue[1].Meta.Should().HaveCount(identifierMeta2.Count);
+        op.Data.ManyValue[1].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta2["index"]);
+        });
+        op.Data.ManyValue[1].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta2["optionalNote"]);
         });
     }
 
     [Fact]
     public async Task Accepts_meta_in_add_to_relationship_operation()
     {
+        // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        ProductFamily family = _fakers.ProductFamily.GenerateOne();
-        SupportTicket ticket1 = _fakers.SupportTicket.GenerateOne();
-        SupportTicket ticket2 = _fakers.SupportTicket.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.Generate();
+        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.Generate();
 
-        await _testContext.RunOnDatabaseAsync(async db =>
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            db.ProductFamilies.Add(family);
-            db.SupportTickets.AddRange(ticket1, ticket2);
-            await db.SaveChangesAsync();
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
+            await dbContext.SaveChangesAsync();
         });
 
         var requestBody = new
@@ -650,7 +963,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     @ref = new
                     {
                         type = "productFamilies",
-                        id = family.StringId,
+                        id = existingFamily.StringId,
                         relationship = "tickets"
                     },
                     data = new[]
@@ -658,66 +971,110 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         new
                         {
                             type = "supportTickets",
-                            id = ticket1.StringId,
-                            meta = GetExampleMetaData()
+                            id = existingTicket1.StringId,
+                            meta = identifierMeta1
                         },
                         new
                         {
                             type = "supportTickets",
-                            id = ticket2.StringId,
-                            meta = GetExampleMetaData()
+                            id = existingTicket2.StringId,
+                            meta = identifierMeta2
                         }
                     },
-                    meta = GetExampleMetaData()
+                    meta = relationshipMeta
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
+        const string route = "/operations";
 
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
         store.Document.Should().NotBeNull();
-        ValidateMetaData(store.Document.Meta);
-        AtomicOperationObject? op = store.Document.Operations![0];
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Operations.Should().NotBeNull();
+
+        AtomicOperationObject? op = store.Document.Operations[0];
         op.Should().NotBeNull();
-        ValidateMetaData(op.Meta);
 
-        foreach (ResourceObject data in op.Data.ManyValue!)
+        // op meta explicit validation (relationshipMeta)
+        op.Meta.Should().HaveCount(relationshipMeta.Count);
+        op.Meta.Should().ContainKey("source").WhoseValue.With(val =>
         {
-            ValidateMetaData(data.Meta);
-        }
-
-        await _testContext.RunOnDatabaseAsync(async db =>
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)relationshipMeta["source"]);
+        });
+        op.Meta.Should().ContainKey("confidence").WhoseValue.With(val =>
         {
-            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets)
-                .FirstAsync(productFamily => productFamily.Id == family.Id);
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
+        });
 
-            dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket1.Id);
-            dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket2.Id);
+        op.Data.ManyValue.Should().NotBeNull();
+        op.Data.ManyValue.Should().HaveCount(2);
+
+        op.Data.ManyValue[0].Meta.Should().HaveCount(identifierMeta1.Count);
+        op.Data.ManyValue[0].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta1["index"]);
+        });
+        op.Data.ManyValue[0].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta1["optionalNote"]);
+        });
+
+        op.Data.ManyValue[1].Meta.Should().HaveCount(identifierMeta2.Count);
+        op.Data.ManyValue[1].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta2["index"]);
+        });
+        op.Data.ManyValue[1].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta2["optionalNote"]);
         });
     }
 
     [Fact]
     public async Task Accepts_meta_in_delete_from_relationship_operation()
     {
+        // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        ProductFamily family = _fakers.ProductFamily.GenerateOne();
-        SupportTicket ticket1 = _fakers.SupportTicket.GenerateOne();
-        SupportTicket ticket2 = _fakers.SupportTicket.GenerateOne();
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
 
-        family.Tickets = new List<SupportTicket>
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+
+        existingFamily.Tickets = new List<SupportTicket>
         {
-            ticket1,
-            ticket2
+            existingTicket1,
+            existingTicket2
         };
 
-        await _testContext.RunOnDatabaseAsync(async db =>
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            db.ProductFamilies.Add(family);
-            db.SupportTickets.AddRange(ticket1, ticket2);
-            await db.SaveChangesAsync();
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
+            await dbContext.SaveChangesAsync();
         });
 
         var requestBody = new
@@ -730,7 +1087,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     @ref = new
                     {
                         type = "productFamilies",
-                        id = family.StringId,
+                        id = existingFamily.StringId,
                         relationship = "tickets"
                     },
                     data = new[]
@@ -738,133 +1095,55 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         new
                         {
                             type = "supportTickets",
-                            id = ticket1.StringId,
-                            meta = GetExampleMetaData()
+                            id = existingTicket1.StringId,
                         }
                     },
-                    meta = GetExampleMetaData()
+                    meta = relationshipMeta
                 }
             },
-            meta = GetExampleMetaData()
+            meta = documentMeta
         };
 
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
+        const string route = "/operations";
 
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
         store.Document.Should().NotBeNull();
-        ValidateMetaData(store.Document.Meta);
-        AtomicOperationObject? op = store.Document.Operations![0];
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Operations.Should().NotBeNull();
+
+        AtomicOperationObject? op = store.Document.Operations[0];
         op.Should().NotBeNull();
-        ValidateMetaData(op.Meta);
 
-        foreach (ResourceObject data in op.Data.ManyValue!)
+        // op meta explicit validation (relationshipMeta)
+        op.Meta.Should().HaveCount(relationshipMeta.Count);
+        op.Meta.Should().ContainKey("source").WhoseValue.With(val =>
         {
-            ValidateMetaData(data.Meta);
-        }
-
-        await _testContext.RunOnDatabaseAsync(async db =>
-        {
-            ProductFamily dbFamily = await db.ProductFamilies.Include(productFamily => productFamily.Tickets)
-                .FirstAsync(productFamily => productFamily.Id == family.Id);
-
-            dbFamily.Tickets.Should().NotContain(supportTicket => supportTicket.Id == ticket1.Id);
-            dbFamily.Tickets.Should().ContainSingle(supportTicket => supportTicket.Id == ticket2.Id);
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)relationshipMeta["source"]);
         });
-    }
-
-    private static object GetExampleMetaData()
-    {
-        return new
+        op.Meta.Should().ContainKey("confidence").WhoseValue.With(val =>
         {
-            category = "bug",
-            priority = 1,
-            urgent = true,
-            components = new[]
-            {
-                "login",
-                "single-sign-on"
-            },
-            relatedTo = new[]
-            {
-                new
-                {
-                    id = 123,
-                    link = "https://www.ticket-system.com/bugs/123"
-                },
-                new
-                {
-                    id = 789,
-                    link = "https://www.ticket-system.com/bugs/789"
-                }
-            },
-            contextInfo = new Dictionary<string, object?>
-            {
-                ["source"] = "form-submission",
-                ["retries"] = 1,
-                ["authenticated"] = false
-            }
-        };
-    }
-
-    private static void ValidateMetaData(IDictionary<string, object?>? meta)
-    {
-        meta.Should().NotBeNull();
-        meta.Should().HaveCount(6);
-
-        meta.Should().ContainKey("category").WhoseValue.With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetString().Should().Be("bug");
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
         });
 
-        meta.Should().ContainKey("priority").WhoseValue.With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetInt32().Should().Be(1);
-        });
-
-        meta.Should().ContainKey("components").WhoseValue.With(value =>
-        {
-            string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
-
-            innerJson.Should().BeJson("""
-                [
-                  "login",
-                  "single-sign-on"
-                ]
-                """);
-        });
-
-        meta.Should().ContainKey("relatedTo").WhoseValue.With(value =>
-        {
-            string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
-
-            innerJson.Should().BeJson("""
-                [
-                  {
-                    "id": 123,
-                    "link": "https://www.ticket-system.com/bugs/123"
-                  },
-                  {
-                    "id": 789,
-                    "link": "https://www.ticket-system.com/bugs/789"
-                  }
-                ]
-                """);
-        });
-
-        meta.Should().ContainKey("contextInfo").WhoseValue.With(value =>
-        {
-            string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
-
-            innerJson.Should().BeJson("""
-                {
-                  "source": "form-submission",
-                  "retries": 1,
-                  "authenticated": false
-                }
-                """);
-        });
+        op.Data.ManyValue.Should().NotBeNull();
+        op.Data.ManyValue.Should().HaveCount(1);
+        op.Data.ManyValue[0].Type.Should().Be("supportTickets");
+        op.Data.ManyValue[0].Id.Should().Be(existingTicket1.StringId);
     }
 
     private sealed class CapturingDocumentAdapter : IDocumentAdapter
