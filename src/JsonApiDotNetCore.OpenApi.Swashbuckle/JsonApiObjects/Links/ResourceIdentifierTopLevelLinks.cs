@@ -7,11 +7,11 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Links;
 internal sealed class ResourceIdentifierTopLevelLinks
 {
     [JsonPropertyName("self")]
-    public required string Self { get; set; }
+    public string Self { get; set; } = null!;
 
     [JsonPropertyName("related")]
-    public required string Related { get; set; }
+    public string Related { get; set; } = null!;
 
     [JsonPropertyName("describedby")]
-    public required string Describedby { get; set; }
+    public string Describedby { get; set; } = null!;
 }

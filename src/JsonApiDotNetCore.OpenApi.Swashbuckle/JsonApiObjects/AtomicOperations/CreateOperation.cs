@@ -12,9 +12,9 @@ internal sealed class CreateOperation<TResource> : AtomicOperation
 {
     [Required]
     [JsonPropertyName("op")]
-    public required string Op { get; set; }
+    public string Op { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("data")]
-    public required DataInCreateRequest<TResource> Data { get; set; }
+    public DataInCreateRequest<TResource> Data { get; set; } = null!;
 }

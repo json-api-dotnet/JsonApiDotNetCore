@@ -12,8 +12,8 @@ internal sealed class ToOneInRequest<TResource> : IHasMeta
 {
     [Required]
     [JsonPropertyName("data")]
-    public required IdentifierInRequest<TResource> Data { get; set; }
+    public IdentifierInRequest<TResource> Data { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

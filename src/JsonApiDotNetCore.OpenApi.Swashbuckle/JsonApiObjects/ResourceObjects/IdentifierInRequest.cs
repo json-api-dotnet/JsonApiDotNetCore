@@ -9,10 +9,10 @@ internal class IdentifierInRequest : IHasMeta
 {
     [Required]
     [JsonPropertyName("type")]
-    public required string Type { get; set; }
+    public string Type { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }
 
 // ReSharper disable once UnusedTypeParameter
@@ -22,9 +22,9 @@ internal class IdentifierInRequest<TResource> : IdentifierInRequest, IResourceId
 {
     [MinLength(1)]
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public string Id { get; set; } = null!;
 
     [MinLength(1)]
     [JsonPropertyName("lid")]
-    public required string Lid { get; set; }
+    public string Lid { get; set; } = null!;
 }

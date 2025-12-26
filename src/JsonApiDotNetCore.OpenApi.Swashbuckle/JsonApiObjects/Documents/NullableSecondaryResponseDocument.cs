@@ -12,19 +12,19 @@ internal sealed class NullableSecondaryResponseDocument<TResource> : IHasMeta
     where TResource : IIdentifiable
 {
     [JsonPropertyName("jsonapi")]
-    public required Jsonapi Jsonapi { get; set; }
+    public Jsonapi Jsonapi { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("links")]
-    public required ResourceTopLevelLinks Links { get; set; }
+    public ResourceTopLevelLinks Links { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("data")]
     public DataInResponse<TResource>? Data { get; set; }
 
     [JsonPropertyName("included")]
-    public required IList<ResourceInResponse> Included { get; set; }
+    public IList<ResourceInResponse> Included { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

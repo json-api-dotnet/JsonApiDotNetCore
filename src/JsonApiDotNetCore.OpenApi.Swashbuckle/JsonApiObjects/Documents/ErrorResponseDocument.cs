@@ -10,16 +10,16 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 internal sealed class ErrorResponseDocument : IHasMeta
 {
     [JsonPropertyName("jsonapi")]
-    public required Jsonapi Jsonapi { get; set; }
+    public Jsonapi Jsonapi { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("links")]
-    public required ErrorTopLevelLinks Links { get; set; }
+    public ErrorTopLevelLinks Links { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("errors")]
     public IList<ErrorObject> Errors { get; set; } = new List<ErrorObject>();
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

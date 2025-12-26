@@ -12,8 +12,8 @@ internal sealed class CreateRequestDocument<TResource> : IHasMeta
 {
     [Required]
     [JsonPropertyName("data")]
-    public required DataInCreateRequest<TResource> Data { get; set; }
+    public DataInCreateRequest<TResource> Data { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

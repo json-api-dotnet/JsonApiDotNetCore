@@ -12,16 +12,16 @@ internal sealed class IdentifierResponseDocument<TResource> : IHasMeta
     where TResource : IIdentifiable
 {
     [JsonPropertyName("jsonapi")]
-    public required Jsonapi Jsonapi { get; set; }
+    public Jsonapi Jsonapi { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("links")]
-    public required ResourceIdentifierTopLevelLinks Links { get; set; }
+    public ResourceIdentifierTopLevelLinks Links { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("data")]
-    public required IdentifierInResponse<TResource> Data { get; set; }
+    public IdentifierInResponse<TResource> Data { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

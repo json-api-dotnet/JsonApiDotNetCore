@@ -12,13 +12,13 @@ internal sealed class AddToRelationshipOperation<TResource> : AtomicOperation
 {
     [Required]
     [JsonPropertyName("op")]
-    public required string Op { get; set; }
+    public string Op { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("ref")]
-    public required object Ref { get; set; }
+    public object Ref { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("data")]
-    public required ICollection<IdentifierInRequest<TResource>> Data { get; set; }
+    public ICollection<IdentifierInRequest<TResource>> Data { get; set; } = null!;
 }

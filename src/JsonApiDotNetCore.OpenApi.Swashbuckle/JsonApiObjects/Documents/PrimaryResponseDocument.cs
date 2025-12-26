@@ -12,19 +12,19 @@ internal sealed class PrimaryResponseDocument<TResource> : IHasMeta
     where TResource : IIdentifiable
 {
     [JsonPropertyName("jsonapi")]
-    public required Jsonapi Jsonapi { get; set; }
+    public Jsonapi Jsonapi { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("links")]
-    public required ResourceTopLevelLinks Links { get; set; }
+    public ResourceTopLevelLinks Links { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("data")]
-    public required DataInResponse<TResource> Data { get; set; }
+    public DataInResponse<TResource> Data { get; set; } = null!;
 
     [JsonPropertyName("included")]
-    public required IList<ResourceInResponse> Included { get; set; }
+    public IList<ResourceInResponse> Included { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

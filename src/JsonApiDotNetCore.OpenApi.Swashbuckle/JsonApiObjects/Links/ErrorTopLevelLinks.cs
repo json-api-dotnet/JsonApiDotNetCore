@@ -7,8 +7,8 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Links;
 internal sealed class ErrorTopLevelLinks
 {
     [JsonPropertyName("self")]
-    public required string Self { get; set; }
+    public string Self { get; set; } = null!;
 
     [JsonPropertyName("describedby")]
-    public required string Describedby { get; set; }
+    public string Describedby { get; set; } = null!;
 }

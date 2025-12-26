@@ -11,15 +11,15 @@ internal sealed class DataInUpdateRequest<TResource> : ResourceInUpdateRequest
 {
     [MinLength(1)]
     [JsonPropertyName("id")]
-    public override required string Id { get; set; }
+    public override string Id { get; set; } = null!;
 
     [MinLength(1)]
     [JsonPropertyName("lid")]
-    public required string Lid { get; set; }
+    public string Lid { get; set; } = null!;
 
     [JsonPropertyName("attributes")]
-    public required AttributesInUpdateRequest<TResource> Attributes { get; set; }
+    public AttributesInUpdateRequest<TResource> Attributes { get; set; } = null!;
 
     [JsonPropertyName("relationships")]
-    public required RelationshipsInUpdateRequest<TResource> Relationships { get; set; }
+    public RelationshipsInUpdateRequest<TResource> Relationships { get; set; } = null!;
 }

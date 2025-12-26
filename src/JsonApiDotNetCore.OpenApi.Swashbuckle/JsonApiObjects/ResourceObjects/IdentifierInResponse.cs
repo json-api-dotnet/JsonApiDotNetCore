@@ -12,12 +12,12 @@ internal sealed class IdentifierInResponse<TResource> : IResourceIdentity
 {
     [Required]
     [JsonPropertyName("type")]
-    public required string Type { get; set; }
+    public string Type { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public string Id { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

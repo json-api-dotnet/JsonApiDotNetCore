@@ -11,8 +11,8 @@ internal sealed class OperationsRequestDocument : IHasMeta
     [Required]
     [MinLength(1)]
     [JsonPropertyName("atomic:operations")]
-    public required ICollection<AtomicOperation> Operations { get; set; }
+    public ICollection<AtomicOperation> Operations { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

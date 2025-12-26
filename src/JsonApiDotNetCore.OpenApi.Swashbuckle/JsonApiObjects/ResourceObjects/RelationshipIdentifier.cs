@@ -11,7 +11,7 @@ internal sealed class RelationshipIdentifier<TResource> : IdentifierInRequest<TR
 {
     [Required]
     [JsonPropertyName("relationship")]
-    public required string Relationship { get; set; }
+    public string Relationship { get; set; } = null!;
 
     // Meta is erased at runtime.
 }

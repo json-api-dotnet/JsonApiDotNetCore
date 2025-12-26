@@ -7,14 +7,14 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects;
 internal sealed class Jsonapi : IHasMeta
 {
     [JsonPropertyName("version")]
-    public required string Version { get; set; }
+    public string Version { get; set; } = null!;
 
     [JsonPropertyName("ext")]
-    public required ICollection<string> Ext { get; set; }
+    public ICollection<string> Ext { get; set; } = null!;
 
     [JsonPropertyName("profile")]
-    public required ICollection<string> Profile { get; set; }
+    public ICollection<string> Profile { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public required Meta Meta { get; set; }
+    public Meta Meta { get; set; } = null!;
 }

@@ -38,7 +38,7 @@ internal sealed class PeopleMessageFormatter
     {
         ICollection<TodoItemIdentifierInResponse> assignedTodoItems = person.Relationships?.AssignedTodoItems?.Data ?? [];
 
-        builder.AppendLine($"  Person {person.Id}: {person.Attributes?.DisplayName ?? string.Empty} with {assignedTodoItems.Count} assigned todo-items:");
+        builder.AppendLine($"  Person {person.Id}: {person.Attributes?.DisplayName} with {assignedTodoItems.Count} assigned todo-items:");
         WriteRelatedTodoItems(assignedTodoItems, includes, builder);
     }
 
@@ -50,7 +50,7 @@ internal sealed class PeopleMessageFormatter
             DataInTodoItemResponse includedTodoItem = includes.OfType<DataInTodoItemResponse>().Single(include => include.Id == todoItemIdentifier.Id);
             ICollection<TagIdentifierInResponse> tags = includedTodoItem.Relationships?.Tags?.Data ?? [];
 
-            builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes?.Description ?? string.Empty} with {tags.Count} tags:");
+            builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes?.Description} with {tags.Count} tags:");
             WriteRelatedTags(tags, includes, builder);
         }
     }
@@ -60,7 +60,7 @@ internal sealed class PeopleMessageFormatter
         foreach (TagIdentifierInResponse tagIdentifier in tagIdentifiers)
         {
             DataInTagResponse includedTag = includes.OfType<DataInTagResponse>().Single(include => include.Id == tagIdentifier.Id);
-            builder.AppendLine($"      Tag {includedTag.Id}: {includedTag.Attributes?.Name ?? string.Empty}");
+            builder.AppendLine($"      Tag {includedTag.Id}: {includedTag.Attributes?.Name}");
         }
     }
 }
