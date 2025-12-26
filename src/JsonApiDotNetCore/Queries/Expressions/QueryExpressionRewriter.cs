@@ -149,12 +149,12 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
 
     public override QueryExpression? VisitMatchText(MatchTextExpression expression, TArgument argument)
     {
-        var newTargetAttribute = Visit(expression.TargetAttribute, argument) as ResourceFieldChainExpression;
+        var newMatchTarget = Visit(expression.MatchTarget, argument) as ResourceFieldChainExpression;
         var newTextValue = Visit(expression.TextValue, argument) as LiteralConstantExpression;
 
-        if (newTargetAttribute != null && newTextValue != null)
+        if (newMatchTarget != null && newTextValue != null)
         {
-            var newExpression = new MatchTextExpression(newTargetAttribute, newTextValue, expression.MatchKind);
+            var newExpression = new MatchTextExpression(newMatchTarget, newTextValue, expression.MatchKind);
             return newExpression.Equals(expression) ? expression : newExpression;
         }
 
@@ -163,12 +163,12 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
 
     public override QueryExpression? VisitAny(AnyExpression expression, TArgument argument)
     {
-        var newTargetAttribute = Visit(expression.TargetAttribute, argument) as ResourceFieldChainExpression;
+        var newMatchTarget = Visit(expression.MatchTarget, argument) as ResourceFieldChainExpression;
         IImmutableSet<LiteralConstantExpression> newConstants = VisitSet(expression.Constants, argument);
 
-        if (newTargetAttribute != null)
+        if (newMatchTarget != null)
         {
-            var newExpression = new AnyExpression(newTargetAttribute, newConstants);
+            var newExpression = new AnyExpression(newMatchTarget, newConstants);
             return newExpression.Equals(expression) ? expression : newExpression;
         }
 

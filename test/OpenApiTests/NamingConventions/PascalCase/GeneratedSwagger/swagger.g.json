@@ -370,7 +370,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -465,7 +465,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -546,7 +546,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -649,7 +649,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -941,7 +941,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1036,7 +1036,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1117,7 +1117,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1220,7 +1220,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1257,7 +1257,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1352,7 +1352,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1435,7 +1435,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1530,7 +1530,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1611,7 +1611,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1693,7 +1693,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1788,7 +1788,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1871,7 +1871,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1966,7 +1966,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2047,7 +2047,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -2127,7 +2127,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -2207,7 +2207,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -2289,7 +2289,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2384,7 +2384,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2467,7 +2467,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2562,7 +2562,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2643,7 +2643,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -3209,7 +3209,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -3245,7 +3245,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -3286,7 +3286,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "lid": {
                 "minLength": 1,
@@ -3317,7 +3317,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "lid": {
                 "minLength": 1,
@@ -4443,7 +4443,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "lid": {
                 "minLength": 1,
@@ -4472,7 +4472,7 @@
           "id": {
             "minLength": 1,
             "type": "string",
-            "format": "int32"
+            "format": "int64"
           },
           "meta": {
             "allOf": [
@@ -4545,7 +4545,7 @@
           "id": {
             "minLength": 1,
             "type": "string",
-            "format": "int32"
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -4584,7 +4584,7 @@
           "id": {
             "minLength": 1,
             "type": "string",
-            "format": "int32"
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -4661,7 +4661,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "lid": {
                 "minLength": 1,
@@ -4696,7 +4696,7 @@
           "id": {
             "minLength": 1,
             "type": "string",
-            "format": "int32"
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,

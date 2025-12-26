@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2025.3.0.3",
+      "version": "2025.3.1",
       "commands": [
         "jb"
       ],
@@ -17,7 +17,7 @@
       "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.5.0",
+      "version": "5.5.1",
       "commands": [
         "reportgenerator"
       ],
