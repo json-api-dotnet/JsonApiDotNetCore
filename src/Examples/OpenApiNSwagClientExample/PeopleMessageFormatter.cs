@@ -36,9 +36,9 @@ internal sealed class PeopleMessageFormatter
 
     private static void WritePerson(DataInPersonResponse person, ICollection<ResourceInResponse> includes, StringBuilder builder)
     {
-        ICollection<TodoItemIdentifierInResponse> assignedTodoItems = person.Relationships.AssignedTodoItems?.Data ?? [];
+        ICollection<TodoItemIdentifierInResponse> assignedTodoItems = person.Relationships?.AssignedTodoItems?.Data ?? [];
 
-        builder.AppendLine($"  Person {person.Id}: {person.Attributes.DisplayName ?? string.Empty} with {assignedTodoItems.Count} assigned todo-items:");
+        builder.AppendLine($"  Person {person.Id}: {person.Attributes?.DisplayName ?? string.Empty} with {assignedTodoItems.Count} assigned todo-items:");
         WriteRelatedTodoItems(assignedTodoItems, includes, builder);
     }
 
@@ -50,7 +50,7 @@ internal sealed class PeopleMessageFormatter
             DataInTodoItemResponse includedTodoItem = includes.OfType<DataInTodoItemResponse>().Single(include => include.Id == todoItemIdentifier.Id);
             ICollection<TagIdentifierInResponse> tags = includedTodoItem.Relationships?.Tags?.Data ?? [];
 
-            builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes.Description ?? string.Empty} with {tags.Count} tags:");
+            builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes?.Description ?? string.Empty} with {tags.Count} tags:");
             WriteRelatedTags(tags, includes, builder);
         }
     }
