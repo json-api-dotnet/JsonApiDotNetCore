@@ -45,11 +45,18 @@ public sealed class OperationsFakers
             .MakeDeterministic()
             .CustomInstantiator(faker =>
             {
-                var dbContext = ResolveDbContext(serviceProvider);
+                OperationsDbContext dbContext = ResolveDbContext(serviceProvider);
+
                 return new Enrollment(dbContext)
                 {
-                    Student = new Student { Name = faker.Name.FullName() },
-                    Course = new Course { Subject = faker.Commerce.Department() },
+                    Student = new Student
+                    {
+                        Name = faker.Name.FullName()
+                    },
+                    Course = new Course
+                    {
+                        Subject = faker.Commerce.Department()
+                    },
                     EnrolledAt = faker.Date.PastDateOnly(),
                     GraduatedAt = faker.Date.RecentDateOnly()
                 };
