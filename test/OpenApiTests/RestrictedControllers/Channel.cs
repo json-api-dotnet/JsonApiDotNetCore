@@ -17,7 +17,7 @@ public abstract class Channel : Identifiable<long>
     public bool? IsAdultOnly { get; set; }
 
     [HasOne]
-    public DataStream VideoStream { get; set; } = null!;
+    public required DataStream VideoStream { get; set; }
 
     [HasOne]
     public DataStream? UltraHighDefinitionVideoStream { get; set; }
