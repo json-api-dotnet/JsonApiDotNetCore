@@ -8,14 +8,14 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models;
 public sealed class Person : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public ISet<Blog> Blogs { get; set; } = new HashSet<Blog>();
 
     [HasOne]
-    public Food FavoriteFood { get; set; } = null!;
+    public required Food FavoriteFood { get; set; }
 
     [HasOne]
-    public Song FavoriteSong { get; set; } = null!;
+    public required Song FavoriteSong { get; set; }
 }

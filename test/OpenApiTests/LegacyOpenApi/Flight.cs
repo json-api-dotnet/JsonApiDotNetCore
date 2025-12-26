@@ -12,7 +12,7 @@ public sealed class Flight : Identifiable<string>
 {
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
     [MaxLength(40)]
-    public string FinalDestination { get; set; } = null!;
+    public required string FinalDestination { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
     [MaxLength(2000)]
@@ -31,7 +31,7 @@ public sealed class Flight : Identifiable<string>
     public ISet<FlightAttendant> CabinCrewMembers { get; set; } = new HashSet<FlightAttendant>();
 
     [HasOne]
-    public FlightAttendant Purser { get; set; } = null!;
+    public required FlightAttendant Purser { get; set; }
 
     [HasOne]
     public FlightAttendant? BackupPurser { get; set; }

@@ -13,8 +13,11 @@ public sealed class OperationsFakers
 {
     private readonly Lazy<Faker<Course>> _lazyCourseFaker = new(() => new Faker<Course>()
         .MakeDeterministic()
-        .RuleFor(course => course.Subject, faker => faker.Lorem.Word())
-        .RuleFor(course => course.Description, faker => faker.Lorem.Sentence()));
+        .CustomInstantiator(faker => new Course
+        {
+            Subject = faker.Lorem.Word(),
+            Description = faker.Lorem.Sentence()
+        }));
 
     private readonly Lazy<Faker<Teacher>> _lazyTeacherFaker = new(() => new Faker<Teacher>()
         .MakeDeterministic()
@@ -23,8 +26,11 @@ public sealed class OperationsFakers
 
     private readonly Lazy<Faker<Student>> _lazyStudentFaker = new(() => new Faker<Student>()
         .MakeDeterministic()
-        .RuleFor(student => student.Name, faker => faker.Person.FullName)
-        .RuleFor(student => student.EmailAddress, faker => faker.Person.Email));
+        .CustomInstantiator(faker => new Student
+        {
+            Name = faker.Person.FullName,
+            EmailAddress = faker.Person.Email
+        }));
 
     private readonly Lazy<Faker<Enrollment>> _lazyEnrollmentFaker;
 
@@ -37,9 +43,17 @@ public sealed class OperationsFakers
     {
         _lazyEnrollmentFaker = new Lazy<Faker<Enrollment>>(() => new Faker<Enrollment>()
             .MakeDeterministic()
-            .CustomInstantiator(_ => new Enrollment(ResolveDbContext(serviceProvider)))
-            .RuleFor(enrollment => enrollment.EnrolledAt, faker => faker.Date.PastDateOnly())
-            .RuleFor(enrollment => enrollment.GraduatedAt, faker => faker.Date.RecentDateOnly()));
+            .CustomInstantiator(faker =>
+            {
+                var dbContext = ResolveDbContext(serviceProvider);
+                return new Enrollment(dbContext)
+                {
+                    Student = new Student { Name = faker.Name.FullName() },
+                    Course = new Course { Subject = faker.Commerce.Department() },
+                    EnrolledAt = faker.Date.PastDateOnly(),
+                    GraduatedAt = faker.Date.RecentDateOnly()
+                };
+            }));
     }
 
     private OperationsDbContext ResolveDbContext(IServiceProvider serviceProvider)

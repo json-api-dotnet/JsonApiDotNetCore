@@ -10,7 +10,7 @@ namespace OpenApiTests.AtomicOperations;
 public sealed class Student : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public string? EmailAddress { get; set; }

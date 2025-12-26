@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices;
 public sealed class DomainUser : Identifiable<Guid>
 {
     [Attr]
-    public string LoginName { get; set; } = null!;
+    public required string LoginName { get; set; }
 
     [Attr]
     public string? DisplayName { get; set; }

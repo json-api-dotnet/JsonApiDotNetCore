@@ -15,5 +15,5 @@ internal sealed class NullableToOneInRequest<TResource> : IHasMeta
     public IdentifierInRequest<TResource>? Data { get; set; }
 
     [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
+    public required Meta Meta { get; set; }
 }

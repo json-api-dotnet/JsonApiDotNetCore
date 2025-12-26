@@ -12,12 +12,12 @@ internal sealed class UpdateOperation<TResource> : AtomicOperation
 {
     [Required]
     [JsonPropertyName("op")]
-    public string Op { get; set; } = null!;
+    public required string Op { get; set; }
 
     [JsonPropertyName("ref")]
-    public IdentifierInRequest<TResource> Ref { get; set; } = null!;
+    public required IdentifierInRequest<TResource> Ref { get; set; }
 
     [Required]
     [JsonPropertyName("data")]
-    public DataInUpdateRequest<TResource> Data { get; set; } = null!;
+    public required DataInUpdateRequest<TResource> Data { get; set; }
 }

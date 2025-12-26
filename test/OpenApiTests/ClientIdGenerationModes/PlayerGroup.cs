@@ -12,7 +12,7 @@ namespace OpenApiTests.ClientIdGenerationModes;
 public sealed class PlayerGroup : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public List<Player> Players { get; set; } = [];

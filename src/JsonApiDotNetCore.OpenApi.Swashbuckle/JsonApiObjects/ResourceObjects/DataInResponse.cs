@@ -12,15 +12,15 @@ internal sealed class DataInResponse<TResource> : ResourceInResponse
 {
     [Required]
     [JsonPropertyName("id")]
-    public override string Id { get; set; } = null!;
+    public override required string Id { get; set; }
 
     [JsonPropertyName("attributes")]
-    public AttributesInResponse<TResource> Attributes { get; set; } = null!;
+    public required AttributesInResponse<TResource> Attributes { get; set; }
 
     [JsonPropertyName("relationships")]
-    public RelationshipsInResponse<TResource> Relationships { get; set; } = null!;
+    public required RelationshipsInResponse<TResource> Relationships { get; set; }
 
     // Non-required because the related controller may be unavailable when used in an include.
     [JsonPropertyName("links")]
-    public ResourceLinks Links { get; set; } = null!;
+    public required ResourceLinks Links { get; set; }
 }

@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
 public sealed class Civilian : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     [Range(1900, 2050)]

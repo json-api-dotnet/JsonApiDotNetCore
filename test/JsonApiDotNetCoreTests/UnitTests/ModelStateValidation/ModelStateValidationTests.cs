@@ -118,13 +118,13 @@ public sealed class ModelStateValidationTests
         public ComplexObject? ComplexObject { get; set; }
 
         [Attr(PublicName = "publicNameOfComplexList")]
-        public IList<ComplexObject> ComplexList { get; set; } = null!;
+        public required IList<ComplexObject> ComplexList { get; set; }
 
         [HasOne(PublicName = "publicNameOfPrimaryChild")]
         public Child? PrimaryChild { get; set; }
 
         [HasMany(PublicName = "publicNameOfChildren")]
-        public ISet<Child> Children { get; set; } = null!;
+        public required ISet<Child> Children { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -149,6 +149,6 @@ public sealed class ModelStateValidationTests
         public ComplexObject? ParentObject { get; set; }
 
         [JsonPropertyName("jsonElements")]
-        public IList<ComplexObject> Elements { get; set; } = null!;
+        public required IList<ComplexObject> Elements { get; set; }
     }
 }

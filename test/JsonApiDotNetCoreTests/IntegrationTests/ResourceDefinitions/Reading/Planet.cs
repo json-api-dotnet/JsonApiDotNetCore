@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 public sealed class Planet : Identifiable<long>
 {
     [Attr]
-    public string PublicName { get; set; } = null!;
+    public required string PublicName { get; set; }
 
     [Attr]
     public string? PrivateName { get; set; }

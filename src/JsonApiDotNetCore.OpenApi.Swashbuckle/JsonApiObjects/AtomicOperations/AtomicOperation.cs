@@ -7,5 +7,5 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 internal abstract class AtomicOperation : IHasMeta
 {
     [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
+    public required Meta Meta { get; set; }
 }

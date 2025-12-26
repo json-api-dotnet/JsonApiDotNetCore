@@ -88,33 +88,33 @@ public abstract class SerializationBenchmarkBase
         public DayOfWeek Attribute10 { get; set; }
 
         [HasOne]
-        public required OutgoingResource Single1 { get; set; }
+        public OutgoingResource Single1 { get; set; } = null!;
 
         [HasOne]
-        public required OutgoingResource Single2 { get; set; }
+        public OutgoingResource Single2 { get; set; } = null!;
 
         [HasOne]
-        public required OutgoingResource Single3 { get; set; }
+        public OutgoingResource Single3 { get; set; } = null!;
 
         [HasOne]
-        public required OutgoingResource Single4 { get; set; }
+        public OutgoingResource Single4 { get; set; } = null!;
 
         [HasOne]
-        public required OutgoingResource Single5 { get; set; }
+        public OutgoingResource Single5 { get; set; } = null!;
 
         [HasMany]
-        public required ISet<OutgoingResource> Multi1 { get; set; }
+        public ISet<OutgoingResource> Multi1 { get; set; } = null!;
 
         [HasMany]
-        public required ISet<OutgoingResource> Multi2 { get; set; }
+        public ISet<OutgoingResource> Multi2 { get; set; } = null!;
 
         [HasMany]
-        public required ISet<OutgoingResource> Multi3 { get; set; }
+        public ISet<OutgoingResource> Multi3 { get; set; } = null!;
 
         [HasMany]
-        public required ISet<OutgoingResource> Multi4 { get; set; }
+        public ISet<OutgoingResource> Multi4 { get; set; } = null!;
 
         [HasMany]
-        public required ISet<OutgoingResource> Multi5 { get; set; }
+        public ISet<OutgoingResource> Multi5 { get; set; } = null!;
     }
 }

@@ -10,17 +10,17 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 internal sealed class OperationsResponseDocument : IHasMeta
 {
     [JsonPropertyName("jsonapi")]
-    public Jsonapi Jsonapi { get; set; } = null!;
+    public required Jsonapi Jsonapi { get; set; }
 
     [Required]
     [JsonPropertyName("links")]
-    public ResourceTopLevelLinks Links { get; set; } = null!;
+    public required ResourceTopLevelLinks Links { get; set; }
 
     [Required]
     [MinLength(1)]
     [JsonPropertyName("atomic:results")]
-    public IList<AtomicResult> Results { get; set; } = null!;
+    public required IList<AtomicResult> Results { get; set; }
 
     [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
+    public required Meta Meta { get; set; }
 }

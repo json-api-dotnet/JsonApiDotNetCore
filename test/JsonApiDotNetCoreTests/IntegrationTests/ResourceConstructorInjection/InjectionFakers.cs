@@ -28,8 +28,10 @@ internal sealed class InjectionFakers
 
         _lazyPostOfficeFaker = new Lazy<Faker<PostOffice>>(() => new Faker<PostOffice>()
             .MakeDeterministic(systemTimeUtc)
-            .CustomInstantiator(_ => new PostOffice(ResolveDbContext()))
-            .RuleFor(postOffice => postOffice.Address, faker => faker.Address.FullAddress()));
+            .CustomInstantiator(faker => new PostOffice(ResolveDbContext())
+            {
+                Address = faker.Address.FullAddress()
+            }));
 
         _lazyGiftCertificateFaker = new Lazy<Faker<GiftCertificate>>(() => new Faker<GiftCertificate>()
             .MakeDeterministic(systemTimeUtc)

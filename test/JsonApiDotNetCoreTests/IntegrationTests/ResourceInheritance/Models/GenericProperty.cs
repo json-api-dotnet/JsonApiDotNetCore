@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 public abstract class GenericProperty : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 }

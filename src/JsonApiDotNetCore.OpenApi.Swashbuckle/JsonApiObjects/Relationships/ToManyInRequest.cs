@@ -12,8 +12,8 @@ internal sealed class ToManyInRequest<TResource> : IHasMeta
 {
     [Required]
     [JsonPropertyName("data")]
-    public ICollection<IdentifierInRequest<TResource>> Data { get; set; } = null!;
+    public required ICollection<IdentifierInRequest<TResource>> Data { get; set; }
 
     [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
+    public required Meta Meta { get; set; }
 }

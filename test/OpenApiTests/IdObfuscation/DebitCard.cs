@@ -9,11 +9,11 @@ namespace OpenApiTests.IdObfuscation;
 public sealed class DebitCard : ObfuscatedIdentifiable
 {
     [Attr]
-    public string OwnerName { get; set; } = null!;
+    public required string OwnerName { get; set; }
 
     [Attr]
     public short PinCode { get; set; }
 
     [HasOne]
-    public BankAccount Account { get; set; } = null!;
+    public required BankAccount Account { get; set; }
 }

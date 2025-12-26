@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 public sealed class WebShop : Identifiable<long>, IHasTenant
 {
     [Attr]
-    public string Url { get; set; } = null!;
+    public required string Url { get; set; }
 
     public Guid TenantId { get; set; }
 

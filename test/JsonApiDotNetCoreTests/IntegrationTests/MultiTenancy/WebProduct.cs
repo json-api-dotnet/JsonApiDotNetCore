@@ -9,11 +9,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 public sealed class WebProduct : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public decimal Price { get; set; }
 
     [HasOne]
-    public WebShop Shop { get; set; } = null!;
+    public required WebShop Shop { get; set; }
 }

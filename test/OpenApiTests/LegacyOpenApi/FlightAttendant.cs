@@ -26,7 +26,7 @@ public sealed class FlightAttendant : Identifiable<string>
 
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate)]
     [Url]
-    public string ProfileImageUrl { get; set; } = null!;
+    public required string ProfileImageUrl { get; set; }
 
     [Attr]
     public long DistanceTraveledInKilometers { get; set; }

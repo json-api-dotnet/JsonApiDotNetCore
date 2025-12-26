@@ -358,10 +358,10 @@ public sealed class CreateSortExpressionFromLambdaTests
     private abstract class FileSystemEntry : Identifiable<long>
     {
         [Attr]
-        public string Name { get; set; } = null!;
+        public required string Name { get; set; }
 
         [HasOne]
-        public FileSystemEntry Parent { get; set; } = null!;
+        public required FileSystemEntry Parent { get; set; }
 
         [HasMany]
         public List<FileSystemEntry> Children { get; set; } = [];
@@ -381,7 +381,7 @@ public sealed class CreateSortExpressionFromLambdaTests
     private sealed class FileEntry : FileSystemEntry
     {
         [Attr]
-        public string Content { get; set; } = null!;
+        public required string Content { get; set; }
 
         [Attr]
         public ulong Length { get; set; }

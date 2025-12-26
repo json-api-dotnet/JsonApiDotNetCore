@@ -12,5 +12,5 @@ public sealed class SystemVolume : Identifiable<long>
     public string? Name { get; set; }
 
     [HasOne]
-    public SystemDirectory RootDirectory { get; set; } = null!;
+    public required SystemDirectory RootDirectory { get; set; }
 }

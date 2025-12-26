@@ -7,8 +7,8 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Links;
 internal sealed class RelationshipLinks
 {
     [JsonPropertyName("self")]
-    public string Self { get; set; } = null!;
+    public required string Self { get; set; }
 
     [JsonPropertyName("related")]
-    public string Related { get; set; } = null!;
+    public required string Related { get; set; }
 }

@@ -12,7 +12,7 @@ public sealed class PostOffice(InjectionDbContext injectionDbContext) : Identifi
     private readonly TimeProvider _timeProvider = injectionDbContext.TimeProvider;
 
     [Attr]
-    public string Address { get; set; } = null!;
+    public required string Address { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView)]
     [NotMapped]

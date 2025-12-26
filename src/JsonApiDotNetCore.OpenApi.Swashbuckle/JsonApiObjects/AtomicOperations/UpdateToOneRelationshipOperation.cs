@@ -12,11 +12,11 @@ internal sealed class UpdateToOneRelationshipOperation<TResource> : AtomicOperat
 {
     [Required]
     [JsonPropertyName("op")]
-    public string Op { get; set; } = null!;
+    public required string Op { get; set; }
 
     [Required]
     [JsonPropertyName("ref")]
-    public object Ref { get; set; } = null!;
+    public required object Ref { get; set; }
 
     [Required]
     [JsonPropertyName("data")]

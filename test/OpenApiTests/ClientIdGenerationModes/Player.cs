@@ -12,7 +12,7 @@ namespace OpenApiTests.ClientIdGenerationModes;
 public sealed class Player : Identifiable<Guid>
 {
     [Attr]
-    public string UserName { get; set; } = null!;
+    public required string UserName { get; set; }
 
     [HasMany]
     public List<Game> OwnedGames { get; set; } = [];

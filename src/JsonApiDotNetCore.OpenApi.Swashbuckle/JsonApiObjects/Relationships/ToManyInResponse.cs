@@ -12,12 +12,12 @@ internal sealed class ToManyInResponse<TResource> : IHasMeta
 {
     // Non-required because the related controller may be unavailable when used in an include.
     [JsonPropertyName("links")]
-    public RelationshipLinks Links { get; set; } = null!;
+    public required RelationshipLinks Links { get; set; }
 
     // Non-required because related data may not be included in the response.
     [JsonPropertyName("data")]
-    public ICollection<IdentifierInResponse<TResource>> Data { get; set; } = null!;
+    public required ICollection<IdentifierInResponse<TResource>> Data { get; set; }
 
     [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
+    public required Meta Meta { get; set; }
 }

@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 public sealed class ProductFamily : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public IList<SupportTicket> Tickets { get; set; } = new List<SupportTicket>();

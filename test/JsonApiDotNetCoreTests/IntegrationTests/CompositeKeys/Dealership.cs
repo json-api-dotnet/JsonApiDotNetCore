@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 public sealed class Dealership : Identifiable<long>
 {
     [Attr]
-    public string Address { get; set; } = null!;
+    public required string Address { get; set; }
 
     [HasMany]
     public ISet<Car> Inventory { get; set; } = new HashSet<Car>();

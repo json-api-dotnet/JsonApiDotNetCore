@@ -9,10 +9,10 @@ internal abstract class ResourceData : IResourceIdentity
 {
     [Required]
     [JsonPropertyName("type")]
-    public string Type { get; set; } = null!;
+    public required string Type { get; set; }
 
     public abstract string Id { get; set; }
 
     [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
+    public required Meta Meta { get; set; }
 }

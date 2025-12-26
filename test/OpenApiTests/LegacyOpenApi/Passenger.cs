@@ -11,7 +11,7 @@ public sealed class Passenger : Identifiable<string>
 {
     [Attr(PublicName = "document-number", Capabilities = AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
     [MaxLength(9)]
-    public string PassportNumber { get; set; } = null!;
+    public required string PassportNumber { get; set; }
 
     [Attr]
     public string? FullName { get; set; }

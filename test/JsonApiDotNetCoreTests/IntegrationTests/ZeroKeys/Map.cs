@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
 public sealed class Map : Identifiable<Guid?>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasOne]
     public Game? Game { get; set; }

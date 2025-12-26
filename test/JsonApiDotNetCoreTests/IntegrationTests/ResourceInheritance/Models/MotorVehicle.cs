@@ -11,10 +11,10 @@ public abstract class MotorVehicle : Vehicle
     public override bool RequiresDriverLicense { get; set; }
 
     [Attr]
-    public string LicensePlate { get; set; } = null!;
+    public required string LicensePlate { get; set; }
 
     [HasOne]
-    public Engine Engine { get; set; } = null!;
+    public required Engine Engine { get; set; }
 
     [HasOne]
     public NavigationSystem? NavigationSystem { get; set; }

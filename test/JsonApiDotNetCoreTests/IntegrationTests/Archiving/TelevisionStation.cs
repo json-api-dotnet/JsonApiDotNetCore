@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 public sealed class TelevisionStation : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public ISet<TelevisionBroadcast> Broadcasts { get; set; } = new HashSet<TelevisionBroadcast>();

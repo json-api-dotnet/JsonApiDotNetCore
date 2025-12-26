@@ -10,11 +10,11 @@ namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOn;
 public sealed class NrtOnResource : Identifiable<long>
 {
     [Attr]
-    public string NonNullableReferenceType { get; set; } = null!;
+    public required string NonNullableReferenceType { get; set; }
 
     [Attr]
     [Required]
-    public string RequiredNonNullableReferenceType { get; set; } = null!;
+    public required string RequiredNonNullableReferenceType { get; set; }
 
     [Attr]
     public string? NullableReferenceType { get; set; }
@@ -38,11 +38,11 @@ public sealed class NrtOnResource : Identifiable<long>
     public int? RequiredNullableValueType { get; set; }
 
     [HasOne]
-    public NrtOnEmpty NonNullableToOne { get; set; } = null!;
+    public required NrtOnEmpty NonNullableToOne { get; set; }
 
     [Required]
     [HasOne]
-    public NrtOnEmpty RequiredNonNullableToOne { get; set; } = null!;
+    public required NrtOnEmpty RequiredNonNullableToOne { get; set; }
 
     [HasOne]
     public NrtOnEmpty? NullableToOne { get; set; }

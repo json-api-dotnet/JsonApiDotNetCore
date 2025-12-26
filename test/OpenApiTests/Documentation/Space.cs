@@ -27,5 +27,5 @@ public sealed class Space : Identifiable<long>
     /// The skyscraper this space exists in.
     /// </summary>
     [HasOne]
-    public Skyscraper ExistsIn { get; set; } = null!;
+    public required Skyscraper ExistsIn { get; set; }
 }

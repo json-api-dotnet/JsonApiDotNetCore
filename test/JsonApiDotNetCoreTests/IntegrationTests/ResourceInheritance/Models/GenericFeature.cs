@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 public sealed class GenericFeature : Identifiable<long>
 {
     [Attr]
-    public string Description { get; set; } = null!;
+    public required string Description { get; set; }
 
     [HasMany]
     public ISet<GenericProperty> Properties { get; set; } = new HashSet<GenericProperty>();

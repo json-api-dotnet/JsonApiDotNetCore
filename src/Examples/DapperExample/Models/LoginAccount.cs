@@ -14,8 +14,8 @@ public sealed class LoginAccount : Identifiable<long>
     public DateTimeOffset? LastUsedAt { get; set; }
 
     [HasOne]
-    public required AccountRecovery Recovery { get; set; }
+    public AccountRecovery Recovery { get; set; } = null!;
 
     [HasOne]
-    public required Person Person { get; set; }
+    public Person Person { get; set; } = null!;
 }

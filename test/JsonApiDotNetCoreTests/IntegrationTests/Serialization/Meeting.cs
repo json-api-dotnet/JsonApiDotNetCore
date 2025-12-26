@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
 public sealed class Meeting : Identifiable<Guid>
 {
     [Attr]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Attr]
     public DateTimeOffset StartTime { get; set; }

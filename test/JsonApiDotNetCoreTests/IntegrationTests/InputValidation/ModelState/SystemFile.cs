@@ -11,7 +11,7 @@ public sealed class SystemFile : Identifiable<long>
 {
     [Attr]
     [MinLength(1)]
-    public string FileName { get; set; } = null!;
+    public required string FileName { get; set; }
 
     [Attr]
     [Required]

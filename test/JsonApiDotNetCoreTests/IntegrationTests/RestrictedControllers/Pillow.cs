@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 public sealed class Pillow : Identifiable<long>
 {
     [Attr]
-    public string Color { get; set; } = null!;
+    public required string Color { get; set; }
 }

@@ -22,8 +22,8 @@ public sealed class Enrollment(OperationsDbContext dbContext) : Identifiable<lon
     public bool HasGraduated => GraduatedAt != null && GraduatedAt <= Today;
 
     [HasOne]
-    public Student Student { get; set; } = null!;
+    public required Student Student { get; set; }
 
     [HasOne]
-    public Course Course { get; set; } = null!;
+    public required Course Course { get; set; }
 }

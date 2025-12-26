@@ -11,7 +11,7 @@ public sealed class Airplane : Identifiable<string>
 {
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
     [MaxLength(255)]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
     [MaxLength(16)]

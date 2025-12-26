@@ -15,5 +15,5 @@ public sealed class AccountRecovery : Identifiable<long>
     public string? EmailAddress { get; set; }
 
     [HasOne]
-    public required LoginAccount Account { get; set; }
+    public LoginAccount Account { get; set; } = null!;
 }

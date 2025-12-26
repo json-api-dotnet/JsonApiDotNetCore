@@ -12,9 +12,9 @@ internal sealed class DeleteOperation<TResource> : AtomicOperation
 {
     [Required]
     [JsonPropertyName("op")]
-    public string Op { get; set; } = null!;
+    public required string Op { get; set; }
 
     [Required]
     [JsonPropertyName("ref")]
-    public IdentifierInRequest<TResource> Ref { get; set; } = null!;
+    public required IdentifierInRequest<TResource> Ref { get; set; }
 }

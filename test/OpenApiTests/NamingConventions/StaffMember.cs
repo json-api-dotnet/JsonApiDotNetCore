@@ -9,7 +9,7 @@ namespace OpenApiTests.NamingConventions;
 public sealed class StaffMember : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public int Age { get; set; }

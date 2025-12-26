@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 public sealed class Street : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView)]
     [NotMapped]

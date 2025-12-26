@@ -12,13 +12,13 @@ internal sealed class UpdateToManyRelationshipOperation<TResource> : AtomicOpera
 {
     [Required]
     [JsonPropertyName("op")]
-    public string Op { get; set; } = null!;
+    public required string Op { get; set; }
 
     [Required]
     [JsonPropertyName("ref")]
-    public object Ref { get; set; } = null!;
+    public required object Ref { get; set; }
 
     [Required]
     [JsonPropertyName("data")]
-    public ICollection<IdentifierInRequest<TResource>> Data { get; set; } = null!;
+    public required ICollection<IdentifierInRequest<TResource>> Data { get; set; }
 }

@@ -9,19 +9,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 public sealed class WebAccount : Identifiable<long>
 {
     [Attr]
-    public string UserName { get; set; } = null!;
+    public required string UserName { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowView)]
-    public string Password { get; set; } = null!;
+    public required string Password { get; set; }
 
     [Attr]
-    public string DisplayName { get; set; } = null!;
+    public required string DisplayName { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
     public DateTime? DateOfBirth { get; set; }
 
     [Attr]
-    public string EmailAddress { get; set; } = null!;
+    public required string EmailAddress { get; set; }
 
     [HasOne(Capabilities = HasOneCapabilities.All & ~HasOneCapabilities.AllowView)]
     public Human? Person { get; set; }

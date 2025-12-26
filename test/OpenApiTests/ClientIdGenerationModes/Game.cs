@@ -12,7 +12,7 @@ namespace OpenApiTests.ClientIdGenerationModes;
 public sealed class Game : Identifiable<Guid>
 {
     [Attr]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Attr]
     public decimal PurchasePrice { get; set; }

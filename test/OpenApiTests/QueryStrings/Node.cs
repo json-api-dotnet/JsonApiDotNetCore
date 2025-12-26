@@ -9,7 +9,7 @@ namespace OpenApiTests.QueryStrings;
 public sealed class Node : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public string? Comment { get; set; }

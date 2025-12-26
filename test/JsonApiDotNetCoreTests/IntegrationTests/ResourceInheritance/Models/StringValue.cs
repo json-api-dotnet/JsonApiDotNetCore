@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 public sealed class StringValue : Identifiable<long>
 {
     [Attr]
-    public string Content { get; set; } = null!;
+    public required string Content { get; set; }
 }

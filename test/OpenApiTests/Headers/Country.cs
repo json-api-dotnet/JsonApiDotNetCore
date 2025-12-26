@@ -9,7 +9,7 @@ namespace OpenApiTests.Headers;
 public sealed class Country : Identifiable<Guid>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public long Population { get; set; }

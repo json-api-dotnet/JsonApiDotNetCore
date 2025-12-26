@@ -12,8 +12,8 @@ internal sealed class UpdateRequestDocument<TResource> : IHasMeta
 {
     [Required]
     [JsonPropertyName("data")]
-    public DataInUpdateRequest<TResource> Data { get; set; } = null!;
+    public required DataInUpdateRequest<TResource> Data { get; set; }
 
     [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
+    public required Meta Meta { get; set; }
 }

@@ -12,7 +12,7 @@ public sealed class Lyric : Identifiable<long>
     public string? Format { get; set; }
 
     [Attr]
-    public string Text { get; set; } = null!;
+    public required string Text { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.None)]
     public DateTimeOffset CreatedAt { get; set; }

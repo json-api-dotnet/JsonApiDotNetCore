@@ -11,11 +11,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 public sealed class Shipment : Identifiable<long>
 {
     [Attr]
-    public string TrackAndTraceCode { get; set; } = null!;
+    public required string TrackAndTraceCode { get; set; }
 
     [Attr]
     public DateTimeOffset ShippedAt { get; set; }
 
     [HasOne]
-    public Order Order { get; set; } = null!;
+    public required Order Order { get; set; }
 }

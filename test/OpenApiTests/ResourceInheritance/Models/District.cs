@@ -9,7 +9,7 @@ namespace OpenApiTests.ResourceInheritance.Models;
 public sealed class District : Identifiable<Guid>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public ISet<Building> Buildings { get; set; } = new HashSet<Building>();
