@@ -22,6 +22,12 @@ public static class FluentExtensions
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
+    private static readonly JsonSerializerOptions FlattenSerializerOptions = new()
+    {
+        WriteIndented = true,
+        PropertyNameCaseInsensitive = true
+    };
+
     /// <summary>
     /// Same as <see cref="NumericAssertionsExtensions.BeApproximately(NumericAssertions{decimal}, decimal, decimal, string, object[])" />, but with default
     /// precision.
@@ -69,6 +75,15 @@ public static class FluentExtensions
         }
 
         return Encoding.UTF8.GetString(stream.ToArray());
+    }
+
+    /// <summary>
+    /// Converts the tree of dictionaries originating from a compound attribute value into a strongly typed object.
+    /// </summary>
+    public static T? SerializeAs<T>(this object? source)
+    {
+        string json = JsonSerializer.Serialize(source, FlattenSerializerOptions);
+        return JsonSerializer.Deserialize<T>(json, FlattenSerializerOptions);
     }
 
     // Workaround for source.Should().NotBeNull().And.Subject having declared type 'object'.

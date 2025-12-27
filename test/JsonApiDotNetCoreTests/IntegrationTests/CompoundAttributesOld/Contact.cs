@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributesOld;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Owned]

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributesOld;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public enum PhoneNumberType

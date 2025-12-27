@@ -14,6 +14,7 @@ namespace Benchmarks.Tools;
 internal sealed class NeverResourceDefinitionAccessor : IResourceDefinitionAccessor
 {
     bool IResourceDefinitionAccessor.IsReadOnlyRequest => throw new NotImplementedException();
+    public bool UseTrackingBehaviorHack => false;
     public IQueryableBuilder QueryableBuilder => throw new NotImplementedException();
 
     public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)

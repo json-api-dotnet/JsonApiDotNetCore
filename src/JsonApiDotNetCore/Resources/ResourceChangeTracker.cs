@@ -67,11 +67,10 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public bool HasImplicitChanges()
     {
-        // TODO: Handle compound attributes.
-
         if (_targetedFields.Attributes.Any(target => target.Attribute.Kind != AttrKind.Primitive))
         {
-            return true;
+            // TODO: Handle compound/collection attributes.
+            return false;
         }
 
         if (_initiallyStoredAttributeValues != null && _requestAttributeValues != null && _finallyStoredAttributeValues != null)

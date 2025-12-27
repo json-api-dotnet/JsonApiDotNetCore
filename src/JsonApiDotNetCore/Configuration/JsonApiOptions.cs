@@ -23,6 +23,9 @@ public sealed class JsonApiOptions : IJsonApiOptions
     JsonSerializerOptions IJsonApiOptions.SerializerWriteOptions => _lazySerializerWriteOptions.Value;
 
     /// <inheritdoc />
+    public bool UseTrackingBehaviorHack { get; set; }
+
+    /// <inheritdoc />
     public string? Namespace { get; set; }
 
     /// <inheritdoc />

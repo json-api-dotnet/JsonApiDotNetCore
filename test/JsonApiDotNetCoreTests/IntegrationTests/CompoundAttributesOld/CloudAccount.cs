@@ -2,10 +2,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributesOld;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes")]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributesOld")]
 public sealed class CloudAccount : Identifiable<long>
 {
     [Attr(IsCompound = true)]

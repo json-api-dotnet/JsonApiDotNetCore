@@ -11,4 +11,7 @@ public sealed class Country
 
     [Attr]
     public string? DisplayName { get; set; }
+
+    [Attr]
+    public IList<Province> Provinces { get; set; } = [];
 }

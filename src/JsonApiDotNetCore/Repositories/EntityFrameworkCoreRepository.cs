@@ -166,6 +166,14 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     {
         IQueryable<TResource> source = _dbContext.Set<TResource>();
 
+        if (_resourceDefinitionAccessor.UseTrackingBehaviorHack)
+        {
+            // Temporary hack to workaround https://github.com/dotnet/efcore/issues/35468 on EF Core 9/10.
+#pragma warning disable CS0618 // Type or member is obsolete
+            return _resourceDefinitionAccessor.IsReadOnlyRequest ? source.AsNoTracking() : source.AsTracking();
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
         return GetTrackingBehavior() switch
         {
             QueryTrackingBehavior.NoTrackingWithIdentityResolution => source.AsNoTrackingWithIdentityResolution(),

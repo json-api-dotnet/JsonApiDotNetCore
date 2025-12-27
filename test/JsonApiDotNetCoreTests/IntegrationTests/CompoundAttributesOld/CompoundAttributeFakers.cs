@@ -4,7 +4,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_if_long
 // @formatter:wrap_before_first_method_call true
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributesOld;
 
 internal sealed class CompoundAttributeFakers
 {

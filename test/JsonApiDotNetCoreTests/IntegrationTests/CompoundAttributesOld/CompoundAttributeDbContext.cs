@@ -4,7 +4,7 @@ using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributesOld;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class CompoundAttributeDbContext(DbContextOptions<CompoundAttributeDbContext> options)

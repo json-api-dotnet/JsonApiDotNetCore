@@ -14,6 +14,11 @@ namespace JsonApiDotNetCore.Configuration;
 public interface IJsonApiOptions
 {
     /// <summary>
+    /// Temporary hack to workaround https://github.com/dotnet/efcore/issues/35468 on EF Core 9/10.
+    /// </summary>
+    bool UseTrackingBehaviorHack { get; }
+
+    /// <summary>
     /// The URL prefix to use for exposed endpoints.
     /// </summary>
     /// <example>

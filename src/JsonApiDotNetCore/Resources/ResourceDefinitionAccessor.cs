@@ -28,6 +28,17 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     }
 
     /// <inheritdoc />
+    public bool UseTrackingBehaviorHack
+    {
+        get
+        {
+            var options = _serviceProvider.GetRequiredService<IJsonApiOptions>();
+            return options.UseTrackingBehaviorHack;
+
+        }
+    }
+
+    /// <inheritdoc />
     [Obsolete("Use injected IQueryableBuilder instead.")]
     public IQueryableBuilder QueryableBuilder => _serviceProvider.GetRequiredService<IQueryableBuilder>();
 

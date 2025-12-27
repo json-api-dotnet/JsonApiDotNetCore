@@ -305,6 +305,8 @@ public partial class ResourceGraphBuilder
 
     private ReadOnlyDictionary<string, AttrAttribute> GetAttributes(Type containerClrType, bool isTopLevel)
     {
+        // TODO: Validate that if top-level is Compound, children are not, and children are not declared in a containing type that implements IIdentifiable.
+
         if (!isTopLevel && containerClrType.IsAbstract)
         {
             // There is no way to indicate the derived type in JSON:API.

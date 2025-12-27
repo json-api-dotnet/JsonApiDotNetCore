@@ -122,6 +122,8 @@ public sealed class ResourceGraph : IResourceGraph
         where TResource : class, IIdentifiable
         where TField : ResourceFieldAttribute
     {
+        // TODO: Support expressions with compound attribute chains.
+
         IReadOnlyCollection<TField> source = GetFieldsOfType<TResource, TField>();
         List<TField> matches = [];
 

@@ -79,7 +79,18 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
                     Country = new Country
                     {
                         Code = "NLD",
-                        DisplayName = "The Netherlands"
+                        DisplayName = "The Netherlands",
+                        Provinces =
+                        [
+                            new Province
+                            {
+                                Name = "Zuid-Holland"
+                            },
+                            new Province
+                            {
+                                Name = "Noord-Holland"
+                            }
+                        ]
                     },
                     NotExposed = "NotExposed"
                 },
@@ -90,7 +101,14 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
                     Country = new Country
                     {
                         Code = "MailCode",
-                        DisplayName = "MailCountryName"
+                        DisplayName = "MailCountryName",
+                        Provinces =
+                        [
+                            new Province
+                            {
+                                Name = "Zuid-Holland"
+                            }
+                        ]
                     },
                     NotExposed = "MailNotExposed"
                 },

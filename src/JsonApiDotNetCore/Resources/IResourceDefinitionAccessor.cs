@@ -22,6 +22,11 @@ public interface IResourceDefinitionAccessor
     bool IsReadOnlyRequest { get; }
 
     /// <summary>
+    /// Temporary hack to workaround https://github.com/dotnet/efcore/issues/35468 on EF Core 9/10.
+    /// </summary>
+    bool UseTrackingBehaviorHack { get; }
+
+    /// <summary>
     /// Gets an <see cref="IQueryableBuilder" /> instance from the service container.
     /// </summary>
     /// <remarks>

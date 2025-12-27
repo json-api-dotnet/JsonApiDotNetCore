@@ -1,10 +1,12 @@
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributesOld;
 
 public sealed class PatchResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<CompoundAttributeDbContext>, CompoundAttributeDbContext>>
 {
@@ -16,6 +18,8 @@ public sealed class PatchResourceTests : IClassFixture<IntegrationTestContext<Te
         _testContext = testContext;
 
         testContext.UseController<CloudAccountsController>();
+
+        testContext.ConfigureServices(services => services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>)));
     }
 
     // TODO: Split up into individual tests. Make collection elements nullable. Add a non-exposed property, ensuring it is preserved.
