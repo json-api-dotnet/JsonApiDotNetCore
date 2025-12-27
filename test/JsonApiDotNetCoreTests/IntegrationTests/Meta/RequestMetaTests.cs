@@ -264,7 +264,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_post_resource_request_with_relationship()
+    public async Task Accepts_meta_in_post_resource_request_with_to_one_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -330,6 +330,96 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("productFamilies");
             value.Data.SingleValue.Id.Should().Be(existingFamily.StringId);
+        });
+    }
+
+    [Fact]
+    public async Task Accepts_meta_in_post_resource_request_with_to_many_relationship()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var resourceMeta = _fakers.ResourceMeta.Generate();
+        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.Generate();
+        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.Generate();
+
+        string newFamilyName = _fakers.ProductFamily.GenerateOne().Name;
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "productFamilies",
+                attributes = new
+                {
+                    name = newFamilyName
+                },
+                relationships = new
+                {
+                    tickets = new
+                    {
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "supportTickets",
+                                id = existingTicket1.StringId,
+                                description = existingTicket1.Description,
+                                meta = identifierMeta1
+                            },
+                            new
+                            {
+                                type = "supportTickets",
+                                id = existingTicket2.StringId,
+                                description = existingTicket2.Description,
+                                meta = identifierMeta2
+                            }
+                        },
+                        meta = resourceMeta
+                    }
+                }
+            },
+            meta = documentMeta
+        };
+
+        const string route = "/productFamilies";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        store.Document.Should().NotBeNull();
+
+        // document meta explicit validation
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Data.SingleValue.Should().NotBeNull();
+        store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().HaveCount(2);
+
+            value.Data.ManyValue[0].Type.Should().Be("supportTickets");
+            value.Data.ManyValue[0].Id.Should().Be(existingTicket1.StringId);
+
+            value.Data.ManyValue[1].Type.Should().Be("supportTickets");
+            value.Data.ManyValue[1].Id.Should().Be(existingTicket2.StringId);
         });
     }
 
