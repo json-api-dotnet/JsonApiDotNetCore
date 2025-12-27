@@ -8,7 +8,7 @@ namespace OpenApiTests.ResourceInheritance.Models;
 public sealed class Mansion : Residence
 {
     [Attr]
-    public string OwnerName { get; set; } = null!;
+    public required string OwnerName { get; set; }
 
     [HasMany]
     public ISet<StaffMember> Staff { get; set; } = new HashSet<StaffMember>();

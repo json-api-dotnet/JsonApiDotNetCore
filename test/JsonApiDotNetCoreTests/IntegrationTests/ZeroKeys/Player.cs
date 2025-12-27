@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
 public sealed class Player : Identifiable<string?>
 {
     [Attr]
-    public string EmailAddress { get; set; } = null!;
+    public required string EmailAddress { get; set; }
 
     [HasOne]
     public Game? ActiveGame { get; set; }

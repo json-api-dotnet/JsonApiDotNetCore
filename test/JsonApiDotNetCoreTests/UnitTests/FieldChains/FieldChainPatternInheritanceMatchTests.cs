@@ -173,7 +173,7 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
         public string? Value { get; set; }
 
         [HasOne]
-        public Base SingleItem { get; set; } = null!;
+        public required Base SingleItem { get; set; }
 
         [HasMany]
         public ISet<Base> SetOfItems { get; set; } = new HashSet<Base>();

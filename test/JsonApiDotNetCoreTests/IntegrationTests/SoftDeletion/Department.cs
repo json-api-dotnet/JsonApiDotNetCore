@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 public sealed class Department : Identifiable<long>, ISoftDeletable
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     public DateTimeOffset? SoftDeletedAt { get; set; }
 

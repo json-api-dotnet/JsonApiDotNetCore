@@ -9,13 +9,13 @@ namespace OpenApiTests.NamingConventions;
 public sealed class Supermarket : Identifiable<long>
 {
     [Attr]
-    public string NameOfCity { get; set; } = null!;
+    public required string NameOfCity { get; set; }
 
     [Attr]
     public SupermarketType Kind { get; set; }
 
     [HasOne]
-    public StaffMember StoreManager { get; set; } = null!;
+    public required StaffMember StoreManager { get; set; }
 
     [HasOne]
     public StaffMember? BackupStoreManager { get; set; }

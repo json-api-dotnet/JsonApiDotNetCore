@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Authorization.Scopes;
 public sealed class Actor : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public DateTime BornAt { get; set; }

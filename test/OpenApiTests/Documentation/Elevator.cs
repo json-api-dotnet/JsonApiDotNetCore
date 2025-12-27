@@ -22,5 +22,5 @@ public sealed class Elevator : Identifiable<long>
     /// The skyscraper this elevator exists in.
     /// </summary>
     [HasOne]
-    public Skyscraper ExistsIn { get; set; } = null!;
+    public required Skyscraper ExistsIn { get; set; }
 }

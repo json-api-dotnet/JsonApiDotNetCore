@@ -8,5 +8,5 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models;
 public sealed class Food : Identifiable<long>
 {
     [Attr]
-    public string Dish { get; set; } = null!;
+    public required string Dish { get; set; }
 }

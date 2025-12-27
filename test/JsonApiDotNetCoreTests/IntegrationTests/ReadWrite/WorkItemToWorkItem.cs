@@ -7,6 +7,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 [NoResource]
 public sealed class WorkItemToWorkItem
 {
-    public WorkItem FromItem { get; set; } = null!;
-    public WorkItem ToItem { get; set; } = null!;
+    public required WorkItem FromItem { get; set; }
+    public required WorkItem ToItem { get; set; }
 }

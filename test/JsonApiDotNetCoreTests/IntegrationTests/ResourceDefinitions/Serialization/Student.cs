@@ -9,10 +9,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 public sealed class Student : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
-    public string SocialSecurityNumber { get; set; } = null!;
+    public required string SocialSecurityNumber { get; set; }
 
     [HasOne]
     public Scholarship? Scholarship { get; set; }

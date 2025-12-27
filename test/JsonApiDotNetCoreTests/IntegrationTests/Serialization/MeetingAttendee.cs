@@ -9,10 +9,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
 public sealed class MeetingAttendee : Identifiable<Guid>
 {
     [Attr]
-    public string DisplayName { get; set; } = null!;
+    public required string DisplayName { get; set; }
 
     [Attr]
-    public Address HomeAddress { get; set; } = null!;
+    public required Address HomeAddress { get; set; }
 
     [HasOne]
     public Meeting? Meeting { get; set; }

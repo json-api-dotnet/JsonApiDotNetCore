@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 public sealed class RecordCompany : Identifiable<short>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public string? CountryOfResidence { get; set; }

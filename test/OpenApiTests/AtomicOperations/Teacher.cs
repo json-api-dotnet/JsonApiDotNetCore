@@ -9,7 +9,7 @@ namespace OpenApiTests.AtomicOperations;
 public sealed class Teacher : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public string? EmailAddress { get; set; }

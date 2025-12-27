@@ -9,5 +9,5 @@ namespace OpenApiTests.ResourceInheritance.Models;
 public sealed class StaffMember : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 }

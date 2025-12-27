@@ -25,7 +25,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
 
     [Attr]
     [Required(AllowEmptyStrings = true)]
-    public string LastName { get; set; } = null!;
+    public required string LastName { get; set; }
 
     [Attr]
     [StringLength(18, MinimumLength = 3)]

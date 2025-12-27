@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation;
 public sealed class Policy : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 }

@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 public sealed class Engine : Identifiable<long>
 {
     [Attr]
-    public string SerialCode { get; set; } = null!;
+    public required string SerialCode { get; set; }
 
     [HasOne]
     public Car? Car { get; set; }

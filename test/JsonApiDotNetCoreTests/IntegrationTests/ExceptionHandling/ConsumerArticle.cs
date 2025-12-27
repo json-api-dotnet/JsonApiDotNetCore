@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling;
 public sealed class ConsumerArticle : Identifiable<long>
 {
     [Attr]
-    public string Code { get; set; } = null!;
+    public required string Code { get; set; }
 }

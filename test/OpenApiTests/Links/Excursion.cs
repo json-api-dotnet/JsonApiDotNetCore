@@ -14,5 +14,5 @@ public sealed class Excursion : Identifiable<long>
     public DateTime? OccursAt { get; set; }
 
     [Attr]
-    public string Description { get; set; } = null!;
+    public required string Description { get; set; }
 }

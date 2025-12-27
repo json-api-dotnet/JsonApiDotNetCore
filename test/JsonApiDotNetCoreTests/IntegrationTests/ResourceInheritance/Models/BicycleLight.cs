@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 public sealed class BicycleLight : Identifiable<long>
 {
     [Attr]
-    public string Color { get; set; } = null!;
+    public required string Color { get; set; }
 }

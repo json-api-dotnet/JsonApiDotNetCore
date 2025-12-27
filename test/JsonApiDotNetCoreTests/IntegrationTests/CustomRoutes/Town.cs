@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
 public sealed class Town : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public double Latitude { get; set; }

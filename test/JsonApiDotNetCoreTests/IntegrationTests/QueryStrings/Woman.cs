@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 public sealed class Woman : Human
 {
     [Attr]
-    public string MaidenName { get; set; } = null!;
+    public required string MaidenName { get; set; }
 
     [Attr]
     public int Age { get; set; }

@@ -11,7 +11,7 @@ public class Person : Identifiable<long>
     public string? FirstName { get; set; }
 
     [Attr]
-    public string LastName { get; set; } = null!;
+    public required string LastName { get; set; }
 }
 ```
 
@@ -54,7 +54,7 @@ Otherwise, the attribute is silently omitted.
 public class User : Identifiable<long>
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
-    public string Password { get; set; } = null!;
+    public required string Password { get; set; }
 }
 ```
 

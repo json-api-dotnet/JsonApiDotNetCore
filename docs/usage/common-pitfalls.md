@@ -17,7 +17,7 @@ Now let's try to define the resource classes:
 public sealed class WebCustomer : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasOne]
     public LoginAccount? Account { get; set; }
@@ -27,7 +27,7 @@ public sealed class WebCustomer : Identifiable<long>
 public sealed class AdminCustomer : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public string? CreditRating { get; set; }
@@ -40,7 +40,7 @@ public sealed class AdminCustomer : Identifiable<long>
 public sealed class LoginAccount : Identifiable<long>
 {
     [Attr]
-    public string EmailAddress { get; set; } = null!;
+    public required string EmailAddress { get; set; }
 
     [HasOne]
     public ??? Customer { get; set; }

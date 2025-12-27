@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 public sealed class Star : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public StarKind Kind { get; set; }

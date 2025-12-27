@@ -14,5 +14,5 @@ public abstract class Room : Identifiable<long>
     public int? SurfaceInSquareMeters { get; set; }
 
     [HasOne]
-    public Residence Residence { get; set; } = null!;
+    public required Residence Residence { get; set; }
 }

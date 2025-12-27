@@ -18,7 +18,7 @@ public sealed class Vacation : Identifiable<long>
     public DateTime? EndsAt { get; set; }
 
     [HasOne]
-    public Accommodation Accommodation { get; set; } = null!;
+    public required Accommodation Accommodation { get; set; }
 
     [HasOne]
     public Transport? Transport { get; set; }

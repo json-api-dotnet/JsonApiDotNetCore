@@ -73,7 +73,7 @@ public abstract class SerializationBenchmarkBase
         public float? Attribute05 { get; set; }
 
         [Attr]
-        public string Attribute06 { get; set; } = null!;
+        public required string Attribute06 { get; set; }
 
         [Attr]
         public DateTime? Attribute07 { get; set; }

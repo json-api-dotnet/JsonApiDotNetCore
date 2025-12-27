@@ -9,10 +9,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 public sealed class BlogPost : Identifiable<long>
 {
     [Attr]
-    public string Caption { get; set; } = null!;
+    public required string Caption { get; set; }
 
     [Attr]
-    public string Url { get; set; } = null!;
+    public required string Url { get; set; }
 
     [HasOne]
     public WebAccount? Author { get; set; }

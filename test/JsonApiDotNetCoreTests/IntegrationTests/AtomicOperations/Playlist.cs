@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 public sealed class Playlist : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     [NotMapped]

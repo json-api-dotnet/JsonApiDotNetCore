@@ -13,7 +13,7 @@ public sealed class MusicTrack : Identifiable<Guid>
     public override Guid Id { get; set; }
 
     [Attr]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Attr]
     [Range(1, 24 * 60)]

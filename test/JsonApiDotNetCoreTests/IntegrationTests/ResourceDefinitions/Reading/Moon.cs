@@ -9,13 +9,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 public sealed class Moon : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public decimal SolarRadius { get; set; }
 
     [HasOne]
-    public Planet OrbitsAround { get; set; } = null!;
+    public required Planet OrbitsAround { get; set; }
 
     [HasOne]
     public Star? IsGivenLightBy { get; set; }

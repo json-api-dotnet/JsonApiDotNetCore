@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 public sealed class WorkItemGroup : Identifiable<Guid>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public bool IsPublic { get; set; }

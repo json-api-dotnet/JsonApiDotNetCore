@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 public sealed class Label : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public LabelColor Color { get; set; }

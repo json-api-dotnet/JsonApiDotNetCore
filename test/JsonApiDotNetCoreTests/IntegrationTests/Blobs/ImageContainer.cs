@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Blobs;
 public sealed class ImageContainer : Identifiable<long>
 {
     [Attr]
-    public string FileName { get; set; } = null!;
+    public required string FileName { get; set; }
 
     [Attr]
     public byte[] Data { get; set; } = [];

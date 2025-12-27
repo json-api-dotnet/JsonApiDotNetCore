@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Authorization.Scopes;
 public sealed class Genre : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public ISet<Movie> Movies { get; set; } = new HashSet<Movie>();

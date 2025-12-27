@@ -9,11 +9,11 @@ namespace OpenApiTests.QueryStrings;
 public sealed class NameValuePair : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public string? Value { get; set; }
 
     [HasOne]
-    public Node Owner { get; set; } = null!;
+    public required Node Owner { get; set; }
 }

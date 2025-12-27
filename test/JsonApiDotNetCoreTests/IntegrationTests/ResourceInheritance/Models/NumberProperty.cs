@@ -8,5 +8,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 public sealed class NumberProperty : GenericProperty
 {
     [HasOne]
-    public NumberValue Value { get; set; } = null!;
+    public required NumberValue Value { get; set; }
 }

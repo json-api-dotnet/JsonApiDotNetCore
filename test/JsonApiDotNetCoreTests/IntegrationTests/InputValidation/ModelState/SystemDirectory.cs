@@ -14,7 +14,7 @@ public sealed class SystemDirectory : Identifiable<int>
 
     [Attr(PublicName = "directoryName")]
     [RegularExpression(@"^[\w\s]+$")]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     [Required]

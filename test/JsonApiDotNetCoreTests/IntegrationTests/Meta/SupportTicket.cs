@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 public sealed class SupportTicket : Identifiable<long>
 {
     [Attr]
-    public string Description { get; set; } = null!;
+    public required string Description { get; set; }
 
     [HasOne]
     public ProductFamily? ProductFamily { get; set; }

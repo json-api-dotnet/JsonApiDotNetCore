@@ -19,7 +19,7 @@ public sealed class PhotoLocation : Identifiable<long>
     public double Longitude { get; set; }
 
     [HasOne]
-    public Photo Photo { get; set; } = null!;
+    public required Photo Photo { get; set; }
 
     [HasOne(Links = LinkTypes.None)]
     public PhotoAlbum? Album { get; set; }

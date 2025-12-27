@@ -10,7 +10,7 @@ Resource classes can be part of a type hierarchy. For example:
 public abstract class Human : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasOne]
     public Man? Father { get; set; }

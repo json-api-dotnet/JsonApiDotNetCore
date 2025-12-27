@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 public sealed class NavigationSystem : Identifiable<long>
 {
     [Attr]
-    public string ModelType { get; set; } = null!;
+    public required string ModelType { get; set; }
 }

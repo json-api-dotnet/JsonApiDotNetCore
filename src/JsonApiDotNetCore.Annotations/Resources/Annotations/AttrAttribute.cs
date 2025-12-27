@@ -21,7 +21,7 @@ public sealed class AttrAttribute : ResourceFieldAttribute
     /// public class Author : Identifiable<long>
     /// {
     ///     [Attr(Capabilities = AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
-    ///     public string Name { get; set; } = null!;
+    ///     public required string Name { get; set; }
     /// }
     /// ]]></code>
     /// </example>

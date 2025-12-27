@@ -9,10 +9,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 public sealed class Blog : Identifiable<long>
 {
     [Attr]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Attr]
-    public string PlatformName { get; set; } = null!;
+    public required string PlatformName { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
     public bool ShowAdvertisements => PlatformName.EndsWith("(using free account)", StringComparison.Ordinal);

@@ -9,5 +9,5 @@ namespace OpenApiTests.Links;
 public sealed class Accommodation : Identifiable<long>
 {
     [Attr]
-    public string Address { get; set; } = null!;
+    public required string Address { get; set; }
 }

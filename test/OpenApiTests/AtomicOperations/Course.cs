@@ -12,7 +12,7 @@ namespace OpenApiTests.AtomicOperations;
 public sealed class Course : Identifiable<Guid>
 {
     [Attr]
-    public string Subject { get; set; } = null!;
+    public required string Subject { get; set; }
 
     [Attr]
     public string? Description { get; set; }

@@ -72,13 +72,13 @@ Example:
 public sealed class Label : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [Attr]
     public string? RgbColor { get; set; }
 
     [HasOne]
-    public Person Creator { get; set; } = null!;
+    public required Person Creator { get; set; }
 
     [HasOne]
     public Label? Parent { get; set; }

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
 public sealed class Game : Identifiable<int?>
 {
     [Attr]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Attr]
     [NotMapped]

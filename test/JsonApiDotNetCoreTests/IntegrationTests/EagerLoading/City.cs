@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 public sealed class City : Identifiable<long>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [HasMany]
     public IList<Street> Streets { get; set; } = new List<Street>();

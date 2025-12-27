@@ -12,8 +12,8 @@ public sealed class Order : Identifiable<long>
     public decimal Amount { get; set; }
 
     [HasOne]
-    public Customer Customer { get; set; } = null!;
+    public required Customer Customer { get; set; }
 
     [HasOne]
-    public Shipment Shipment { get; set; } = null!;
+    public required Shipment Shipment { get; set; }
 }

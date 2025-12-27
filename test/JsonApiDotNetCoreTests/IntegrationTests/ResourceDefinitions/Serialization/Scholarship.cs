@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 public sealed class Scholarship : Identifiable<long>
 {
     [Attr]
-    public string ProgramName { get; set; } = null!;
+    public required string ProgramName { get; set; }
 
     [Attr]
     public decimal Amount { get; set; }

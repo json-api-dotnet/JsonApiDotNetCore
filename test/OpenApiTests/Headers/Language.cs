@@ -9,8 +9,8 @@ namespace OpenApiTests.Headers;
 public sealed class Language : Identifiable<Guid>
 {
     [Attr]
-    public string Code { get; set; } = null!;
+    public required string Code { get; set; }
 
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 }

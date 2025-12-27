@@ -9,11 +9,11 @@ namespace GettingStarted.Models;
 public sealed class Book : Identifiable<long>
 {
     [Attr]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Attr]
     public int PublishYear { get; set; }
 
     [HasOne]
-    public Person Author { get; set; } = null!;
+    public required Person Author { get; set; }
 }
