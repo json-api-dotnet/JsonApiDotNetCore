@@ -196,7 +196,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -204,7 +203,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             element.GetString().Should().Be((string)documentMeta["requestId"]);
         });
 
-        // resource meta explicit validation
         store.Document.Data.SingleValue.Should().NotBeNull();
         store.Document.Data.SingleValue.Meta.Should().HaveCount(resourceMeta.Count);
         store.Document.Data.SingleValue.Meta.Should().ContainKey("editedBy").WhoseValue.With(value =>
@@ -218,7 +216,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             element.GetInt32().Should().Be((int)resourceMeta["revision"]);
         });
 
-        // relationship meta validation
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
         {
@@ -314,7 +311,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -373,14 +369,12 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                             {
                                 type = "supportTickets",
                                 id = existingTicket1.StringId,
-                                description = existingTicket1.Description,
                                 meta = identifierMeta1
                             },
                             new
                             {
                                 type = "supportTickets",
                                 id = existingTicket2.StringId,
-                                description = existingTicket2.Description,
                                 meta = identifierMeta2
                             }
                         },
@@ -401,7 +395,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -409,6 +402,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             element.GetString().Should().Be((string)documentMeta["requestId"]);
         });
 
+        //TODO: resource meta and relationship identifier meta validation
         store.Document.Data.SingleValue.Should().NotBeNull();
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
         {
@@ -420,6 +414,241 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
             value.Data.ManyValue[1].Type.Should().Be("supportTickets");
             value.Data.ManyValue[1].Id.Should().Be(existingTicket2.StringId);
+        });
+    }
+
+    [Fact]
+    public async Task Accepts_meta_in_update_to_one_relationship_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var relationshipMeta = _fakers.RelationshipMeta.Generate();
+        var identifierMeta = _fakers.RelationshipIdentifierMeta.Generate();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.Add(existingTicket);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "productFamilies",
+                id = existingFamily.StringId,
+                meta = relationshipMeta
+            },
+            meta = documentMeta
+        };
+
+        string route = $"/supportTickets/{existingTicket.StringId}/relationships/productFamily";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
+
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Data.SingleValue.Should().NotBeNull();
+
+        store.Document.Data.SingleValue.Meta.Should().HaveCount(relationshipMeta.Count);
+        store.Document.Data.SingleValue.Meta.Should().ContainKey("source").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)relationshipMeta["source"]);
+        });
+        store.Document.Data.SingleValue.Meta.Should().ContainKey("confidence").WhoseValue.With(val =>
+        {
+            JsonElement element = val.Should().BeOfType<JsonElement>().Subject;
+            element.GetDouble().Should().BeApproximately((double)relationshipMeta["confidence"], 1e-6);
+        });
+    }
+
+    [Fact]
+    public async Task Accepts_meta_in_update_to_many_relationship_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.Generate();
+        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.Generate();
+
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.Add(existingTicket1);
+            dbContext.SupportTickets.Add(existingTicket2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "supportTickets",
+                    id = existingTicket1.StringId,
+                    meta = identifierMeta1,
+                },
+                new
+                {
+                    type = "supportTickets",
+                    id = existingTicket2.StringId,
+                    meta = identifierMeta2,
+                },
+            },
+            meta = documentMeta
+        };
+
+        string route = $"/productFamilies/{existingFamily.StringId}/relationships/tickets";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
+
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Data.ManyValue.Should().HaveCount(2);
+
+        store.Document.Data.ManyValue[0].Meta.Should().HaveCount(identifierMeta1.Count);
+        store.Document.Data.ManyValue[0].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta1["index"]);
+        });
+        store.Document.Data.ManyValue[0].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta1["optionalNote"]);
+        });
+
+        store.Document.Data.ManyValue[1].Meta.Should().HaveCount(identifierMeta2.Count);
+        store.Document.Data.ManyValue[1].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta2["index"]);
+        });
+        store.Document.Data.ManyValue[1].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta2["optionalNote"]);
+        });
+    }
+
+    [Fact]
+    public async Task Accepts_meta_in_post_relationship_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        var documentMeta = _fakers.DocumentMeta.Generate();
+        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.Generate();
+        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.Generate();
+
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.Add(existingTicket1);
+            dbContext.SupportTickets.Add(existingTicket2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "supportTickets",
+                    id = existingTicket1.StringId,
+                    meta = identifierMeta1,
+                },
+                new
+                {
+                    type = "supportTickets",
+                    id = existingTicket2.StringId,
+                    meta = identifierMeta2,
+                },
+            },
+            meta = documentMeta
+        };
+
+        string route = $"/productFamilies/{existingFamily.StringId}/relationships/tickets";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
+
+        store.Document.Meta.Should().HaveCount(documentMeta.Count);
+        store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)documentMeta["requestId"]);
+        });
+
+        store.Document.Data.ManyValue.Should().HaveCount(2);
+
+        store.Document.Data.ManyValue[0].Meta.Should().HaveCount(identifierMeta1.Count);
+        store.Document.Data.ManyValue[0].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta1["index"]);
+        });
+        store.Document.Data.ManyValue[0].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta1["optionalNote"]);
+        });
+
+        store.Document.Data.ManyValue[1].Meta.Should().HaveCount(identifierMeta2.Count);
+        store.Document.Data.ManyValue[1].Meta.Should().ContainKey("index").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be((int)identifierMeta2["index"]);
+        });
+        store.Document.Data.ManyValue[1].Meta.Should().ContainKey("optionalNote").WhoseValue.With(v =>
+        {
+            JsonElement element = v.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be((string)identifierMeta2["optionalNote"]);
         });
     }
 
@@ -459,7 +688,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Data.SingleValue.Should().BeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -515,7 +743,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -582,7 +809,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -653,7 +879,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -670,7 +895,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         operation.Data.Should().NotBeNull();
         operation.Data.SingleValue.Should().NotBeNull();
 
-        // resource/meta validation on operation data (resourceMeta -> relationshipMeta mapping)
         operation.Data.SingleValue.Meta.Should().HaveCount(relationshipMeta.Count);
         operation.Data.SingleValue.Meta.Should().ContainKey("editedBy").WhoseValue.With(val =>
         {
@@ -757,7 +981,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -771,7 +994,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         AtomicOperationObject? operation = store.Document.Operations[0];
         operation.Should().NotBeNull();
 
-        // operation meta explicit validation (resourceMeta)
         operation.Meta.Should().HaveCount(resourceMeta.Count);
         operation.Meta.Should().ContainKey("editedBy").WhoseValue.With(val =>
         {
@@ -858,7 +1080,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -871,7 +1092,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         AtomicOperationObject? op = store.Document.Operations[0];
         op.Should().NotBeNull();
 
-        // operation meta explicit validation (resourceMeta)
         op.Meta.Should().HaveCount(resourceMeta.Count);
         op.Meta.Should().ContainKey("editedBy").WhoseValue.With(val =>
         {
@@ -887,7 +1107,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         op.Data.SingleValue.Should().NotBeNull();
         op.Data.SingleValue.Meta.Should().NotBeNull();
 
-        // data meta explicit validation (relationshipMeta)
         op.Data.SingleValue.Meta.Should().HaveCount(relationshipMeta.Count);
         op.Data.SingleValue.Meta.Should().ContainKey("source").WhoseValue.With(val =>
         {
@@ -967,7 +1186,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -980,7 +1198,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         AtomicOperationObject? op = store.Document.Operations[0];
         op.Should().NotBeNull();
 
-        // op meta explicit validation (relationshipMeta)
         op.Meta.Should().HaveCount(relationshipMeta.Count);
         op.Meta.Should().ContainKey("source").WhoseValue.With(val =>
         {
@@ -1087,7 +1304,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -1100,7 +1316,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         AtomicOperationObject? op = store.Document.Operations[0];
         op.Should().NotBeNull();
 
-        // op meta explicit validation (relationshipMeta)
         op.Meta.Should().HaveCount(relationshipMeta.Count);
         op.Meta.Should().ContainKey("source").WhoseValue.With(val =>
         {
@@ -1204,7 +1419,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        // document meta explicit validation
         store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().ContainKey("requestId").WhoseValue.With(value =>
         {
@@ -1217,7 +1431,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         AtomicOperationObject? op = store.Document.Operations[0];
         op.Should().NotBeNull();
 
-        // op meta explicit validation (relationshipMeta)
         op.Meta.Should().HaveCount(relationshipMeta.Count);
         op.Meta.Should().ContainKey("source").WhoseValue.With(val =>
         {
