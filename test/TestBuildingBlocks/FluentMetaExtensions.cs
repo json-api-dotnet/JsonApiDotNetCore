@@ -1,4 +1,6 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using FluentAssertions.Collections;
 
@@ -76,5 +78,27 @@ public static class FluentMetaExtensions
     {
         object? value = source.ContainKey(metaKey).WhoseValue;
         return value.Should().BeOfType<JsonElement>().Subject;
+    }
+
+    private static readonly JsonSerializerOptions MetaSerializerOptions = new()
+    {
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles
+    };
+
+    /// <summary>
+    /// Asserts that the content of a "meta" dictionary matches the expected structure and values, after conversion to JSON.
+    /// </summary>
+    [CustomAssertion]
+    public static void BeEquivalentToJson(this GenericDictionaryAssertions<IDictionary<string, object?>, string, object?> source,
+        Dictionary<string, object?> expected)
+    {
+        source.NotBeNull();
+
+        string sourceJson = JsonSerializer.Serialize(source.Subject, MetaSerializerOptions);
+        string expectedJson = JsonSerializer.Serialize(expected, MetaSerializerOptions);
+
+        sourceJson.Should().Be(expectedJson);
     }
 }
