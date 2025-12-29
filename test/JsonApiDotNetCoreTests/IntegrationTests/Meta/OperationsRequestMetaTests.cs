@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
@@ -45,6 +44,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         var documentMeta = _fakers.DocumentMeta.GenerateOne();
+        var resourceMeta = _fakers.ResourceMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
 
@@ -68,7 +68,8 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                         attributes = new
                         {
                             description = existingTicket.Description
-                        }
+                        },
+                        meta = resourceMeta
                     }
                 }
             },
@@ -95,10 +96,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         ResourceObject? resource = operation.Data.SingleValue;
         resource.Should().NotBeNull();
-        resource.Type.Should().Be("supportTickets");
-        resource.Id.Should().Be(existingTicket.StringId);
-        resource.Attributes.Should().NotBeNull();
-        resource.Attributes.Should().ContainKey("description");
+        resource.Meta.Should().BeEquivalentToJson(resourceMeta);
     }
 
     [Fact]
@@ -158,6 +156,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         var documentMeta = _fakers.DocumentMeta.GenerateOne();
         var resourceMeta = _fakers.ResourceMeta.GenerateOne();
         var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -189,7 +188,8 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                                 data = new
                                 {
                                     type = "productFamilies",
-                                    id = existingFamily.StringId
+                                    id = existingFamily.StringId,
+                                    meta = identifierMeta
                                 },
                                 meta = relationshipMeta
                             }
@@ -228,7 +228,14 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         operation.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
+
             value.Meta.Should().BeEquivalentToJson(relationshipMeta);
+
+            value.Data.Should().NotBeNull();
+
+            value.Data.SingleValue.Should().NotBeNull();
+
+            value.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
         });
     }
 
@@ -550,6 +557,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         var documentMeta = _fakers.DocumentMeta.GenerateOne();
         var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
@@ -587,6 +595,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                         {
                             type = "supportTickets",
                             id = existingTicket1.StringId,
+                            meta = identifierMeta
                         }
                     },
                     meta = relationshipMeta
@@ -617,8 +626,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         op.Data.ManyValue.Should().NotBeNull();
         op.Data.ManyValue.Should().HaveCount(1);
 
-        op.Data.ManyValue[0].Type.Should().Be("supportTickets");
-        op.Data.ManyValue[0].Id.Should().Be(existingTicket1.StringId);
+        op.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta);
     }
 
     private sealed class CapturingDocumentAdapter : IDocumentAdapter

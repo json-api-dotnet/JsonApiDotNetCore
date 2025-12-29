@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
@@ -47,6 +46,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         var documentMeta = _fakers.DocumentMeta.GenerateOne();
         var resourceMeta = _fakers.ResourceMeta.GenerateOne();
         var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -71,7 +71,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         data = new
                         {
                             type = "productFamilies",
-                            id = existingFamily.StringId
+                            id = existingFamily.StringId,
+                            meta = identifierMeta
                         },
                         meta = relationshipMeta
                     }
@@ -103,6 +104,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         {
             value.Should().NotBeNull();
             value.Meta.Should().BeEquivalentToJson(relationshipMeta);
+            value.Data.SingleValue.Should().NotBeNull();
+            value.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
         });
     }
 
@@ -197,6 +200,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         var documentMeta = _fakers.DocumentMeta.GenerateOne();
+        var resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -223,10 +229,13 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                         data = new
                         {
                             type = "productFamilies",
-                            id = existingFamily.StringId
-                        }
+                            id = existingFamily.StringId,
+                            meta = identifierMeta
+                        },
+                        meta = relationshipMeta
                     }
-                }
+                },
+                meta = resourceMeta
             },
             meta = documentMeta
         };
@@ -243,13 +252,19 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
         store.Document.Data.SingleValue.Should().NotBeNull();
+
+        store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
+
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
+
+            value.Meta.Should().BeEquivalentToJson(relationshipMeta);
+
             value.Data.SingleValue.Should().NotBeNull();
-            value.Data.SingleValue.Type.Should().Be("productFamilies");
-            value.Data.SingleValue.Id.Should().Be(existingFamily.StringId);
+
+            value.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
         });
     }
 
@@ -261,6 +276,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         var documentMeta = _fakers.DocumentMeta.GenerateOne();
         var resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         var identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
         var identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
@@ -302,7 +318,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                                 meta = identifierMeta2
                             }
                         },
-
+                        meta = relationshipMeta
                     }
                 },
                 meta = resourceMeta
@@ -326,9 +342,12 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
+
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
+
+            value.Meta.Should().BeEquivalentToJson(relationshipMeta);
 
             value.Data.ManyValue.Should().HaveCount(2);
 
