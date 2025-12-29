@@ -43,8 +43,8 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
-        var resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
 
@@ -105,7 +105,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
 
@@ -153,9 +153,9 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
-        var resourceMeta = _fakers.ResourceMeta.GenerateOne();
-        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
@@ -245,9 +245,9 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
-        var resourceMeta = _fakers.ResourceMeta.GenerateOne();
-        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -321,9 +321,9 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
-        var resourceMeta = _fakers.ResourceMeta.GenerateOne();
-        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -389,10 +389,10 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
-        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
-        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
@@ -472,10 +472,10 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
-        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        var identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
-        var identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
@@ -555,8 +555,8 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
-        var documentMeta = _fakers.DocumentMeta.GenerateOne();
-        var relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
