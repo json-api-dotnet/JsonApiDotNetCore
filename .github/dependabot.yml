@@ -22,5 +22,3 @@ updates:
       # Block major updates of packages that require a matching .NET version.
       - dependency-name: "Microsoft.AspNetCore*"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "Microsoft.Extensions*"
-        update-types: ["version-update:semver-major"]
