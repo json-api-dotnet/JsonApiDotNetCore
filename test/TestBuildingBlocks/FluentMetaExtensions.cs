@@ -8,6 +8,13 @@ namespace TestBuildingBlocks;
 
 public static class FluentMetaExtensions
 {
+    private static readonly JsonSerializerOptions MetaSerializerOptions = new()
+    {
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles
+    };
+
     /// <summary>
     /// Asserts that a "meta" dictionary contains a single element named "total" with the specified value.
     /// </summary>
@@ -79,13 +86,6 @@ public static class FluentMetaExtensions
         object? value = source.ContainKey(metaKey).WhoseValue;
         return value.Should().BeOfType<JsonElement>().Subject;
     }
-
-    private static readonly JsonSerializerOptions MetaSerializerOptions = new()
-    {
-        WriteIndented = true,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        ReferenceHandler = ReferenceHandler.IgnoreCycles
-    };
 
     /// <summary>
     /// Asserts that the content of a "meta" dictionary matches the expected structure and values, after conversion to JSON.
