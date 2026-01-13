@@ -62,7 +62,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get resources");
 
-        if (_options.IncludeTotalResourceCount)
+        QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
+        bool isPaginationDisabled = queryLayer.Pagination?.PageSize == null;
+
+        if (_options.IncludeTotalResourceCount && !isPaginationDisabled)
         {
             FilterExpression? topFilter = _queryLayerComposer.GetPrimaryFilterFromConstraints(_request.PrimaryResourceType);
             _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(_request.PrimaryResourceType, topFilter, cancellationToken);
@@ -73,12 +76,16 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             }
         }
 
-        QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
         IReadOnlyCollection<TResource> resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
         if (queryLayer.Pagination?.PageSize?.Value == resources.Count)
         {
             _paginationContext.IsPageFull = true;
+        }
+
+        if (_options.IncludeTotalResourceCount && _paginationContext.TotalResourceCount == null)
+        {
+            _paginationContext.TotalResourceCount = resources.Count;
         }
 
         return resources;
@@ -112,7 +119,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get secondary resource(s)");
 
-        if (_options.IncludeTotalResourceCount && _request.IsCollection)
+        QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResourceType!);
+        bool isPaginationDisabled = secondaryLayer.Pagination?.PageSize == null;
+
+        if (_options.IncludeTotalResourceCount && !isPaginationDisabled)
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
@@ -120,7 +130,6 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             // the parent resource exists. In case the parent does not exist, an error is produced below.
         }
 
-        QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResourceType!);
         QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
@@ -132,6 +141,11 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         if (rightValue is ICollection rightResources && secondaryLayer.Pagination?.PageSize?.Value == rightResources.Count)
         {
             _paginationContext.IsPageFull = true;
+        }
+
+        if (_options.IncludeTotalResourceCount && _paginationContext.TotalResourceCount == null && rightValue is ICollection rightResourcesForCount)
+        {
+            _paginationContext.TotalResourceCount = rightResourcesForCount.Count;
         }
 
         return rightValue;
@@ -152,7 +166,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get relationship");
 
-        if (_options.IncludeTotalResourceCount && _request.IsCollection)
+        QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResourceType!);
+        bool isPaginationDisabled = secondaryLayer.Pagination?.PageSize == null;
+
+        if (_options.IncludeTotalResourceCount && !isPaginationDisabled)
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
@@ -160,7 +177,6 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             // the parent resource exists. In case the parent does not exist, an error is produced below.
         }
 
-        QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResourceType!);
         QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
@@ -172,6 +188,11 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         if (rightValue is ICollection rightResources && secondaryLayer.Pagination?.PageSize?.Value == rightResources.Count)
         {
             _paginationContext.IsPageFull = true;
+        }
+
+        if (_options.IncludeTotalResourceCount && _paginationContext.TotalResourceCount == null && rightValue is ICollection rightResourcesForCount)
+        {
+            _paginationContext.TotalResourceCount = rightResourcesForCount.Count;
         }
 
         return rightValue;
