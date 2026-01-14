@@ -504,8 +504,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     type = "supportTickets",
                     id = existingTicket2.StringId,
                     meta = identifierMeta2
-                },
-            }
+                }
+            },
             meta = documentMeta
         };
 
