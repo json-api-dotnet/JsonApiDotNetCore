@@ -46,7 +46,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -202,7 +202,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -256,6 +256,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
+
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
@@ -434,13 +435,13 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 {
                     type = "supportTickets",
                     id = existingTicket1.StringId,
-                    meta = identifierMeta1,
+                    meta = identifierMeta1
                 },
                 new
                 {
                     type = "supportTickets",
                     id = existingTicket2.StringId,
-                    meta = identifierMeta2,
+                    meta = identifierMeta2
                 },
             },
             meta = documentMeta
@@ -495,13 +496,13 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 {
                     type = "supportTickets",
                     id = existingTicket1.StringId,
-                    meta = identifierMeta1,
+                    meta = identifierMeta1
                 },
                 new
                 {
                     type = "supportTickets",
                     id = existingTicket2.StringId,
-                    meta = identifierMeta2,
+                    meta = identifierMeta2
                 },
             },
             meta = documentMeta

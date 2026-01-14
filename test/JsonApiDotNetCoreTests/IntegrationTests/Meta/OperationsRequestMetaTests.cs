@@ -156,7 +156,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -308,6 +308,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         operation.Data.Should().NotBeNull();
 
         operation.Data.SingleValue.Should().NotBeNull();
+
         operation.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
@@ -557,7 +558,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        var identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();

@@ -37,7 +37,7 @@ internal sealed class MetaFakers
         .CustomInstantiator(faker => new Dictionary<string, object?>
         {
             ["source"] = faker.PickRandom("ui", "api", "import"),
-            ["confidence"] = faker.Random.Double(0.1, 1.0)
+            ["confidence"] = faker.Random.Double(0.1)
         }));
 
     private readonly Lazy<Faker<Dictionary<string, object?>>> _lazyRelationshipIdentifierMetaFaker = new(() => new Faker<Dictionary<string, object?>>()
