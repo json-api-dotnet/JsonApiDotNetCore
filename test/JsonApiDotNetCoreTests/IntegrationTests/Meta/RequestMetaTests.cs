@@ -526,6 +526,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
     }
 
+    [Fact]
     public async Task Accepts_meta_in_remove_relationship_request()
     {
         // Arrange
