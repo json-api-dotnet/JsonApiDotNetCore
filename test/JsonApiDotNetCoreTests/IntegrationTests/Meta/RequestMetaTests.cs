@@ -195,7 +195,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_post_resource_request_with_to_one_relationship()
+    public async Task Accepts_meta_in_add_resource_request_with_to_one_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -271,7 +271,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_post_resource_request_with_to_many_relationship()
+    public async Task Accepts_meta_in_add_resource_request_with_to_many_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -443,7 +443,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     type = "supportTickets",
                     id = existingTicket2.StringId,
                     meta = identifierMeta2
-                },
+                }
             },
             meta = documentMeta
         };
@@ -468,7 +468,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_post_relationship_request()
+    public async Task Accepts_meta_in_add_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
