@@ -182,6 +182,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
+
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
@@ -565,6 +566,60 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.SingleValue.Should().BeNull();
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
+    }
+
+    [Fact]
+    public async Task Accepts_meta_in_delete_relationship_request_with_identifier_meta()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ProductFamilies.Add(existingFamily);
+            existingTicket.ProductFamily = existingFamily;
+            dbContext.SupportTickets.Add(existingTicket);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "supportTickets",
+                    id = existingTicket.StringId,
+                    meta = identifierMeta
+                }
+            },
+            meta = documentMeta
+        };
+
+        string route = $"/productFamilies/{existingFamily.StringId}/relationships/tickets";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
+
+        store.Document.Data.SingleValue.Should().BeNull();
+
+        store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
+
+        store.Document.Data.Should().NotBeNull();
+        store.Document.Data.ManyValue.Should().HaveCount(1);
+
+        store.Document.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta);
     }
 
     private sealed class CapturingDocumentAdapter : IDocumentAdapter
