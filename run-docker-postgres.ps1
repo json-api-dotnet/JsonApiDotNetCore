@@ -1,3 +1,4 @@
+#Requires -Version 7.0
 
 # This script starts a PostgreSQL database in a docker container, which is required for running tests locally.
 # When the -UI switch is passed, pgAdmin (a web-based PostgreSQL management tool) is started in a second container, which lets you query the database.
