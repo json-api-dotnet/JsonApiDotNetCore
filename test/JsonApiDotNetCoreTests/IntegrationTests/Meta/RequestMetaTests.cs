@@ -178,6 +178,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Data.SingleValue.Should().NotBeNull();
+
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
@@ -504,7 +505,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                     id = existingTicket2.StringId,
                     meta = identifierMeta2
                 },
-            },
+            }
             meta = documentMeta
         };
 

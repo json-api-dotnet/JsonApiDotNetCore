@@ -106,6 +106,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
+        Dictionary<string, object?> operationMeta = _fakers.ResourceMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
 
@@ -126,7 +127,8 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                     {
                         type = "supportTickets",
                         id = existingTicket.StringId
-                    }
+                    },
+                    meta = operationMeta
                 }
             },
             meta = documentMeta
@@ -145,6 +147,13 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         store.Document.Should().NotBeNull();
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
+
+        store.Document.Operations.Should().HaveCount(1);
+
+        AtomicOperationObject? operation = store.Document.Operations[0];
+        operation.Should().NotBeNull();
+
+        operation.Meta.Should().BeEquivalentToJson(operationMeta);
     }
 
     [Fact]
