@@ -842,7 +842,10 @@ but adds attributes for routing templates. If you want to provide routing templa
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L113"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Deletes an existing resource. Example: <pre><code class="lang-csharp">DELETE /articles/1 HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Deletes an existing resource.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">DELETE /articles/1 HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -882,7 +885,10 @@ public override Task&lt;IActionResult&gt; DeleteAsync(TId id, CancellationToken 
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship. Example: <pre><code class="lang-csharp">DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -930,7 +936,10 @@ public override Task&lt;IActionResult&gt; DeleteRelationshipAsync(TId id, string
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a collection of primary resources. Example: <pre><code class="lang-csharp">GET /articles HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a collection of primary resources.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">GET /articles HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -969,7 +978,10 @@ public override Task&lt;IActionResult&gt; GetAsync(CancellationToken cancellatio
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a single primary resource by ID. Example: <pre><code class="lang-csharp">GET /articles/1 HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a single primary resource by ID.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">GET /articles/1 HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1010,9 +1022,11 @@ public override Task&lt;IActionResult&gt; GetAsync(TId id, CancellationToken can
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection. Example:</p>
-<pre><code class="lang-csharp">GET /articles/1/relationships/author HTTP/1.1</code></pre> Example:
-<pre><code class="lang-csharp">GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">GET /articles/1/relationships/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1055,8 +1069,11 @@ public override Task&lt;IActionResult&gt; GetRelationshipAsync(TId id, string re
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a secondary resource or collection of secondary resources. Example: <pre><code class="lang-csharp">GET /articles/1/author HTTP/1.1</code></pre> Example:
-<pre><code class="lang-csharp">GET /articles/1/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a secondary resource or collection of secondary resources.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">GET /articles/1/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">GET /articles/1/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1100,7 +1117,10 @@ public override Task&lt;IActionResult&gt; GetSecondaryAsync(TId id, string relat
   </h3>
 
   <div class="markdown level1 summary"><p>Updates the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced. And only the values of sent
-relationships are replaced. Example: <pre><code class="lang-csharp">PATCH /articles/1 HTTP/1.1</code></pre>
+relationships are replaced.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">PATCH /articles/1 HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1142,9 +1162,11 @@ public override Task&lt;IActionResult&gt; PatchAsync(TId id, TResource resource,
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource. Example:</p>
-<pre><code class="lang-csharp">PATCH /articles/1/relationships/author HTTP/1.1</code></pre> Example:
-<pre><code class="lang-csharp">PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">PATCH /articles/1/relationships/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1192,7 +1214,10 @@ public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string 
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both. Example: <pre><code class="lang-csharp">POST /articles HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">POST /articles HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1232,7 +1257,10 @@ public override Task&lt;IActionResult&gt; PostAsync(TResource resource, Cancella
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship. Example: <pre><code class="lang-csharp">POST /articles/1/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">POST /articles/1/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 

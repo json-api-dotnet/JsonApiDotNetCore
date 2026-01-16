@@ -352,13 +352,13 @@ as a JSON:API relationship.</p>
 
 
   <h4 class="section" id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty_examples">Examples</h4>
-  <pre><code class="lang-csharp">public class Article : Identifiable
+  <pre><code class="lang-csharp">public class Article : Identifiable&lt;long&gt;
 {
     [HasOne] // InverseNavigationProperty: Person.Articles
     public Person Owner { get; set; }
 }
 
-public class Person : Identifiable
+public class Person : Identifiable&lt;long&gt;
 {
     [HasMany] // InverseNavigationProperty: Article.Owner
     public ICollection&lt;Article&gt; Articles { get; set; }

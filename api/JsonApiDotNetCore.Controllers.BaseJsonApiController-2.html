@@ -846,10 +846,13 @@ Class BaseJsonApiController&lt;TResource, TId&gt;  <a class="header-action link-
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.DeleteAsync(`1,System.Threading.CancellationToken)">
   DeleteAsync(TId, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L354"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L379"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Deletes an existing resource. Example: <pre><code class="lang-csharp">DELETE /articles/1 HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Deletes an existing resource.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">DELETE /articles/1 HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -885,10 +888,13 @@ Class BaseJsonApiController&lt;TResource, TId&gt;  <a class="header-action link-
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.DeleteRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   DeleteRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L388"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L416"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship. Example: <pre><code class="lang-csharp">DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -932,10 +938,13 @@ Class BaseJsonApiController&lt;TResource, TId&gt;  <a class="header-action link-
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.GetAsync(System.Threading.CancellationToken)">
   GetAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L96"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a collection of primary resources. Example: <pre><code class="lang-csharp">GET /articles HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a collection of primary resources.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">GET /articles HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -969,10 +978,13 @@ Class BaseJsonApiController&lt;TResource, TId&gt;  <a class="header-action link-
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.GetAsync(`1,System.Threading.CancellationToken)">
   GetAsync(TId, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a single primary resource by ID. Example: <pre><code class="lang-csharp">GET /articles/1 HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a single primary resource by ID.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">GET /articles/1 HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1008,12 +1020,14 @@ Class BaseJsonApiController&lt;TResource, TId&gt;  <a class="header-action link-
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.GetRelationshipAsync(`1,System.String,System.Threading.CancellationToken)">
   GetRelationshipAsync(TId, string, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L178"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection. Example:</p>
-<pre><code class="lang-csharp">GET /articles/1/relationships/author HTTP/1.1</code></pre> Example:
-<pre><code class="lang-csharp">GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">GET /articles/1/relationships/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1051,11 +1065,14 @@ Class BaseJsonApiController&lt;TResource, TId&gt;  <a class="header-action link-
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.GetSecondaryAsync(`1,System.String,System.Threading.CancellationToken)">
   GetSecondaryAsync(TId, string, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a secondary resource or collection of secondary resources. Example: <pre><code class="lang-csharp">GET /articles/1/author HTTP/1.1</code></pre> Example:
-<pre><code class="lang-csharp">GET /articles/1/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Gets a secondary resource or collection of secondary resources.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">GET /articles/1/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">GET /articles/1/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1093,11 +1110,14 @@ Class BaseJsonApiController&lt;TResource, TId&gt;  <a class="header-action link-
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchAsync__1__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.PatchAsync(`1,`0,System.Threading.CancellationToken)">
   PatchAsync(TId, TResource, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L281"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L301"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Updates the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced. And only the values of sent
-relationships are replaced. Example: <pre><code class="lang-csharp">PATCH /articles/1 HTTP/1.1</code></pre>
+relationships are replaced.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">PATCH /articles/1 HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1135,12 +1155,14 @@ relationships are replaced. Example: <pre><code class="lang-csharp">PATCH /artic
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.PatchRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)">
   PatchRelationshipAsync(TId, string, object?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L349"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource. Example:</p>
-<pre><code class="lang-csharp">PATCH /articles/1/relationships/author HTTP/1.1</code></pre> Example:
-<pre><code class="lang-csharp">PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">PATCH /articles/1/relationships/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1184,10 +1206,13 @@ relationships are replaced. Example: <pre><code class="lang-csharp">PATCH /artic
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.PostAsync(`0,System.Threading.CancellationToken)">
   PostAsync(TResource, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L193"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L207"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both. Example: <pre><code class="lang-csharp">POST /articles HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">POST /articles HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1223,10 +1248,13 @@ relationships are replaced. Example: <pre><code class="lang-csharp">PATCH /artic
 
   <h3 id="JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiController`2.PostRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   PostRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L252"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiController.cs/#L269"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship. Example: <pre><code class="lang-csharp">POST /articles/1/revisions HTTP/1.1</code></pre>
+  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">POST /articles/1/revisions HTTP/1.1</code></pre>
+
 </div>
   <div class="markdown level1 conceptual"></div>
 

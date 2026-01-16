@@ -281,7 +281,7 @@ public sealed class HasOneAttribute : RelationshipAttribute</code></pre>
 
 
   <h2 id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_examples">Examples</h2>
-  <pre><code class="lang-csharp">public class Article : Identifiable
+  <pre><code class="lang-csharp">public class Article : Identifiable&lt;long&gt;
 {
     [HasOne]
     public Author Author { get; set; }

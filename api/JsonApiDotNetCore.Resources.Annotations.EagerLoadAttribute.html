@@ -92,7 +92,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute" data-uid="JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute" class="text-break">
-Class EagerLoadAttribute  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L35"><i class="bi bi-code-slash"></i></a>
+Class EagerLoadAttribute  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -257,27 +257,29 @@ public sealed class EagerLoadAttribute : Attribute</code></pre>
 
   <h2 id="JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>This is intended for calculated properties that are exposed as JSON:API attributes, which depend on a related entity to always be loaded.
-<example>
-public class User : Identifiable
+<example></example></p>
+<pre><code class="lang-csharp">public class User : Identifiable&lt;long&gt;
 {
-[Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
-[NotMapped]
-public string DisplayName =&gt; Name.First + &quot; &quot; + Name.Last;</example></p>
-<pre><code>[EagerLoad]
-public Name Name { get; set; }
-</code></pre>
-<p>}</p>
-<p>public class Name // not exposed as resource, only database table
-{
-public string First { get; set; }
-public string Last { get; set; }
-}</p>
-<p>public class Blog : Identifiable
-{
-[HasOne]
-public User Author { get; set; }
+    [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
+    [NotMapped]
+    public string DisplayName =&gt; Name.First + " " + Name.Last;
+
+    [EagerLoad]
+    public Name Name { get; set; }
 }
-</p>
+
+public class Name // not exposed as resource, only database table
+{
+    public string First { get; set; }
+    public string Last { get; set; }
+}
+
+public class Blog : Identifiable&lt;long&gt;
+{
+    [HasOne]
+    public User Author { get; set; }
+}</code></pre>
+
 </div>
 
 
@@ -289,7 +291,7 @@ public User Author { get; set; }
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute_Children" data-uid="JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute.Children">
   Children
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -320,7 +322,7 @@ public User Author { get; set; }
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute_Property" data-uid="JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute.Property">
   Property
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -351,7 +353,7 @@ public User Author { get; set; }
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L35" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/EagerLoadAttribute.cs/#L37" class="edit-link">Edit this page</a>
         </div>
 
 

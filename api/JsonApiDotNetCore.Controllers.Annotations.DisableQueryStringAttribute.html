@@ -92,7 +92,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Controllers_Annotations_DisableQueryStringAttribute" data-uid="JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute" class="text-break">
-Class DisableQueryStringAttribute  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L17"><i class="bi bi-code-slash"></i></a>
+Class DisableQueryStringAttribute  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -255,11 +255,10 @@ public sealed class DisableQueryStringAttribute : Attribute</code></pre>
 
 
   <h2 id="JsonApiDotNetCore_Controllers_Annotations_DisableQueryStringAttribute_examples">Examples</h2>
-  <p>[DisableQueryString(JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page)]
-public class CustomersController : JsonApiController&lt;Customer&gt; { }</p>
-
-  <p>[DisableQueryString(&quot;skipCache&quot;)]
-public class CustomersController : JsonApiController&lt;Customer&gt; { }</p>
+  <pre><code class="lang-csharp">[DisableQueryString(JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page)]
+public class CustomersController : JsonApiController&lt;Customer&gt; { }</code></pre>
+<pre><code class="lang-csharp">[DisableQueryString("skipCache")]
+public class CustomersController : JsonApiController&lt;Customer&gt; { }</code></pre>
 
 
 
@@ -272,7 +271,7 @@ public class CustomersController : JsonApiController&lt;Customer&gt; { }</p>
 
   <h3 id="JsonApiDotNetCore_Controllers_Annotations_DisableQueryStringAttribute__ctor_JsonApiDotNetCore_QueryStrings_JsonApiQueryStringParameters_" data-uid="JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.#ctor(JsonApiDotNetCore.QueryStrings.JsonApiQueryStringParameters)">
   DisableQueryStringAttribute(JsonApiQueryStringParameters)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Disables one or more of the builtin query parameters for a controller.</p>
@@ -304,7 +303,7 @@ public class CustomersController : JsonApiController&lt;Customer&gt; { }</p>
 
   <h3 id="JsonApiDotNetCore_Controllers_Annotations_DisableQueryStringAttribute__ctor_System_String_" data-uid="JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.#ctor(System.String)">
   DisableQueryStringAttribute(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L49"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>It is allowed to use a comma-separated list of strings to indicate which query parameters should be disabled, because the user may have defined
@@ -340,7 +339,7 @@ custom query parameters that are not included in the <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Controllers_Annotations_DisableQueryStringAttribute_Empty" data-uid="JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.Empty">
   Empty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -375,7 +374,7 @@ custom query parameters that are not included in the <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Controllers_Annotations_DisableQueryStringAttribute_ParameterNames" data-uid="JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.ParameterNames">
   ParameterNames
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -410,7 +409,7 @@ custom query parameters that are not included in the <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Controllers_Annotations_DisableQueryStringAttribute_ContainsParameter_JsonApiDotNetCore_QueryStrings_JsonApiQueryStringParameters_" data-uid="JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.ContainsParameter(JsonApiDotNetCore.QueryStrings.JsonApiQueryStringParameters)">
   ContainsParameter(JsonApiQueryStringParameters)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -446,7 +445,7 @@ custom query parameters that are not included in the <a class="xref" href="JsonA
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L17" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/Annotations/DisableQueryStringAttribute.cs/#L19" class="edit-link">Edit this page</a>
         </div>
 
 
