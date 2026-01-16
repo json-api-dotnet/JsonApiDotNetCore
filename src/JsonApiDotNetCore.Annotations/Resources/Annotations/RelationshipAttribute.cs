@@ -25,13 +25,13 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     /// </summary>
     /// <example>
     /// <code><![CDATA[
-    /// public class Article : Identifiable
+    /// public class Article : Identifiable<long>
     /// {
     ///     [HasOne] // InverseNavigationProperty: Person.Articles
     ///     public Person Owner { get; set; }
     /// }
     /// 
-    /// public class Person : Identifiable
+    /// public class Person : Identifiable<long>
     /// {
     ///     [HasMany] // InverseNavigationProperty: Article.Owner
     ///     public ICollection<Article> Articles { get; set; }

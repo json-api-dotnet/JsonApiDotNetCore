@@ -14,7 +14,7 @@ public static class FakerExtensions
         faker.UseSeed(seed);
 
         // Setting the system DateTime to kind Utc, so that faker calls like PastOffset() don't depend on the system time zone.
-        // See https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset.op_implicit?view=net-6.0#remarks
+        // See https://learn.microsoft.com/en-us/dotnet/api/system.datetimeoffset.op_implicit#remarks
         faker.UseDateTimeReference(systemTimeUtc ?? IntegrationTest.DefaultDateTimeUtc.UtcDateTime);
 
         return faker;

@@ -289,7 +289,7 @@ public sealed class ResourceType
         }
 
         // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
-        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
+        // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
         HashSet<AttrAttribute> attributesInDerivedTypes = [];
 
         foreach (AttrAttribute attributeInDerivedType in resourceType.DirectlyDerivedTypes
@@ -330,7 +330,7 @@ public sealed class ResourceType
         }
 
         // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
-        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
+        // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
         HashSet<RelationshipAttribute> relationshipsInDerivedTypes = [];
 
         foreach (RelationshipAttribute relationshipInDerivedType in resourceType.DirectlyDerivedTypes

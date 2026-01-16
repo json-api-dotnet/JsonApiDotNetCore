@@ -6,14 +6,13 @@ namespace NoEntityFrameworkExample;
 /// <summary>
 /// Inserts a null check on member dereference and extension method invocation, to prevent a <see cref="NullReferenceException" /> from being thrown when
 /// the expression is compiled and executed.
-/// </summary>
-/// For example,
-/// <code><![CDATA[
+/// <example>
+/// For example, <code><![CDATA[
 /// Database.TodoItems.Where(todoItem => todoItem.Assignee.Id == todoItem.Owner.Id)
-/// ]]> </code>
-/// would throw if the database contains a
-/// TodoItem that doesn't have an assignee.
-/// <example></example>
+/// ]]></code> would throw if the database
+/// contains a TodoItem that doesn't have an assignee.
+/// </example>
+/// </summary>
 public sealed class NullSafeExpressionRewriter : ExpressionVisitor
 {
     private const string MinValueName = nameof(long.MinValue);
