@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// </summary>
 /// <example>
 /// <code><![CDATA[
-/// public class Article : Identifiable
+/// public class Article : Identifiable<long>
 /// {
 ///     [HasOne]
 ///     public Author Author { get; set; }

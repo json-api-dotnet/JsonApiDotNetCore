@@ -167,12 +167,12 @@ public static class RuntimeTypeConverter
 
     /// <summary>
     /// Gets the name of a type, including the names of its generic type arguments, without any namespaces.
-    /// <example>
-    /// <code><![CDATA[
+    /// </summary>
+    /// <returns>
+    /// Example return value: <code><![CDATA[
     /// KeyValuePair<TimeSpan, Nullable<DateTimeOffset>>
     /// ]]></code>
-    /// </example>
-    /// </summary>
+    /// </returns>
     public static string GetFriendlyTypeName(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
