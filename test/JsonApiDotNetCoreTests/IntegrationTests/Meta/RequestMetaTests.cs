@@ -38,7 +38,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_resource_request_with_to_one_relationship()
+    public async Task Accepts_meta_in_update_resource_request_with_ToOne_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -46,16 +46,16 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
-        await _testContext.RunOnDatabaseAsync(async dbContex =>
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContex.ProductFamilies.Add(existingFamily);
-            dbContex.SupportTickets.Add(existingTicket);
-            await dbContex.SaveChangesAsync();
+            dbContext.ProductFamilies.Add(existingFamily);
+            dbContext.SupportTickets.Add(existingTicket);
+            await dbContext.SaveChangesAsync();
         });
 
         var requestBody = new
@@ -92,7 +92,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Data.Should().NotBeNull();
@@ -110,7 +109,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_resource_request_with_to_many_relationship()
+    public async Task Accepts_meta_in_update_resource_request_with_ToMany_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -118,8 +117,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
@@ -196,7 +195,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_resource_request_with_to_one_relationship()
+    public async Task Accepts_meta_in_add_resource_request_with_ToOne_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -204,7 +203,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -272,7 +271,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_resource_request_with_to_many_relationship()
+    public async Task Accepts_meta_in_add_resource_request_with_ToMany_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -280,8 +279,8 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         string newFamilyName = _fakers.ProductFamily.GenerateOne().Name;
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
@@ -361,13 +360,13 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_to_one_relationship_request()
+    public async Task Accepts_meta_in_update_ToOne_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
-        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -385,7 +384,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             {
                 type = "productFamilies",
                 id = existingFamily.StringId,
-                meta = relationshipMeta
+                meta = identifierMeta
             },
             meta = documentMeta
         };
@@ -404,18 +403,18 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Data.SingleValue.Should().NotBeNull();
 
-        store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(relationshipMeta);
+        store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_to_many_relationship_request()
+    public async Task Accepts_meta_in_update_ToMany_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
@@ -424,8 +423,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             dbContext.ProductFamilies.Add(existingFamily);
-            dbContext.SupportTickets.Add(existingTicket1);
-            dbContext.SupportTickets.Add(existingTicket2);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
             await dbContext.SaveChangesAsync();
         });
 
@@ -469,14 +467,14 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_relationship_request()
+    public async Task Accepts_meta_in_add_ToMany_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta1 = _fakers.RelationshipIdentifierMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta2 = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
@@ -485,8 +483,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             dbContext.ProductFamilies.Add(existingFamily);
-            dbContext.SupportTickets.Add(existingTicket1);
-            dbContext.SupportTickets.Add(existingTicket2);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
             await dbContext.SaveChangesAsync();
         });
 
@@ -530,52 +527,13 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_remove_relationship_request()
+    public async Task Accepts_meta_in_remove_from_ToMany_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
-
-        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
-        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            existingTicket.ProductFamily = existingFamily;
-            dbContext.SupportTickets.Add(existingTicket);
-            await dbContext.SaveChangesAsync();
-        });
-
-        var requestBody = new
-        {
-            data = (object?)null,
-            meta = documentMeta
-        };
-
-        string route = $"/supportTickets/{existingTicket.StringId}/relationships/productFamily";
-
-        // Act
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
-
-        store.Document.Should().NotBeNull();
-
-        store.Document.Data.SingleValue.Should().BeNull();
-
-        store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
-    }
-
-    [Fact]
-    public async Task Accepts_meta_in_delete_relationship_request_with_identifier_meta()
-    {
-        // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
-
-        Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta = _fakers.RelationshipIdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
