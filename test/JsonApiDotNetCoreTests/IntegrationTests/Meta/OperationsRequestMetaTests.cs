@@ -181,7 +181,8 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                             {
                                 data = new[]
                                 {
-                                    new {
+                                    new
+                                    {
                                         type = "supportTickets",
                                         id = existingTicket1.StringId,
                                         meta = identifierMeta1
@@ -367,6 +368,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
             dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
             await dbContext.SaveChangesAsync();
         });
+
         var requestBody = new
         {
             atomic__operations = new[]
