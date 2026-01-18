@@ -527,7 +527,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_remove_from_ToMany_relationship_request()
+    public async Task Accepts_meta_in_remove_from_ToOne_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
