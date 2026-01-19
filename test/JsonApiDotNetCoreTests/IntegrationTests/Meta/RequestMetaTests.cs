@@ -94,7 +94,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Data.Should().NotBeNull();
         store.Document.Data.SingleValue.Should().NotBeNull();
 
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
@@ -527,22 +526,25 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_remove_from_ToOne_relationship_request()
+    public async Task Accepts_meta_in_remove_from_ToMany_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
-        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        existingTicket1.ProductFamily = existingFamily;
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+        existingTicket2.ProductFamily = existingFamily;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             dbContext.ProductFamilies.Add(existingFamily);
-            existingTicket.ProductFamily = existingFamily;
-            dbContext.SupportTickets.Add(existingTicket);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
             await dbContext.SaveChangesAsync();
         });
 
@@ -553,8 +555,14 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 new
                 {
                     type = "supportTickets",
-                    id = existingTicket.StringId,
-                    meta = identifierMeta
+                    id = existingTicket2.StringId,
+                    meta = identifierMeta1
+                },
+                new
+                {
+                    type = "supportTickets",
+                    id = existingTicket2.StringId,
+                    meta = identifierMeta2
                 }
             },
             meta = documentMeta
@@ -570,14 +578,12 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Should().NotBeNull();
 
-        store.Document.Data.SingleValue.Should().BeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Data.Should().NotBeNull();
-        store.Document.Data.ManyValue.Should().HaveCount(1);
+        store.Document.Data.ManyValue.Should().HaveCount(2);
 
-        store.Document.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta);
+        store.Document.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
+        store.Document.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
     }
 
     private sealed class CapturingDocumentAdapter : IDocumentAdapter
