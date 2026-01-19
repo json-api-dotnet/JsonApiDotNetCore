@@ -17,7 +17,8 @@ namespace JsonApiDotNetCore.Middleware;
 /// example, when a controller directly inherits from <see cref="CoreJsonApiController" />), the serializer naming convention is applied on the
 /// controller type name (camel-case by default).
 /// </summary>
-/// <example><![CDATA[
+/// <example>
+/// <code><![CDATA[
 /// // controller name is ignored when resource type is available:
 /// public class RandomNameController<SomeResource> : JsonApiController<SomeResource> { } // => /someResources
 /// 
@@ -26,7 +27,8 @@ namespace JsonApiDotNetCore.Middleware;
 /// 
 /// // unable to determine resource type:
 /// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustom
-/// ]]></example>
+/// ]]></code>
+/// </example>
 [PublicAPI]
 public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
 {

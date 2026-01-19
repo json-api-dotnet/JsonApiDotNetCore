@@ -6,14 +6,16 @@ namespace JsonApiDotNetCore.Controllers.Annotations;
 /// <summary>
 /// Used on an ASP.NET controller class to indicate which query string parameters are blocked.
 /// </summary>
-/// <example><![CDATA[
+/// <example>
+/// <code><![CDATA[
 /// [DisableQueryString(JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page)]
 /// public class CustomersController : JsonApiController<Customer> { }
-/// ]]></example>
-/// <example><![CDATA[
+/// ]]></code>
+/// <code><![CDATA[
 /// [DisableQueryString("skipCache")]
 /// public class CustomersController : JsonApiController<Customer> { }
-/// ]]></example>
+/// ]]></code>
+/// </example>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public sealed class DisableQueryStringAttribute : Attribute
