@@ -8,8 +8,9 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// </summary>
 /// <remarks>
 /// This is intended for calculated properties that are exposed as JSON:API attributes, which depend on a related entity to always be loaded.
-/// <example><![CDATA[
-/// public class User : Identifiable
+/// <example>
+/// <code><![CDATA[
+/// public class User : Identifiable<long>
 /// {
 ///     [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
 ///     [NotMapped]
@@ -25,12 +26,13 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 ///     public string Last { get; set; }
 /// }
 /// 
-/// public class Blog : Identifiable
+/// public class Blog : Identifiable<long>
 /// {
 ///     [HasOne]
 ///     public User Author { get; set; }
 /// }
-/// ]]></example>
+/// ]]></code>
+/// </example>
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Property)]

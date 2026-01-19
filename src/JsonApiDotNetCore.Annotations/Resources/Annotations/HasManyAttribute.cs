@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// </summary>
 /// <example>
 /// <code><![CDATA[
-/// public class Author : Identifiable
+/// public class Author : Identifiable<long>
 /// {
 ///     [HasMany]
 ///     public ISet<Article> Articles { get; set; }

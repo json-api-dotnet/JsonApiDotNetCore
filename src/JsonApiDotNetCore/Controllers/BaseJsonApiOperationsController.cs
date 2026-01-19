@@ -52,8 +52,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     /// none of the operations returns any data, then HTTP 201 is returned instead of 200.
     /// </summary>
     /// <example>
-    /// The next example creates a new resource.
-    /// <code><![CDATA[
+    /// The following example creates a new resource.
+    /// <code language="http"><![CDATA[
     /// POST /operations HTTP/1.1
     /// Content-Type: application/vnd.api+json;ext="https://jsonapi.org/ext/atomic"
     /// 
@@ -71,8 +71,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     /// ]]></code>
     /// </example>
     /// <example>
-    /// The next example updates an existing resource.
-    /// <code><![CDATA[
+    /// The following example updates an existing resource.
+    /// <code language="http"><![CDATA[
     /// POST /operations HTTP/1.1
     /// Content-Type: application/vnd.api+json;ext="https://jsonapi.org/ext/atomic"
     /// 
@@ -91,8 +91,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     /// ]]></code>
     /// </example>
     /// <example>
-    /// The next example deletes an existing resource.
-    /// <code><![CDATA[
+    /// The following example deletes an existing resource.
+    /// <code language="http"><![CDATA[
     /// POST /operations HTTP/1.1
     /// Content-Type: application/vnd.api+json;ext="https://jsonapi.org/ext/atomic"
     /// 
