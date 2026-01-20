@@ -49,6 +49,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -64,6 +65,10 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             {
                 type = "supportTickets",
                 id = existingTicket.StringId,
+                attributes = new
+                {
+                    description = newTicketDescription
+                },
                 relationships = new
                 {
                     productFamily = new
@@ -120,6 +125,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+        string newFamilyName = _fakers.ProductFamily.GenerateOne().Name;
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
 
@@ -136,6 +142,10 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             {
                 type = "productFamilies",
                 id = existingFamily.StringId,
+                attributes = new
+                {
+                    name = newFamilyName
+                },
                 relationships = new
                 {
                     tickets = new
@@ -415,9 +425,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
-        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -466,7 +476,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_ToMany_relationship_request()
+    public async Task Accepts_meta_in_add_to_ToMany_relationship_request()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();

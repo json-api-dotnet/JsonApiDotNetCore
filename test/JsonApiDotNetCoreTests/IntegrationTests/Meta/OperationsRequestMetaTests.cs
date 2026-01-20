@@ -38,15 +38,15 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_resource_operation_with_ToOne_relationship_operation()
+    public async Task Accepts_meta_in_update_resource_operation_with_ToOne_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
-        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
@@ -107,15 +107,11 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Operations.Should().HaveCount(1);
-
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
 
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
-            operation.Data.Should().NotBeNull();
 
             operation.Data.SingleValue.Should().NotBeNull();
 
@@ -127,8 +123,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
 
-                value.Data.Should().NotBeNull();
-
                 value.Data.SingleValue.Should().NotBeNull();
 
                 value.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
@@ -137,14 +131,14 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_resource_operation_with_ToMany_relationship_operation()
+    public async Task Accepts_meta_in_update_resource_operation_with_ToMany_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
-        Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
+        Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
         Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
@@ -229,17 +223,12 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
             operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
-            operation.Data.SingleValue.Relationships.Should().NotBeNull();
-
             operation.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
             {
                 value.Should().NotBeNull();
 
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
 
-                value.Data.Should().NotBeNull();
-
-                value.Data.ManyValue.Should().NotBeNull();
                 value.Data.ManyValue.Should().HaveCount(2);
 
                 value.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
@@ -249,7 +238,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_resource_request_with_ToOne_relationship_operation()
+    public async Task Accepts_meta_in_add_resource_operation_with_ToOne_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -314,10 +303,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         store.Document.Should().NotBeNull();
 
-        store.Document.Meta.Should().HaveCount(documentMeta.Count);
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
-
-        store.Document.Operations.Should().NotBeNull();
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
@@ -325,7 +311,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
 
-            operation.Data.Should().NotBeNull();
             operation.Data.SingleValue.Should().NotBeNull();
 
             operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
@@ -336,8 +321,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
 
-                value.Data.Should().NotBeNull();
-
                 value.Data.SingleValue.Should().NotBeNull();
 
                 value.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
@@ -346,15 +329,15 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_resource_request_with_ToMany_relationship_operation()
+    public async Task Accepts_meta_in_add_resource_operation_with_ToMany_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
-        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         Dictionary<string, object?> resourceMeta = _fakers.ResourceMeta.GenerateOne();
+        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
@@ -425,14 +408,11 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Operations.Should().NotBeNull();
-
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
 
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-            operation.Data.Should().NotBeNull();
 
             operation.Data.SingleValue.Should().NotBeNull();
 
@@ -444,9 +424,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
 
-                value.Data.Should().NotBeNull();
-
-                value.Data.ManyValue.Should().NotBeNull();
                 value.Data.ManyValue.Should().HaveCount(2);
 
                 value.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
@@ -456,7 +433,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_ToOne_relationship_operation()
+    public async Task Accepts_meta_in_update_operation_ToOne_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -512,8 +489,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Operations.Should().NotBeNull();
-
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
@@ -526,7 +501,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_ToMany_relationship_operation()
+    public async Task Accepts_meta_in_update_operation_ToMany_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -593,15 +568,12 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Operations.Should().NotBeNull();
-
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
 
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
 
-            operation.Data.ManyValue.Should().NotBeNull();
             operation.Data.ManyValue.Should().HaveCount(2);
 
             operation.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
@@ -611,7 +583,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_ToMany_relationship_operation()
+    public async Task Accepts_meta_in_add_operation_ToMany_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -678,15 +650,12 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Operations.Should().NotBeNull();
-
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
 
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
 
-            operation.Data.ManyValue.Should().NotBeNull();
             operation.Data.ManyValue.Should().HaveCount(2);
 
             operation.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
@@ -696,23 +665,26 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_remove_from_ToOne_relationship_operation()
+    public async Task Accepts_meta_in_remove_operation_from_ToMany_relationship()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
-        Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
-        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
+        existingTicket1.ProductFamily = existingFamily;
+        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
+        existingTicket2.ProductFamily = existingFamily;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             dbContext.ProductFamilies.Add(existingFamily);
-            existingTicket.ProductFamily = existingFamily;
-            dbContext.SupportTickets.Add(existingTicket);
+            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
             await dbContext.SaveChangesAsync();
         });
 
@@ -734,8 +706,14 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                         new
                         {
                             type = "supportTickets",
-                            id = existingTicket.StringId,
-                            meta = identifierMeta
+                            id = existingTicket1.StringId,
+                            meta = identifierMeta1
+                        },
+                        new
+                        {
+                            type = "supportTickets",
+                            id = existingTicket2.StringId,
+                            meta = identifierMeta2
                         }
                     },
                     meta = operationMeta
@@ -756,23 +734,21 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
-        store.Document.Operations.Should().NotBeNull();
-
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
 
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
 
-            operation.Data.ManyValue.Should().NotBeNull();
-            operation.Data.ManyValue.Should().HaveCount(1);
+            operation.Data.ManyValue.Should().HaveCount(2);
 
-            operation.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta);
+            operation.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
+            operation.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
         });
     }
 
     [Fact]
-    public async Task Accepts_meta_in_atomic_remove_resource_operation()
+    public async Task Accepts_meta_in_remove_resource_operation()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -819,8 +795,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         store.Document.Should().NotBeNull();
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
-
-        store.Document.Operations.Should().HaveCount(1);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
