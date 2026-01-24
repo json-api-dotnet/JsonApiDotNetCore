@@ -485,9 +485,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
+        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
-        ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -546,15 +546,11 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
-        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
-        existingTicket1.ProductFamily = existingFamily;
-        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
-        existingTicket2.ProductFamily = existingFamily;
+        existingFamily.Tickets = _fakers.SupportTicket.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             dbContext.ProductFamilies.Add(existingFamily);
-            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
             await dbContext.SaveChangesAsync();
         });
 
@@ -565,13 +561,13 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 new
                 {
                     type = "supportTickets",
-                    id = existingTicket2.StringId,
+                    id = existingFamily.Tickets[0].StringId,
                     meta = identifierMeta1
                 },
                 new
                 {
                     type = "supportTickets",
-                    id = existingTicket2.StringId,
+                    id = existingFamily.Tickets[1].StringId,
                     meta = identifierMeta2
                 }
             },
@@ -594,31 +590,5 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
         store.Document.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
-    }
-
-    private sealed class CapturingDocumentAdapter : IDocumentAdapter
-    {
-        private readonly IDocumentAdapter _innerAdapter;
-        private readonly RequestDocumentStore _requestDocumentStore;
-
-        public CapturingDocumentAdapter(IDocumentAdapter innerAdapter, RequestDocumentStore requestDocumentStore)
-        {
-            ArgumentNullException.ThrowIfNull(innerAdapter);
-            ArgumentNullException.ThrowIfNull(requestDocumentStore);
-
-            _innerAdapter = innerAdapter;
-            _requestDocumentStore = requestDocumentStore;
-        }
-
-        public object? Convert(Document document)
-        {
-            _requestDocumentStore.Document = document;
-            return _innerAdapter.Convert(document);
-        }
-    }
-
-    private sealed class RequestDocumentStore
-    {
-        public Document? Document { get; set; }
     }
 }

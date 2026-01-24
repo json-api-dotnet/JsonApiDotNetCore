@@ -50,6 +50,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        string newTicketDescription = _fakers.SupportTicket.GenerateOne().Description;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -72,7 +73,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                         id = existingTicket.StringId,
                         attributes = new
                         {
-                            description = existingTicket.Description
+                            description = newTicketDescription
                         },
                         relationships = new
                         {
@@ -210,8 +211,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         store.Document.Should().NotBeNull();
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
-
-        store.Document.Operations.Should().HaveCount(1);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
@@ -433,14 +432,14 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_operation_ToOne_relationship()
+    public async Task Accepts_meta_in_update_ToOne_relationship_operation()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
-        Dictionary<string, object?> relationshipMeta = _fakers.RelationshipMeta.GenerateOne();
+        Dictionary<string, object?> identifierMeta = _fakers.IdentifierMeta.GenerateOne();
 
         SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
@@ -469,7 +468,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                     {
                         type = "productFamilies",
                         id = existingFamily.StringId,
-                        meta = relationshipMeta
+                        meta = identifierMeta
                     },
                     meta = operationMeta
                 }
@@ -501,7 +500,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_update_operation_ToMany_relationship()
+    public async Task Accepts_meta_in_update_ToMany_relationship_operation()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -583,7 +582,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_operation_ToMany_relationship()
+    public async Task Accepts_meta_in_add_ToMany_relationship_operation()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -676,15 +675,11 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
-        SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
-        existingTicket1.ProductFamily = existingFamily;
-        SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
-        existingTicket2.ProductFamily = existingFamily;
+        existingFamily.Tickets = _fakers.SupportTicket.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             dbContext.ProductFamilies.Add(existingFamily);
-            dbContext.SupportTickets.AddRange(existingTicket1, existingTicket2);
             await dbContext.SaveChangesAsync();
         });
 
@@ -706,13 +701,13 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                         new
                         {
                             type = "supportTickets",
-                            id = existingTicket1.StringId,
+                            id = existingFamily.Tickets[0].StringId,
                             meta = identifierMeta1
                         },
                         new
                         {
                             type = "supportTickets",
-                            id = existingTicket2.StringId,
+                            id = existingFamily.Tickets[1].StringId,
                             meta = identifierMeta2
                         }
                     },
@@ -790,8 +785,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
-        responseDocument.Should().BeEmpty();
-
         store.Document.Should().NotBeNull();
 
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
@@ -802,31 +795,5 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
 
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
         });
-    }
-
-    private sealed class CapturingDocumentAdapter : IDocumentAdapter
-    {
-        private readonly IDocumentAdapter _innerAdapter;
-        private readonly RequestDocumentStore _requestDocumentStore;
-
-        public CapturingDocumentAdapter(IDocumentAdapter innerAdapter, RequestDocumentStore requestDocumentStore)
-        {
-            ArgumentNullException.ThrowIfNull(innerAdapter);
-            ArgumentNullException.ThrowIfNull(requestDocumentStore);
-
-            _innerAdapter = innerAdapter;
-            _requestDocumentStore = requestDocumentStore;
-        }
-
-        public object? Convert(Document document)
-        {
-            _requestDocumentStore.Document = document;
-            return _innerAdapter.Convert(document);
-        }
-    }
-
-    private sealed class RequestDocumentStore
-    {
-        public Document? Document { get; set; }
     }
 }
