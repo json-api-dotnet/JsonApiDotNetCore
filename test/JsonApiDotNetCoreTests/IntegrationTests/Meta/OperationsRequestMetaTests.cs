@@ -495,7 +495,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
 
             operation.Data.SingleValue.Should().NotBeNull();
-            operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(relationshipMeta);
+            operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
         });
     }
 
