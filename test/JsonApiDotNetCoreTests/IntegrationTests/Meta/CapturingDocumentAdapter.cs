@@ -23,5 +23,3 @@ public sealed class CapturingDocumentAdapter : IDocumentAdapter
         return _innerAdapter.Convert(document);
     }
 }
-
-
