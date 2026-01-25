@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Serialization.Request.Adapters;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 
-public sealed class CapturingDocumentAdapter : IDocumentAdapter
+internal sealed class CapturingDocumentAdapter : IDocumentAdapter
 {
     private readonly IDocumentAdapter _innerAdapter;
     private readonly RequestDocumentStore _requestDocumentStore;
