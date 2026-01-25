@@ -780,7 +780,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         const string route = "/operations";
 
         // Act
-        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
