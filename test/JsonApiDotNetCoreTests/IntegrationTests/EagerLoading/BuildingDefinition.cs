@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class BuildingDefinition : JsonApiResourceDefinition<Building, int>
+public sealed class BuildingDefinition : JsonApiResourceDefinition<Building, long>
 {
     private readonly IJsonApiRequest _request;
 

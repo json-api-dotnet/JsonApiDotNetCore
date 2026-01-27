@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys")]
-public sealed class Engine : Identifiable<int>
+public sealed class Engine : Identifiable<long>
 {
     [Attr]
     public string SerialCode { get; set; } = null!;

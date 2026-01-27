@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships")]
-public sealed class Shipment : Identifiable<int>
+public sealed class Shipment : Identifiable<long>
 {
     [Attr]
     public string TrackAndTraceCode { get; set; } = null!;

@@ -118,19 +118,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -281,7 +281,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -376,7 +376,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -405,19 +405,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -457,7 +457,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -560,7 +560,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -597,7 +597,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -692,7 +692,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -721,19 +721,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -775,7 +775,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -870,7 +870,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -899,19 +899,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -951,7 +951,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1033,7 +1033,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1128,7 +1128,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1157,19 +1157,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1211,7 +1211,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1306,7 +1306,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1335,19 +1335,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1387,7 +1387,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1469,7 +1469,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1564,7 +1564,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1593,19 +1593,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1647,7 +1647,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1742,7 +1742,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -1771,19 +1771,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1823,7 +1823,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1905,7 +1905,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2000,7 +2000,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2029,19 +2029,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2083,7 +2083,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2178,7 +2178,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2207,19 +2207,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2259,7 +2259,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -2341,7 +2341,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2436,7 +2436,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2465,19 +2465,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2519,7 +2519,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2614,7 +2614,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -2643,19 +2643,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2695,7 +2695,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -2775,7 +2775,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -2855,7 +2855,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -2937,7 +2937,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -3032,7 +3032,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -3061,19 +3061,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3115,7 +3115,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -3210,7 +3210,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           },
           {
@@ -3239,19 +3239,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3291,7 +3291,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -3371,7 +3371,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -3451,7 +3451,7 @@
             "schema": {
               "minLength": 1,
               "type": "string",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -3805,7 +3805,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "links": {
                 "allOf": [
@@ -3834,7 +3834,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -3878,7 +3878,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -3981,7 +3981,7 @@
               "id": {
                 "minLength": 1,
                 "type": "string",
-                "format": "int32"
+                "format": "int64"
               }
             },
             "additionalProperties": false
@@ -4006,7 +4006,7 @@
           "id": {
             "minLength": 1,
             "type": "string",
-            "format": "int32"
+            "format": "int64"
           },
           "meta": {
             "allOf": [
@@ -5006,5 +5006,10 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "resources"
+    }
+  ]
 }

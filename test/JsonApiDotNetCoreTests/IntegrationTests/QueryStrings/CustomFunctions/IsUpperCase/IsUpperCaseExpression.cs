@@ -52,7 +52,7 @@ internal sealed class IsUpperCaseExpression : FilterExpression
 
         builder.Append(Keyword);
         builder.Append('(');
-        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute);
+        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute.ToString());
         builder.Append(')');
 
         return builder.ToString();

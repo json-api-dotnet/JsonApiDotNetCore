@@ -320,10 +320,37 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
+        QueryExpression matchTarget = ParseTextMatchLeftTerm();
+
+        EatSingleCharacterToken(TokenKind.Comma);
+
+        ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(typeof(string));
+        LiteralConstantExpression constant = ParseConstant(constantValueConverter);
+
+        EatSingleCharacterToken(TokenKind.CloseParen);
+
+        var matchKind = Enum.Parse<TextMatchKind>(operatorName.Pascalize());
+        return new MatchTextExpression(matchTarget, constant, matchKind);
+    }
+
+    private QueryExpression ParseTextMatchLeftTerm()
+    {
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
+        {
+            FunctionExpression targetFunction = ParseFunction();
+
+            if (targetFunction.ReturnType != typeof(string))
+            {
+                throw new QueryParseException("Function that returns type 'String' expected.", nextToken.Position);
+            }
+
+            return targetFunction;
+        }
+
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None,
+            ResourceTypeInScope, null);
 
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
@@ -333,15 +360,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             throw new QueryParseException("Attribute of type 'String' expected.", position);
         }
 
-        EatSingleCharacterToken(TokenKind.Comma);
-
-        ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
-        LiteralConstantExpression constant = ParseConstant(constantValueConverter);
-
-        EatSingleCharacterToken(TokenKind.CloseParen);
-
-        var matchKind = Enum.Parse<TextMatchKind>(operatorName.Pascalize());
-        return new MatchTextExpression(targetAttributeChain, constant, matchKind);
+        return targetAttributeChain;
     }
 
     protected virtual AnyExpression ParseAny()
@@ -349,16 +368,13 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatText(Keywords.Any);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetAttributeChain =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
-
-        var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
+        (QueryExpression matchTarget, Func<ConstantValueConverter> constantValueConverterFactory) = ParseAnyLeftTerm();
 
         EatSingleCharacterToken(TokenKind.Comma);
 
         ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
-        ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
+        ConstantValueConverter constantValueConverter = constantValueConverterFactory();
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
         constantsBuilder.Add(constant);
 
@@ -374,7 +390,26 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         IImmutableSet<LiteralConstantExpression> constantSet = constantsBuilder.ToImmutable();
 
-        return new AnyExpression(targetAttributeChain, constantSet);
+        return new AnyExpression(matchTarget, constantSet);
+    }
+
+    private (QueryExpression matchTarget, Func<ConstantValueConverter> constantValueConverterFactory) ParseAnyLeftTerm()
+    {
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
+        {
+            FunctionExpression targetFunction = ParseFunction();
+
+            Func<ConstantValueConverter> functionConverterFactory = () => GetConstantValueConverterForType(targetFunction.ReturnType);
+            return (targetFunction, functionConverterFactory);
+        }
+
+        ResourceFieldChainExpression targetAttributeChain =
+            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+
+        var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
+
+        Func<ConstantValueConverter> attributeConverterFactory = () => GetConstantValueConverterForAttribute(targetAttribute);
+        return (targetAttributeChain, attributeConverterFactory);
     }
 
     protected virtual HasExpression ParseHas()
@@ -540,7 +575,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private ConstantValueConverter GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
-        if (attribute is { Property.Name: nameof(Identifiable<object>.Id) })
+        if (attribute is { Property.Name: nameof(Identifiable<>.Id) })
         {
             return (stringValue, position) =>
             {

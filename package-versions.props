@@ -5,7 +5,7 @@
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.4</NewtonsoftJsonFrozenVersion>
-    <SwashbuckleFrozenVersion>9.0.6</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>10.1.0</SwashbuckleFrozenVersion>
     <SystemTextRegularExpressionsFrozenVersion>4.3.1</SystemTextRegularExpressionsFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
@@ -13,26 +13,38 @@
     <BenchmarkDotNetVersion>0.15.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
-    <CodeAnalysisVersion>4.14.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>5.0.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
-    <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
+    <GitHubActionsTestLoggerVersion>3.0.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <KiotaVersion>1.*</KiotaVersion>
-    <MicrosoftApiClientVersion>9.0.*</MicrosoftApiClientVersion>
-    <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
+    <MicrosoftApiServerVersion>10.0.*</MicrosoftApiServerVersion>
     <MiniValidationVersion>0.9.*</MiniValidationVersion>
     <NSwagApiClientVersion>14.6.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <PolyfillVersion>8.9.*</PolyfillVersion>
+    <PolyfillVersion>9.7.*</PolyfillVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
-    <ScalarAspNetCoreVersion>2.9.*</ScalarAspNetCoreVersion>
-    <SwashbuckleVersion>9.*-*</SwashbuckleVersion>
-    <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
+    <ScalarAspNetCoreVersion>2.12.*</ScalarAspNetCoreVersion>
+    <SwashbuckleVersion>10.*-*</SwashbuckleVersion>
+    <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
     <TestSdkVersion>18.0.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>3.1.*</XunitVisualStudioVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>10.0.0</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>10.0.*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>10.0.*-*</EntityFrameworkCoreVersion>
+    <PomeloEntityFrameworkCoreVersion>
+      <!-- Temporary workaround: Unstable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet. -->
+      9.0.*
+    </PomeloEntityFrameworkCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
@@ -42,6 +54,7 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>9.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>9.0.*</EntityFrameworkCoreVersion>
+    <PomeloEntityFrameworkCoreVersion>$(EntityFrameworkCoreVersion)</PomeloEntityFrameworkCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -51,5 +64,6 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
+    <PomeloEntityFrameworkCoreVersion>$(EntityFrameworkCoreVersion)</PomeloEntityFrameworkCoreVersion>
   </PropertyGroup>
 </Project>

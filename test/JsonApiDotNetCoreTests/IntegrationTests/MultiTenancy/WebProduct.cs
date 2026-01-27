@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy")]
-public sealed class WebProduct : Identifiable<int>
+public sealed class WebProduct : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

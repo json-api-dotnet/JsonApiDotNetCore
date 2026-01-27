@@ -9,10 +9,19 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <VersionPrefix>5.9.2</VersionPrefix>
+    <VersionPrefix>5.10.1</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
-    <OpenApiPreviewNumber>7</OpenApiPreviewNumber>
-    <NuGetAuditMode>direct</NuGetAuditMode>
+    <OpenApiPreviewNumber>8</OpenApiPreviewNumber>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>
+      <!--
+        Temporary workaround: Stable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet.
+        NU1608: Detected package version outside of dependency constraint
+      -->
+      $(NoWarn);NU1608
+    </NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

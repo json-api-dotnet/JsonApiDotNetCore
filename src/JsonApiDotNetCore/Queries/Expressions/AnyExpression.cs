@@ -17,21 +17,21 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 public class AnyExpression : FilterExpression
 {
     /// <summary>
-    /// The attribute whose value to compare. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// The function or attribute whose value to compare. Attribute chain format: an optional list of to-one relationships, followed by an attribute.
     /// </summary>
-    public ResourceFieldChainExpression TargetAttribute { get; }
+    public QueryExpression MatchTarget { get; }
 
     /// <summary>
     /// One or more constants to compare the attribute's value against.
     /// </summary>
     public IImmutableSet<LiteralConstantExpression> Constants { get; }
 
-    public AnyExpression(ResourceFieldChainExpression targetAttribute, IImmutableSet<LiteralConstantExpression> constants)
+    public AnyExpression(QueryExpression matchTarget, IImmutableSet<LiteralConstantExpression> constants)
     {
-        ArgumentNullException.ThrowIfNull(targetAttribute);
+        ArgumentNullException.ThrowIfNull(matchTarget);
         ArgumentGuard.NotNullNorEmpty(constants);
 
-        TargetAttribute = targetAttribute;
+        MatchTarget = matchTarget;
         Constants = constants;
     }
 
@@ -56,7 +56,7 @@ public class AnyExpression : FilterExpression
 
         builder.Append(Keywords.Any);
         builder.Append('(');
-        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute.ToString());
+        builder.Append(toFullString ? MatchTarget.ToFullString() : MatchTarget.ToString());
         builder.Append(',');
         builder.Append(string.Join(',', Constants.Select(constant => toFullString ? constant.ToFullString() : constant.ToString()).Order()));
         builder.Append(')');
@@ -78,13 +78,13 @@ public class AnyExpression : FilterExpression
 
         var other = (AnyExpression)obj;
 
-        return TargetAttribute.Equals(other.TargetAttribute) && Constants.SetEquals(other.Constants);
+        return MatchTarget.Equals(other.MatchTarget) && Constants.SetEquals(other.Constants);
     }
 
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
-        hashCode.Add(TargetAttribute);
+        hashCode.Add(MatchTarget);
 
         foreach (LiteralConstantExpression constant in Constants)
         {

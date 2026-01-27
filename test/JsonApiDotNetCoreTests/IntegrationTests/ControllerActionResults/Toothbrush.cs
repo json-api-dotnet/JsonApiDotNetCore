@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults")]
-public sealed class Toothbrush : Identifiable<int>
+public sealed class Toothbrush : Identifiable<long>
 {
     [Attr]
     public bool IsElectric { get; set; }

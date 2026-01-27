@@ -1060,5 +1060,10 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "socialMediaAccounts"
+    }
+  ]
 }

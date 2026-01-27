@@ -18,7 +18,7 @@ builder.Services.AddResourceDefinition<ArticleDefinition>();
 > [!NOTE]
 > Prior to the introduction of auto-discovery (in v3), you needed to register the resource definition on the container yourself:
 > ```c#
-> builder.Services.AddScoped<ResourceDefinition<Article, int>, ArticleDefinition>();
+> builder.Services.AddScoped<ResourceDefinition<Article, long>, ArticleDefinition>();
 > ```
 
 ## Customizing queries
@@ -41,7 +41,7 @@ For example, you may accept some sensitive data that should only be exposed to a
 > To exclude fields unconditionally, [attribute capabilities](~/usage/resources/attributes.md#capabilities) and [relationship capabilities](~/usage/resources/relationships.md#capabilities) can be used instead.
 
 ```c#
-public class UserDefinition : JsonApiResourceDefinition<User, int>
+public class UserDefinition : JsonApiResourceDefinition<User, long>
 {
     public UserDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -100,7 +100,7 @@ Content-Type: application/vnd.api+json
 You can define the default sort order if no `sort` query string parameter is provided.
 
 ```c#
-public class AccountDefinition : JsonApiResourceDefinition<Account, int>
+public class AccountDefinition : JsonApiResourceDefinition<Account, long>
 {
     public AccountDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -128,7 +128,7 @@ public class AccountDefinition : JsonApiResourceDefinition<Account, int>
 You may want to enforce pagination on large database tables.
 
 ```c#
-public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog, int>
+public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog, long>
 {
     public AccessLogDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -159,7 +159,7 @@ public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog, int>
 The next example filters out `Account` resources that are suspended.
 
 ```c#
-public class AccountDefinition : JsonApiResourceDefinition<Account, int>
+public class AccountDefinition : JsonApiResourceDefinition<Account, long>
 {
     public AccountDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -188,7 +188,7 @@ public class AccountDefinition : JsonApiResourceDefinition<Account, int>
 In the example below, an error is returned when a user tries to include the manager of an employee.
 
 ```c#
-public class EmployeeDefinition : JsonApiResourceDefinition<Employee, int>
+public class EmployeeDefinition : JsonApiResourceDefinition<Employee, long>
 {
     public EmployeeDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -224,7 +224,7 @@ If the key is present in a query string, the supplied LINQ expression will be ad
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#
-public class ItemDefinition : JsonApiResourceDefinition<Item, int>
+public class ItemDefinition : JsonApiResourceDefinition<Item, long>
 {
     public ItemDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)

@@ -182,7 +182,7 @@ public sealed class DependencyContainerRegistrationTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class Resource : Identifiable<int>
+    private sealed class Resource : Identifiable<long>
     {
         [Attr]
         public string? Field { get; set; }

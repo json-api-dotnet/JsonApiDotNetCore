@@ -70,7 +70,7 @@ public sealed class ServiceDiscoveryFacadeTests
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
-        var resourceService = serviceProvider.GetRequiredService<IResourceService<PrivateResource, int>>();
+        var resourceService = serviceProvider.GetRequiredService<IResourceService<PrivateResource, long>>();
 
         resourceService.Should().BeOfType<PrivateResourceService>();
     }
@@ -86,7 +86,7 @@ public sealed class ServiceDiscoveryFacadeTests
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
-        var resourceRepository = serviceProvider.GetRequiredService<IResourceRepository<PrivateResource, int>>();
+        var resourceRepository = serviceProvider.GetRequiredService<IResourceRepository<PrivateResource, long>>();
 
         resourceRepository.Should().BeOfType<PrivateResourceRepository>();
     }
@@ -102,7 +102,7 @@ public sealed class ServiceDiscoveryFacadeTests
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
-        var resourceDefinition = serviceProvider.GetRequiredService<IResourceDefinition<PrivateResource, int>>();
+        var resourceDefinition = serviceProvider.GetRequiredService<IResourceDefinition<PrivateResource, long>>();
 
         resourceDefinition.Should().BeOfType<PrivateResourceDefinition>();
     }

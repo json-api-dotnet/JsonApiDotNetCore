@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
@@ -21,19 +19,22 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         ArgumentNullException.ThrowIfNull(document);
         ArgumentNullException.ThrowIfNull(context);
 
-        document.Components.Schemas.Remove(GenerationCacheSchemaGenerator.SchemaId);
+        if (document.Components?.Schemas != null)
+        {
+            document.Components.Schemas.Remove(GenerationCacheSchemaGenerator.SchemaId);
 
-        HashSet<string> unusedSchemaIds = GetUnusedSchemaIds(document);
-        AssertNoUnknownSchemasFound(unusedSchemaIds);
+            HashSet<string> unusedSchemaIds = GetUnusedSchemaIds(document, document.Components.Schemas);
+            AssertNoUnknownSchemasFound(unusedSchemaIds);
 
-        RemoveUnusedComponentSchemas(document, unusedSchemaIds);
+            RemoveUnusedComponentSchemas(document.Components.Schemas, unusedSchemaIds);
+        }
     }
 
-    private static HashSet<string> GetUnusedSchemaIds(OpenApiDocument document)
+    private static HashSet<string> GetUnusedSchemaIds(OpenApiDocument document, IDictionary<string, IOpenApiSchema> componentSchemas)
     {
         HashSet<string> reachableSchemaIds = ReachableRootsCollector.Instance.CollectReachableSchemaIds(document);
 
-        ComponentSchemaUsageCollector collector = new(document);
+        ComponentSchemaUsageCollector collector = new(componentSchemas);
         return collector.CollectUnusedSchemaIds(reachableSchemaIds);
     }
 
@@ -46,11 +47,11 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         }
     }
 
-    private static void RemoveUnusedComponentSchemas(OpenApiDocument document, HashSet<string> unusedSchemaIds)
+    private static void RemoveUnusedComponentSchemas(IDictionary<string, IOpenApiSchema> componentSchemas, HashSet<string> unusedSchemaIds)
     {
         foreach (string schemaId in unusedSchemaIds)
         {
-            document.Components.Schemas.Remove(schemaId);
+            componentSchemas.Remove(schemaId);
         }
     }
 
@@ -78,13 +79,13 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         {
             public HashSet<string> ReachableSchemaIds { get; } = [];
 
-            public override void Visit(IOpenApiReferenceable referenceable)
+            public override void Visit(IOpenApiReferenceHolder referenceHolder)
             {
                 if (!PathString.StartsWith(ComponentSchemaPrefix, StringComparison.Ordinal))
                 {
-                    if (referenceable is OpenApiSchema schema)
+                    if (referenceHolder is OpenApiSchemaReference { Reference.Id: not null } referenceSchema)
                     {
-                        ReachableSchemaIds.Add(schema.Reference.Id);
+                        ReachableSchemaIds.Add(referenceSchema.Reference.Id);
                     }
                 }
             }
@@ -93,14 +94,14 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 
     private sealed class ComponentSchemaUsageCollector
     {
-        private readonly IDictionary<string, OpenApiSchema> _componentSchemas;
+        private readonly IDictionary<string, IOpenApiSchema> _componentSchemas;
         private readonly HashSet<string> _schemaIdsInUse = [];
 
-        public ComponentSchemaUsageCollector(OpenApiDocument document)
+        public ComponentSchemaUsageCollector(IDictionary<string, IOpenApiSchema> componentSchemas)
         {
-            ArgumentNullException.ThrowIfNull(document);
+            ArgumentNullException.ThrowIfNull(componentSchemas);
 
-            _componentSchemas = document.Components.Schemas;
+            _componentSchemas = componentSchemas;
         }
 
         public HashSet<string> CollectUnusedSchemaIds(ICollection<string> reachableSchemaIds)
@@ -117,18 +118,18 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
             return unusedSchemaIds;
         }
 
-        private void WalkSchemaId(string schemaId)
+        private void WalkSchemaId(string? schemaId)
         {
-            if (_schemaIdsInUse.Add(schemaId))
+            if (schemaId != null && _schemaIdsInUse.Add(schemaId))
             {
-                if (_componentSchemas.TryGetValue(schemaId, out OpenApiSchema? schema))
+                if (_componentSchemas.TryGetValue(schemaId, out IOpenApiSchema? schema))
                 {
                     WalkSchema(schema);
                 }
             }
         }
 
-        private void WalkSchema(OpenApiSchema? schema)
+        private void WalkSchema(IOpenApiSchema? schema)
         {
             if (schema != null)
             {
@@ -137,22 +138,22 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
                 WalkSchema(schema.Items);
                 WalkSchema(schema.Not);
 
-                foreach (OpenApiSchema? subSchema in schema.AllOf)
+                foreach (IOpenApiSchema subSchema in schema.AllOf ?? Array.Empty<IOpenApiSchema>())
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.AnyOf)
+                foreach (IOpenApiSchema subSchema in schema.AnyOf ?? Array.Empty<IOpenApiSchema>())
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.OneOf)
+                foreach (IOpenApiSchema subSchema in schema.OneOf ?? Array.Empty<IOpenApiSchema>())
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.Properties.Values)
+                foreach (IOpenApiSchema subSchema in schema.Properties?.Values ?? Array.Empty<IOpenApiSchema>())
                 {
                     WalkSchema(subSchema);
                 }
@@ -162,22 +163,18 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
             }
         }
 
-        private void VisitSchema(OpenApiSchema schema)
+        private void VisitSchema(IOpenApiSchema schema)
         {
-            if (schema.Reference is { Type: ReferenceType.Schema, IsExternal: false })
+            if (schema is OpenApiSchemaReference { Reference: { Type: ReferenceType.Schema, IsExternal: false } } referenceSchema)
             {
-                WalkSchemaId(schema.Reference.Id);
+                WalkSchemaId(referenceSchema.Reference.Id);
             }
 
-            if (schema.Discriminator != null)
+            if (schema.Discriminator is { Mapping: not null })
             {
-                foreach (string mappingValue in schema.Discriminator.Mapping.Values)
+                foreach (OpenApiSchemaReference mappingValueReferenceSchema in schema.Discriminator.Mapping.Values)
                 {
-                    if (mappingValue.StartsWith(ComponentSchemaPrefix, StringComparison.Ordinal))
-                    {
-                        string schemaId = mappingValue[ComponentSchemaPrefix.Length..];
-                        WalkSchemaId(schemaId);
-                    }
+                    WalkSchemaId(mappingValueReferenceSchema.Reference.Id);
                 }
             }
         }

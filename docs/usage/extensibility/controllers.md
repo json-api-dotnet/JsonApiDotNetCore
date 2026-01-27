@@ -126,10 +126,10 @@ You can even make your own mix of allowed routes by calling the alternate constr
 In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable `IResourceService` implementation, so simply inject the implementation that is available.
 
 ```c#
-public class ReportsController : JsonApiController<Report, int>
+public class ReportsController : JsonApiController<Report, long>
 {
     public ReportsController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IGetAllService<Report, int> getAllService)
+        ILoggerFactory loggerFactory, IGetAllService<Report, long> getAllService)
         : base(options, resourceGraph, loggerFactory, getAll: getAllService)
     {
     }

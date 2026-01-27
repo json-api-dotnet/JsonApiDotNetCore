@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState")]
-public sealed class SystemFile : Identifiable<int>
+public sealed class SystemFile : Identifiable<long>
 {
     [Attr]
     [MinLength(1)]

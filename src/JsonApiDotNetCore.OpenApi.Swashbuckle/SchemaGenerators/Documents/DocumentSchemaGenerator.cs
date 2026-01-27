@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -31,12 +31,12 @@ internal abstract class DocumentSchemaGenerator
 
     public abstract bool CanGenerate(Type schemaType);
 
-    public OpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByTypeSafe(schemaType, out OpenApiSchemaReference? referenceSchema))
         {
             return referenceSchema;
         }
@@ -46,23 +46,22 @@ internal abstract class DocumentSchemaGenerator
         _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
         referenceSchema = GenerateDocumentSchema(schemaType, schemaRepository);
-        OpenApiSchema fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
+        OpenApiSchema inlineSchema = schemaRepository.Schemas[referenceSchema.GetReferenceId()].AsInlineSchema();
 
-        _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(schemaType, fullSchema, schemaRepository);
+        _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(schemaType, inlineSchema, schemaRepository);
 
-        SetJsonApiVersion(fullSchema, schemaRepository);
+        SetJsonApiVersion(inlineSchema, schemaRepository);
 
-        traceScope.TraceSucceeded(referenceSchema.Reference.Id);
+        traceScope.TraceSucceeded(referenceSchema.GetReferenceId());
         return referenceSchema;
     }
 
-    protected abstract OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository);
+    protected abstract OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository);
 
-    private void SetJsonApiVersion(OpenApiSchema fullSchema, SchemaRepository schemaRepository)
+    private void SetJsonApiVersion(OpenApiSchema inlineSchema, SchemaRepository schemaRepository)
     {
-        if (fullSchema.Properties.ContainsKey(JsonApiPropertyName.Jsonapi) && !_options.IncludeJsonApiVersion)
+        if (!_options.IncludeJsonApiVersion && inlineSchema.Properties != null && inlineSchema.Properties.Remove(JsonApiPropertyName.Jsonapi))
         {
-            fullSchema.Properties.Remove(JsonApiPropertyName.Jsonapi);
             schemaRepository.Schemas.Remove(JsonApiPropertyName.Jsonapi);
         }
     }

@@ -27,8 +27,8 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
 
         testContext.ConfigureServices(services =>
         {
-            services.AddResourceService<MultiTenantResourceService<WebShop, int>>();
-            services.AddResourceService<MultiTenantResourceService<WebProduct, int>>();
+            services.AddResourceService<MultiTenantResourceService<WebShop, long>>();
+            services.AddResourceService<MultiTenantResourceService<WebProduct, long>>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ITenantProvider, RouteTenantProvider>();
@@ -310,7 +310,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("url").WhoseValue.Should().Be(newShopUrl);
         responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
 
-        int newShopId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+        long newShopId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

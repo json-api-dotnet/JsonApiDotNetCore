@@ -14,11 +14,11 @@ public class Person : Identifiable<Guid>
 If you need to attach annotations or attributes on the `Id` property, you can override the virtual property.
 
 ```c#
-public class Person : Identifiable<int>
+public class Person : Identifiable<long>
 {
     [Key]
     [Column("PersonID")]
-    public override int Id { get; set; }
+    public override long Id { get; set; }
 }
 ```
 

@@ -24,7 +24,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         testContext.ConfigureServices(services =>
         {
             services.AddResourceRepository<CarCompositeKeyAwareRepository<Car, string?>>();
-            services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership, int>>();
+            services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership, long>>();
         });
     }
 

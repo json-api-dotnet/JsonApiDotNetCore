@@ -137,7 +137,7 @@ options.ValidateModelState = true;
 ```c#
 #nullable enable
 
-public class Person : Identifiable<int>
+public class Person : Identifiable<long>
 {
     [Attr]
     [MinLength(3)]

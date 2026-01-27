@@ -37,7 +37,7 @@ public sealed class ModelStateValidationTests
     {
         // Arrange
         var options = new JsonApiOptions();
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent, int>().Add<Child, int>().Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent, long>().Add<Child, long>().Build();
 
         var modelState = new ModelStateDictionary();
         modelState.AddModelError(modelStateKey, "(ignored error message)");
@@ -83,7 +83,7 @@ public sealed class ModelStateValidationTests
     {
         // Arrange
         var options = new JsonApiOptions();
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent, int>().Add<Child, int>().Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent, long>().Add<Child, long>().Build();
 
         var modelState = new ModelStateDictionary();
         modelState.AddModelError(modelStateKey, "(ignored error message)");
@@ -107,7 +107,7 @@ public sealed class ModelStateValidationTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class Parent : Identifiable<int>
+    private sealed class Parent : Identifiable<long>
     {
         public string? NotMappedInParent { get; set; }
 
@@ -128,7 +128,7 @@ public sealed class ModelStateValidationTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class Child : Identifiable<int>
+    private sealed class Child : Identifiable<long>
     {
         public string? NotMappedInChild { get; set; }
 

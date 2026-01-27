@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Meta")]
-public sealed class SupportTicket : Identifiable<int>
+public sealed class SupportTicket : Identifiable<long>
 {
     [Attr]
     public string Description { get; set; } = null!;

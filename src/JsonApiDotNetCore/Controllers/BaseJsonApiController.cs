@@ -86,9 +86,12 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Gets a collection of primary resources. Example: <code><![CDATA[
+    /// Gets a collection of primary resources.
+    /// <para>
+    /// Example endpoint: <code language="http"><![CDATA[
     /// GET /articles HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     public virtual async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
     {
@@ -105,9 +108,12 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Gets a single primary resource by ID. Example: <code><![CDATA[
+    /// Gets a single primary resource by ID.
+    /// <para>
+    /// Example endpoint: <code language="http"><![CDATA[
     /// GET /articles/1 HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     public virtual async Task<IActionResult> GetAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
@@ -127,12 +133,15 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Gets a secondary resource or collection of secondary resources. Example: <code><![CDATA[
+    /// Gets a secondary resource or collection of secondary resources.
+    /// <para>
+    /// Example endpoints: <code language="http"><![CDATA[
     /// GET /articles/1/author HTTP/1.1
-    /// ]]></code> Example:
-    /// <code><![CDATA[
+    /// ]]></code>
+    /// <code language="http"><![CDATA[
     /// GET /articles/1/revisions HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     public virtual async Task<IActionResult> GetSecondaryAsync([DisallowNull] TId id, [PreserveEmptyString] string relationshipName,
         CancellationToken cancellationToken)
@@ -156,13 +165,15 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Gets a relationship value, which can be a <c>null</c>, a single object or a collection. Example:
-    /// <code><![CDATA[
+    /// Gets a relationship value, which can be a <c>null</c>, a single object or a collection.
+    /// <para>
+    /// Example endpoints: <code language="http"><![CDATA[
     /// GET /articles/1/relationships/author HTTP/1.1
-    /// ]]></code> Example:
-    /// <code><![CDATA[
+    /// ]]></code>
+    /// <code language="http"><![CDATA[
     /// GET /articles/1/relationships/revisions HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     public virtual async Task<IActionResult> GetRelationshipAsync([DisallowNull] TId id, [PreserveEmptyString] string relationshipName,
         CancellationToken cancellationToken)
@@ -186,9 +197,12 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Creates a new resource with attributes, relationships or both. Example: <code><![CDATA[
+    /// Creates a new resource with attributes, relationships or both.
+    /// <para>
+    /// Example endpoint: <code language="http"><![CDATA[
     /// POST /articles HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
     {
@@ -233,9 +247,12 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Adds resources to a to-many relationship. Example: <code><![CDATA[
+    /// Adds resources to a to-many relationship.
+    /// <para>
+    /// Example endpoint: <code language="http"><![CDATA[
     /// POST /articles/1/revisions HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     /// <param name="id">
     /// Identifies the left side of the relationship.
@@ -274,9 +291,12 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
 
     /// <summary>
     /// Updates the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced. And only the values of sent
-    /// relationships are replaced. Example: <code><![CDATA[
+    /// relationships are replaced.
+    /// <para>
+    /// Example endpoint: <code language="http"><![CDATA[
     /// PATCH /articles/1 HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     public virtual async Task<IActionResult> PatchAsync([DisallowNull] TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
     {
@@ -304,13 +324,15 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Performs a complete replacement of a relationship on an existing resource. Example:
-    /// <code><![CDATA[
+    /// Performs a complete replacement of a relationship on an existing resource.
+    /// <para>
+    /// Example endpoints: <code language="http"><![CDATA[
     /// PATCH /articles/1/relationships/author HTTP/1.1
-    /// ]]></code> Example:
-    /// <code><![CDATA[
+    /// ]]></code>
+    /// <code language="http"><![CDATA[
     /// PATCH /articles/1/relationships/revisions HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     /// <param name="id">
     /// Identifies the left side of the relationship.
@@ -347,9 +369,12 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Deletes an existing resource. Example: <code><![CDATA[
+    /// Deletes an existing resource.
+    /// <para>
+    /// Example endpoint: <code language="http"><![CDATA[
     /// DELETE /articles/1 HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     public virtual async Task<IActionResult> DeleteAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
@@ -369,9 +394,12 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Removes resources from a to-many relationship. Example: <code><![CDATA[
+    /// Removes resources from a to-many relationship.
+    /// <para>
+    /// Example endpoint: <code language="http"><![CDATA[
     /// DELETE /articles/1/relationships/revisions HTTP/1.1
     /// ]]></code>
+    /// </para>
     /// </summary>
     /// <param name="id">
     /// Identifies the left side of the relationship.

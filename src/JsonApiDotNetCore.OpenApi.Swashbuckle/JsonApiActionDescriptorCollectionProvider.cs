@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
@@ -27,7 +26,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 /// /article/{id}/{relationshipName} -> /article/{id}/author, /article/{id}/revisions, etc.
 /// ]]></code>
 /// </summary>
-internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
+internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
 {
     private const int FilterScope = 10;
     private static readonly Type ErrorDocumentType = typeof(ErrorResponseDocument);
@@ -35,24 +34,21 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
-    private readonly ILogger<JsonApiActionDescriptorCollectionProvider> _logger;
     private readonly ConcurrentDictionary<int, Lazy<ActionDescriptorCollection>> _versionedActionDescriptorCache = new();
 
     public ActionDescriptorCollection ActionDescriptors =>
         _versionedActionDescriptorCache.GetOrAdd(_defaultProvider.ActionDescriptors.Version, LazyGetActionDescriptors).Value;
 
     public JsonApiActionDescriptorCollectionProvider(IActionDescriptorCollectionProvider defaultProvider, IControllerResourceMapping controllerResourceMapping,
-        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider, ILogger<JsonApiActionDescriptorCollectionProvider> logger)
+        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
     {
         ArgumentNullException.ThrowIfNull(defaultProvider);
         ArgumentNullException.ThrowIfNull(controllerResourceMapping);
         ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
-        ArgumentNullException.ThrowIfNull(logger);
 
         _defaultProvider = defaultProvider;
         _controllerResourceMapping = controllerResourceMapping;
         _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
-        _logger = logger;
     }
 
     private Lazy<ActionDescriptorCollection> LazyGetActionDescriptors(int version)
@@ -478,7 +474,4 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
 
         descriptorsByRelationship[relationship] = relationshipDescriptor;
     }
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Hiding unsupported custom JSON:API action method [{HttpMethods}] {ActionMethod} in OpenAPI.")]
-    private partial void LogSuppressedActionMethod(string httpMethods, string? actionMethod);
 }

@@ -118,19 +118,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -293,19 +293,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -439,19 +439,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -614,19 +614,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -792,19 +792,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -970,19 +970,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1148,19 +1148,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1326,19 +1326,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1504,19 +1504,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1682,19 +1682,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1828,19 +1828,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2003,19 +2003,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2181,19 +2181,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2359,19 +2359,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2537,19 +2537,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2715,19 +2715,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3133,19 +3133,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3391,19 +3391,19 @@
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
               "Content-Length": {
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer",
                   "format": "int64"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -5910,5 +5910,22 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "dataStreams"
+    },
+    {
+      "name": "readOnlyChannels"
+    },
+    {
+      "name": "readOnlyResourceChannels"
+    },
+    {
+      "name": "relationshipChannels"
+    },
+    {
+      "name": "writeOnlyChannels"
+    }
+  ]
 }

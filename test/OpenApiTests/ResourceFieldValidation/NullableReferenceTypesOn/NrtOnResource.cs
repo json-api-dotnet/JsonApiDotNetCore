@@ -7,7 +7,7 @@ namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOn;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(PublicName = "resources", ControllerNamespace = "OpenApiTests.ResourceFieldValidation")]
-public sealed class NrtOnResource : Identifiable<int>
+public sealed class NrtOnResource : Identifiable<long>
 {
     [Attr]
     public string NonNullableReferenceType { get; set; } = null!;

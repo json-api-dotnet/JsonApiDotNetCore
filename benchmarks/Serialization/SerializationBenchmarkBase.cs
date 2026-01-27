@@ -31,7 +31,7 @@ public abstract class SerializationBenchmarkBase
             }
         };
 
-        ResourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<OutgoingResource, int>().Build();
+        ResourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<OutgoingResource, long>().Build();
         SerializerWriteOptions = ((IJsonApiOptions)options).SerializerWriteOptions;
 
         // ReSharper disable VirtualMemberCallInConstructor
@@ -55,7 +55,7 @@ public abstract class SerializationBenchmarkBase
     protected abstract IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph);
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class OutgoingResource : Identifiable<int>
+    public sealed class OutgoingResource : Identifiable<long>
     {
         [Attr]
         public bool Attribute01 { get; set; }

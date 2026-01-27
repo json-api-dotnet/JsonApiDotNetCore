@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings")]
-public sealed class Blog : Identifiable<int>
+public sealed class Blog : Identifiable<long>
 {
     [Attr]
     public string Title { get; set; } = null!;

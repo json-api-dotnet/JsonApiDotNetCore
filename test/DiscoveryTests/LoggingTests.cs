@@ -32,7 +32,7 @@ public sealed class LoggingTests
         var resourceGraph = app.Services.GetRequiredService<IResourceGraph>();
         ResourceType resourceType = resourceGraph.GetResourceType<PrivateResource>();
 
-        var repository = app.Services.GetRequiredService<IResourceRepository<PrivateResource, int>>();
+        var repository = app.Services.GetRequiredService<IResourceRepository<PrivateResource, long>>();
 
         // Act
         _ = await repository.GetAsync(new QueryLayer(resourceType), CancellationToken.None);

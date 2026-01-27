@@ -191,7 +191,7 @@ public interface IJsonApiOptions
     /// Enables to customize the settings that are used by the <see cref="JsonSerializer" />.
     /// </summary>
     /// <example>
-    /// The next example sets the naming convention to camel casing.
+    /// The following example sets the naming convention to camel casing.
     /// <code><![CDATA[
     /// options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     /// options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;

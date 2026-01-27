@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS")]
-public sealed class ArtGallery : Identifiable<int>
+public sealed class ArtGallery : Identifiable<long>
 {
     [Attr]
     public string Theme { get; set; } = null!;

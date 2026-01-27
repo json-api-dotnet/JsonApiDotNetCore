@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers")]
-public sealed class Room : Identifiable<int>
+public sealed class Room : Identifiable<long>
 {
     [Attr]
     public int WindowCount { get; set; }

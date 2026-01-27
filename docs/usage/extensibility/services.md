@@ -12,7 +12,7 @@ In simple cases, you can also just wrap the base implementation with your custom
 A simple example would be to send notifications when a resource gets created.
 
 ```c#
-public class TodoItemService : JsonApiResourceService<TodoItem, int>
+public class TodoItemService : JsonApiResourceService<TodoItem, long>
 {
     private readonly INotificationService _notificationService;
 
@@ -51,14 +51,14 @@ If you'd like to use another ORM that does not provide what JsonApiResourceServi
 // Program.cs
 
 // Add the service override for Product.
-builder.Services.AddScoped<IResourceService<Product, int>, ProductService>();
+builder.Services.AddScoped<IResourceService<Product, long>, ProductService>();
 
 // Add your own Data Access Object.
 builder.Services.AddScoped<IProductDao, ProductDao>();
 
 // ProductService.cs
 
-public class ProductService : IResourceService<Product, int>
+public class ProductService : IResourceService<Product, long>
 {
     private readonly IProductDao _dao;
 
@@ -114,14 +114,14 @@ IResourceCommandService <|-- IRemoveFromRelationshipService
 In order to take advantage of these interfaces you first need to register the service for each implemented interface.
 
 ```c#
-public class ArticleService : ICreateService<Article, int>, IDeleteService<Article, int>
+public class ArticleService : ICreateService<Article, long>, IDeleteService<Article, long>
 {
     // ...
 }
 
 // Program.cs
-builder.Services.AddScoped<ICreateService<Article, int>, ArticleService>();
-builder.Services.AddScoped<IDeleteService<Article, int>, ArticleService>();
+builder.Services.AddScoped<ICreateService<Article, long>, ArticleService>();
+builder.Services.AddScoped<IDeleteService<Article, long>, ArticleService>();
 ```
 
 In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
@@ -140,7 +140,7 @@ Then on your model, pass in the set of endpoints to expose (the ones that you've
 ```c#
 [Resource(GenerateControllerEndpoints =
     JsonApiEndpoints.Create | JsonApiEndpoints.Delete)]
-public class Article : Identifiable<int>
+public class Article : Identifiable<long>
 {
     // ...
 }
@@ -149,11 +149,11 @@ public class Article : Identifiable<int>
 Alternatively, when using a hand-written controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:
 
 ```c#
-public class ArticlesController : JsonApiController<Article, int>
+public class ArticlesController : JsonApiController<Article, long>
 {
     public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, ICreateService<Article, int> create,
-        IDeleteService<Article, int> delete)
+        ILoggerFactory loggerFactory, ICreateService<Article, long> create,
+        IDeleteService<Article, long> delete)
         : base(options, resourceGraph, loggerFactory, create: create, delete: delete)
     {
     }

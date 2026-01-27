@@ -120,7 +120,7 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         responseDocument.Data.SingleValue.Type.Should().Be("swimming-pools");
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("is-indoor").WhoseValue.Should().Be(newPool.IsIndoor);
 
-        int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+        long newPoolId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
         string poolLink = $"{route}/{newPoolId}";
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("water-slides").WhoseValue.With(value =>

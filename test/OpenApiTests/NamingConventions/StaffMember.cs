@@ -6,7 +6,7 @@ namespace OpenApiTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.NamingConventions")]
-public sealed class StaffMember : Identifiable<int>
+public sealed class StaffMember : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

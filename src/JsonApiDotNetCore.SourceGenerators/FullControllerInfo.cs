@@ -22,8 +22,6 @@ internal readonly record struct FullControllerInfo(
 
     public FullControllerInfo WithHintFileName(string hintFileName)
     {
-        // ReSharper disable once UseWithExpressionToCopyRecord
-        // Justification: Workaround for bug at https://youtrack.jetbrains.com/issue/RSRP-502017/Invalid-suggestion-to-use-with-expression.
         return new FullControllerInfo(CoreController, ControllerType, LoggerFactoryInterface, hintFileName);
     }
 }

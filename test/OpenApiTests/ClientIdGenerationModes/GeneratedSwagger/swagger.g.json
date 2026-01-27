@@ -1629,5 +1629,16 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "games"
+    },
+    {
+      "name": "playerGroups"
+    },
+    {
+      "name": "players"
+    }
+  ]
 }

@@ -23,6 +23,7 @@ concurrency:
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  SOLUTION_FILE: JsonApiDotNetCore.sln
 
 jobs:
   build-and-test:
@@ -48,6 +49,7 @@ jobs:
         dotnet-version: |
           8.0.*
           9.0.*
+          10.0.*
     - name: Show installed versions
       shell: pwsh
       run: |
@@ -55,7 +57,9 @@ jobs:
         psql --version
         Write-Host "Active .NET SDK: $(dotnet --version)"
     - name: Git checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
+      with:
+        persist-credentials: false
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore packages
@@ -100,7 +104,7 @@ jobs:
         Logging__LogLevel__Microsoft.Extensions.Hosting.Internal.Host: 'None'
         Logging__LogLevel__Microsoft.EntityFrameworkCore.Database.Command: 'None'
         Logging__LogLevel__JsonApiDotNetCore: 'None'
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true"
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;annotations-title=@test (@framework);annotations-message=@error\n@trace;summary-include-passed=false"
     - name: Upload coverage to codecov.io
       if: ${{ matrix.os == 'ubuntu-latest' }}
       env:
@@ -113,7 +117,7 @@ jobs:
       run: dotnet pack --no-build --configuration Release --output ${{ github.workspace }}/artifacts/packages /p:VersionSuffix=${{ env.PACKAGE_VERSION_SUFFIX }}
     - name: Upload packages to artifacts
       if: ${{ matrix.os == 'ubuntu-latest' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: packages
         path: artifacts/packages
@@ -123,12 +127,14 @@ jobs:
         # This contains the git tag name on release; in that case, we build the docs without publishing them.
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
       run: |
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandUseErrorActionPreference = $true
         cd docs
+        $zipFile = [IO.Path]::Combine($env:TEMP, 'docfx-net10-binaries.zip')
+        Invoke-WebRequest -Uri 'https://github.com/json-api-dotnet/docfx/raw/refs/heads/dotnet10-rtm/net10-binaries.zip' -Method 'GET' -OutFile $zipFile
+        Expand-Archive $zipFile -Force
         & ./generate-examples.ps1
-        dotnet docfx docfx.json --warningsAsErrors true
-        if ($LastExitCode -ne 0) {
-            Write-Error "docfx failed with exit code $LastExitCode."
-        }
+        dotnet exec docfx-net10-binaries/docfx.dll docfx.json --warningsAsErrors true
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/
@@ -136,7 +142,7 @@ jobs:
         Copy-Item -Recurse home/assets/* _site/styles/
     - name: Upload documentation to artifacts
       if: ${{ matrix.os == 'ubuntu-latest' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: documentation
         path: docs/_site
@@ -159,8 +165,11 @@ jobs:
         dotnet-version: |
           8.0.*
           9.0.*
+          10.0.*
     - name: Git checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
+      with:
+        persist-credentials: false
     - name: Restore tools
       run: dotnet tool restore
     - name: InspectCode
@@ -168,9 +177,10 @@ jobs:
       run: |
         $inspectCodeOutputPath = Join-Path $env:RUNNER_TEMP 'jetbrains-inspectcode-results.xml'
         Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+        dotnet jb inspectcode --version
+        dotnet jb inspectcode $env:SOLUTION_FILE --build --no-updates --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --format="xml" --settings=WarningSeverities.DotSettings --properties:"Configuration=Release;RunAnalyzers=false;NuGetAudit=false;ContinuousIntegrationBuild=false" --severity=WARNING --verbosity=WARN --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
     - name: Upload output to artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: InspectCode-${{ matrix.os }}
         path: ${{ env.INSPECT_CODE_OUTPUT_PATH }}
@@ -189,7 +199,7 @@ jobs:
                             $issueType = $xml.report.IssueTypes.SelectSingleNode("IssueType[@Id='$($_.TypeId)']")
                             $severity = $_.Severity ?? $issueType.Severity
 
-                            Write-Output "[$severity] $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
+                            Write-Output "[$severity] ($($_.TargetFramework)) $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
                         })
                     })
                 }
@@ -201,7 +211,7 @@ jobs:
         }
 
   cleanup-code:
-    timeout-minutes: 60
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
@@ -218,14 +228,18 @@ jobs:
         dotnet-version: |
           8.0.*
           9.0.*
+          10.0.*
     - name: Git checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
+        persist-credentials: false
         fetch-depth: 2
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore packages
-      run: dotnet restore
+      run: dotnet restore /p:NuGetAudit=false
+    - name: Build
+      run: dotnet build --no-restore --configuration Release /p:RunAnalyzers=false
     - name: CleanupCode (on PR diff)
       if: ${{ github.event_name == 'pull_request' }}
       shell: pwsh
@@ -236,13 +250,15 @@ jobs:
         $baseCommitHash = git rev-parse HEAD~1
 
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        dotnet jb cleanupcode --version
+        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --no-updates --jb --properties:"Configuration=Release;RunAnalyzers=false;NuGetAudit=false" --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
       if: ${{ github.event_name == 'push' || github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
       shell: pwsh
       run: |
         Write-Output 'Running code cleanup on all files.'
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN --fail-on-diff --print-diff
+        dotnet jb cleanupcode --version
+        dotnet regitlint -s $env:SOLUTION_FILE --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --no-updates --jb --properties:"Configuration=Release;RunAnalyzers=false;NuGetAudit=false" --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
     timeout-minutes: 60
@@ -261,12 +277,12 @@ jobs:
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
         dotnet nuget add source --username 'json-api-dotnet' --password '${{ secrets.GITHUB_TOKEN }}' --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
-        dotnet nuget push '${{ github.workspace }}/packages/*.nupkg' --api-key '${{ secrets.GITHUB_TOKEN }}' --source 'github'
+        dotnet nuget push '${{ github.workspace }}/packages/*.nupkg' --api-key '${{ secrets.GITHUB_TOKEN }}' --source 'github' --skip-duplicate
     - name: Publish to feedz.io
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
         dotnet nuget add source --name 'feedz-io' 'https://f.feedz.io/json-api-dotnet/jsonapidotnetcore/nuget/index.json'
-        dotnet nuget push '${{ github.workspace }}/packages/*.nupkg' --api-key '${{ secrets.FEEDZ_IO_API_KEY }}' --source 'feedz-io'
+        dotnet nuget push '${{ github.workspace }}/packages/*.nupkg' --api-key '${{ secrets.FEEDZ_IO_API_KEY }}' --source 'feedz-io' --skip-duplicate
     - name: Publish documentation
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: peaceiris/actions-gh-pages@v4

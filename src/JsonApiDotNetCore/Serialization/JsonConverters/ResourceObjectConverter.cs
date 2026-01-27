@@ -204,7 +204,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                     {
                         object? attributeValue;
 
-                        if (property.Name == nameof(Identifiable<object>.Id))
+                        if (property.Name == nameof(Identifiable<>.Id))
                         {
                             attributeValue = JsonInvalidAttributeInfo.Id;
                         }

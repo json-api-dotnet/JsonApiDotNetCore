@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 // The constructor parameters will be resolved from the container, which means you can take on any dependency that is also defined in the container.
 public sealed class PlanetDefinition(IResourceGraph resourceGraph, IClientSettingsProvider clientSettingsProvider, ResourceDefinitionHitCounter hitCounter)
-    : HitCountingResourceDefinition<Planet, int>(resourceGraph, hitCounter)
+    : HitCountingResourceDefinition<Planet, long>(resourceGraph, hitCounter)
 {
     private readonly IClientSettingsProvider _clientSettingsProvider = clientSettingsProvider;
 

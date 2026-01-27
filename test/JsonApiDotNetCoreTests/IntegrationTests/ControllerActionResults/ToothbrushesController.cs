@@ -13,7 +13,7 @@ partial class ToothbrushesController
     internal const int ObjectResultWithErrorCollectionId = 55555555;
 
     [HttpGet("{id}")]
-    public override async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
+    public override async Task<IActionResult> GetAsync(long id, CancellationToken cancellationToken)
     {
         if (id == EmptyActionResultId)
         {

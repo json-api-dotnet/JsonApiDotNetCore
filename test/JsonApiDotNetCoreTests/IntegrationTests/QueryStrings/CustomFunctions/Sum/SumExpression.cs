@@ -65,9 +65,9 @@ internal sealed class SumExpression : FunctionExpression
 
         builder.Append(Keyword);
         builder.Append('(');
-        builder.Append(toFullString ? TargetToManyRelationship.ToFullString() : TargetToManyRelationship);
+        builder.Append(toFullString ? TargetToManyRelationship.ToFullString() : TargetToManyRelationship.ToString());
         builder.Append(',');
-        builder.Append(toFullString ? Selector.ToFullString() : Selector);
+        builder.Append(toFullString ? Selector.ToFullString() : Selector.ToString());
         builder.Append(')');
 
         return builder.ToString();
