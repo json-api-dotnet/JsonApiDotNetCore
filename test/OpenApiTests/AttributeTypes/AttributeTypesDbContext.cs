@@ -14,9 +14,6 @@ namespace OpenApiTests.AttributeTypes;
 public sealed class AttributeTypesDbContext(DbContextOptions<AttributeTypesDbContext> options)
     : TestableDbContext(options)
 {
-    public DbSet<Author> Authors => Set<Author>();
-    public DbSet<Book> Books => Set<Book>();
-    public DbSet<Review> Reviews => Set<Review>();
     public DbSet<TypeContainer> TypeContainers => Set<TypeContainer>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder builder)
