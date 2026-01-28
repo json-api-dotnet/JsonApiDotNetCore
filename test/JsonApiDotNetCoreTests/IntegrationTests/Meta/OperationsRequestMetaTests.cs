@@ -582,7 +582,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_add_ToMany_relationship_operation()
+    public async Task Accepts_meta_in_add_to_ToMany_relationship_operation()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
@@ -664,7 +664,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     }
 
     [Fact]
-    public async Task Accepts_meta_in_remove_operation_from_ToMany_relationship()
+    public async Task Accepts_meta_in_remove_from_ToMany_relationship_operation()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
