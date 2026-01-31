@@ -86,7 +86,7 @@
         "tags": [
           "nonJsonApi"
         ],
-        "description": "Returns another greeting text.",
+        "description": "Returns another greeting text.\n\n**CAUTION**: This endpoint requires admin permissions.\n\n**NOTE: This endpoint will no longer be available after 2030-01-01.**",
         "parameters": [
           {
             "name": "name",
@@ -153,6 +153,7 @@
           "operations"
         ],
         "summary": "Performs multiple mutations in a linear and atomic manner.",
+        "description": "**CAUTION**: This endpoint requires admin permissions.",
         "operationId": "postOperations",
         "requestBody": {
           "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",

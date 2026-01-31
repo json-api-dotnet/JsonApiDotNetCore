@@ -1,3 +1,4 @@
+using JsonApiDotNetCoreExample.DocAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCoreExample.Controllers;
@@ -38,6 +39,8 @@ public sealed class NonJsonApiController : ControllerBase
     [HttpPut]
     [EndpointDescription("Returns another greeting text.")]
     [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
+    [RequiresAdmin]
+    [ExpiresOn("2030-01-01")]
     public IActionResult Put([FromQuery] string? name)
     {
         string result = $"Hi, {name}";

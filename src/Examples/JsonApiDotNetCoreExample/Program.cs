@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Scalar.AspNetCore;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 [assembly: ExcludeFromCodeCoverage]
 
@@ -31,6 +32,8 @@ static WebApplication CreateWebApplication(string[] args)
 
     // Add services to the container.
     ConfigureServices(builder);
+
+    builder.Services.AddOptions<SwaggerGenOptions>().Configure(options => options.OperationFilter<DynamicDocumentationOperationFilter>());
 
     WebApplication app = builder.Build();
 
