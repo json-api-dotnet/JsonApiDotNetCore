@@ -10,5 +10,5 @@ public sealed class FamilyHome : Residence
 {
     [Attr]
     [Required]
-    public int FloorCount { get; set; }
+    public int? FloorCount { get; set; }
 }

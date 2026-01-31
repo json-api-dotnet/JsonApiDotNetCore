@@ -131,7 +131,7 @@ public sealed class OperationsInheritanceTests
                         {
                             SurfaceInSquareMeters = newFamilyHome.SurfaceInSquareMeters!.Value,
                             NumberOfResidents = newFamilyHome.NumberOfResidents!.Value,
-                            FloorCount = newFamilyHome.FloorCount
+                            FloorCount = newFamilyHome.FloorCount!.Value
                         }
                     }
                 },

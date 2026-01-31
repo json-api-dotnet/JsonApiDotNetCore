@@ -574,7 +574,7 @@ public sealed class ResourceInheritanceTests
                 {
                     SurfaceInSquareMeters = newFamilyHome.SurfaceInSquareMeters!.Value,
                     NumberOfResidents = newFamilyHome.NumberOfResidents!.Value,
-                    FloorCount = newFamilyHome.FloorCount
+                    FloorCount = newFamilyHome.FloorCount!.Value
                 },
                 Relationships = new RelationshipsInCreateFamilyHomeRequest
                 {
@@ -662,7 +662,7 @@ public sealed class ResourceInheritanceTests
                 {
                     SurfaceInSquareMeters = newFamilyHome.SurfaceInSquareMeters!.Value,
                     NumberOfResidents = newFamilyHome.NumberOfResidents!.Value,
-                    FloorCount = newFamilyHome.FloorCount
+                    FloorCount = newFamilyHome.FloorCount!.Value
                 }
             }
         };

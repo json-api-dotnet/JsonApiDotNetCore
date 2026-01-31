@@ -14502,6 +14502,9 @@
             "$ref": "#/components/schemas/attributesInCreateResidenceRequest"
           },
           {
+            "required": [
+              "floorCount"
+            ],
             "type": "object",
             "properties": {
               "floorCount": {
