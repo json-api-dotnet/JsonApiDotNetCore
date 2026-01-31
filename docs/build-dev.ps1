@@ -69,7 +69,7 @@ if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
 dotnet tool restore
 
 $env:DOCFX_SOURCE_BRANCH_NAME="dev"
-dotnet exec docfx-net10-binaries/docfx.dll -- docfx.json --warningsAsErrors true
+dotnet exec docfx-net10-binaries/docfx.dll docfx.json --warningsAsErrors true
 
 Copy-Item -Force home/*.html _site/
 Copy-Item -Force home/*.ico _site/
