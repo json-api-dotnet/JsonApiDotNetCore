@@ -144,8 +144,8 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
-        string newFamilyName = _fakers.ProductFamily.GenerateOne().Name;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
+        string newFamilyName = _fakers.ProductFamily.GenerateOne().Name;
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
 
