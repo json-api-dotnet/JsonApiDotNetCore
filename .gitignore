@@ -424,5 +424,5 @@ FodyWeavers.xsd
 **/.idea/**/dataSources/
 !**/.idea/**/codeStyles/*
 
-# Workaround for https://github.com/microsoft/kiota/issues/4228
+# Enable Dependabot updates for kiota without side effects
 kiota-lock.json
