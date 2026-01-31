@@ -105,27 +105,20 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.SingleValue.Should().NotBeNull();
-
             operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
             operation.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
             {
                 value.Should().NotBeNull();
-
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
-
                 value.Data.SingleValue.Should().NotBeNull();
-
                 value.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
             });
         });
@@ -210,27 +203,20 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.SingleValue.Should().NotBeNull();
-
             operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
             operation.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
             {
                 value.Should().NotBeNull();
-
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
-
                 value.Data.ManyValue.Should().HaveCount(2);
-
                 value.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
                 value.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
             });
@@ -302,27 +288,20 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.SingleValue.Should().NotBeNull();
-
             operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
             operation.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
             {
                 value.Should().NotBeNull();
-
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
-
                 value.Data.SingleValue.Should().NotBeNull();
-
                 value.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
             });
         });
@@ -342,7 +321,6 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
         string newFamilyName = _fakers.ProductFamily.GenerateOne().Name;
-
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
 
@@ -405,27 +383,20 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.SingleValue.Should().NotBeNull();
-
             operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
 
             operation.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
             {
                 value.Should().NotBeNull();
-
                 value.Meta.Should().BeEquivalentToJson(relationshipMeta);
-
                 value.Data.ManyValue.Should().HaveCount(2);
-
                 value.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
                 value.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
             });
@@ -486,15 +457,12 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.SingleValue.Should().NotBeNull();
             operation.Data.SingleValue.Meta.Should().BeEquivalentToJson(identifierMeta);
         });
@@ -565,19 +533,14 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.ManyValue.Should().HaveCount(2);
-
             operation.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
-
             operation.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
         });
     }
@@ -647,19 +610,14 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.ManyValue.Should().HaveCount(2);
-
             operation.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
-
             operation.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
         });
     }
@@ -727,17 +685,13 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
-
             operation.Data.ManyValue.Should().HaveCount(2);
-
             operation.Data.ManyValue[0].Meta.Should().BeEquivalentToJson(identifierMeta1);
             operation.Data.ManyValue[1].Meta.Should().BeEquivalentToJson(identifierMeta2);
         });
@@ -787,13 +741,11 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-
         store.Document.Meta.Should().BeEquivalentToJson(documentMeta);
 
         store.Document.Operations.Should().ContainSingle().Which.With(operation =>
         {
             operation.Should().NotBeNull();
-
             operation.Meta.Should().BeEquivalentToJson(operationMeta);
         });
     }
