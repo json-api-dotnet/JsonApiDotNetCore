@@ -423,3 +423,6 @@ FodyWeavers.xsd
 **/.idea/**/httpRequests/
 **/.idea/**/dataSources/
 !**/.idea/**/codeStyles/*
+
+# Enable Dependabot updates for kiota without side effects
+kiota-lock.json
