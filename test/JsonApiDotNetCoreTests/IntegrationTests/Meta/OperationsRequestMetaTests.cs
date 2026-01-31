@@ -144,6 +144,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
         Dictionary<string, object?> identifierMeta1 = _fakers.IdentifierMeta.GenerateOne();
         Dictionary<string, object?> identifierMeta2 = _fakers.IdentifierMeta.GenerateOne();
 
+        string newFamilyName = _fakers.ProductFamily.GenerateOne().Name;
         ProductFamily existingFamily = _fakers.ProductFamily.GenerateOne();
         SupportTicket existingTicket1 = _fakers.SupportTicket.GenerateOne();
         SupportTicket existingTicket2 = _fakers.SupportTicket.GenerateOne();
@@ -168,7 +169,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
                         id = existingFamily.StringId,
                         attributes = new
                         {
-                            name = existingFamily.Name
+                            name = newFamilyName
                         },
                         relationships = new
                         {

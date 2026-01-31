@@ -90,10 +90,10 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = $"/supportTickets/{existingTicket.StringId}";
 
         // Act
-        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
 
@@ -176,10 +176,10 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = $"/productFamilies/{existingFamily.StringId}";
 
         // Act
-        (HttpResponseMessage response, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
 
@@ -188,8 +188,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.SingleValue.Should().NotBeNull();
 
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
-
-        store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
 
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
         {
@@ -264,8 +262,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.SingleValue.Should().NotBeNull();
 
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
-
-        store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
 
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("productFamily").WhoseValue.With(value =>
         {
@@ -351,8 +347,6 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         store.Document.Data.SingleValue.Should().NotBeNull();
         store.Document.Data.SingleValue.Meta.Should().BeEquivalentToJson(resourceMeta);
-
-        store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
 
         store.Document.Data.SingleValue.Relationships.Should().ContainKey("tickets").WhoseValue.With(value =>
         {
