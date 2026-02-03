@@ -44,19 +44,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."LastUsedAt", t2."UserName"
@@ -92,19 +82,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
@@ -141,19 +121,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
@@ -190,19 +160,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
@@ -243,19 +203,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority", t4."Id", t4."Name"
@@ -299,19 +249,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."FirstName", t2."LastName", t3."Id", t3."CreatedAt", t3."Description", t3."DurationInHours", t3."LastModifiedAt", t3."Priority", t5."Id", t5."Name", t6."Id", t6."CreatedAt", t6."Description", t6."DurationInHours", t6."LastModifiedAt", t6."Priority", t8."Id", t8."Name"
@@ -360,19 +300,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t3."Id", t3."CreatedAt", t3."Description", t3."DurationInHours", t3."LastModifiedAt", t3."Priority"
@@ -414,19 +344,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t4."Id", t4."CreatedAt", t4."Description", t4."DurationInHours", t4."LastModifiedAt", t4."Priority"
@@ -471,19 +391,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t4."Id", t4."CreatedAt", t4."Description", t4."DurationInHours", t4."LastModifiedAt", t4."Priority"
@@ -530,19 +440,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t5."Id", t5."CreatedAt", t5."Description", t5."DurationInHours", t5."LastModifiedAt", t5."Priority", t5.Id0 AS Id, t5."Name"
@@ -591,19 +491,9 @@ public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t7."Id", t7."CreatedAt", t7."Description", t7."DurationInHours", t7."LastModifiedAt", t7."Priority", t7.Id00 AS Id, t7."Name"

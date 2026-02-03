@@ -44,6 +44,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
+    [Obsolete("This method is no longer used and will be removed in a future version.")]
     public FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType)
     {
         // @formatter:wrap_chained_method_calls chop_always

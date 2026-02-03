@@ -60,6 +60,8 @@ internal sealed class CollectionConverter
     /// </summary>
     private Type ToConcreteCollectionType(Type collectionType)
     {
+        ArgumentNullException.ThrowIfNull(collectionType);
+
         if (collectionType is { IsInterface: true, IsGenericType: true })
         {
             Type openCollectionType = collectionType.GetGenericTypeDefinition();
@@ -91,6 +93,23 @@ internal sealed class CollectionConverter
             IEnumerable<IIdentifiable> resources => resources.ToArray().AsReadOnly(),
             IIdentifiable resource => [resource],
             _ => Array.Empty<IIdentifiable>()
+        };
+    }
+
+    /// <summary>
+    /// Returns the number of elements in a collection of resources.
+    /// </summary>
+    public int GetCount(IEnumerable source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return source switch
+        {
+            List<IIdentifiable> resourceList => resourceList.Count,
+            HashSet<IIdentifiable> resourceSet => resourceSet.Count,
+            IReadOnlyCollection<IIdentifiable> resourceCollection => resourceCollection.Count,
+            IEnumerable<IIdentifiable> resources => resources.Count(),
+            _ => source.Cast<object>().Count()
         };
     }
 

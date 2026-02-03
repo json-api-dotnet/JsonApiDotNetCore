@@ -144,19 +144,9 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."FirstName", t2."LastName", t3."Id", t3."FirstName", t3."LastName", t4."Id", t4."CreatedAt", t4."Description", t4."DurationInHours", t4."LastModifiedAt", t4."Priority", t5."Id", t5."Name"
@@ -212,19 +202,9 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(25);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."Name", t3."Id"

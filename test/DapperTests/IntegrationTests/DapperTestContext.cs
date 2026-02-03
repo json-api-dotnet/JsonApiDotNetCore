@@ -81,11 +81,7 @@ public sealed class DapperTestContext : IntegrationTest
             builder.ConfigureServices(services =>
             {
                 services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(FrozenTime)));
-
-                ServiceDescriptor scopedCaptureStore = services.Single(descriptor => descriptor.ImplementationType == typeof(SqlCaptureStore));
-                services.Remove(scopedCaptureStore);
-
-                services.AddSingleton<SqlCaptureStore>();
+                services.Replace(ServiceDescriptor.Singleton<SqlCaptureStore, SqlCaptureStore>());
             });
         });
     }

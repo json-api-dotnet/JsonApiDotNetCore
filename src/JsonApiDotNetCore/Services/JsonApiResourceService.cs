@@ -62,10 +62,12 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get resources");
 
-        if (_options.IncludeTotalResourceCount)
+        QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
+        int? pageSize = queryLayer.Pagination?.PageSize?.Value;
+
+        if (_options.IncludeTotalResourceCount && pageSize != null)
         {
-            FilterExpression? topFilter = _queryLayerComposer.GetPrimaryFilterFromConstraints(_request.PrimaryResourceType);
-            _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(_request.PrimaryResourceType, topFilter, cancellationToken);
+            _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(_request.PrimaryResourceType, queryLayer.Filter, cancellationToken);
 
             if (_paginationContext.TotalResourceCount == 0)
             {
@@ -73,10 +75,13 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             }
         }
 
-        QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
         IReadOnlyCollection<TResource> resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
-        if (queryLayer.Pagination?.PageSize?.Value == resources.Count)
+        if (pageSize == null)
+        {
+            _paginationContext.TotalResourceCount = resources.Count;
+        }
+        else if (pageSize == resources.Count)
         {
             _paginationContext.IsPageFull = true;
         }
@@ -107,12 +112,17 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         });
 
         ArgumentNullException.ThrowIfNull(relationshipName);
-        AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
+        AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
+        AssertSecondaryResourceTypeInJsonApiRequestIsNotNull(_request.SecondaryResourceType);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get secondary resource(s)");
 
-        if (_options.IncludeTotalResourceCount && _request.IsCollection)
+        QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResourceType);
+        QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
+        int? pageSize = secondaryLayer.Pagination?.PageSize?.Value;
+
+        if (_options.IncludeTotalResourceCount && _request.IsCollection && pageSize != null)
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
@@ -120,8 +130,6 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             // the parent resource exists. In case the parent does not exist, an error is produced below.
         }
 
-        QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResourceType!);
-        QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
         TResource? primaryResource = primaryResources.SingleOrDefault();
@@ -129,9 +137,18 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         object? rightValue = _request.Relationship.GetValue(primaryResource);
 
-        if (rightValue is ICollection rightResources && secondaryLayer.Pagination?.PageSize?.Value == rightResources.Count)
+        if (rightValue is IEnumerable rightResources)
         {
-            _paginationContext.IsPageFull = true;
+            int resourceCount = CollectionConverter.Instance.GetCount(rightResources);
+
+            if (pageSize == null)
+            {
+                _paginationContext.TotalResourceCount = resourceCount;
+            }
+            else if (pageSize == resourceCount)
+            {
+                _paginationContext.IsPageFull = true;
+            }
         }
 
         return rightValue;
@@ -147,12 +164,17 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         });
 
         ArgumentNullException.ThrowIfNull(relationshipName);
-        AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
+        AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
+        AssertSecondaryResourceTypeInJsonApiRequestIsNotNull(_request.SecondaryResourceType);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get relationship");
 
-        if (_options.IncludeTotalResourceCount && _request.IsCollection)
+        QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResourceType);
+        QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
+        int? pageSize = secondaryLayer.Pagination?.PageSize?.Value;
+
+        if (_options.IncludeTotalResourceCount && _request.IsCollection && pageSize != null)
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
@@ -160,8 +182,6 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             // the parent resource exists. In case the parent does not exist, an error is produced below.
         }
 
-        QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResourceType!);
-        QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
         TResource? primaryResource = primaryResources.SingleOrDefault();
@@ -169,9 +189,18 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         object? rightValue = _request.Relationship.GetValue(primaryResource);
 
-        if (rightValue is ICollection rightResources && secondaryLayer.Pagination?.PageSize?.Value == rightResources.Count)
+        if (rightValue is IEnumerable rightResources)
         {
-            _paginationContext.IsPageFull = true;
+            int resourceCount = CollectionConverter.Instance.GetCount(rightResources);
+
+            if (pageSize == null)
+            {
+                _paginationContext.TotalResourceCount = resourceCount;
+            }
+            else if (pageSize == resourceCount)
+            {
+                _paginationContext.IsPageFull = true;
+            }
         }
 
         return rightValue;
@@ -674,6 +703,16 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         {
             throw new InvalidOperationException(
                 $"Expected {nameof(IJsonApiRequest)}.{nameof(IJsonApiRequest.PrimaryResourceType)} not to be null at this point.");
+        }
+    }
+
+    [AssertionMethod]
+    private void AssertSecondaryResourceTypeInJsonApiRequestIsNotNull([SysNotNull] ResourceType? resourceType)
+    {
+        if (resourceType == null)
+        {
+            throw new InvalidOperationException(
+                $"Expected {nameof(IJsonApiRequest)}.{nameof(IJsonApiRequest.SecondaryResourceType)} not to be null at this point.");
         }
     }
 
