@@ -56,19 +56,9 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItems[0].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(todoItems[1].StringId);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -124,22 +114,9 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         responseDocument.Included[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).Tags.ElementAt(1).StringId);
         responseDocument.Included[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).Tags.ElementAt(0).StringId);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                WHERE t2."Id" = @p1
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", person.Id);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority", t3."Id", t3."Name"
@@ -190,19 +167,9 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItems[0].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(todoItems[1].StringId);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -253,22 +220,9 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                WHERE t2."Id" = @p1
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", person.Id);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
@@ -322,22 +276,9 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                WHERE t2."Id" = @p1
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", person.Id);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority", t4."Id", t4."Name"
@@ -397,19 +338,9 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         responseDocument.Included[2].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
         responseDocument.Included[3].Id.Should().Be(person.OwnedTodoItems.ElementAt(3).StringId);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"

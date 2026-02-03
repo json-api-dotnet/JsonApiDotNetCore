@@ -56,22 +56,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "Tags" AS t1
-                LEFT JOIN "RgbColors" AS t2 ON t1."Id" = t2."TagId"
-                WHERE t2."Id" = @p1
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", 0x00FF00);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."Name"
@@ -120,23 +107,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "Tags" AS t1
-                LEFT JOIN "RgbColors" AS t2 ON t1."Id" = t2."TagId"
-                WHERE t2."Id" IN (@p1, @p2)
-                """));
-
-            command.Parameters.Should().HaveCount(2);
-            command.Parameters.Should().Contain("@p1", 0x00FF00);
-            command.Parameters.Should().Contain("@p2", 0x11EE11);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."Name"
@@ -182,23 +155,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                LEFT JOIN "People" AS t3 ON t1."AssigneeId" = t3."Id"
-                WHERE (t2."Id" = @p1) AND (t3."Id" IS NULL)
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", person.Id);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t4."Id", t4."CreatedAt", t4."Description", t4."DurationInHours", t4."LastModifiedAt", t4."Priority"
@@ -249,22 +208,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                WHERE (t2."Id" = @p1) AND (t1."DurationInHours" IS NULL)
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", person.Id);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t3."Id", t3."CreatedAt", t3."Description", t3."DurationInHours", t3."LastModifiedAt", t3."Priority"
@@ -317,21 +263,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                WHERE t1."Priority" = @p1
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", todoItems[1].Priority);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -379,23 +313,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                LEFT JOIN "People" AS t2 ON t1."AssigneeId" = t2."Id"
-                WHERE (t2."Id" = @p1) AND (t1."Description" = @p2)
-                """));
-
-            command.Parameters.Should().HaveCount(2);
-            command.Parameters.Should().Contain("@p1", person.Id);
-            command.Parameters.Should().Contain("@p2", person.AssignedTodoItems.ElementAt(1).Description);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t3."Id", t3."CreatedAt", t3."Description", t3."DurationInHours", t3."LastModifiedAt", t3."Priority"
@@ -449,21 +369,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                LEFT JOIN "People" AS t2 ON t1."AssigneeId" = t2."Id"
-                WHERE t2."LastName" = t2."FirstName"
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -510,23 +418,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                WHERE (t2."Id" = @p1) AND (t1."Priority" = @p2)
-                """));
-
-            command.Parameters.Should().HaveCount(2);
-            command.Parameters.Should().Contain("@p1", person.Id);
-            command.Parameters.Should().Contain("@p2", TodoItemPriority.Medium);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t3."Id", t3."CreatedAt", t3."Description", t3."DurationInHours", t3."LastModifiedAt", t3."Priority"
@@ -578,21 +472,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                WHERE t1."Description" = @p1
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", "X");
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -640,21 +522,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                WHERE (NOT (t1."FirstName" = @p1)) OR (t1."FirstName" IS NULL)
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", "X");
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName"
@@ -702,23 +572,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                LEFT JOIN "People" AS t2 ON t1."AssigneeId" = t2."Id"
-                WHERE (NOT ((t2."FirstName" = @p1) AND (t2."LastName" = @p2))) OR (t2."FirstName" IS NULL) OR (t2."LastName" IS NULL)
-                """));
-
-            command.Parameters.Should().HaveCount(2);
-            command.Parameters.Should().Contain("@p1", "X");
-            command.Parameters.Should().Contain("@p2", "Y");
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -771,24 +627,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                WHERE (t1."Description" LIKE 'T%') AND (NOT (t1."Description" IN (@p1, @p2))) AND (t2."FirstName" = @p3) AND (t1."Description" LIKE '%o%')
-                """));
-
-            command.Parameters.Should().HaveCount(3);
-            command.Parameters.Should().Contain("@p1", "Four");
-            command.Parameters.Should().Contain("@p2", "Three");
-            command.Parameters.Should().Contain("@p3", "Jack");
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -845,20 +686,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(5);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "Tags" AS t1
-                WHERE (t1."Name" LIKE '%A\%%' ESCAPE '\') OR (t1."Name" LIKE '%A\_%' ESCAPE '\') OR (t1."Name" LIKE '%A\\%' ESCAPE '\') OR (t1."Name" LIKE '%A''%') OR (t1."Name" LIKE '%\%\_\\''%' ESCAPE '\')
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."Name"
@@ -906,22 +736,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                WHERE (t1."DurationInHours" > @p1) OR (t1."DurationInHours" <= @p2)
-                """));
-
-            command.Parameters.Should().HaveCount(2);
-            command.Parameters.Should().Contain("@p1", 250);
-            command.Parameters.Should().Contain("@p2", 100);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -970,27 +787,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t4 ON t1."OwnerId" = t4."Id"
-                WHERE ((
-                    SELECT COUNT(*)
-                    FROM "People" AS t2
-                    LEFT JOIN "TodoItems" AS t3 ON t2."Id" = t3."AssigneeId"
-                    WHERE t1."OwnerId" = t2."Id"
-                ) > @p1) AND (NOT (t4."Id" IS NULL))
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", 1);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -1054,33 +853,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                WHERE EXISTS (
-                    SELECT 1
-                    FROM "People" AS t2
-                    LEFT JOIN "TodoItems" AS t3 ON t2."Id" = t3."AssigneeId"
-                    INNER JOIN "People" AS t5 ON t3."OwnerId" = t5."Id"
-                    WHERE (t1."OwnerId" = t2."Id") AND (EXISTS (
-                        SELECT 1
-                        FROM "Tags" AS t4
-                        WHERE (t3."Id" = t4."TodoItemId") AND (t4."Name" = @p1)
-                    )) AND (t5."LastName" = @p2) AND (t3."Description" = @p3)
-                )
-                """));
-
-            command.Parameters.Should().HaveCount(3);
-            command.Parameters.Should().Contain("@p1", "Personal");
-            command.Parameters.Should().Contain("@p2", "Smith");
-            command.Parameters.Should().Contain("@p3", "Homework");
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -1144,25 +919,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "People" AS t1
-                WHERE EXISTS (
-                    SELECT 1
-                    FROM "TodoItems" AS t2
-                    LEFT JOIN "People" AS t3 ON t2."AssigneeId" = t3."Id"
-                    WHERE (t1."Id" = t2."OwnerId") AND (NOT (t3."Id" IS NULL)) AND (t3."FirstName" IS NULL)
-                )
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName"
@@ -1232,23 +991,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(3);
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                WHERE (t1."Description" = @p1) AND ((t1."Priority" = @p2) OR (t1."DurationInHours" = @p3))
-                """));
-
-            command.Parameters.Should().HaveCount(3);
-            command.Parameters.Should().Contain("@p1", "1");
-            command.Parameters.Should().Contain("@p2", TodoItemPriority.High);
-            command.Parameters.Should().Contain("@p3", 1);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"

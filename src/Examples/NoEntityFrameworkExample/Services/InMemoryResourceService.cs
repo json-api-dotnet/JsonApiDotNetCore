@@ -50,17 +50,27 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
     {
         LogFiltersInTopScope();
 
-        if (SetPrimaryTotalCountIsZero())
-        {
-            return Task.FromResult<IReadOnlyCollection<TResource>>(Array.Empty<TResource>());
-        }
-
         QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_resourceType);
+        int? pageSize = queryLayer.Pagination?.PageSize?.Value;
+
+        if (_options.IncludeTotalResourceCount && pageSize != null)
+        {
+            _paginationContext.TotalResourceCount = GetResourceCountForPrimaryEndpoint(queryLayer.Filter);
+
+            if (_paginationContext.TotalResourceCount == 0)
+            {
+                return Task.FromResult<IReadOnlyCollection<TResource>>(Array.Empty<TResource>());
+            }
+        }
 
         IEnumerable<TResource> dataSource = GetDataSource(_resourceType).Cast<TResource>();
         TResource[] resources = _queryLayerToLinqConverter.ApplyQueryLayer(queryLayer, dataSource).ToArray();
 
-        if (queryLayer.Pagination?.PageSize?.Value == resources.Length)
+        if (pageSize == null)
+        {
+            _paginationContext.TotalResourceCount = resources.Length;
+        }
+        else if (pageSize == resources.Length)
         {
             _paginationContext.IsPageFull = true;
         }
@@ -91,27 +101,17 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
         }
     }
 
-    private bool SetPrimaryTotalCountIsZero()
+    private int GetResourceCountForPrimaryEndpoint(FilterExpression? filter)
     {
-        if (_options.IncludeTotalResourceCount)
+        var queryLayer = new QueryLayer(_resourceType)
         {
-            var queryLayer = new QueryLayer(_resourceType)
-            {
-                Filter = _queryLayerComposer.GetPrimaryFilterFromConstraints(_resourceType)
-            };
+            Filter = filter
+        };
 
-            IEnumerable<TResource> dataSource = GetDataSource(_resourceType).Cast<TResource>();
-            IEnumerable<TResource> resources = _queryLayerToLinqConverter.ApplyQueryLayer(queryLayer, dataSource);
+        IEnumerable<TResource> dataSource = GetDataSource(_resourceType).Cast<TResource>();
+        IEnumerable<TResource> resources = _queryLayerToLinqConverter.ApplyQueryLayer(queryLayer, dataSource);
 
-            _paginationContext.TotalResourceCount = resources.Count();
-
-            if (_paginationContext.TotalResourceCount == 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return resources.Count();
     }
 
     /// <inheritdoc />
@@ -141,10 +141,14 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
             throw new RelationshipNotFoundException(relationshipName, _resourceType.PublicName);
         }
 
-        SetNonPrimaryTotalCount(id, relationship);
-
         QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(relationship.RightType);
         QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _resourceType, id, relationship);
+        int? pageSize = secondaryLayer.Pagination?.PageSize?.Value;
+
+        if (_options.IncludeTotalResourceCount && relationship is HasManyAttribute hasManyRelationship && pageSize != null)
+        {
+            SetResourceCountForNonPrimaryEndpoint(id, hasManyRelationship);
+        }
 
         IEnumerable<TResource> dataSource = GetDataSource(_resourceType).Cast<TResource>();
         IEnumerable<TResource> primaryResources = _queryLayerToLinqConverter.ApplyQueryLayer(primaryLayer, dataSource);
@@ -157,31 +161,35 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
 
         object? rightValue = relationship.GetValue(primaryResource);
 
-        if (rightValue is ICollection rightResources && secondaryLayer.Pagination?.PageSize?.Value == rightResources.Count)
+        if (rightValue is IEnumerable rightResources)
         {
-            _paginationContext.IsPageFull = true;
+            int resourceCount = rightResources.Cast<object>().Count();
+
+            if (pageSize == null)
+            {
+                _paginationContext.TotalResourceCount = resourceCount;
+            }
+            else if (pageSize == resourceCount)
+            {
+                _paginationContext.IsPageFull = true;
+            }
         }
 
         return Task.FromResult(rightValue);
     }
 
-    private void SetNonPrimaryTotalCount([DisallowNull] TId id, RelationshipAttribute relationship)
+    private void SetResourceCountForNonPrimaryEndpoint([DisallowNull] TId id, HasManyAttribute relationship)
     {
-        if (_options.IncludeTotalResourceCount && relationship is HasManyAttribute hasManyRelationship)
+        FilterExpression? secondaryFilter = _queryLayerComposer.GetSecondaryFilterFromConstraints(id, relationship);
+
+        if (secondaryFilter != null)
         {
-            FilterExpression? secondaryFilter = _queryLayerComposer.GetSecondaryFilterFromConstraints(id, hasManyRelationship);
-
-            if (secondaryFilter == null)
-            {
-                return;
-            }
-
-            var queryLayer = new QueryLayer(hasManyRelationship.RightType)
+            var queryLayer = new QueryLayer(relationship.RightType)
             {
                 Filter = secondaryFilter
             };
 
-            IEnumerable<IIdentifiable> dataSource = GetDataSource(hasManyRelationship.RightType);
+            IEnumerable<IIdentifiable> dataSource = GetDataSource(relationship.RightType);
             IEnumerable<IIdentifiable> resources = _queryLayerToLinqConverter.ApplyQueryLayer(queryLayer, dataSource);
 
             _paginationContext.TotalResourceCount = resources.Count();

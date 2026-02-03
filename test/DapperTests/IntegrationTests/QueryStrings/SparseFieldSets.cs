@@ -84,19 +84,9 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         responseDocument.Included[1].Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(todoItem.Assignee.LastName);
         responseDocument.Included[1].Relationships.Should().BeNull();
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
-
-            command.Parameters.Should().BeEmpty();
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."Description", t1."DurationInHours", t2."Id", t2."LastName", t3."Id", t3."LastName"
@@ -193,22 +183,9 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
             value.Data.Value.Should().BeNull();
         });
 
-        store.SqlCommands.Should().HaveCount(2);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
-        {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "Tags" AS t1
-                LEFT JOIN "TodoItems" AS t2 ON t1."TodoItemId" = t2."Id"
-                WHERE t2."Id" = @p1
-                """));
-
-            command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().Contain("@p1", todoItem.Id);
-        });
-
-        store.SqlCommands[1].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t2."Id"
