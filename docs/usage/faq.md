@@ -166,7 +166,7 @@ which produces SQL and uses [Dapper](https://github.com/DapperLib/Dapper) for da
 The best way to express your gratitude is by starring our repository.
 This increases our leverage when asking for bug fixes in dependent projects, such as the .NET runtime and Entity Framework Core.
 You can also [sponsor](https://github.com/sponsors/json-api-dotnet) our project.
-Of course, a simple thank-you message in our [Gitter channel](https://gitter.im/json-api-dotnet-core/Lobby) is appreciated too!
+Of course, a simple thank-you message on [GitHub Discussions](https://github.com/json-api-dotnet/JsonApiDotNetCore/discussions) is appreciated too!
 
 If you'd like to do more: try things out, ask questions, create GitHub bug reports or feature requests, or upvote existing issues that are important to you.
 We welcome PRs, but keep in mind: The worst thing in the world is opening a PR that gets rejected after you've put a lot of effort into it.

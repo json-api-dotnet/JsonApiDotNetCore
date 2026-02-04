@@ -1,6 +1,6 @@
 # I don't want to read this whole thing I just have a question!!!
 
-> You can file an issue to ask a question, but you'll get faster results by using our official [Gitter channel](https://gitter.im/json-api-dotnet-core/Lobby) or [StackOverflow](https://stackoverflow.com/search?q=jsonapidotnetcore) where the community chimes in with helpful advice if you have questions.
+> You can file an issue to ask a question, but you'll get faster results by using [GitHub Discussions](https://github.com/json-api-dotnet/JsonApiDotNetCore/discussions) or [StackOverflow](https://stackoverflow.com/search?q=jsonapidotnetcore) where the community chimes in with helpful advice if you have questions.
 
 # How can I contribute?
 
