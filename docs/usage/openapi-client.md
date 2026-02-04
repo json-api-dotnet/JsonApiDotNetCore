@@ -311,7 +311,7 @@ demonstrates how to use them. It uses local IDs to:
 # [Kiota](#tab/kiota)
 
 [Atomic operations](~/usage/writing/bulk-batch-operations.md) are fully supported.
-See the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample)
+The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample)
 demonstrates how to use them. It uses local IDs to:
 - Create a new tag
 - Create a new person
