@@ -4,8 +4,8 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Sum;
 
 /// <summary>
-/// This expression allows to determine the sum of values in the related resources of a to-many relationship. It represents the "sum" function, resulting
-/// from text such as:
+/// This expression determines the sum of values in the related resources of a to-many relationship. It represents the "sum" function, resulting from
+/// text such as:
 /// <c>
 /// sum(orderLines,quantity)
 /// </c>

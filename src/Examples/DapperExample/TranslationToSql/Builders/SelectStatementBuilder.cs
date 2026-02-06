@@ -746,7 +746,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
         public ILoggerFactory LoggerFactory { get; }
 
-        // Prevents importing a table multiple times and enables to reference a table imported by an inner/outer query.
+        // Prevents importing a table multiple times and enables referencing a table imported by an inner/outer query.
         // In case of sub-queries, this may include temporary tables that won't survive in the final query.
         public Dictionary<TableAccessorNode, Dictionary<RelationshipAttribute, TableAccessorNode>> RelatedTables { get; } = [];
 

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Controllers;
 namespace JsonApiDotNetCore.Middleware;
 
 /// <summary>
-/// Enables to remove JSON:API controller action methods at startup. For atomic:operation requests, see <see cref="IAtomicOperationFilter" />.
+/// Enables removing JSON:API controller action methods at startup. For atomic:operation requests, see <see cref="IAtomicOperationFilter" />.
 /// </summary>
 [PublicAPI]
 public interface IJsonApiEndpointFilter

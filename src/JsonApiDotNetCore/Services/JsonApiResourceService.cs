@@ -396,7 +396,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         if (_request.Relationship.LeftType.IsPartOfTypeHierarchy())
         {
             // The left resource may be stored as a derived type. We fetch it, so we'll know the stored type, which
-            // enables to invoke IResourceDefinition<TResource> with TResource being the stored resource type.
+            // enables invoking IResourceDefinition<TResource> with TResource being the stored resource type.
             resourceFromDatabase ??= await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
             AccurizeJsonApiRequest(resourceFromDatabase);
         }
@@ -406,7 +406,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         if (_request.Relationship.RightType.IsPartOfTypeHierarchy())
         {
             // Some of the incoming right-side resources may be stored as a derived type. We fetch them, so we'll know
-            // the stored types, which enables to invoke resource definitions with the stored right-side resources types.
+            // the stored types, which enables invoking resource definitions with the stored right-side resources types.
             object? rightValue = await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
             effectiveRightResourceIds = ((IEnumerable<IIdentifiable>)rightValue!).ToHashSet(IdentifiableComparer.Instance);
         }
@@ -535,7 +535,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         object? effectiveRightValue = _request.Relationship.RightType.IsPartOfTypeHierarchy()
             // Some of the incoming right-side resources may be stored as a derived type. We fetch them, so we'll know
-            // the stored types, which enables to invoke resource definitions with the stored right-side resources types.
+            // the stored types, which enables invoking resource definitions with the stored right-side resources types.
             ? await AssertRightResourcesExistAsync(rightValue, cancellationToken)
             : rightValue;
 
@@ -572,7 +572,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         if (_request.PrimaryResourceType.IsPartOfTypeHierarchy())
         {
             // The resource to delete may be stored as a derived type. We fetch it, so we'll know the stored type, which
-            // enables to invoke IResourceDefinition<TResource> with TResource being the stored resource type.
+            // enables invoking IResourceDefinition<TResource> with TResource being the stored resource type.
             resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id, cancellationToken);
             AccurizeJsonApiRequest(resourceFromDatabase);
         }

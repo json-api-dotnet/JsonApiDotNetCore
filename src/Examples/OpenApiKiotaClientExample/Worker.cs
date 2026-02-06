@@ -93,7 +93,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                 Id = "1",
                 Attributes = new AttributesInUpdatePersonRequest
                 {
-                    // The --backing-store switch enables to send null and default values.
+                    // The --backing-store switch enables sending null and default values.
                     FirstName = null,
                     LastName = "Doe"
                 }
@@ -145,7 +145,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                         Lid = "new-person",
                         Attributes = new AttributesInUpdatePersonRequest
                         {
-                            // The --backing-store switch enables to send null and default values.
+                            // The --backing-store switch enables sending null and default values.
                             FirstName = null
                         }
                     }

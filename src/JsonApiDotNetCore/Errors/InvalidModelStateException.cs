@@ -214,7 +214,7 @@ public sealed class InvalidModelStateException(
         // The right part of the full key, which nested segments are produced from.
         private readonly string _nextKey;
 
-        // Enables to resolve the runtime-type of a collection element, such as the resource type in an atomic:operation.
+        // Enables resolving the runtime-type of a collection element, such as the resource type in an atomic:operation.
         protected Func<Type, int, Type?>? GetCollectionElementTypeCallback { get; }
 
         // In case of a property, its declaring type. In case of an indexer, the collection type or collection element type (in case the parent is a relationship).

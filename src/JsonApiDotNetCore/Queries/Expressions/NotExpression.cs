@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Queries.Parsing;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// This expression allows to test for the logical negation of its operand. It represents the "not" filter function, resulting from text such as:
+/// This expression tests for the logical negation of its operand. It represents the "not" filter function, resulting from text such as:
 /// <c>
 /// not(equals(title,'Work'))
 /// </c>

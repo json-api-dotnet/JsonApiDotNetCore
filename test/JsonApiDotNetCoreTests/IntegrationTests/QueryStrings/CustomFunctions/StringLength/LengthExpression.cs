@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;
 
 /// <summary>
-/// This expression allows to determine the string length of a JSON:API attribute. It represents the "length" function, resulting from text such as:
+/// This expression determines the string length of a JSON:API attribute. It represents the "length" function, resulting from text such as:
 /// <c>
 /// length(title)
 /// </c>

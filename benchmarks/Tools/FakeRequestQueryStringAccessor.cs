@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace Benchmarks.Tools;
 
 /// <summary>
-/// Enables to inject a query string, instead of obtaining it from <see cref="HttpContext" />.
+/// Enables injecting a query string, instead of obtaining it from <see cref="HttpContext" />.
 /// </summary>
 internal sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
 {

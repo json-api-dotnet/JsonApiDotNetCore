@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Middleware;
 namespace OpenApiNSwagClientTests;
 
 /// <summary>
-/// Enables to inject an outgoing response body and inspect the incoming request.
+/// Enables injecting an outgoing response body and inspecting the incoming request.
 /// </summary>
 internal sealed class FakeHttpClientWrapper : IDisposable
 {

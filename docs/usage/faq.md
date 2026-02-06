@@ -22,7 +22,7 @@ You'll need to build the resource graph on the client and rely on internal imple
 Due to auto-generated controllers, you may find it hard to determine where to put your breakpoints.
 In Visual Studio, controllers are accessible below **Solution Explorer > Project > Dependencies > Analyzers > JsonApiDotNetCore.SourceGenerators**.
 
-After turning on [Source Link](https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/#enabling-source-link) (which enables to download the JsonApiDotNetCore source code from GitHub), you can step into our source code and add breakpoints there too.
+After turning on [Source Link](https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/#enabling-source-link) (which enables downloading the JsonApiDotNetCore source code from GitHub), you can step into our source code and add breakpoints there too.
 
 Here are some key places in the execution pipeline to set a breakpoint:
 - `JsonApiRoutingConvention.Apply`: Controllers are registered here (executes once at startup)

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// This expression allows to compare two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:
+/// This expression compares two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:
 /// <c>
 /// equals(name,'Joe')
 /// </c>

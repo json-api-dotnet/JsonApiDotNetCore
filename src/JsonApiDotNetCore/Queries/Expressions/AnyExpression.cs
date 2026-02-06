@@ -6,8 +6,8 @@ using JsonApiDotNetCore.Queries.Parsing;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// This expression allows to test if an attribute value equals any of the specified constants. It represents the "any" filter function, resulting from
-/// text such as:
+/// This expression tests if an attribute value equals any of the specified constants. It represents the "any" filter function, resulting from text such
+/// as:
 /// <c>
 /// any(owner.name,'Jack','Joe','John')
 /// </c>

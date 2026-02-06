@@ -8,7 +8,7 @@ using Xunit;
 namespace TestBuildingBlocks;
 
 /// <summary>
-/// A base class for tests that conveniently enables to execute HTTP requests against JSON:API endpoints. It throttles tests that are running in parallel
+/// A base class for tests that conveniently enables executing HTTP requests against JSON:API endpoints. It throttles tests that are running in parallel
 /// to avoid exceeding the maximum active database connections.
 /// </summary>
 public abstract class IntegrationTest : IAsyncLifetime

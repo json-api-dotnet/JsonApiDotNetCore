@@ -170,8 +170,8 @@ public interface IJsonApiOptions
     int? MaximumOperationsPerRequest { get; }
 
     /// <summary>
-    /// Enables to override the default isolation level for database transactions, enabling to balance between consistency and performance. Defaults to
-    /// <c>null</c>, which leaves this up to Entity Framework Core to choose (and then it varies per database provider).
+    /// Enables overriding the default isolation level for database transactions to balance between consistency and performance. Defaults to <c>null</c>,
+    /// which leaves this up to Entity Framework Core to choose (and then it varies per database provider).
     /// </summary>
     IsolationLevel? TransactionIsolationLevel { get; }
 
@@ -188,7 +188,7 @@ public interface IJsonApiOptions
     IReadOnlySet<JsonApiMediaTypeExtension> Extensions { get; }
 
     /// <summary>
-    /// Enables to customize the settings that are used by the <see cref="JsonSerializer" />.
+    /// Enables customizing the settings that are used by the <see cref="JsonSerializer" />.
     /// </summary>
     /// <example>
     /// The following example sets the naming convention to camel casing.

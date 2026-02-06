@@ -289,7 +289,7 @@ Resource definitions provide a better solution, see below.
 ### Resource definitions
 
 In contrast to the request pipeline, JsonApiDotNetCore always executes the resource definition that matches the *stored* type.
-This enables to implement business logic in a central place, irrespective of which endpoint was used or whether base types were used in relationships.
+This enables implementing business logic in a central place, irrespective of which endpoint was used or whether base types were used in relationships.
 
 To delegate logic for base types to their matching resource type, you can build a chain of resource definitions. And because you'll always get the
 actually stored types (for relationships too), you can type-check left-side and right-side types in resources definitions.

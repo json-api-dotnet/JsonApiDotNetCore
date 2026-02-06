@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 /// <summary>
-/// Enables to log recursive component schema generation at trace level.
+/// Enables logging recursive component schema generation at trace level.
 /// </summary>
 internal sealed partial class SchemaGenerationTracer
 {
