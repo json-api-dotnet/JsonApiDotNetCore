@@ -14,12 +14,12 @@ public interface IOperationsTransaction : IAsyncDisposable
     string TransactionId { get; }
 
     /// <summary>
-    /// Enables to execute custom logic before processing of an operation starts.
+    /// Enables executing custom logic before processing of an operation starts.
     /// </summary>
     Task BeforeProcessOperationAsync(CancellationToken cancellationToken);
 
     /// <summary>
-    /// Enables to execute custom logic after processing of an operation succeeds.
+    /// Enables executing custom logic after processing of an operation succeeds.
     /// </summary>
     Task AfterProcessOperationAsync(CancellationToken cancellationToken);
 

@@ -47,7 +47,7 @@ public sealed class QueryClauseBuilderContext
     public IQueryableBuilder QueryableBuilder { get; }
 
     /// <summary>
-    /// Enables to pass custom state that you'd like to transfer between calls.
+    /// Enables passing custom state that you'd like to transfer between calls.
     /// </summary>
     public object? State { get; }
 

@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Queries.Parsing;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// This expression allows to test if a to-many relationship has related resources, optionally with a condition. It represents the "has" filter function,
+/// This expression tests if a to-many relationship has related resources, optionally with a condition. It represents the "has" filter function,
 /// resulting from text such as:
 /// <c>
 /// has(articles)

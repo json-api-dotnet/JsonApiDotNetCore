@@ -38,7 +38,7 @@ public static class RuntimeTypeConverter
         // Earlier versions of JsonApiDotNetCore failed to pass CultureInfo.InvariantCulture in the parsing below, which resulted in the 'current'
         // culture being used. Unlike parsing JSON request/response bodies, this effectively meant that query strings were parsed based on the
         // OS-level regional settings of the web server.
-        // Because this was fixed in a non-major release, the switch below enables to revert to the old behavior.
+        // Because this was fixed in a non-major release, the switch below enables reverting to the old behavior.
 
         // With the switch activated, API developers can still choose between:
         // - Requiring localized date/number formats: parsing occurs using the OS-level regional settings (the default).

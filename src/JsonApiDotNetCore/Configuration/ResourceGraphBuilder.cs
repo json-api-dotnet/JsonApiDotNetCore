@@ -302,7 +302,7 @@ public partial class ResourceGraphBuilder
                 if (property.Name == nameof(Identifiable<>.Id))
                 {
                     // Although strictly not correct, 'id' is added to the list of attributes for convenience.
-                    // For example, it enables to filter on ID, without the need to special-case existing logic.
+                    // For example, it enables filtering on ID, without the need to special-case existing logic.
                     // And when using sparse fieldsets, it silently adds 'id' to the set of attributes to retrieve.
 
                     attribute = new AttrAttribute();

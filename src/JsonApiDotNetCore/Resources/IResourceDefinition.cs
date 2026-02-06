@@ -20,7 +20,7 @@ public interface IResourceDefinition<TResource, in TId>
     where TResource : class, IIdentifiable<TId>
 {
     /// <summary>
-    /// Enables to extend, replace or remove includes that are being applied on this resource type.
+    /// Enables extending, replacing or removing includes that are being applied on this resource type.
     /// </summary>
     /// <param name="existingIncludes">
     /// An optional existing set of includes, coming from query string. Never <c>null</c>, but may be empty.
@@ -31,7 +31,7 @@ public interface IResourceDefinition<TResource, in TId>
     IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes);
 
     /// <summary>
-    /// Enables to extend, replace or remove a filter that is being applied on a set of this resource type.
+    /// Enables extending, replacing or removing a filter that is being applied on a set of this resource type.
     /// </summary>
     /// <param name="existingFilter">
     /// An optional existing filter, coming from query string. Can be <c>null</c>.
@@ -42,7 +42,7 @@ public interface IResourceDefinition<TResource, in TId>
     FilterExpression? OnApplyFilter(FilterExpression? existingFilter);
 
     /// <summary>
-    /// Enables to extend, replace or remove a sort order that is being applied on a set of this resource type. Tip: Use
+    /// Enables extending, replacing or removing a sort order that is being applied on a set of this resource type. Tip: Use
     /// <see cref="JsonApiResourceDefinition{TResource, TId}.CreateSortExpressionFromLambda" /> to build from a lambda expression.
     /// </summary>
     /// <param name="existingSort">
@@ -54,7 +54,7 @@ public interface IResourceDefinition<TResource, in TId>
     SortExpression? OnApplySort(SortExpression? existingSort);
 
     /// <summary>
-    /// Enables to extend, replace or remove pagination that is being applied on a set of this resource type.
+    /// Enables extending, replacing or removing pagination that is being applied on a set of this resource type.
     /// </summary>
     /// <param name="existingPagination">
     /// An optional existing pagination, coming from query string. Can be <c>null</c>.
@@ -66,7 +66,7 @@ public interface IResourceDefinition<TResource, in TId>
     PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination);
 
     /// <summary>
-    /// Enables to extend, replace or remove a sparse fieldset that is being applied on a set of this resource type. Tip: Use
+    /// Enables extending, replacing or removing a sparse fieldset that is being applied on a set of this resource type. Tip: Use
     /// <see cref="SparseFieldSetExpressionExtensions.Including{TResource}" /> and <see cref="SparseFieldSetExpressionExtensions.Excluding{TResource}" /> to
     /// safely change the fieldset without worrying about nulls.
     /// </summary>
@@ -85,7 +85,7 @@ public interface IResourceDefinition<TResource, in TId>
     SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet);
 
     /// <summary>
-    /// Enables to adapt the Entity Framework Core <see cref="IQueryable{T}" /> query, based on custom query string parameters. Note this only works on
+    /// Enables adapting the Entity Framework Core <see cref="IQueryable{T}" /> query, based on custom query string parameters. Note this only works on
     /// primary resource requests, such as /articles, but not on /blogs/1/articles or /blogs?include=articles.
     /// </summary>
     /// <example>
@@ -113,7 +113,7 @@ public interface IResourceDefinition<TResource, in TId>
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 
     /// <summary>
-    /// Enables to add JSON:API meta information, specific to this resource.
+    /// Enables adding JSON:API meta information, specific to this resource.
     /// </summary>
 #pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     IDictionary<string, object?>? GetMeta(TResource resource);
@@ -122,7 +122,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.
     /// <para>
-    /// Implementing this method enables to perform validations and make changes to <paramref name="resource" />, before the fields from the request are
+    /// Implementing this method enables performing validations and making changes to <paramref name="resource" />, before the fields from the request are
     /// copied into it.
     /// </para>
     /// <para>
@@ -147,7 +147,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before setting (or clearing) the resource at the right side of a to-one relationship.
     /// <para>
-    /// Implementing this method enables to perform validations and change <paramref name="rightResourceId" />, before the relationship is updated.
+    /// Implementing this method enables performing validations and changing <paramref name="rightResourceId" />, before the relationship is updated.
     /// </para>
     /// </summary>
     /// <param name="leftResource">
@@ -176,7 +176,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.
     /// <para>
-    /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is updated.
     /// </para>
     /// </summary>
     /// <param name="leftResource">
@@ -202,7 +202,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before adding resources to the right side of a to-many relationship, as part of a POST relationship request.
     /// <para>
-    /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is updated.
     /// </para>
     /// </summary>
     /// <param name="leftResource">
@@ -237,7 +237,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before removing resources from the right side of a to-many relationship, as part of a DELETE relationship request.
     /// <para>
-    /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is updated.
     /// </para>
     /// </summary>
     /// <param name="leftResource">
@@ -260,7 +260,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before writing the changed resource to the underlying data store, as part of a write request.
     /// <para>
-    /// Implementing this method enables to perform validations and make changes to <paramref name="resource" />, after the fields from the request have been
+    /// Implementing this method enables performing validations and making changes to <paramref name="resource" />, after the fields from the request have been
     /// copied into it.
     /// </para>
     /// <para>
@@ -290,7 +290,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes after successfully writing the changed resource to the underlying data store, as part of a write request.
     /// <para>
-    /// Implementing this method enables to run additional logic, for example enqueue a notification message on a service bus.
+    /// Implementing this method enables running additional logic, for example enqueue a notification message on a service bus.
     /// </para>
     /// </summary>
     /// <param name="resource">
@@ -310,7 +310,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// Executes after a resource has been deserialized from an incoming request body.
     /// </summary>
     /// <para>
-    /// Implementing this method enables to change the incoming resource before it enters an ASP.NET Controller Action method.
+    /// Implementing this method enables changing the incoming resource before it enters an ASP.NET Controller Action method.
     /// </para>
     /// <para>
     /// Changing attributes on <paramref name="resource" /> from this method may break detection of side effects on resource POST/PATCH requests, because
@@ -326,7 +326,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// Executes before a (primary or included) resource is serialized into an outgoing response body.
     /// </summary>
     /// <para>
-    /// Implementing this method enables to change the returned resource, for example scrub sensitive data or transform returned attribute values.
+    /// Implementing this method enables changing the returned resource, for example scrub sensitive data or transform returned attribute values.
     /// </para>
     /// <para>
     /// Changing attributes on <paramref name="resource" /> from this method may break detection of side effects on resource POST/PATCH requests. What this

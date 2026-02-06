@@ -1145,11 +1145,11 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     private sealed class RemoveExtraFromWorkItemDefinition(IResourceGraph resourceGraph)
         : JsonApiResourceDefinition<WorkItem, int>(resourceGraph)
     {
-        // Enables to verify that not the full relationship was loaded upfront.
+        // Enables verifying that not the full relationship was loaded upfront.
         public HashSet<UserAccount> PreloadedSubscribers { get; } = new(IdentifiableComparer.Instance);
         public HashSet<WorkTag> PreloadedTags { get; } = new(IdentifiableComparer.Instance);
 
-        // Enables to verify that adding extra IDs for removal from ResourceDefinition works correctly.
+        // Enables verifying that adding extra IDs for removal from ResourceDefinition works correctly.
         public HashSet<long> ExtraSubscribersIdsToRemove { get; } = [];
         public HashSet<int> ExtraTagIdsToRemove { get; } = [];
 

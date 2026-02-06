@@ -7,7 +7,7 @@ After [enabling OpenAPI](~/usage/openapi.md), you can expose a documentation web
 
 ## SwaggerUI
 
-[SwaggerUI](https://swagger.io/tools/swagger-ui/) enables to visualize and interact with the JSON:API endpoints through a web page.
+[SwaggerUI](https://swagger.io/tools/swagger-ui/) enables visualizing and interacting with the JSON:API endpoints through a web page.
 While it conveniently provides the ability to execute requests, it doesn't show properties of derived types when component schema inheritance is used.
 
 SwaggerUI can be enabled by installing the `Swashbuckle.AspNetCore.SwaggerUI` NuGet package and adding the following to your `Program.cs` file:

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Queries.Parsing;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// This expression allows to test if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the
+/// This expression tests if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the
 /// derived type is accessible. It represents the "isType" filter function, resulting from text such as:
 /// <c>
 /// isType(,men)

@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Queries.Parsing;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// This expression allows to determine the number of related resources in a to-many relationship. It represents the "count" function, resulting from
+/// This expression determines the number of related resources in a to-many relationship. It represents the "count" function, resulting from
 /// text such as:
 /// <c>
 /// count(articles)

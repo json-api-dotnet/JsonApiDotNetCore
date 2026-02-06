@@ -3,8 +3,8 @@
 
 # OpenAPI
 
-Exposing an [OpenAPI document](https://swagger.io/specification/) for your JSON:API endpoints enables to provide a
-[documentation website](https://swagger.io/tools/swagger-ui/) and to generate typed
+Exposing an [OpenAPI document](https://swagger.io/specification/) for your JSON:API endpoints enables providing a
+[documentation website](https://swagger.io/tools/swagger-ui/) and generating typed
 [client libraries](https://openapi-generator.tech/docs/generators/) in various languages.
 
 The [JsonApiDotNetCore.OpenApi.Swashbuckle](https://github.com/json-api-dotnet/JsonApiDotNetCore/pkgs/nuget/JsonApiDotNetCore.OpenApi.Swashbuckle) NuGet package
