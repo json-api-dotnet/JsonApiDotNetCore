@@ -111,7 +111,7 @@ IResourceCommandService <|-- ISetRelationshipService
 IResourceCommandService <|-- IRemoveFromRelationshipService
 ```
 
-In order to take advantage of these interfaces you first need to register the service for each implemented interface.
+To take advantage of these interfaces, register the service for each implemented interface.
 
 ```c#
 public class ArticleService : ICreateService<Article, long>, IDeleteService<Article, long>

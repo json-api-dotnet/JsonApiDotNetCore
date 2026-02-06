@@ -21,7 +21,7 @@ See [here](~/usage/extensibility/resource-definitions.md#custom-query-string-par
 
 ## Custom query string parsing
 
-In order to add parsing of custom query string parameters, you can implement the `IQueryStringParameterReader` interface and register your reader.
+To add parsing of custom query string parameters, implement the `IQueryStringParameterReader` interface and register your reader.
 
 ```c#
 public class CustomQueryStringParameterReader : IQueryStringParameterReader

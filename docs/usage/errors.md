@@ -2,7 +2,7 @@
 
 Errors returned will contain only the properties that are set on the `ErrorObject` class. Custom fields can be added through `ErrorObject.Meta`.
 You can create a custom error by throwing a `JsonApiException` (which accepts an `ErrorObject` instance), or returning an `ErrorObject` instance from an `ActionResult` in a controller.
-Please keep in mind that JSON:API requires `Title` to be a generic message, while `Detail` should contain information about the specific problem occurence.
+Please keep in mind that JSON:API requires `Title` to be a generic message, while `Detail` should contain information about the specific problem occurrence.
 
 From a controller method:
 

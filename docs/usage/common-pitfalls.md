@@ -73,13 +73,13 @@ the richness of JSON:API. For example, it enables users to include related resou
 As an API developer, you'll benefit from rich input validation and fine-grained control for setting what's permitted when users access relationships.
 
 #### Model relationships instead of complex (JSON) attributes
-Similar to the above, returning a complex object takes away all the relationship features of JSON:API. Users can't filter inside a complex object. Or update
-a nested value, without risking accidentally overwriting another unrelated nested value from a concurrent request. Basically, there's no partial PATCH to prevent that.
+Similar to the above, returning a complex object takes away all the relationship features of JSON:API. Users can't filter inside a complex object, nor update
+a nested value without risking accidentally overwriting another unrelated nested value from a concurrent request because there's no partial PATCH to prevent that.
 
 #### Stay away from stored procedures
 There are [many reasons](https://stackoverflow.com/questions/1761601/is-the-usage-of-stored-procedures-a-bad-practice/9483781#9483781) to not use stored procedures.
 But with JSON:API, there's an additional concern. Due to its dynamic nature of filtering, sorting, pagination, sparse fieldsets, and including related resources,
-the number of required stored procedures to support all that either explodes, or you'll end up with one extremely complex stored proceduce to handle it all.
+the number of required stored procedures to support all that either explodes, or you'll end up with one extremely complex stored procedure to handle it all.
 With stored procedures, you're either going to have a lot of work to do, or you'll end up with an API that has very limited capabilities.
 Neither sounds very compelling. If stored procedures is what you need, you're better off creating an RPC-style API that doesn't use JsonApiDotNetCore.
 

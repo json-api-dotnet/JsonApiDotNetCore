@@ -32,7 +32,7 @@ internal sealed class FromEntitiesNavigationResolver : IInverseNavigationResolve
 
     public void Resolve()
     {
-        // In order to produce SQL, some knowledge of the underlying database model is required.
+        // To produce SQL, some knowledge of the underlying database model is required.
         // Because the database in this example project is created using Entity Framework Core, we derive that information from its model.
         // Some alternative approaches to consider:
         // - Query the database to obtain model information at startup.
