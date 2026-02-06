@@ -92,7 +92,7 @@
 
 <p>Errors returned will contain only the properties that are set on the <code>ErrorObject</code> class. Custom fields can be added through <code>ErrorObject.Meta</code>.
 You can create a custom error by throwing a <code>JsonApiException</code> (which accepts an <code>ErrorObject</code> instance), or returning an <code>ErrorObject</code> instance from an <code>ActionResult</code> in a controller.
-Please keep in mind that JSON:API requires <code>Title</code> to be a generic message, while <code>Detail</code> should contain information about the specific problem occurence.</p>
+Please keep in mind that JSON:API requires <code>Title</code> to be a generic message, while <code>Detail</code> should contain information about the specific problem occurrence.</p>
 <p>From a controller method:</p>
 <pre><code class="lang-c#">return Conflict(new ErrorObject(HttpStatusCode.Conflict)
 {

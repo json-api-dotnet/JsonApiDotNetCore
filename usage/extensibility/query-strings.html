@@ -101,7 +101,7 @@ Those types also implement <code>IQueryConstraintProvider</code>, which they use
 <p>When using Entity Framework Core, resource definitions provide a concise syntax to bind a LINQ expression to a query string parameter.
 See <a href="resource-definitions.html#custom-query-string-parameters">here</a> for details.</p>
 <h2 id="custom-query-string-parsing">Custom query string parsing</h2>
-<p>In order to add parsing of custom query string parameters, you can implement the <code>IQueryStringParameterReader</code> interface and register your reader.</p>
+<p>To add parsing of custom query string parameters, implement the <code>IQueryStringParameterReader</code> interface and register your reader.</p>
 <pre><code class="lang-c#">public class CustomQueryStringParameterReader : IQueryStringParameterReader
 {
     // ...

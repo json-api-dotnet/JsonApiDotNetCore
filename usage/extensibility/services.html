@@ -186,7 +186,7 @@ IResourceCommandService &lt;|-- IAddToRelationshipService
 IResourceCommandService &lt;|-- ISetRelationshipService
 IResourceCommandService &lt;|-- IRemoveFromRelationshipService
 </code></pre>
-<p>In order to take advantage of these interfaces you first need to register the service for each implemented interface.</p>
+<p>To take advantage of these interfaces, register the service for each implemented interface.</p>
 <pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article, long&gt;, IDeleteService&lt;Article, long&gt;
 {
     // ...

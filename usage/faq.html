@@ -106,7 +106,7 @@ You'll need to build the resource graph on the client and rely on internal imple
 <h4 id="how-can-i-debug-my-api-project">How can I debug my API project?</h4>
 <p>Due to auto-generated controllers, you may find it hard to determine where to put your breakpoints.
 In Visual Studio, controllers are accessible below <strong>Solution Explorer &gt; Project &gt; Dependencies &gt; Analyzers &gt; JsonApiDotNetCore.SourceGenerators</strong>.</p>
-<p>After turning on <a href="https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/#enabling-source-link">Source Link</a> (which enables to download the JsonApiDotNetCore source code from GitHub), you can step into our source code and add breakpoints there too.</p>
+<p>After turning on <a href="https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/#enabling-source-link">Source Link</a> (which enables downloading the JsonApiDotNetCore source code from GitHub), you can step into our source code and add breakpoints there too.</p>
 <p>Here are some key places in the execution pipeline to set a breakpoint:</p>
 <ul>
 <li><code>JsonApiRoutingConvention.Apply</code>: Controllers are registered here (executes once at startup)</li>

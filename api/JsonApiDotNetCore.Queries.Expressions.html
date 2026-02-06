@@ -99,8 +99,8 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.AnyExpression.html">AnyExpression</a></dt>
-      <dd><p>This expression allows to test if an attribute value equals any of the specified constants. It represents the &quot;any&quot; filter function, resulting from
-text such as:
+      <dd><p>This expression tests if an attribute value equals any of the specified constants. It represents the &quot;any&quot; filter function, resulting from text such
+as:
 <code>
 any(owner.name,'Jack','Joe','John')
 </code>
@@ -109,7 +109,7 @@ any(owner.name,'Jack','Joe','John')
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html">ComparisonExpression</a></dt>
-      <dd><p>This expression allows to compare two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:
+      <dd><p>This expression compares two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:
 <code>
 equals(name,'Joe')
 </code>
@@ -126,8 +126,8 @@ greaterOrEqual(count(upVotes),count(downVotes),'1')
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.CountExpression.html">CountExpression</a></dt>
-      <dd><p>This expression allows to determine the number of related resources in a to-many relationship. It represents the &quot;count&quot; function, resulting from
-text such as:
+      <dd><p>This expression determines the number of related resources in a to-many relationship. It represents the &quot;count&quot; function, resulting from text such
+as:
 <code>
 count(articles)
 </code>
@@ -146,7 +146,7 @@ count(articles)
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.HasExpression.html">HasExpression</a></dt>
-      <dd><p>This expression allows to test if a to-many relationship has related resources, optionally with a condition. It represents the &quot;has&quot; filter function,
+      <dd><p>This expression tests if a to-many relationship has related resources, optionally with a condition. It represents the &quot;has&quot; filter function,
 resulting from text such as:
 <code>
 has(articles)
@@ -183,8 +183,8 @@ owner,articles.revisions
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IsTypeExpression.html">IsTypeExpression</a></dt>
-      <dd><p>This expression allows to test if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the
-derived type is accessible. It represents the &quot;isType&quot; filter function, resulting from text such as:
+      <dd><p>This expression tests if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the derived type
+is accessible. It represents the &quot;isType&quot; filter function, resulting from text such as:
 <code>
 isType(,men)
 </code>
@@ -206,8 +206,8 @@ isType(creator,men,equals(hasBeard,'true'))
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html">LogicalExpression</a></dt>
-      <dd><p>This expression allows to test whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from
-text such as:
+      <dd><p>This expression tests whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from text
+such as:
 <code>
 and(equals(title,'Work'),has(articles))
 </code>
@@ -238,7 +238,7 @@ contains(name,'middle')
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.NotExpression.html">NotExpression</a></dt>
-      <dd><p>This expression allows to test for the logical negation of its operand. It represents the &quot;not&quot; filter function, resulting from text such as:
+      <dd><p>This expression tests for the logical negation of its operand. It represents the &quot;not&quot; filter function, resulting from text such as:
 <code>
 not(equals(title,'Work'))
 </code>

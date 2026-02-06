@@ -127,16 +127,16 @@ public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFil
 
 
   <h2 id="JsonApiDotNetCore_Middleware_IAsyncConvertEmptyActionResultFilter_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>This basically turns calls such as
+  <div class="markdown level0 remarks"><p>This converts calls such as:
 <code>
 return NotFound()
 </code>
-into
+into:
 <code>
 return NotFound(null)
 </code>
 , so that our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
-<a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
+<a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a>.</p>
 </div>
 
 

@@ -1511,7 +1511,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Middleware.IJsonApiEndpointFilter",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Middleware.IJsonApiEndpointFilter.yml\" sourcestartlinenumber=\"1\">Enables to remove JSON:API controller action methods at startup. For atomic:operation requests, see <xref href=\"JsonApiDotNetCore.AtomicOperations.IAtomicOperationFilter\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Middleware.IJsonApiEndpointFilter.yml\" sourcestartlinenumber=\"1\">Enables removing JSON:API controller action methods at startup. For atomic:operation requests, see <xref href=\"JsonApiDotNetCore.AtomicOperations.IAtomicOperationFilter\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1927,7 +1927,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Queries.Expressions.AnyExpression",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.yml\" sourcestartlinenumber=\"1\">This expression allows to test if an attribute value equals any of the specified constants. It represents the &quot;any&quot; filter function, resulting from\ntext such as:\n<code>\nany(owner.name,'Jack','Joe','John')\n</code>\n.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.yml\" sourcestartlinenumber=\"1\">This expression tests if an attribute value equals any of the specified constants. It represents the &quot;any&quot; filter function, resulting from text such\nas:\n<code>\nany(owner.name,'Jack','Joe','John')\n</code>\n.</p>\n"
     },
     {
       "type": "Redirection",
@@ -1951,7 +1951,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Queries.Expressions.ComparisonExpression",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.yml\" sourcestartlinenumber=\"1\">This expression allows to compare two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:\n<code>\nequals(name,'Joe')\n</code>\n,\n<code>\nequals(owner,null)\n</code>\n, or:\n<code>\ngreaterOrEqual(count(upVotes),count(downVotes),'1')\n</code>\n.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.yml\" sourcestartlinenumber=\"1\">This expression compares two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:\n<code>\nequals(name,'Joe')\n</code>\n,\n<code>\nequals(owner,null)\n</code>\n, or:\n<code>\ngreaterOrEqual(count(upVotes),count(downVotes),'1')\n</code>\n.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1979,7 +1979,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Queries.Expressions.CountExpression",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.CountExpression.yml\" sourcestartlinenumber=\"1\">This expression allows to determine the number of related resources in a to-many relationship. It represents the &quot;count&quot; function, resulting from\ntext such as:\n<code>\ncount(articles)\n</code>\n.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.CountExpression.yml\" sourcestartlinenumber=\"1\">This expression determines the number of related resources in a to-many relationship. It represents the &quot;count&quot; function, resulting from text such\nas:\n<code>\ncount(articles)\n</code>\n.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2021,7 +2021,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Queries.Expressions.HasExpression",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.HasExpression.yml\" sourcestartlinenumber=\"1\">This expression allows to test if a to-many relationship has related resources, optionally with a condition. It represents the &quot;has&quot; filter function,\nresulting from text such as:\n<code>\nhas(articles)\n</code>\n, or:\n<code>\nhas(articles,equals(isHidden,'false'))\n</code>\n.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.HasExpression.yml\" sourcestartlinenumber=\"1\">This expression tests if a to-many relationship has related resources, optionally with a condition. It represents the &quot;has&quot; filter function,\nresulting from text such as:\n<code>\nhas(articles)\n</code>\n, or:\n<code>\nhas(articles,equals(isHidden,'false'))\n</code>\n.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2077,7 +2077,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Queries.Expressions.IsTypeExpression",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.IsTypeExpression.yml\" sourcestartlinenumber=\"1\">This expression allows to test if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the\nderived type is accessible. It represents the &quot;isType&quot; filter function, resulting from text such as:\n<code>\nisType(,men)\n</code>\n,\n<code>\nisType(creator,men)\n</code>\n, or:\n<code>\nisType(creator,men,equals(hasBeard,'true'))\n</code>\n.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.IsTypeExpression.yml\" sourcestartlinenumber=\"1\">This expression tests if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the derived type\nis accessible. It represents the &quot;isType&quot; filter function, resulting from text such as:\n<code>\nisType(,men)\n</code>\n,\n<code>\nisType(creator,men)\n</code>\n, or:\n<code>\nisType(creator,men,equals(hasBeard,'true'))\n</code>\n.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2105,7 +2105,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Queries.Expressions.LogicalExpression",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.yml\" sourcestartlinenumber=\"1\">This expression allows to test whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from\ntext such as:\n<code>\nand(equals(title,'Work'),has(articles))\n</code>\n, or:\n<code>\nor(equals(title,'Work'),has(articles))\n</code>\n.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.yml\" sourcestartlinenumber=\"1\">This expression tests whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from text\nsuch as:\n<code>\nand(equals(title,'Work'),has(articles))\n</code>\n, or:\n<code>\nor(equals(title,'Work'),has(articles))\n</code>\n.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2147,7 +2147,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Queries.Expressions.NotExpression",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.NotExpression.yml\" sourcestartlinenumber=\"1\">This expression allows to test for the logical negation of its operand. It represents the &quot;not&quot; filter function, resulting from text such as:\n<code>\nnot(equals(title,'Work'))\n</code>\n.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.Expressions.NotExpression.yml\" sourcestartlinenumber=\"1\">This expression tests for the logical negation of its operand. It represents the &quot;not&quot; filter function, resulting from text such as:\n<code>\nnot(equals(title,'Work'))\n</code>\n.</p>\n"
     },
     {
       "type": "ManagedReference",

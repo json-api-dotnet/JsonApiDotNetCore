@@ -326,7 +326,7 @@ public class JsonApiResourceDefinition&lt;TResource, TId&gt; : IResourceDefiniti
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L115"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to add JSON:API meta information, specific to this resource.</p>
+  <div class="markdown level1 summary"><p>Enables adding JSON:API meta information, specific to this resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -365,7 +365,8 @@ public class JsonApiResourceDefinition&lt;TResource, TId&gt; : IResourceDefiniti
 
   <div class="markdown level1 summary"><p>Executes before adding resources to the right side of a to-many relationship, as part of a POST relationship request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">rightResourceIds</code>, before the relationship is updated.
+Implementing this method enables performing validations and making changes to <code class="paramref">rightResourceIds</code>, before the relationship is
+updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -420,7 +421,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove a filter that is being applied on a set of this resource type.</p>
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing a filter that is being applied on a set of this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -459,7 +460,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove includes that are being applied on this resource type.</p>
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing includes that are being applied on this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -498,7 +499,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove pagination that is being applied on a set of this resource type.</p>
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing pagination that is being applied on a set of this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -538,7 +539,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove a sort order that is being applied on a set of this resource type. Tip: Use
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing a sort order that is being applied on a set of this resource type. Tip: Use
 <a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_JsonApiResourceDefinition__0__1__PropertySortOrder_">CreateSortExpressionFromLambda(PropertySortOrder)</a> to build from a lambda expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -578,7 +579,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove a sparse fieldset that is being applied on a set of this resource type. Tip: Use
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing a sparse fieldset that is being applied on a set of this resource type. Tip: Use
 <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpressionExtensions.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpressionExtensions_Including__1_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_System_Linq_Expressions_Expression_System_Func___0_System_Object___JsonApiDotNetCore_Configuration_IResourceGraph_">Including&lt;TResource&gt;(SparseFieldSetExpression?, Expression&lt;Func&lt;TResource, object?&gt;&gt;, IResourceGraph)</a> and <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpressionExtensions.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpressionExtensions_Excluding__1_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_System_Linq_Expressions_Expression_System_Func___0_System_Object___JsonApiDotNetCore_Configuration_IResourceGraph_">Excluding&lt;TResource&gt;(SparseFieldSetExpression?, Expression&lt;Func&lt;TResource, object?&gt;&gt;, IResourceGraph)</a> to
 safely change the fieldset without worrying about nulls.</p>
 </div>
@@ -660,7 +661,7 @@ properties whose value depends on a field that is not in the sparse fieldset.</p
 
   <div class="markdown level1 summary"><p>Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">resource</code>, before the fields from the request are
+Implementing this method enables performing validations and making changes to <code class="paramref">resource</code>, before the fields from the request are
 copied into it.
 </p>
 <p>
@@ -713,7 +714,7 @@ related resources and linking them.
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L109"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to adapt the Entity Framework Core <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable&lt;T&gt;</a> query, based on custom query string parameters. Note this only works on
+  <div class="markdown level1 summary"><p>Enables adapting the Entity Framework Core <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable&lt;T&gt;</a> query, based on custom query string parameters. Note this only works on
 primary resource requests, such as /articles, but not on /blogs/1/articles or /blogs?include=articles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -766,7 +767,8 @@ private static IQueryable&lt;Model&gt; FilterByHighRisk(IQueryable&lt;Model&gt; 
 
   <div class="markdown level1 summary"><p>Executes before removing resources from the right side of a to-many relationship, as part of a DELETE relationship request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">rightResourceIds</code>, before the relationship is updated.
+Implementing this method enables performing validations and making changes to <code class="paramref">rightResourceIds</code>, before the relationship is
+updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -851,7 +853,8 @@ are retrieved from the underlying data store.</p>
 
   <div class="markdown level1 summary"><p>Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">rightResourceIds</code>, before the relationship is updated.
+Implementing this method enables performing validations and making changes to <code class="paramref">rightResourceIds</code>, before the relationship is
+updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -906,7 +909,7 @@ declared on <code class="typeparamref">TResource</code>.</p>
 
   <div class="markdown level1 summary"><p>Executes before setting (or clearing) the resource at the right side of a to-one relationship.</p>
 <p>
-Implementing this method enables to perform validations and change <code class="paramref">rightResourceId</code>, before the relationship is updated.
+Implementing this method enables performing validations and changing <code class="paramref">rightResourceId</code>, before the relationship is updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -962,7 +965,7 @@ declared on <code class="typeparamref">TResource</code>.</p>
 
   <div class="markdown level1 summary"><p>Executes after successfully writing the changed resource to the underlying data store, as part of a write request.</p>
 <p>
-Implementing this method enables to run additional logic, for example enqueue a notification message on a service bus.
+Implementing this method enables running additional logic, for example enqueue a notification message on a service bus.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1011,8 +1014,8 @@ Implementing this method enables to run additional logic, for example enqueue a 
 
   <div class="markdown level1 summary"><p>Executes before writing the changed resource to the underlying data store, as part of a write request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">resource</code>, after the fields from the request have been
-copied into it.
+Implementing this method enables performing validations and making changes to <code class="paramref">resource</code>, after the fields from the request have
+been copied into it.
 </p>
 <p>
 An example usage is to set the last-modification timestamp, overwriting the value from the incoming request.

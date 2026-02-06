@@ -141,7 +141,7 @@ public interface IResourceDefinition&lt;TResource, in TId&gt; where TResource : 
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to add JSON:API meta information, specific to this resource.</p>
+  <div class="markdown level1 summary"><p>Enables adding JSON:API meta information, specific to this resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -175,12 +175,13 @@ public interface IResourceDefinition&lt;TResource, in TId&gt; where TResource : 
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnAddToRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnAddToRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   OnAddToRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L234"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L236"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes before adding resources to the right side of a to-many relationship, as part of a POST relationship request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">rightResourceIds</code>, before the relationship is updated.
+Implementing this method enables performing validations and making changes to <code class="paramref">rightResourceIds</code>, before the relationship is
+updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -235,7 +236,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove a filter that is being applied on a set of this resource type.</p>
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing a filter that is being applied on a set of this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -274,7 +275,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove includes that are being applied on this resource type.</p>
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing includes that are being applied on this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -313,7 +314,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L66"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove pagination that is being applied on a set of this resource type.</p>
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing pagination that is being applied on a set of this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -353,7 +354,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove a sort order that is being applied on a set of this resource type. Tip: Use
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing a sort order that is being applied on a set of this resource type. Tip: Use
 <a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_JsonApiResourceDefinition__0__1__PropertySortOrder_">CreateSortExpressionFromLambda(PropertySortOrder)</a> to build from a lambda expression.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -393,7 +394,7 @@ The left resource type is part of a type hierarchy. This ensures your business l
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to extend, replace or remove a sparse fieldset that is being applied on a set of this resource type. Tip: Use
+  <div class="markdown level1 summary"><p>Enables extending, replacing or removing a sparse fieldset that is being applied on a set of this resource type. Tip: Use
 <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpressionExtensions.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpressionExtensions_Including__1_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_System_Linq_Expressions_Expression_System_Func___0_System_Object___JsonApiDotNetCore_Configuration_IResourceGraph_">Including&lt;TResource&gt;(SparseFieldSetExpression?, Expression&lt;Func&lt;TResource, object?&gt;&gt;, IResourceGraph)</a> and <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpressionExtensions.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpressionExtensions_Excluding__1_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_System_Linq_Expressions_Expression_System_Func___0_System_Object___JsonApiDotNetCore_Configuration_IResourceGraph_">Excluding&lt;TResource&gt;(SparseFieldSetExpression?, Expression&lt;Func&lt;TResource, object?&gt;&gt;, IResourceGraph)</a> to
 safely change the fieldset without worrying about nulls.</p>
 </div>
@@ -437,7 +438,7 @@ properties whose value depends on a field that is not in the sparse fieldset.</p
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnDeserialize__0_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnDeserialize(`0)">
   OnDeserialize(TResource)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L323"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L326"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes after a resource has been deserialized from an incoming request body.</p>
@@ -475,7 +476,7 @@ properties whose value depends on a field that is not in the sparse fieldset.</p
 
   <div class="markdown level1 summary"><p>Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">resource</code>, before the fields from the request are
+Implementing this method enables performing validations and making changes to <code class="paramref">resource</code>, before the fields from the request are
 copied into it.
 </p>
 <p>
@@ -528,7 +529,7 @@ related resources and linking them.
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables to adapt the Entity Framework Core <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable&lt;T&gt;</a> query, based on custom query string parameters. Note this only works on
+  <div class="markdown level1 summary"><p>Enables adapting the Entity Framework Core <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable&lt;T&gt;</a> query, based on custom query string parameters. Note this only works on
 primary resource requests, such as /articles, but not on /blogs/1/articles or /blogs?include=articles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -576,12 +577,13 @@ private static IQueryable&lt;Model&gt; FilterByHighRisk(IQueryable&lt;Model&gt; 
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRemoveFromRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnRemoveFromRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   OnRemoveFromRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L257"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L260"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes before removing resources from the right side of a to-many relationship, as part of a DELETE relationship request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">rightResourceIds</code>, before the relationship is updated.
+Implementing this method enables performing validations and making changes to <code class="paramref">rightResourceIds</code>, before the relationship is
+updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -628,7 +630,7 @@ are retrieved from the underlying data store.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSerialize__0_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSerialize(`0)">
   OnSerialize(TResource)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L339"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L342"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes before a (primary or included) resource is serialized into an outgoing response body.</p>
@@ -661,12 +663,13 @@ are retrieved from the underlying data store.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToManyRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSetToManyRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnSetToManyRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L200"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">rightResourceIds</code>, before the relationship is updated.
+Implementing this method enables performing validations and making changes to <code class="paramref">rightResourceIds</code>, before the relationship is
+updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -721,7 +724,7 @@ declared on <code class="typeparamref">TResource</code>.</p>
 
   <div class="markdown level1 summary"><p>Executes before setting (or clearing) the resource at the right side of a to-one relationship.</p>
 <p>
-Implementing this method enables to perform validations and change <code class="paramref">rightResourceId</code>, before the relationship is updated.
+Implementing this method enables performing validations and changing <code class="paramref">rightResourceId</code>, before the relationship is updated.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -772,12 +775,12 @@ declared on <code class="typeparamref">TResource</code>.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWriteSucceededAsync(`0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnWriteSucceededAsync(TResource, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L307"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L310"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes after successfully writing the changed resource to the underlying data store, as part of a write request.</p>
 <p>
-Implementing this method enables to run additional logic, for example enqueue a notification message on a service bus.
+Implementing this method enables running additional logic, for example enqueue a notification message on a service bus.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -821,13 +824,13 @@ Implementing this method enables to run additional logic, for example enqueue a 
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWritingAsync(`0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnWritingAsync(TResource, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L288"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L291"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes before writing the changed resource to the underlying data store, as part of a write request.</p>
 <p>
-Implementing this method enables to perform validations and make changes to <code class="paramref">resource</code>, after the fields from the request have been
-copied into it.
+Implementing this method enables performing validations and making changes to <code class="paramref">resource</code>, after the fields from the request have
+been copied into it.
 </p>
 <p>
 An example usage is to set the last-modification timestamp, overwriting the value from the incoming request.
