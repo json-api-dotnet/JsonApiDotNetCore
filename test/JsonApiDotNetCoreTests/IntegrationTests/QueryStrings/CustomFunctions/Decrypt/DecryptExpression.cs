@@ -4,8 +4,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Decrypt;
 
 /// <summary>
-/// This expression calls the user-defined "decrypt_column_value" database function. It represents the "decrypt" function, resulting from text
-/// such as:
+/// This expression calls the user-defined "decrypt_column_value" database function. It represents the "decrypt" function, resulting from text such as:
 /// <c>
 /// decrypt(title)
 /// </c>

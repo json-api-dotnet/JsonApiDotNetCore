@@ -6,8 +6,8 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// This expression tests whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from
-/// text such as:
+/// This expression tests whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from text
+/// such as:
 /// <c>
 /// and(equals(title,'Work'),has(articles))
 /// </c>

@@ -176,7 +176,8 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.
     /// <para>
-    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is
+    /// updated.
     /// </para>
     /// </summary>
     /// <param name="leftResource">
@@ -202,7 +203,8 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before adding resources to the right side of a to-many relationship, as part of a POST relationship request.
     /// <para>
-    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is
+    /// updated.
     /// </para>
     /// </summary>
     /// <param name="leftResource">
@@ -237,7 +239,8 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before removing resources from the right side of a to-many relationship, as part of a DELETE relationship request.
     /// <para>
-    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+    /// Implementing this method enables performing validations and making changes to <paramref name="rightResourceIds" />, before the relationship is
+    /// updated.
     /// </para>
     /// </summary>
     /// <param name="leftResource">
@@ -260,8 +263,8 @@ public interface IResourceDefinition<TResource, in TId>
     /// <summary>
     /// Executes before writing the changed resource to the underlying data store, as part of a write request.
     /// <para>
-    /// Implementing this method enables performing validations and making changes to <paramref name="resource" />, after the fields from the request have been
-    /// copied into it.
+    /// Implementing this method enables performing validations and making changes to <paramref name="resource" />, after the fields from the request have
+    /// been copied into it.
     /// </para>
     /// <para>
     /// An example usage is to set the last-modification timestamp, overwriting the value from the incoming request.

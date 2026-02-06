@@ -170,8 +170,8 @@ public interface IJsonApiOptions
     int? MaximumOperationsPerRequest { get; }
 
     /// <summary>
-    /// Enables overriding the default isolation level for database transactions to balance between consistency and performance. Defaults to
-    /// <c>null</c>, which leaves this up to Entity Framework Core to choose (and then it varies per database provider).
+    /// Enables overriding the default isolation level for database transactions to balance between consistency and performance. Defaults to <c>null</c>,
+    /// which leaves this up to Entity Framework Core to choose (and then it varies per database provider).
     /// </summary>
     IsolationLevel? TransactionIsolationLevel { get; }
 
