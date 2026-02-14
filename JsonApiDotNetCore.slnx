@@ -1,0 +1,54 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".gitignore" />
+    <File Path="CodingGuidelines.ruleset" />
+    <File Path="CSharpGuidelinesAnalyzer.config" />
+    <File Path="Directory.Build.props" />
+    <File Path="package-versions.props" />
+    <File Path="tests.runsettings" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/JsonApiDotNetCore.Annotations/JsonApiDotNetCore.Annotations.csproj" />
+    <Project Path="src/JsonApiDotNetCore.OpenApi.Client.Kiota/JsonApiDotNetCore.OpenApi.Client.Kiota.csproj" />
+    <Project Path="src/JsonApiDotNetCore.OpenApi.Client.NSwag/JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
+    <Project Path="src/JsonApiDotNetCore.OpenApi.Swashbuckle/JsonApiDotNetCore.OpenApi.Swashbuckle.csproj" />
+    <Project Path="src/JsonApiDotNetCore.SourceGenerators/JsonApiDotNetCore.SourceGenerators.csproj" />
+    <Project Path="src/JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
+  </Folder>
+  <Folder Name="/src/Examples/">
+    <Project Path="src/Examples/DapperExample/DapperExample.csproj" />
+    <Project Path="src/Examples/DatabasePerTenantExample/DatabasePerTenantExample.csproj" />
+    <Project Path="src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
+    <Project Path="src/Examples/MultiDbContextExample/MultiDbContextExample.csproj" />
+    <Project Path="src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
+    <Project Path="src/Examples/OpenApiKiotaClientExample/OpenApiKiotaClientExample.csproj" />
+    <Project Path="src/Examples/OpenApiNSwagClientExample/OpenApiNSwagClientExample.csproj" />
+    <Project Path="src/Examples/ReportsExample/ReportsExample.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/AnnotationTests/AnnotationTests.csproj" />
+    <Project Path="test/DapperTests/DapperTests.csproj" />
+    <Project Path="test/DiscoveryTests/DiscoveryTests.csproj" />
+    <Project Path="test/JsonApiDotNetCoreTests/JsonApiDotNetCoreTests.csproj" />
+    <Project Path="test/MultiDbContextTests/MultiDbContextTests.csproj" />
+    <Project Path="test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj" />
+    <Project Path="test/OpenApiKiotaEndToEndTests/OpenApiKiotaEndToEndTests.csproj" />
+    <Project Path="test/OpenApiNSwagClientTests/OpenApiNSwagClientTests.csproj" />
+    <Project Path="test/OpenApiNSwagEndToEndTests/OpenApiNSwagEndToEndTests.csproj" />
+    <Project Path="test/OpenApiTests/OpenApiTests.csproj" />
+    <Project Path="test/SourceGeneratorTests/SourceGeneratorTests.csproj" />
+    <Project Path="test/TestBuildingBlocks/TestBuildingBlocks.csproj" />
+    <Project Path="test/UnitTests/UnitTests.csproj" />
+  </Folder>
+  <Project Path="src/Examples/GettingStarted/GettingStarted.csproj" DefaultStartup="true" />
+</Solution>
