@@ -1022,7 +1022,7 @@ public override Task&lt;IActionResult&gt; GetAsync(TId id, CancellationToken can
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection.</p>
+  <div class="markdown level1 summary"><p>Gets a relationship value, which can be <code>null</code>, a single object or a collection.</p>
 <p>
 Example endpoints: <pre><code class="lang-http">GET /articles/1/relationships/author HTTP/1.1</code></pre>
 <pre><code class="lang-http">GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
@@ -1214,7 +1214,7 @@ public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string 
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both.</p>
+  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships, or both.</p>
 <p>
 Example endpoint: <pre><code class="lang-http">POST /articles HTTP/1.1</code></pre>
 

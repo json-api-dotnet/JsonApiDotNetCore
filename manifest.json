@@ -229,7 +229,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor<TResource, TId>",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.yml\" sourcestartlinenumber=\"1\">Processes a single operation to create a new resource with attributes, relationships or both.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.yml\" sourcestartlinenumber=\"1\">Processes a single operation to create a new resource with attributes, relationships, or both.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -271,7 +271,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor<TResource, TId>",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor-2.yml\" sourcestartlinenumber=\"1\">Processes a single operation to create a new resource with attributes, relationships or both.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor-2.yml\" sourcestartlinenumber=\"1\">Processes a single operation to create a new resource with attributes, relationships, or both.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -767,7 +767,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Controllers.JsonApiEndpoints",
-      "Summary": null
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Controllers.JsonApiEndpoints.yml\" sourcestartlinenumber=\"1\">Lists the built-in JSON:API endpoints, described at <a href=\"https://jsonapi.org/format\" sourcefile=\"api/JsonApiDotNetCore.Controllers.JsonApiEndpoints.yml\" sourcestartlinenumber=\"1\">https://jsonapi.org/format</a>.</p>\n"
     },
     {
       "type": "ManagedReference",

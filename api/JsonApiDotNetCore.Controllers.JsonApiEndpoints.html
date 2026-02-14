@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Enum JsonApiEndpoints ">
       
-      
+      <meta name="description" content="Lists the built-in JSON:API endpoints, described at https://jsonapi.org/format.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -93,7 +93,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Controllers_JsonApiEndpoints" data-uid="JsonApiDotNetCore.Controllers.JsonApiEndpoints" class="text-break">
-Enum JsonApiEndpoints  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Controllers/JsonApiEndpoints.shared.cs/#L6"><i class="bi bi-code-slash"></i></a>
+Enum JsonApiEndpoints  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Controllers/JsonApiEndpoints.shared.cs/#L8"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -101,7 +101,8 @@ Enum JsonApiEndpoints  <a class="header-action link-secondary" title="View sourc
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.Annotations.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Lists the built-in JSON:API endpoints, described at <a href="https://jsonapi.org/format">https://jsonapi.org/format</a>.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -123,46 +124,93 @@ public enum JsonApiEndpoints</code></pre>
   <dl class="parameters">
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_All"><code>All = Query | Command</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents all JSON:API endpoints.</p>
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_Command"><code>Command = Post | PostRelationship | Patch | PatchRelationship | Delete | DeleteRelationship</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the set of JSON:API endpoints to change resources and relationships.</p>
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_Delete"><code>Delete = 256</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to delete an existing resource.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">DELETE /articles/1 HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_DeleteRelationship"><code>DeleteRelationship = 512</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to remove resources from a to-many relationship.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_GetCollection"><code>GetCollection = 1</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to get a collection of primary resources.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">GET /articles HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_GetRelationship"><code>GetRelationship = 8</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to get a relationship value.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">GET /articles/1/relationships/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_GetSecondary"><code>GetSecondary = 4</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to get a secondary resource or collection of secondary resources.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">GET /articles/1/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">GET /articles/1/revisions HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_GetSingle"><code>GetSingle = 2</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to get a single primary resource by ID.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">GET /articles/1 HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_None"><code>None = 0</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents none of the JSON:API endpoints.</p>
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_Patch"><code>Patch = 64</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to update the attributes and/or relationships of an existing resource.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">PATCH /articles/1 HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_PatchRelationship"><code>PatchRelationship = 128</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to perform a complete replacement of a relationship on an existing resource.</p>
+<p>
+Example endpoints: <pre><code class="lang-http">PATCH /articles/1/relationships/author HTTP/1.1</code></pre>
+<pre><code class="lang-http">PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_Post"><code>Post = 16</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to create a new resource with attributes, relationships, or both.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">POST /articles HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_PostRelationship"><code>PostRelationship = 32</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the endpoint to add resources to a to-many relationship.</p>
+<p>
+Example endpoint: <pre><code class="lang-http">POST /articles/1/revisions HTTP/1.1</code></pre>
+
+</dd>
     <dt id="JsonApiDotNetCore_Controllers_JsonApiEndpoints_Query"><code>Query = GetCollection | GetSingle | GetSecondary | GetRelationship</code></dt>
   
-  <dd></dd>
+  <dd><p>Represents the set of JSON:API endpoints to query resources and relationships.</p>
+</dd>
   </dl>
 
 
@@ -170,7 +218,7 @@ public enum JsonApiEndpoints</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Controllers/JsonApiEndpoints.shared.cs/#L6" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Controllers/JsonApiEndpoints.shared.cs/#L8" class="edit-link">Edit this page</a>
         </div>
 
 
