@@ -8,9 +8,13 @@
 [![GitHub License](https://img.shields.io/github/license/json-api-dotnet/JsonApiDotNetCore)](LICENSE)
 [![FIRST-TIMERS](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://www.firsttimersonly.com/)
 
-A framework for building [JSON:API](https://jsonapi.org/) compliant REST APIs using ASP.NET Core and Entity Framework Core. Includes support for the [Atomic Operations](https://jsonapi.org/ext/atomic/) extension.
+A framework for building [JSON:API](https://jsonapi.org/) compliant REST APIs using ASP.NET Core and Entity Framework
+Core. Includes support for the [Atomic Operations](https://jsonapi.org/ext/atomic/) extension.
 
-The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features, such as sorting, filtering, pagination, sparse fieldset selection, and side-loading related resources. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection, making extensibility incredibly easy.
+The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features,
+such as sorting, filtering, pagination, sparse fieldset selection, and side-loading related resources. You just need to
+focus on defining the resources and implementing your custom business logic. This library has been designed around
+dependency injection, making extensibility incredibly easy.
 
 > [!NOTE]
 > OpenAPI support is now [available](https://www.jsonapi.net/usage/openapi.html), currently in preview. Give it a try!
@@ -192,7 +196,6 @@ The following links explain what this project provides, why it exists, and how y
 - [JSON:API and JsonApiDotNetCore](https://www.youtube.com/watch?v=79Oq0HOxyeI) (video, 2021)
 - [JsonApiDotNetCore Release 4.0](https://dev.to/wunki/getting-started-5dkl) (blog, 2020)
 - [JSON:API, ASP.NET Core, EmberJS](https://youtu.be/KAMuo6K7VcE) (video, 2017)
-- [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs) (paid course, 2017)
 
 ### Official documentation
 
@@ -202,10 +205,14 @@ The following links explain what this project provides, why it exists, and how y
 
 ### Samples
 
-- The [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory provides ready-to-run sample API projects, which are documented [here](https://www.jsonapi.net/request-examples/index.html).
-- The [integration tests](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests) directory covers many advanced use cases, which are documented [here](https://www.jsonapi.net/usage/advanced/index.html).
-  This includes topics such as batching, multi-tenancy, authorization, soft-deletion, obfuscated IDs, resource inheritance, alternate routing, custom metadata, error handling and logging.
-- The [Ember.js Todo List App](https://github.com/json-api-dotnet/TodoListExample) showcases a JsonApiDotNetCore API and an Ember.js client with token authentication.
+- The [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory provides
+  ready-to-run sample API projects, which are documented [here](https://www.jsonapi.net/request-examples/index.html).
+- The [integration tests](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests)
+  directory covers many advanced use cases, which are documented [here](https://www.jsonapi.net/usage/advanced/index.html).
+  This includes topics such as batching, multi-tenancy, authorization, soft-deletion, obfuscated IDs, resource
+  inheritance, alternate routing, custom metadata, error handling and logging.
+- The [Ember.js Todo List App](https://github.com/json-api-dotnet/TodoListExample) showcases a JsonApiDotNetCore API and
+  an Ember.js client with token authentication.
 
 ### Related projects
 
@@ -232,7 +239,8 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 
 ## Trying out the latest build
 
-After each commit to the master branch, a new pre-release NuGet package is automatically published to [feedz.io](https://feedz.io/docs/package-types/nuget).
+After each commit to the master branch, a new pre-release NuGet package is automatically published
+to [feedz.io](https://feedz.io/docs/package-types/nuget).
 To try it out, follow the steps below:
 
 1. Create a `nuget.config` file in the same directory as your .sln file, with the following contents:
@@ -246,7 +254,8 @@ To try it out, follow the steps below:
    </configuration>
    ```
 
-1. In your IDE, browse the list of packages from the `json-api-dotnet` feed. Make sure pre-release packages are included in the list.
+1. In your IDE, browse the list of packages from the `json-api-dotnet` feed. Make sure pre-release packages are included
+   in the list.
 
 ## Contributing
 
@@ -296,4 +305,5 @@ We are grateful to the following sponsors, who provide the team with a no-cost l
   </a>
 <p/>
 
-Do you like this project? Consider to [sponsor](https://github.com/sponsors/json-api-dotnet), or just reward us by giving our repository a star.
+Do you like this project? Consider to [sponsor](https://github.com/sponsors/json-api-dotnet), or just reward us by
+giving our repository a star.
