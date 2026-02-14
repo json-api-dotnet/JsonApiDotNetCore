@@ -1,4 +1,4 @@
-﻿<component name="ProjectCodeStyleConfiguration">
+<component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <XML>
       <option name="XML_KEEP_BLANK_LINES" value="1" />
@@ -8,6 +8,9 @@
     <editorconfig>
       <option name="ENABLED" value="false" />
     </editorconfig>
+    <yaml>
+      <option name="INDENT_SEQUENCE_VALUE" value="false" />
+    </yaml>
     <codeStyleSettings language="XML">
       <option name="RIGHT_MARGIN" value="160" />
       <indentOptions>
