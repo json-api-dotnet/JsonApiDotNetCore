@@ -1,10 +1,14 @@
 using System.Net;
+using System.Reflection;
+using System.Text;
 using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Net.Http.Headers;
@@ -40,16 +44,14 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
     private const string TextRequestBodyValidationFailed = "Validation of the request body failed.";
     private const string TextRequestBodyClientId = "Client-generated IDs cannot be used at this endpoint.";
 
-    private const string ResourceQueryStringParameters =
-        "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/" +
-        "[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/" +
-        "[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/" +
-        "[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
-
-    private const string RelationshipQueryStringParameters = "For syntax, see the documentation for the " +
-        "[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/" +
-        "[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/" +
-        "[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
+    private static readonly Dictionary<JsonApiQueryStringParameters, string> QueryStringParameterLinks = new()
+    {
+        [JsonApiQueryStringParameters.Include] = "[`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)",
+        [JsonApiQueryStringParameters.Filter] = "[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)",
+        [JsonApiQueryStringParameters.Sort] = "[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)",
+        [JsonApiQueryStringParameters.Page] = "[`page`](https://www.jsonapi.net/usage/reading/pagination.html)",
+        [JsonApiQueryStringParameters.Fields] = "[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html)"
+    };
 
     private readonly IJsonApiOptions _options;
     private readonly IControllerResourceMapping _controllerResourceMapping;
@@ -91,6 +93,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
         string actionName = context.MethodInfo.Name;
         ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(context.MethodInfo.ReflectedType);
+        JsonApiQueryStringParameters queryStringParameters = GetQueryStringParameters(context.MethodInfo.ReflectedType);
 
         if (resourceType != null)
         {
@@ -102,17 +105,17 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
                     {
                         case GetPrimaryName:
                         {
-                            ApplyGetPrimary(operation, resourceType, hasHeadVerb);
+                            ApplyGetPrimary(operation, resourceType, hasHeadVerb, queryStringParameters);
                             break;
                         }
                         case PostResourceName:
                         {
-                            ApplyPostResource(operation, resourceType);
+                            ApplyPostResource(operation, resourceType, queryStringParameters);
                             break;
                         }
                         case PatchResourceName:
                         {
-                            ApplyPatchResource(operation, resourceType);
+                            ApplyPatchResource(operation, resourceType, queryStringParameters);
                             break;
                         }
                         case DeleteResourceName:
@@ -132,12 +135,12 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
                     {
                         case GetSecondaryName:
                         {
-                            ApplyGetSecondary(operation, relationship, hasHeadVerb);
+                            ApplyGetSecondary(operation, relationship, hasHeadVerb, queryStringParameters);
                             break;
                         }
                         case GetRelationshipName:
                         {
-                            ApplyGetRelationship(operation, relationship, hasHeadVerb);
+                            ApplyGetRelationship(operation, relationship, hasHeadVerb, queryStringParameters);
                             break;
                         }
                         case PostRelationshipName:
@@ -167,7 +170,27 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         }
     }
 
-    private static void ApplyGetPrimary(OpenApiOperation operation, ResourceType resourceType, bool hasHeadVerb)
+    private static JsonApiQueryStringParameters GetQueryStringParameters(Type? controllerType)
+    {
+        var parameters = JsonApiQueryStringParameters.All;
+        var disableQueryStringAttribute = controllerType?.GetCustomAttribute<DisableQueryStringAttribute>(true);
+
+        if (disableQueryStringAttribute != null)
+        {
+            foreach (string name in disableQueryStringAttribute.ParameterNames)
+            {
+                if (Enum.TryParse(name, out JsonApiQueryStringParameters parameter))
+                {
+                    parameters &= ~parameter;
+                }
+            }
+        }
+
+        return parameters;
+    }
+
+    private static void ApplyGetPrimary(OpenApiOperation operation, ResourceType resourceType, bool hasHeadVerb,
+        JsonApiQueryStringParameters queryStringParameters)
     {
         if (operation.Parameters == null || operation.Parameters.Count == 0)
         {
@@ -193,13 +216,14 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
 
-            AddQueryStringParameters(operation, false);
+            AddQueryStringParameters(operation, queryStringParameters);
             AddRequestHeaderIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         }
         else if (operation.Parameters.Count == 1)
         {
             string singularName = resourceType.PublicName.Singularize();
+            JsonApiQueryStringParameters singularQueryStringParameters = ReduceQueryStringParametersForSingularEndpoint(queryStringParameters);
 
             if (hasHeadVerb)
             {
@@ -221,19 +245,20 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             }
 
             SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularName} to retrieve.");
-            AddQueryStringParameters(operation, false);
+            AddQueryStringParameters(operation, singularQueryStringParameters);
             AddRequestHeaderIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
         }
     }
 
-    private void ApplyPostResource(OpenApiOperation operation, ResourceType resourceType)
+    private void ApplyPostResource(OpenApiOperation operation, ResourceType resourceType, JsonApiQueryStringParameters queryStringParameters)
     {
         string singularName = resourceType.PublicName.Singularize();
+        JsonApiQueryStringParameters singularQueryStringParameters = ReduceQueryStringParametersForSingularEndpoint(queryStringParameters);
 
         SetOperationSummary(operation, $"Creates a new {singularName}.");
-        AddQueryStringParameters(operation, false);
+        AddQueryStringParameters(operation, singularQueryStringParameters);
         SetRequestBodyDescription(operation.RequestBody, $"The attributes and relationships of the {singularName} to create.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.Created,
@@ -258,13 +283,14 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
 
-    private void ApplyPatchResource(OpenApiOperation operation, ResourceType resourceType)
+    private void ApplyPatchResource(OpenApiOperation operation, ResourceType resourceType, JsonApiQueryStringParameters queryStringParameters)
     {
         string singularName = resourceType.PublicName.Singularize();
+        JsonApiQueryStringParameters singularQueryStringParameters = ReduceQueryStringParametersForSingularEndpoint(queryStringParameters);
 
         SetOperationSummary(operation, $"Updates an existing {singularName}.");
         SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularName} to update.");
-        AddQueryStringParameters(operation, false);
+        AddQueryStringParameters(operation, singularQueryStringParameters);
 
         SetRequestBodyDescription(operation.RequestBody,
             $"The attributes and relationships of the {singularName} to update. Omitted fields are left unchanged.");
@@ -291,10 +317,19 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
     }
 
-    private static void ApplyGetSecondary(OpenApiOperation operation, RelationshipAttribute relationship, bool hasHeadVerb)
+    private static void ApplyGetSecondary(OpenApiOperation operation, RelationshipAttribute relationship, bool hasHeadVerb,
+        JsonApiQueryStringParameters queryStringParameters)
     {
         string singularLeftName = relationship.LeftType.PublicName.Singularize();
         string rightName = relationship is HasOneAttribute ? relationship.RightType.PublicName.Singularize() : relationship.RightType.PublicName;
+
+        JsonApiQueryStringParameters effectiveQueryStringParameters =
+            relationship is HasOneAttribute ? ReduceQueryStringParametersForSingularEndpoint(queryStringParameters) : queryStringParameters;
+
+        if (relationship is HasManyAttribute { DisablePagination: true })
+        {
+            effectiveQueryStringParameters &= ~JsonApiQueryStringParameters.Page;
+        }
 
         if (hasHeadVerb)
         {
@@ -325,17 +360,27 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         }
 
         SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
-        AddQueryStringParameters(operation, false);
+        AddQueryStringParameters(operation, effectiveQueryStringParameters);
         AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
 
-    private static void ApplyGetRelationship(OpenApiOperation operation, RelationshipAttribute relationship, bool hasHeadVerb)
+    private static void ApplyGetRelationship(OpenApiOperation operation, RelationshipAttribute relationship, bool hasHeadVerb,
+        JsonApiQueryStringParameters queryStringParameters)
     {
         string singularLeftName = relationship.LeftType.PublicName.Singularize();
         string singularRightName = relationship.RightType.PublicName.Singularize();
         string ident = relationship is HasOneAttribute ? "identity" : "identities";
+
+        JsonApiQueryStringParameters effectiveQueryStringParameters = ~JsonApiQueryStringParameters.Include & (relationship is HasOneAttribute
+            ? ReduceQueryStringParametersForSingularEndpoint(queryStringParameters)
+            : queryStringParameters);
+
+        if (relationship is HasManyAttribute { DisablePagination: true })
+        {
+            effectiveQueryStringParameters &= ~JsonApiQueryStringParameters.Page;
+        }
 
         if (hasHeadVerb)
         {
@@ -367,7 +412,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         }
 
         SetParameterDescription(operation.Parameters, 0, $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
-        AddQueryStringParameters(operation, true);
+        AddQueryStringParameters(operation, effectiveQueryStringParameters);
         AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
@@ -449,6 +494,11 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
         string relationshipName = apiDescription.RelativePath.Split('/').Last();
         return resourceType.GetRelationshipByPublicName(relationshipName);
+    }
+
+    private static JsonApiQueryStringParameters ReduceQueryStringParametersForSingularEndpoint(JsonApiQueryStringParameters parameters)
+    {
+        return parameters & ~(JsonApiQueryStringParameters.Filter | JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page);
     }
 
     private static void SetOperationSummary(OpenApiOperation operation, string description)
@@ -553,7 +603,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         return (OpenApiResponse)response;
     }
 
-    private static void AddQueryStringParameters(OpenApiOperation operation, bool isRelationshipEndpoint)
+    private static void AddQueryStringParameters(OpenApiOperation operation, JsonApiQueryStringParameters parameters)
     {
         // The JSON:API query string parameters (include, filter, sort, page[size], page[number], fields[]) are too dynamic to represent in OpenAPI.
         // - The parameter names for fields[] require exploding to all resource types, because outcome of possible resource types depends on
@@ -565,24 +615,59 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         // - This makes NSwag produce a C# client with method signature: GetAsync(IDictionary<string, string?>? query)
         //     when combined with <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes> in the project file.
 
-        operation.Parameters ??= new List<IOpenApiParameter>();
+        string? description = GetDescriptionForQueryStringParameters(parameters);
 
-        operation.Parameters.Add(new OpenApiParameter
+        if (description != null)
         {
-            In = ParameterLocation.Query,
-            Name = "query",
-            Schema = new OpenApiSchema
+            operation.Parameters ??= new List<IOpenApiParameter>();
+
+            operation.Parameters.Add(new OpenApiParameter
             {
-                Type = JsonSchemaType.Object,
-                AdditionalProperties = new OpenApiSchema
+                In = ParameterLocation.Query,
+                Name = "query",
+                Schema = new OpenApiSchema
                 {
-                    Type = JsonSchemaType.String | JsonSchemaType.Null
+                    Type = JsonSchemaType.Object,
+                    AdditionalProperties = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String | JsonSchemaType.Null
+                    },
+                    // Prevent SwaggerUI from producing sample, which fails when used because unknown query string parameters are blocked by default.
+                    Example = string.Empty
                 },
-                // Prevent SwaggerUI from producing sample, which fails when used because unknown query string parameters are blocked by default.
-                Example = string.Empty
-            },
-            Description = isRelationshipEndpoint ? RelationshipQueryStringParameters : ResourceQueryStringParameters
-        });
+                Description = description
+            });
+        }
+    }
+
+    private static string? GetDescriptionForQueryStringParameters(JsonApiQueryStringParameters parameters)
+    {
+        if (parameters != JsonApiQueryStringParameters.None)
+        {
+            var builder = new StringBuilder("For syntax, see the documentation for the ");
+            int count = 0;
+
+            foreach (JsonApiQueryStringParameters parameter in QueryStringParameterLinks.Keys)
+            {
+                if (parameters.HasFlag(parameter))
+                {
+                    if (count > 0)
+                    {
+                        builder.Append('/');
+                    }
+
+                    string link = QueryStringParameterLinks[parameter];
+                    builder.Append(link);
+
+                    count++;
+                }
+            }
+
+            builder.Append(count == 1 ? " query string parameter." : " query string parameters.");
+            return builder.ToString();
+        }
+
+        return null;
     }
 
     private static void AddRequestHeaderIfNoneMatch(OpenApiOperation operation)
