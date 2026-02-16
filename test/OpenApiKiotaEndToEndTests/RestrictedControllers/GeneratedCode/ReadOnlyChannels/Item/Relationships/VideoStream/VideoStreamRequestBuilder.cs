@@ -108,7 +108,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class VideoStreamRequestBuilderGetQueryParameters 
         {
-            /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
+            /// <summary>For syntax, see the documentation for the [`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameter.</summary>
             [QueryParameter("query")]
             public string? Query { get; set; }
         }
@@ -119,7 +119,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class VideoStreamRequestBuilderHeadQueryParameters 
         {
-            /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
+            /// <summary>For syntax, see the documentation for the [`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameter.</summary>
             [QueryParameter("query")]
             public string? Query { get; set; }
         }

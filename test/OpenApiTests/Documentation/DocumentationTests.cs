@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Text.Json;
 using FluentAssertions;
+using JsonApiDotNetCore.QueryStrings;
 using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
@@ -10,11 +12,19 @@ namespace OpenApiTests.Documentation;
 
 public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext>>
 {
-    private const string ResourceTextQueryString =
+    private const string SingleResourceQueryStringText =
+        "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
+
+    private const string ResourceCollectionQueryStringText =
         "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
 
-    private const string RelationshipTextQueryString =
-        "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
+    private const string ResourceCollectionDisablePaginationQueryStringText =
+        "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
+
+    private const string ToOneRelationshipQueryStringText = "For syntax, see the documentation for the [`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameter.";
+
+    private const string ToManyRelationshipDisablePaginationQueryStringText =
+        "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
 
     private readonly OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> _testContext;
 
@@ -74,7 +84,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                 {
                     parametersElement.EnumerateArray().Should().HaveCount(2);
                     parametersElement.Should().HaveProperty("[0].in", "query");
-                    parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[0].description", ResourceCollectionQueryStringText);
                     parametersElement.Should().HaveProperty("[1].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[1].in", "header");
                     parametersElement.Should().HaveProperty("[1].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -100,7 +110,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                 {
                     parametersElement.EnumerateArray().Should().HaveCount(2);
                     parametersElement.Should().HaveProperty("[0].in", "query");
-                    parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[0].description", ResourceCollectionQueryStringText);
                     parametersElement.Should().HaveProperty("[1].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[1].in", "header");
                     parametersElement.Should().HaveProperty("[1].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -126,7 +136,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                 {
                     parametersElement.EnumerateArray().Should().HaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "query");
-                    parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[0].description", SingleResourceQueryStringText);
                 });
 
                 postElement.Should().HaveProperty("requestBody.description", "The attributes and relationships of the skyscraper to create.");
@@ -157,7 +167,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", SingleResourceQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -186,7 +196,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", SingleResourceQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -215,7 +225,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to update.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", SingleResourceQueryStringText);
                 });
 
                 patchElement.Should().HaveProperty("requestBody.description", "The attributes and relationships of the skyscraper to update. Omitted fields are left unchanged.");
@@ -264,7 +274,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", SingleResourceQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -293,7 +303,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", SingleResourceQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -325,7 +335,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator identity to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ToOneRelationshipQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -354,7 +364,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator identity to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ToOneRelationshipQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -410,7 +420,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related spaces to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceCollectionDisablePaginationQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -439,7 +449,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related spaces to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceCollectionDisablePaginationQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -471,7 +481,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related space identities to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ToManyRelationshipDisablePaginationQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -500,7 +510,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related space identities to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ToManyRelationshipDisablePaginationQueryStringText);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
                     parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -612,6 +622,60 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
+        });
+    }
+
+    [Theory]
+    [InlineData("/elevators.get", JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Include | JsonApiQueryStringParameters.Page)]
+    [InlineData("/elevators.head", JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Include | JsonApiQueryStringParameters.Page)]
+    [InlineData("/elevators.post", JsonApiQueryStringParameters.Include)]
+    [InlineData("/elevators/{id}.get", JsonApiQueryStringParameters.Include)]
+    [InlineData("/elevators/{id}.head", JsonApiQueryStringParameters.Include)]
+    [InlineData("/elevators/{id}.patch", JsonApiQueryStringParameters.Include)]
+    [InlineData("/elevators/{id}/existsIn.get", JsonApiQueryStringParameters.Include)]
+    [InlineData("/elevators/{id}/existsIn.head", JsonApiQueryStringParameters.Include)]
+    [InlineData("/elevators/{id}/relationships/existsIn.get", JsonApiQueryStringParameters.None)]
+    [InlineData("/elevators/{id}/relationships/existsIn.head", JsonApiQueryStringParameters.None)]
+    public async Task Applies_restrictions_from_DisableQueryString_annotation_on_controller(string endpointPath, JsonApiQueryStringParameters queryStringParameters)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath($"paths.{endpointPath}.parameters").With(parametersElement =>
+        {
+            if (queryStringParameters == JsonApiQueryStringParameters.None)
+            {
+                parametersElement.EnumerateArray().Should().NotContain(parameterElement => parameterElement.GetProperty("in").ValueEquals("query"));
+            }
+            else
+            {
+                parametersElement.EnumerateArray().Should().ContainSingle(parameterElement => parameterElement.GetProperty("in").ValueEquals("query")).Subject.With(parameterElement =>
+                {
+                    parameterElement.Should().ContainPath("description").With(descriptionElement =>
+                    {
+                        foreach (JsonApiQueryStringParameters parameter in Enum.GetValues<JsonApiQueryStringParameters>())
+                        {
+                            if (parameter is JsonApiQueryStringParameters.None or JsonApiQueryStringParameters.All)
+                            {
+                                continue;
+                            }
+
+                            string? description = descriptionElement.GetString();
+                            string linkTitle = parameter.ToString().ToLower(CultureInfo.InvariantCulture);
+
+                            if (queryStringParameters.HasFlag(parameter))
+                            {
+                                description.Should().Contain($"[`{linkTitle}`]");
+                            }
+                            else
+                            {
+                                description.Should().NotContain($"[`{linkTitle}`]");
+                            }
+                        }
+                    });
+                });
+            }
         });
     }
 

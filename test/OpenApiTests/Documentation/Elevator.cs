@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -9,7 +10,8 @@ namespace OpenApiTests.Documentation;
 /// An elevator within a skyscraper.
 /// </summary>
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.Documentation", ClientIdGeneration = ClientIdGenerationMode.Forbidden)]
+[Resource(ControllerNamespace = "OpenApiTests.Documentation", ClientIdGeneration = ClientIdGenerationMode.Forbidden,
+    GenerateControllerEndpoints = JsonApiEndpoints.None)]
 public sealed class Elevator : Identifiable<long>
 {
     /// <summary>

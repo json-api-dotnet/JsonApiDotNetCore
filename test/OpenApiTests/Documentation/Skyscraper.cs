@@ -28,6 +28,6 @@ public sealed class Skyscraper : Identifiable<long>
     /// <summary>
     /// The spaces within this building.
     /// </summary>
-    [HasMany]
+    [HasMany(DisablePagination = true)]
     public ISet<Space> Spaces { get; set; } = new HashSet<Space>();
 }
