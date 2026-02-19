@@ -14,7 +14,7 @@
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
     <CodeAnalysisVersion>5.0.*</CodeAnalysisVersion>
-    <CoverletVersion>6.0.*</CoverletVersion>
+    <CoverletVersion>8.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>3.0.*</GitHubActionsTestLoggerVersion>
