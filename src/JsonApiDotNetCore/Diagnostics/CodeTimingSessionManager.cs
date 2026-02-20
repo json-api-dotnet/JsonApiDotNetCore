@@ -89,10 +89,13 @@ public static class CodeTimingSessionManager
 
     private static void SessionOnDisposed(object? sender, EventArgs args)
     {
+#pragma warning disable IDE0031 // Use null propagation
+        // Justification: Workaround for bug https://github.com/dotnet/roslyn/issues/82482.
         if (_session != null)
         {
             _session.Disposed -= SessionOnDisposed;
             _session = null;
         }
+#pragma warning restore IDE0031 // Use null propagation
     }
 }
