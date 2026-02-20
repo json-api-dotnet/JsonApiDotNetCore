@@ -16,6 +16,8 @@ public sealed class CapturingLoggerProvider : ILoggerProvider
     private static readonly Func<string, LogLevel, bool> DefaultFilter = (_, _) => true;
     private readonly Func<string, LogLevel, bool> _filter;
 
+    // ReSharper disable once ChangeFieldTypeToSystemThreadingLock
+    // Justification: Workaround for bug https://youtrack.jetbrains.com/issue/RSRP-503024/Regression-Use-System.Threading.Lock-on-.NET-11.
     private readonly LockPrimitive _lockObject = new();
     private readonly List<LogMessage> _messages = [];
 
