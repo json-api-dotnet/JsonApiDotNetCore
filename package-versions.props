@@ -28,10 +28,23 @@
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <ScalarAspNetCoreVersion>2.12.*</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>10.*-*</SwashbuckleVersion>
-    <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
     <TestSdkVersion>18.3.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>3.1.*</XunitVisualStudioVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>11.0.*-*</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>11.0.*-*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>11.0.*-*</EntityFrameworkCoreVersion>
+    <PomeloEntityFrameworkCoreVersion>
+      <!-- Temporary workaround: Unstable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet. -->
+      9.0.*
+    </PomeloEntityFrameworkCoreVersion>
+    <SystemTextJsonVersion>11.0.*-*</SystemTextJsonVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
@@ -45,6 +58,7 @@
       <!-- Temporary workaround: Unstable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet. -->
       9.0.*
     </PomeloEntityFrameworkCoreVersion>
+    <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
@@ -55,6 +69,7 @@
     <AspNetCoreVersion>9.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>9.0.*</EntityFrameworkCoreVersion>
     <PomeloEntityFrameworkCoreVersion>$(EntityFrameworkCoreVersion)</PomeloEntityFrameworkCoreVersion>
+    <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -65,5 +80,6 @@
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
     <PomeloEntityFrameworkCoreVersion>$(EntityFrameworkCoreVersion)</PomeloEntityFrameworkCoreVersion>
+    <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
   </PropertyGroup>
 </Project>
