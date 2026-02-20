@@ -15,6 +15,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- .NET 11 Preview -->
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <NoWarn>
       <!--
         Temporary workaround: Stable EF Core 10 package for Pomelo.EntityFrameworkCore.MySql is not available yet.
