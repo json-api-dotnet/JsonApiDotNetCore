@@ -157,7 +157,7 @@ internal sealed class ResultSetMapper<TResource, TId>
 
         public IEnumerable<IncludeElementExpression> BreadthFirstEnumerate()
         {
-            foreach (IncludeElementExpression next in _include.Elements.OrderBy(element => element.Relationship.PublicName)
+            foreach (IncludeElementExpression next in _include.Elements.OrderBy(element => element.Relationship.PublicName, StringComparer.Ordinal)
                 .SelectMany(RecursiveEnumerateElement))
             {
                 yield return next;
@@ -168,7 +168,8 @@ internal sealed class ResultSetMapper<TResource, TId>
         {
             yield return element;
 
-            foreach (IncludeElementExpression next in element.Children.OrderBy(child => child.Relationship.PublicName).SelectMany(RecursiveEnumerateElement))
+            foreach (IncludeElementExpression next in element.Children.OrderBy(child => child.Relationship.PublicName, StringComparer.Ordinal)
+                .SelectMany(RecursiveEnumerateElement))
             {
                 yield return next;
             }
