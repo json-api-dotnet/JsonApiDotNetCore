@@ -13,14 +13,14 @@ public static class DbContextExtensions
     public static async Task ClearTableAsync<TEntity>(this DbContext dbContext)
         where TEntity : class
     {
-        await dbContext.ClearTablesAsync(typeof(TEntity));
+        await ClearTablesAsync(dbContext, typeof(TEntity));
     }
 
     public static async Task ClearTablesAsync<TEntity1, TEntity2>(this DbContext dbContext)
         where TEntity1 : class
         where TEntity2 : class
     {
-        await dbContext.ClearTablesAsync(typeof(TEntity1), typeof(TEntity2));
+        await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2));
     }
 
     private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] modelTypes)
@@ -40,7 +40,7 @@ public static class DbContextExtensions
             {
                 // There is no table for the specified abstract base type when using TablePerConcreteType inheritance.
                 IEnumerable<IEntityType> derivedTypes = entityType.GetConcreteDerivedTypesInclusive();
-                await dbContext.ClearTablesAsync(derivedTypes.Select(derivedType => derivedType.ClrType).ToArray());
+                await ClearTablesAsync(dbContext, derivedTypes.Select(derivedType => derivedType.ClrType).ToArray());
             }
             else
             {

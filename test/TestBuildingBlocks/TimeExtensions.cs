@@ -12,7 +12,7 @@ public static class TimeExtensions
         // Because PostgreSQL does not store the UTC offset in the database, it cannot round-trip
         // values with a non-zero UTC offset, and therefore always rejects such values.
 
-        DateTime dateTime = value.DateTime.TruncateToWholeMilliseconds();
+        DateTime dateTime = TruncateToWholeMilliseconds(value.DateTime);
         return new DateTimeOffset(dateTime, TimeSpan.Zero);
     }
 

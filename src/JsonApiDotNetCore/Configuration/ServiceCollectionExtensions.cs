@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
         Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null)
         where TDbContext : DbContext
     {
-        return services.AddJsonApi(options, discovery, resources, mvcBuilder, [typeof(TDbContext)]);
+        return AddJsonApi(services, options, discovery, resources, mvcBuilder, [typeof(TDbContext)]);
     }
 
     /// <summary>
