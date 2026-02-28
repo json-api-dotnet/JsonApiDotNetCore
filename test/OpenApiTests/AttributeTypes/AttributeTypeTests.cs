@@ -8,11 +8,14 @@ namespace OpenApiTests.AttributeTypes;
 public sealed class AttributeTypeTests : IClassFixture<OpenApiTestContext<AttributeTypesStartup, AttributeTypesDbContext>>
 {
     public static readonly TheoryData<string> SchemaNames =
-    [
-        "attributesInCreateTypeContainerRequest",
-        "attributesInUpdateTypeContainerRequest",
-        "attributesInTypeContainerResponse"
-    ];
+#pragma warning disable CA1825 // Avoid zero-length array allocations
+        // Justification: Workaround for bug https://github.com/dotnet/roslyn/issues/82484.
+        [
+            "attributesInCreateTypeContainerRequest",
+            "attributesInUpdateTypeContainerRequest",
+            "attributesInTypeContainerResponse"
+        ];
+#pragma warning restore CA1825 // Avoid zero-length array allocations
 
     private readonly OpenApiTestContext<AttributeTypesStartup, AttributeTypesDbContext> _testContext;
 

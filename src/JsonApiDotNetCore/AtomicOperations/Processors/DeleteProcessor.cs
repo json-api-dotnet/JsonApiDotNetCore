@@ -24,7 +24,10 @@ public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
         ArgumentNullException.ThrowIfNull(operation);
 
         var id = (TId)operation.Resource.GetTypedId();
+#pragma warning disable IDE0370 // Remove unnecessary suppression
+        // Justification: Workaround for bug https://github.com/dotnet/roslyn/issues/82483.
         await _service.DeleteAsync(id!, cancellationToken);
+#pragma warning restore IDE0370 // Remove unnecessary suppression
 
         return null;
     }

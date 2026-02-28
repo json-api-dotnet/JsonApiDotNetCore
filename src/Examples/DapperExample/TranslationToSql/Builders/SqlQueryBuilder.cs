@@ -452,7 +452,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
                 builder.AppendLine();
             }
 
-            builder.Append(new string(' ', _indentDepth * 4));
+            builder.Append(' ', _indentDepth * 4);
             builder.Append(value);
         }
     }

@@ -12,7 +12,7 @@ internal sealed class IndentingStringWriter(StringBuilder builder) : IDisposable
     {
         if (_indentDepth > 0)
         {
-            _builder.Append(new string(' ', _indentDepth * 2));
+            _builder.Append(' ', _indentDepth * 2);
         }
 
         _builder.AppendLine(line);
