@@ -29,7 +29,7 @@
     <ScalarAspNetCoreVersion>2.12.*</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>10.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>18.0.*</TestSdkVersion>
+    <TestSdkVersion>18.3.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>3.1.*</XunitVisualStudioVersion>
   </PropertyGroup>
