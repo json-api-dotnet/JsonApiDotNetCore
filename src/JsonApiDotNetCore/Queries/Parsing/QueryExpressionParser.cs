@@ -53,7 +53,20 @@ public abstract class QueryExpressionParser
         Source = source;
 
         var tokenizer = new QueryTokenizer(source);
-        TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
+        Token[] tokens = tokenizer.EnumerateTokens().ToArray();
+        TokenStack = TokensToStack(tokens);
+    }
+
+    private static Stack<Token> TokensToStack(Token[] tokens)
+    {
+        var stack = new Stack<Token>(tokens.Length);
+
+        for (int index = tokens.Length - 1; index >= 0; index--)
+        {
+            stack.Push(tokens[index]);
+        }
+
+        return stack;
     }
 
     /// <summary>
@@ -143,7 +156,11 @@ public abstract class QueryExpressionParser
     {
         if (!TokenStack.TryPop(out Token? token) || token.Kind != kind)
         {
-            char ch = QueryTokenizer.SingleCharacterToTokenKinds.Single(pair => pair.Value == kind).Key;
+            if (!QueryTokenizer.TokenKindToSingleCharacterLookup.TryGetValue(kind, out char ch))
+            {
+                throw new InvalidOperationException($"Token kind '{kind}' is not a single-character token.");
+            }
+
             int position = token?.Position ?? GetNextTokenPositionOrEnd();
             throw new QueryParseException($"{ch} expected.", position);
         }

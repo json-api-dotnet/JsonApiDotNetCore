@@ -118,7 +118,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
     private static bool IsSuccessStatusCode(HttpStatusCode statusCode)
     {
-        return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
+        return (int)statusCode is >= 200 and <= 299;
     }
 
     private string RenderModel(object? model)
