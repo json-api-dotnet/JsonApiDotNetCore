@@ -156,7 +156,11 @@ public abstract class QueryExpressionParser
     {
         if (!TokenStack.TryPop(out Token? token) || token.Kind != kind)
         {
-            char ch = QueryTokenizer.SingleCharacterToTokenKinds.Single(pair => pair.Value == kind).Key;
+            if (!QueryTokenizer.TokenKindToSingleCharacterLookup.TryGetValue(kind, out char ch))
+            {
+                throw new InvalidOperationException($"Token kind '{kind}' is not a single-character token.");
+            }
+
             int position = token?.Position ?? GetNextTokenPositionOrEnd();
             throw new QueryParseException($"{ch} expected.", position);
         }
