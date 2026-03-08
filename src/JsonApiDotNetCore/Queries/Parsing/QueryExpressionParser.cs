@@ -53,7 +53,20 @@ public abstract class QueryExpressionParser
         Source = source;
 
         var tokenizer = new QueryTokenizer(source);
-        TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
+        Token[] tokens = tokenizer.EnumerateTokens().ToArray();
+        TokenStack = TokensToStack(tokens);
+    }
+
+    private static Stack<Token> TokensToStack(Token[] tokens)
+    {
+        var stack = new Stack<Token>(tokens.Length);
+
+        for (int index = tokens.Length - 1; index >= 0; index--)
+        {
+            stack.Push(tokens[index]);
+        }
+
+        return stack;
     }
 
     /// <summary>
