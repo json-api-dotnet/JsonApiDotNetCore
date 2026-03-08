@@ -303,7 +303,7 @@ We are grateful to the following sponsors, who provide the team with a no-cost l
   <a href="https://www.araxis.com">
     <img align="middle" src="docs/home/assets/img/araxis-logo.png" alt="Araxis Logo" style="width:150px">
   </a>
-<p/>
+</p>
 
 Do you like this project? Consider to [sponsor](https://github.com/sponsors/json-api-dotnet), or just reward us by
 giving our repository a star.
