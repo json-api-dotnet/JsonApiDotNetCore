@@ -30,7 +30,10 @@ internal sealed partial class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<
 {
     private readonly ColumnSelectorUsageCollector _usageCollector;
     private readonly ILogger<UnusedSelectorsRewriter> _logger;
+#pragma warning disable IDE0370 // Suppression is unnecessary
+    // Justification: Workaround for bug at https://github.com/dotnet/roslyn/issues/81843.
     private SelectNode _rootSelect = null!;
+#pragma warning restore IDE0370 // Suppression is unnecessary
     private bool _hasChanged;
 
     public UnusedSelectorsRewriter(ILoggerFactory loggerFactory)
