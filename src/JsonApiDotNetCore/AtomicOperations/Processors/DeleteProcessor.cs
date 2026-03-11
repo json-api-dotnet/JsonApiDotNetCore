@@ -24,7 +24,10 @@ public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
         ArgumentNullException.ThrowIfNull(operation);
 
         var id = (TId)operation.Resource.GetTypedId();
-        await _service.DeleteAsync(id!, cancellationToken);
+#pragma warning disable CS8607 // A possible null value may not be used for a type marked with [NotNull] or [DisallowNull]
+        // Justification: Temporary workaround for R# bug at https://youtrack.jetbrains.com/issue/RSRP-503026.
+        await _service.DeleteAsync(id, cancellationToken);
+#pragma warning restore CS8607 // A possible null value may not be used for a type marked with [NotNull] or [DisallowNull]
 
         return null;
     }

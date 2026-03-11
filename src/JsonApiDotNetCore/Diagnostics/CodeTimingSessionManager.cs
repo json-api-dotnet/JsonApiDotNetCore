@@ -89,10 +89,7 @@ public static class CodeTimingSessionManager
 
     private static void SessionOnDisposed(object? sender, EventArgs args)
     {
-        if (_session != null)
-        {
-            _session.Disposed -= SessionOnDisposed;
-            _session = null;
-        }
+        _session?.Disposed -= SessionOnDisposed;
+        _session = null;
     }
 }
