@@ -6,7 +6,7 @@
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.4</NewtonsoftJsonFrozenVersion>
     <SwashbuckleFrozenVersion_NET8_9>10.1.5</SwashbuckleFrozenVersion_NET8_9>
-    <SwashbuckleFrozenVersion_NET10_11>10.*-pr.3786.*</SwashbuckleFrozenVersion_NET10_11>
+    <SwashbuckleFrozenVersion_NET10_11>*-pr.3786.*</SwashbuckleFrozenVersion_NET10_11>
     <SystemTextRegularExpressionsFrozenVersion>4.3.1</SystemTextRegularExpressionsFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
