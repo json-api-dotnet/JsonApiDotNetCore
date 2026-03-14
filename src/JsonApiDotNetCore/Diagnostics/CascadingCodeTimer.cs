@@ -263,7 +263,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
 
         private static void WriteIndent(StringBuilder builder, int indent)
         {
-            builder.Append(new string(' ', indent * 2));
+            builder.Append(' ', indent * 2);
         }
 
         private void WritePadding(StringBuilder builder, int indent, int paddingLength)
