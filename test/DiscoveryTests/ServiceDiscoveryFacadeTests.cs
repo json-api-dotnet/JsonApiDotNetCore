@@ -29,7 +29,7 @@ public sealed class ServiceDiscoveryFacadeTests
         Action<ServiceDiscoveryFacade> addAction = facade => facade.AddAssembly(typeof(Person).Assembly);
 
         // Act
-        _services.AddJsonApi(discovery: facade => addAction(facade));
+        _services.AddJsonApi(discovery: addAction);
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
@@ -49,7 +49,7 @@ public sealed class ServiceDiscoveryFacadeTests
         Action<ServiceDiscoveryFacade> addAction = facade => facade.AddCurrentAssembly();
 
         // Act
-        _services.AddJsonApi(discovery: facade => addAction(facade));
+        _services.AddJsonApi(discovery: addAction);
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
@@ -66,7 +66,7 @@ public sealed class ServiceDiscoveryFacadeTests
         Action<ServiceDiscoveryFacade> addAction = facade => facade.AddCurrentAssembly();
 
         // Act
-        _services.AddJsonApi(discovery: facade => addAction(facade));
+        _services.AddJsonApi(discovery: addAction);
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
@@ -82,7 +82,7 @@ public sealed class ServiceDiscoveryFacadeTests
         Action<ServiceDiscoveryFacade> addAction = facade => facade.AddCurrentAssembly();
 
         // Act
-        _services.AddJsonApi(discovery: facade => addAction(facade));
+        _services.AddJsonApi(discovery: addAction);
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
@@ -98,7 +98,7 @@ public sealed class ServiceDiscoveryFacadeTests
         Action<ServiceDiscoveryFacade> addAction = facade => facade.AddCurrentAssembly();
 
         // Act
-        _services.AddJsonApi(discovery: facade => addAction(facade));
+        _services.AddJsonApi(discovery: addAction);
 
         // Assert
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
