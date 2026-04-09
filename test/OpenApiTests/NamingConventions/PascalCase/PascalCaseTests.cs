@@ -7,8 +7,10 @@ namespace OpenApiTests.NamingConventions.PascalCase;
 
 public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
-    private const string EscapedJsonApiMediaType = "['application/vnd.api+json; ext=openapi']";
-    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic; ext=openapi']";
+    private const string EscapedJsonApiMediaType = """['application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"']""";
+
+    private const string EscapedOperationsMediaType =
+        """['application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"']""";
 
     private readonly OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 

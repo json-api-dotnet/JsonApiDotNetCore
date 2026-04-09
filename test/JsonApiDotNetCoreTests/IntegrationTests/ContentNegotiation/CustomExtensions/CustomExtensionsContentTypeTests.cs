@@ -46,7 +46,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
             ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime, TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")))));
 
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.IncludeExtensions(ServerTimeMediaTypeExtension.ServerTime, ServerTimeMediaTypeExtension.RelaxedServerTime);
+        options.IncludeExtensions(ServerTimeMediaTypeExtension.ServerTime);
     }
 
     [Fact]
@@ -119,42 +119,6 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
     }
 
     [Fact]
-    public async Task Permits_JsonApi_ContentType_header_with_relaxed_ServerTime_extension()
-    {
-        // Arrange
-        var requestBody = new
-        {
-            data = new
-            {
-                type = "policies",
-                attributes = new
-                {
-                    name = "some"
-                }
-            }
-        };
-
-        const string route = "/policies";
-        string contentType = ServerTimeMediaTypes.RelaxedServerTime.ToString();
-
-        Action<HttpRequestHeaders> setRequestHeaders = headers =>
-            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(ServerTimeMediaTypes.RelaxedServerTime.ToString()));
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) =
-            await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
-
-        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
-        httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.RelaxedServerTime.ToString());
-
-        responseDocument.Meta.Should().ContainKey("utcServerTime").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should()
-            .Be("2024-12-31T21:53:40.0000000Z");
-    }
-
-    [Fact]
     public async Task Permits_JsonApi_ContentType_header_with_AtomicOperations_and_ServerTime_extension_at_operations_endpoint()
     {
         // Arrange
@@ -198,53 +162,6 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
     }
 
     [Fact]
-    public async Task Permits_JsonApi_ContentType_header_with_relaxed_AtomicOperations_and_relaxed_ServerTime_extension_at_operations_endpoint()
-    {
-        // Arrange
-        var requestBody = new
-        {
-            meta = new
-            {
-                useLocalTime = true
-            },
-
-            atomic__operations = new[]
-            {
-                new
-                {
-                    op = "add",
-                    data = new
-                    {
-                        type = "policies",
-                        attributes = new
-                        {
-                            name = "some"
-                        }
-                    }
-                }
-            }
-        };
-
-        const string route = "/operations";
-        string contentType = ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime.ToString();
-
-        Action<HttpRequestHeaders> setRequestHeaders = headers =>
-            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime.ToString()));
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) =
-            await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-
-        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
-        httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime.ToString());
-
-        responseDocument.Meta.Should().ContainKey("localServerTime");
-    }
-
-    [Fact]
     public async Task Denies_JsonApi_ContentType_header_with_AtomicOperations_extension_and_ServerTime_at_resource_endpoint()
     {
         // Arrange
@@ -274,8 +191,8 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
 
         responseDocument.Errors.Should().HaveCount(1);
 
-        string detail = $"Use '{JsonApiMediaType.Default}' or '{ServerTimeMediaTypes.ServerTime}' or " +
-            $"'{ServerTimeMediaTypes.RelaxedServerTime}' instead of '{contentType}' for the Content-Type header value.";
+        string detail =
+            $"Use '{JsonApiMediaType.Default}' or '{ServerTimeMediaTypes.ServerTime}' instead of '{contentType}' for the Content-Type header value.";
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -286,7 +203,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
     }
 
     [Fact]
-    public async Task Denies_JsonApi_ContentType_header_with_relaxed_ServerTime_at_operations_endpoint()
+    public async Task Denies_JsonApi_ContentType_header_with_ServerTime_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -309,7 +226,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         };
 
         const string route = "/operations";
-        string contentType = ServerTimeMediaTypes.RelaxedServerTime.ToString();
+        string contentType = ServerTimeMediaTypes.ServerTime.ToString();
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -322,9 +239,8 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
 
         responseDocument.Errors.Should().HaveCount(1);
 
-        string detail = $"Use '{JsonApiMediaType.AtomicOperations}' or '{ServerTimeMediaTypes.AtomicOperationsWithServerTime}' or " +
-            $"'{JsonApiMediaType.RelaxedAtomicOperations}' or '{ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime}' " +
-            $"instead of '{contentType}' for the Content-Type header value.";
+        string detail =
+            $"Use '{JsonApiMediaType.AtomicOperations}' or '{ServerTimeMediaTypes.AtomicOperationsWithServerTime}' instead of '{contentType}' for the Content-Type header value.";
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);

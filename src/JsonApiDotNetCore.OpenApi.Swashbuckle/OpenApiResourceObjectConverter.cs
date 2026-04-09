@@ -20,8 +20,10 @@ internal sealed class OpenApiResourceObjectConverter : ResourceObjectConverter
                 return false;
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             return _requestAccessor.Current.Extensions.Contains(OpenApiMediaTypeExtension.OpenApi) ||
                 _requestAccessor.Current.Extensions.Contains(OpenApiMediaTypeExtension.RelaxedOpenApi);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 

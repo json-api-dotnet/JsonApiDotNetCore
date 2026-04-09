@@ -186,10 +186,12 @@ public sealed partial class JsonApiMiddleware
 
     private static void AssertNoAtomicOperationsExtension(IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         if (extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations) || extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
         {
             throw new InvalidOperationException("Incorrect content negotiation implementation detected: Unexpected atomic:operations extension found.");
         }
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     private static string? GetPrimaryRequestId(RouteValueDictionary routeValues)
@@ -225,10 +227,12 @@ public sealed partial class JsonApiMiddleware
 
     private static void AssertHasAtomicOperationsExtension(IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         if (!extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations) && !extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
         {
             throw new InvalidOperationException("Incorrect content negotiation implementation detected: Missing atomic:operations extension.");
         }
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, JsonApiException exception)

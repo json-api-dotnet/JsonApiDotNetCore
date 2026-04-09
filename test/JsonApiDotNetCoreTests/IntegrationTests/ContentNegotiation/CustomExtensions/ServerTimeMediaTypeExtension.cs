@@ -7,5 +7,4 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation.CustomExten
 internal static class ServerTimeMediaTypeExtension
 {
     public static readonly JsonApiMediaTypeExtension ServerTime = new("https://www.jsonapi.net/ext/server-time");
-    public static readonly JsonApiMediaTypeExtension RelaxedServerTime = new("server-time");
 }

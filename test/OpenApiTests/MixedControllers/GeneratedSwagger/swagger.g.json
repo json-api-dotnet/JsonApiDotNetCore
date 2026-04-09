@@ -21,7 +21,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCoffeeSummaryResponseDocument"
                 }
@@ -31,7 +31,7 @@
           "404": {
             "description": "Not Found",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -67,7 +67,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/cupOfCoffeeCollectionResponseDocument"
                 }
@@ -112,7 +112,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCupOfCoffeeResponseDocument"
                 }
@@ -122,7 +122,7 @@
           "404": {
             "description": "Not Found",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -181,7 +181,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -200,7 +200,7 @@
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -234,7 +234,7 @@
           "404": {
             "description": "Not Found",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -287,7 +287,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/cupOfCoffeeCollectionResponseDocument"
                 }
@@ -309,7 +309,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -414,7 +414,7 @@
           "404": {
             "description": "The cupOfCoffee does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }

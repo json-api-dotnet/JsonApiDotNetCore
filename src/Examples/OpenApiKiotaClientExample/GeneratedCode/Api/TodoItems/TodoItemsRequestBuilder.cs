@@ -115,7 +115,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems
         {
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
         }
 
@@ -142,8 +142,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
-            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=openapi", body);
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
+            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"", body);
             return requestInfo;
         }
 

@@ -28,6 +28,7 @@ internal sealed class OpenApiContentNegotiator(IJsonApiOptions options, IHttpCon
         // JSON:API compliant entries come after relaxed entries, which makes them less likely to be selected.
         // This improves compatibility with client generators, which often generate broken code due to the double quotes.
 
+#pragma warning disable CS0618 // Type or member is obsolete
         if (IsOperationsEndpoint())
         {
             if (_options.Extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
@@ -65,6 +66,7 @@ internal sealed class OpenApiContentNegotiator(IJsonApiOptions options, IHttpCon
 
             mediaTypes.Add(JsonApiMediaType.Default);
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         return mediaTypes.AsReadOnly();
     }

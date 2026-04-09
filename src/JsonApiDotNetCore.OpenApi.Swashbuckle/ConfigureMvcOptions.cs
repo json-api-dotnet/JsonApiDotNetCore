@@ -24,6 +24,8 @@ internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
 
         options.InputFormatters.Add(_jsonApiRequestFormatMetadataProvider);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         _jsonApiOptions.IncludeExtensions(OpenApiMediaTypeExtension.OpenApi, OpenApiMediaTypeExtension.RelaxedOpenApi);
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 }

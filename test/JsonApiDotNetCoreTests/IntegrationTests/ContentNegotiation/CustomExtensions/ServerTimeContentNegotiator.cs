@@ -13,8 +13,6 @@ internal sealed class ServerTimeContentNegotiator(IJsonApiOptions options, IHttp
     {
         List<JsonApiMediaType> mediaTypes = [];
 
-        // Relaxed entries come after JSON:API compliant entries, which makes them less likely to be selected.
-
         if (IsOperationsEndpoint())
         {
             if (_options.Extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations))
@@ -27,17 +25,6 @@ internal sealed class ServerTimeContentNegotiator(IJsonApiOptions options, IHttp
             {
                 mediaTypes.Add(ServerTimeMediaTypes.AtomicOperationsWithServerTime);
             }
-
-            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
-            {
-                mediaTypes.Add(JsonApiMediaType.RelaxedAtomicOperations);
-            }
-
-            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations) &&
-                _options.Extensions.Contains(ServerTimeMediaTypeExtension.RelaxedServerTime))
-            {
-                mediaTypes.Add(ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime);
-            }
         }
         else
         {
@@ -46,11 +33,6 @@ internal sealed class ServerTimeContentNegotiator(IJsonApiOptions options, IHttp
             if (_options.Extensions.Contains(ServerTimeMediaTypeExtension.ServerTime))
             {
                 mediaTypes.Add(ServerTimeMediaTypes.ServerTime);
-            }
-
-            if (_options.Extensions.Contains(ServerTimeMediaTypeExtension.RelaxedServerTime))
-            {
-                mediaTypes.Add(ServerTimeMediaTypes.RelaxedServerTime);
             }
         }
 

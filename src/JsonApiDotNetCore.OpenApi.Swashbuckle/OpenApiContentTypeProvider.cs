@@ -21,12 +21,12 @@ internal sealed class OpenApiContentTypeProvider
 
         if (documentType == typeof(OperationsRequestDocument))
         {
-            return [OpenApiMediaTypes.RelaxedAtomicOperationsWithRelaxedOpenApi.ToString()];
+            return [OpenApiMediaTypes.AtomicOperationsWithOpenApi.ToString()];
         }
 
         if (JsonApiSchemaFacts.IsRequestDocumentSchemaType(documentType))
         {
-            return [OpenApiMediaTypes.RelaxedOpenApi.ToString()];
+            return [OpenApiMediaTypes.OpenApi.ToString()];
         }
 
         return [];
@@ -38,17 +38,17 @@ internal sealed class OpenApiContentTypeProvider
 
         if (documentType == typeof(OperationsResponseDocument))
         {
-            return [OpenApiMediaTypes.RelaxedAtomicOperationsWithRelaxedOpenApi.ToString()];
+            return [OpenApiMediaTypes.AtomicOperationsWithOpenApi.ToString()];
         }
 
         if (documentType == typeof(ErrorResponseDocument))
         {
-            return [OpenApiMediaTypes.RelaxedOpenApi.ToString()];
+            return [OpenApiMediaTypes.OpenApi.ToString()];
         }
 
         if (documentType != null && JsonApiSchemaFacts.IsResponseDocumentSchemaType(documentType))
         {
-            return [OpenApiMediaTypes.RelaxedOpenApi.ToString()];
+            return [OpenApiMediaTypes.OpenApi.ToString()];
         }
 
         return [];

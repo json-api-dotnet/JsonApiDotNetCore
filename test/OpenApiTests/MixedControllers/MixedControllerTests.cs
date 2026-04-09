@@ -61,7 +61,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                 "200": {
                   "description": "OK",
                   "content": {
-                    "application/vnd.api+json; ext=openapi": {
+                    "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
                         "$ref": "#/components/schemas/primaryCoffeeSummaryResponseDocument"
                       }
@@ -71,7 +71,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                 "404": {
                   "description": "Not Found",
                   "content": {
-                    "application/vnd.api+json; ext=openapi": {
+                    "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -119,7 +119,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                 "200": {
                   "description": "OK",
                   "content": {
-                    "application/vnd.api+json; ext=openapi": {
+                    "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
                         "$ref": "#/components/schemas/cupOfCoffeeCollectionResponseDocument"
                       }
@@ -176,7 +176,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                 "200": {
                   "description": "OK",
                   "content": {
-                    "application/vnd.api+json; ext=openapi": {
+                    "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
                         "$ref": "#/components/schemas/primaryCupOfCoffeeResponseDocument"
                       }
@@ -186,7 +186,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                 "404": {
                   "description": "Not Found",
                   "content": {
-                    "application/vnd.api+json; ext=openapi": {
+                    "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -257,7 +257,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               ],
               "requestBody": {
                 "content": {
-                  "application/vnd.api+json; ext=openapi": {
+                  "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                     "schema": {
                       "allOf": [
                         {
@@ -276,7 +276,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                 "400": {
                   "description": "Bad Request",
                   "content": {
-                    "application/vnd.api+json; ext=openapi": {
+                    "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -332,7 +332,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                 "404": {
                   "description": "Not Found",
                   "content": {
-                    "application/vnd.api+json; ext=openapi": {
+                    "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
