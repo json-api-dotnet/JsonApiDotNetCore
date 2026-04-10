@@ -15,6 +15,7 @@ internal sealed class ServerTimeContentNegotiator(IJsonApiOptions options, IHttp
 
         // Relaxed entries come after JSON:API compliant entries, which makes them less likely to be selected.
 
+#pragma warning disable CS0618 // Type or member is obsolete
         if (IsOperationsEndpoint())
         {
             if (_options.Extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations))
@@ -53,6 +54,7 @@ internal sealed class ServerTimeContentNegotiator(IJsonApiOptions options, IHttp
                 mediaTypes.Add(ServerTimeMediaTypes.RelaxedServerTime);
             }
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         return mediaTypes.AsReadOnly();
     }

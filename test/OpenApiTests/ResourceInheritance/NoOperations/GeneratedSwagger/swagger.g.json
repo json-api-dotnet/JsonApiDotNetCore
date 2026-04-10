@@ -53,7 +53,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/bathroomCollectionResponseDocument"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -176,7 +176,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the bathroom to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -202,7 +202,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBathroomResponseDocument"
                 }
@@ -215,7 +215,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -225,7 +225,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -235,7 +235,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -245,7 +245,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -255,7 +255,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -319,7 +319,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBathroomResponseDocument"
                 }
@@ -341,7 +341,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -351,7 +351,7 @@
           "404": {
             "description": "The bathroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -477,7 +477,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the bathroom to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -493,7 +493,7 @@
           "200": {
             "description": "The bathroom was successfully updated, which resulted in additional changes. The updated bathroom is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBathroomResponseDocument"
                 }
@@ -506,7 +506,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -516,7 +516,7 @@
           "404": {
             "description": "The bathroom or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -526,7 +526,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -536,7 +536,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -571,7 +571,7 @@
           "404": {
             "description": "The bathroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -635,7 +635,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/secondaryResidenceResponseDocument"
                 }
@@ -657,7 +657,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -667,7 +667,7 @@
           "404": {
             "description": "The bathroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -813,7 +813,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/residenceIdentifierResponseDocument"
                 }
@@ -835,7 +835,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -845,7 +845,7 @@
           "404": {
             "description": "The bathroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -958,7 +958,7 @@
         "requestBody": {
           "description": "The identity of the residence to assign to the residence relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -977,7 +977,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -987,7 +987,7 @@
           "404": {
             "description": "The bathroom or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -997,7 +997,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1007,7 +1007,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1060,7 +1060,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/bedroomCollectionResponseDocument"
                 }
@@ -1082,7 +1082,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1183,7 +1183,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the bedroom to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -1209,7 +1209,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBedroomResponseDocument"
                 }
@@ -1222,7 +1222,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1232,7 +1232,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1242,7 +1242,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1252,7 +1252,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1262,7 +1262,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1326,7 +1326,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBedroomResponseDocument"
                 }
@@ -1348,7 +1348,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1358,7 +1358,7 @@
           "404": {
             "description": "The bedroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1484,7 +1484,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the bedroom to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -1500,7 +1500,7 @@
           "200": {
             "description": "The bedroom was successfully updated, which resulted in additional changes. The updated bedroom is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBedroomResponseDocument"
                 }
@@ -1513,7 +1513,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1523,7 +1523,7 @@
           "404": {
             "description": "The bedroom or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1533,7 +1533,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1543,7 +1543,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1578,7 +1578,7 @@
           "404": {
             "description": "The bedroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1642,7 +1642,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/secondaryResidenceResponseDocument"
                 }
@@ -1664,7 +1664,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1674,7 +1674,7 @@
           "404": {
             "description": "The bedroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1820,7 +1820,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/residenceIdentifierResponseDocument"
                 }
@@ -1842,7 +1842,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1852,7 +1852,7 @@
           "404": {
             "description": "The bedroom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1965,7 +1965,7 @@
         "requestBody": {
           "description": "The identity of the residence to assign to the residence relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -1984,7 +1984,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1994,7 +1994,7 @@
           "404": {
             "description": "The bedroom or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2004,7 +2004,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2014,7 +2014,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2067,7 +2067,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/buildingCollectionResponseDocument"
                 }
@@ -2089,7 +2089,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2190,7 +2190,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the building to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -2216,7 +2216,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBuildingResponseDocument"
                 }
@@ -2229,7 +2229,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2239,7 +2239,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2249,7 +2249,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2259,7 +2259,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2269,7 +2269,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2333,7 +2333,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBuildingResponseDocument"
                 }
@@ -2355,7 +2355,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2365,7 +2365,7 @@
           "404": {
             "description": "The building does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2491,7 +2491,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the building to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -2507,7 +2507,7 @@
           "200": {
             "description": "The building was successfully updated, which resulted in additional changes. The updated building is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryBuildingResponseDocument"
                 }
@@ -2520,7 +2520,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2530,7 +2530,7 @@
           "404": {
             "description": "The building or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2540,7 +2540,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2550,7 +2550,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2585,7 +2585,7 @@
           "404": {
             "description": "The building does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2638,7 +2638,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/cyclePathCollectionResponseDocument"
                 }
@@ -2660,7 +2660,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2761,7 +2761,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the cyclePath to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -2787,7 +2787,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCyclePathResponseDocument"
                 }
@@ -2800,7 +2800,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2810,7 +2810,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2820,7 +2820,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2830,7 +2830,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2840,7 +2840,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2904,7 +2904,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCyclePathResponseDocument"
                 }
@@ -2926,7 +2926,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2936,7 +2936,7 @@
           "404": {
             "description": "The cyclePath does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3062,7 +3062,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the cyclePath to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -3078,7 +3078,7 @@
           "200": {
             "description": "The cyclePath was successfully updated, which resulted in additional changes. The updated cyclePath is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCyclePathResponseDocument"
                 }
@@ -3091,7 +3091,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3101,7 +3101,7 @@
           "404": {
             "description": "The cyclePath or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3111,7 +3111,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3121,7 +3121,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3156,7 +3156,7 @@
           "404": {
             "description": "The cyclePath does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3209,7 +3209,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/districtCollectionResponseDocument"
                 }
@@ -3231,7 +3231,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3332,7 +3332,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the district to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -3358,7 +3358,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryDistrictResponseDocument"
                 }
@@ -3371,7 +3371,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3381,7 +3381,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3391,7 +3391,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3401,7 +3401,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3411,7 +3411,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3475,7 +3475,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryDistrictResponseDocument"
                 }
@@ -3497,7 +3497,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3507,7 +3507,7 @@
           "404": {
             "description": "The district does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3633,7 +3633,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the district to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -3649,7 +3649,7 @@
           "200": {
             "description": "The district was successfully updated, which resulted in additional changes. The updated district is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryDistrictResponseDocument"
                 }
@@ -3662,7 +3662,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3672,7 +3672,7 @@
           "404": {
             "description": "The district or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3682,7 +3682,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3692,7 +3692,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3727,7 +3727,7 @@
           "404": {
             "description": "The district does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3791,7 +3791,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/buildingCollectionResponseDocument"
                 }
@@ -3813,7 +3813,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3823,7 +3823,7 @@
           "404": {
             "description": "The district does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3969,7 +3969,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/buildingIdentifierCollectionResponseDocument"
                 }
@@ -3991,7 +3991,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4001,7 +4001,7 @@
           "404": {
             "description": "The district does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4114,7 +4114,7 @@
         "requestBody": {
           "description": "The identities of the buildings to add to the buildings relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -4133,7 +4133,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4143,7 +4143,7 @@
           "404": {
             "description": "The district or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4153,7 +4153,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4163,7 +4163,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4194,7 +4194,7 @@
         "requestBody": {
           "description": "The identities of the buildings to assign to the buildings relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -4213,7 +4213,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4223,7 +4223,7 @@
           "404": {
             "description": "The district or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4233,7 +4233,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4243,7 +4243,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4274,7 +4274,7 @@
         "requestBody": {
           "description": "The identities of the buildings to remove from the buildings relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -4293,7 +4293,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4303,7 +4303,7 @@
           "404": {
             "description": "The district or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4313,7 +4313,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4323,7 +4323,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4387,7 +4387,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roadCollectionResponseDocument"
                 }
@@ -4409,7 +4409,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4419,7 +4419,7 @@
           "404": {
             "description": "The district does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4565,7 +4565,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roadIdentifierCollectionResponseDocument"
                 }
@@ -4587,7 +4587,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4597,7 +4597,7 @@
           "404": {
             "description": "The district does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4710,7 +4710,7 @@
         "requestBody": {
           "description": "The identities of the roads to add to the roads relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -4729,7 +4729,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4739,7 +4739,7 @@
           "404": {
             "description": "The district or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4749,7 +4749,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4759,7 +4759,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4790,7 +4790,7 @@
         "requestBody": {
           "description": "The identities of the roads to assign to the roads relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -4809,7 +4809,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4819,7 +4819,7 @@
           "404": {
             "description": "The district or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4829,7 +4829,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4839,7 +4839,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4870,7 +4870,7 @@
         "requestBody": {
           "description": "The identities of the roads to remove from the roads relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -4889,7 +4889,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4899,7 +4899,7 @@
           "404": {
             "description": "The district or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4909,7 +4909,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4919,7 +4919,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4972,7 +4972,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/familyHomeCollectionResponseDocument"
                 }
@@ -4994,7 +4994,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5095,7 +5095,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the familyHome to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -5121,7 +5121,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryFamilyHomeResponseDocument"
                 }
@@ -5134,7 +5134,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5144,7 +5144,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5154,7 +5154,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5164,7 +5164,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5174,7 +5174,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5238,7 +5238,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryFamilyHomeResponseDocument"
                 }
@@ -5260,7 +5260,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5270,7 +5270,7 @@
           "404": {
             "description": "The familyHome does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5396,7 +5396,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the familyHome to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -5412,7 +5412,7 @@
           "200": {
             "description": "The familyHome was successfully updated, which resulted in additional changes. The updated familyHome is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryFamilyHomeResponseDocument"
                 }
@@ -5425,7 +5425,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5435,7 +5435,7 @@
           "404": {
             "description": "The familyHome or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5445,7 +5445,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5455,7 +5455,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5490,7 +5490,7 @@
           "404": {
             "description": "The familyHome does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5554,7 +5554,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roomCollectionResponseDocument"
                 }
@@ -5576,7 +5576,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5586,7 +5586,7 @@
           "404": {
             "description": "The familyHome does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5732,7 +5732,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roomIdentifierCollectionResponseDocument"
                 }
@@ -5754,7 +5754,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5764,7 +5764,7 @@
           "404": {
             "description": "The familyHome does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5877,7 +5877,7 @@
         "requestBody": {
           "description": "The identities of the rooms to add to the rooms relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -5896,7 +5896,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5906,7 +5906,7 @@
           "404": {
             "description": "The familyHome or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5916,7 +5916,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5926,7 +5926,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5957,7 +5957,7 @@
         "requestBody": {
           "description": "The identities of the rooms to assign to the rooms relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -5976,7 +5976,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5986,7 +5986,7 @@
           "404": {
             "description": "The familyHome or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5996,7 +5996,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6006,7 +6006,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6037,7 +6037,7 @@
         "requestBody": {
           "description": "The identities of the rooms to remove from the rooms relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -6056,7 +6056,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6066,7 +6066,7 @@
           "404": {
             "description": "The familyHome or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6076,7 +6076,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6086,7 +6086,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6139,7 +6139,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/kitchenCollectionResponseDocument"
                 }
@@ -6161,7 +6161,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6262,7 +6262,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the kitchen to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -6288,7 +6288,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryKitchenResponseDocument"
                 }
@@ -6301,7 +6301,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6311,7 +6311,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6321,7 +6321,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6331,7 +6331,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6341,7 +6341,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6405,7 +6405,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryKitchenResponseDocument"
                 }
@@ -6427,7 +6427,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6437,7 +6437,7 @@
           "404": {
             "description": "The kitchen does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6563,7 +6563,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the kitchen to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -6579,7 +6579,7 @@
           "200": {
             "description": "The kitchen was successfully updated, which resulted in additional changes. The updated kitchen is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryKitchenResponseDocument"
                 }
@@ -6592,7 +6592,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6602,7 +6602,7 @@
           "404": {
             "description": "The kitchen or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6612,7 +6612,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6622,7 +6622,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6657,7 +6657,7 @@
           "404": {
             "description": "The kitchen does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6721,7 +6721,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/secondaryResidenceResponseDocument"
                 }
@@ -6743,7 +6743,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6753,7 +6753,7 @@
           "404": {
             "description": "The kitchen does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6899,7 +6899,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/residenceIdentifierResponseDocument"
                 }
@@ -6921,7 +6921,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -6931,7 +6931,7 @@
           "404": {
             "description": "The kitchen does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7044,7 +7044,7 @@
         "requestBody": {
           "description": "The identity of the residence to assign to the residence relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -7063,7 +7063,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7073,7 +7073,7 @@
           "404": {
             "description": "The kitchen or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7083,7 +7083,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7093,7 +7093,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7146,7 +7146,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/livingRoomCollectionResponseDocument"
                 }
@@ -7168,7 +7168,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7269,7 +7269,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the livingRoom to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -7295,7 +7295,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryLivingRoomResponseDocument"
                 }
@@ -7308,7 +7308,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7318,7 +7318,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7328,7 +7328,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7338,7 +7338,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7348,7 +7348,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7412,7 +7412,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryLivingRoomResponseDocument"
                 }
@@ -7434,7 +7434,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7444,7 +7444,7 @@
           "404": {
             "description": "The livingRoom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7570,7 +7570,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the livingRoom to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -7586,7 +7586,7 @@
           "200": {
             "description": "The livingRoom was successfully updated, which resulted in additional changes. The updated livingRoom is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryLivingRoomResponseDocument"
                 }
@@ -7599,7 +7599,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7609,7 +7609,7 @@
           "404": {
             "description": "The livingRoom or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7619,7 +7619,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7629,7 +7629,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7664,7 +7664,7 @@
           "404": {
             "description": "The livingRoom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7728,7 +7728,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/secondaryResidenceResponseDocument"
                 }
@@ -7750,7 +7750,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7760,7 +7760,7 @@
           "404": {
             "description": "The livingRoom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7906,7 +7906,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/residenceIdentifierResponseDocument"
                 }
@@ -7928,7 +7928,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -7938,7 +7938,7 @@
           "404": {
             "description": "The livingRoom does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8051,7 +8051,7 @@
         "requestBody": {
           "description": "The identity of the residence to assign to the residence relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -8070,7 +8070,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8080,7 +8080,7 @@
           "404": {
             "description": "The livingRoom or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8090,7 +8090,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8100,7 +8100,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8153,7 +8153,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/mansionCollectionResponseDocument"
                 }
@@ -8175,7 +8175,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8276,7 +8276,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the mansion to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -8302,7 +8302,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryMansionResponseDocument"
                 }
@@ -8315,7 +8315,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8325,7 +8325,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8335,7 +8335,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8345,7 +8345,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8355,7 +8355,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8419,7 +8419,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryMansionResponseDocument"
                 }
@@ -8441,7 +8441,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8451,7 +8451,7 @@
           "404": {
             "description": "The mansion does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8577,7 +8577,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the mansion to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -8593,7 +8593,7 @@
           "200": {
             "description": "The mansion was successfully updated, which resulted in additional changes. The updated mansion is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryMansionResponseDocument"
                 }
@@ -8606,7 +8606,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8616,7 +8616,7 @@
           "404": {
             "description": "The mansion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8626,7 +8626,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8636,7 +8636,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8671,7 +8671,7 @@
           "404": {
             "description": "The mansion does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8735,7 +8735,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roomCollectionResponseDocument"
                 }
@@ -8757,7 +8757,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8767,7 +8767,7 @@
           "404": {
             "description": "The mansion does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8913,7 +8913,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roomIdentifierCollectionResponseDocument"
                 }
@@ -8935,7 +8935,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -8945,7 +8945,7 @@
           "404": {
             "description": "The mansion does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9058,7 +9058,7 @@
         "requestBody": {
           "description": "The identities of the rooms to add to the rooms relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -9077,7 +9077,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9087,7 +9087,7 @@
           "404": {
             "description": "The mansion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9097,7 +9097,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9107,7 +9107,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9138,7 +9138,7 @@
         "requestBody": {
           "description": "The identities of the rooms to assign to the rooms relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -9157,7 +9157,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9167,7 +9167,7 @@
           "404": {
             "description": "The mansion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9177,7 +9177,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9187,7 +9187,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9218,7 +9218,7 @@
         "requestBody": {
           "description": "The identities of the rooms to remove from the rooms relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -9237,7 +9237,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9247,7 +9247,7 @@
           "404": {
             "description": "The mansion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9257,7 +9257,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9267,7 +9267,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9331,7 +9331,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/staffMemberCollectionResponseDocument"
                 }
@@ -9353,7 +9353,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9363,7 +9363,7 @@
           "404": {
             "description": "The mansion does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9509,7 +9509,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/staffMemberIdentifierCollectionResponseDocument"
                 }
@@ -9531,7 +9531,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9541,7 +9541,7 @@
           "404": {
             "description": "The mansion does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9654,7 +9654,7 @@
         "requestBody": {
           "description": "The identities of the staffMembers to add to the staff relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -9673,7 +9673,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9683,7 +9683,7 @@
           "404": {
             "description": "The mansion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9693,7 +9693,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9703,7 +9703,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9734,7 +9734,7 @@
         "requestBody": {
           "description": "The identities of the staffMembers to assign to the staff relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -9753,7 +9753,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9763,7 +9763,7 @@
           "404": {
             "description": "The mansion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9773,7 +9773,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9783,7 +9783,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9814,7 +9814,7 @@
         "requestBody": {
           "description": "The identities of the staffMembers to remove from the staff relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -9833,7 +9833,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9843,7 +9843,7 @@
           "404": {
             "description": "The mansion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9853,7 +9853,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9863,7 +9863,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9883,7 +9883,7 @@
         "requestBody": {
           "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",
           "content": {
-            "application/vnd.api+json; ext=atomic; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -9899,7 +9899,7 @@
           "200": {
             "description": "All operations were successfully applied, which resulted in additional changes.",
             "content": {
-              "application/vnd.api+json; ext=atomic; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/operationsResponseDocument"
                 }
@@ -9912,7 +9912,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=atomic; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9922,7 +9922,7 @@
           "403": {
             "description": "An operation is not accessible or a client-generated ID is used.",
             "content": {
-              "application/vnd.api+json; ext=atomic; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9932,7 +9932,7 @@
           "404": {
             "description": "A resource or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=atomic; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9942,7 +9942,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=atomic; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -9952,7 +9952,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=atomic; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10005,7 +10005,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/residenceCollectionResponseDocument"
                 }
@@ -10027,7 +10027,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10128,7 +10128,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the residence to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -10154,7 +10154,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryResidenceResponseDocument"
                 }
@@ -10167,7 +10167,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10177,7 +10177,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10187,7 +10187,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10197,7 +10197,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10207,7 +10207,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10271,7 +10271,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryResidenceResponseDocument"
                 }
@@ -10293,7 +10293,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10303,7 +10303,7 @@
           "404": {
             "description": "The residence does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10429,7 +10429,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the residence to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -10445,7 +10445,7 @@
           "200": {
             "description": "The residence was successfully updated, which resulted in additional changes. The updated residence is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryResidenceResponseDocument"
                 }
@@ -10458,7 +10458,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10468,7 +10468,7 @@
           "404": {
             "description": "The residence or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10478,7 +10478,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10488,7 +10488,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10523,7 +10523,7 @@
           "404": {
             "description": "The residence does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10587,7 +10587,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roomCollectionResponseDocument"
                 }
@@ -10609,7 +10609,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10619,7 +10619,7 @@
           "404": {
             "description": "The residence does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10765,7 +10765,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roomIdentifierCollectionResponseDocument"
                 }
@@ -10787,7 +10787,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10797,7 +10797,7 @@
           "404": {
             "description": "The residence does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10910,7 +10910,7 @@
         "requestBody": {
           "description": "The identities of the rooms to add to the rooms relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -10929,7 +10929,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10939,7 +10939,7 @@
           "404": {
             "description": "The residence or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10949,7 +10949,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10959,7 +10959,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -10990,7 +10990,7 @@
         "requestBody": {
           "description": "The identities of the rooms to assign to the rooms relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -11009,7 +11009,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11019,7 +11019,7 @@
           "404": {
             "description": "The residence or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11029,7 +11029,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11039,7 +11039,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11070,7 +11070,7 @@
         "requestBody": {
           "description": "The identities of the rooms to remove from the rooms relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -11089,7 +11089,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11099,7 +11099,7 @@
           "404": {
             "description": "The residence or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11109,7 +11109,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11119,7 +11119,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11172,7 +11172,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roadCollectionResponseDocument"
                 }
@@ -11194,7 +11194,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11295,7 +11295,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the road to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -11321,7 +11321,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryRoadResponseDocument"
                 }
@@ -11334,7 +11334,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11344,7 +11344,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11354,7 +11354,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11364,7 +11364,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11374,7 +11374,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11438,7 +11438,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryRoadResponseDocument"
                 }
@@ -11460,7 +11460,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11470,7 +11470,7 @@
           "404": {
             "description": "The road does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11596,7 +11596,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the road to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -11612,7 +11612,7 @@
           "200": {
             "description": "The road was successfully updated, which resulted in additional changes. The updated road is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryRoadResponseDocument"
                 }
@@ -11625,7 +11625,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11635,7 +11635,7 @@
           "404": {
             "description": "The road or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11645,7 +11645,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11655,7 +11655,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11690,7 +11690,7 @@
           "404": {
             "description": "The road does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11743,7 +11743,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/roomCollectionResponseDocument"
                 }
@@ -11765,7 +11765,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11866,7 +11866,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the room to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -11892,7 +11892,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryRoomResponseDocument"
                 }
@@ -11905,7 +11905,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11915,7 +11915,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11925,7 +11925,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11935,7 +11935,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -11945,7 +11945,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12009,7 +12009,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryRoomResponseDocument"
                 }
@@ -12031,7 +12031,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12041,7 +12041,7 @@
           "404": {
             "description": "The room does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12167,7 +12167,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the room to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -12183,7 +12183,7 @@
           "200": {
             "description": "The room was successfully updated, which resulted in additional changes. The updated room is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryRoomResponseDocument"
                 }
@@ -12196,7 +12196,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12206,7 +12206,7 @@
           "404": {
             "description": "The room or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12216,7 +12216,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12226,7 +12226,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12261,7 +12261,7 @@
           "404": {
             "description": "The room does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12325,7 +12325,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/secondaryResidenceResponseDocument"
                 }
@@ -12347,7 +12347,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12357,7 +12357,7 @@
           "404": {
             "description": "The room does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12503,7 +12503,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/residenceIdentifierResponseDocument"
                 }
@@ -12525,7 +12525,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12535,7 +12535,7 @@
           "404": {
             "description": "The room does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12648,7 +12648,7 @@
         "requestBody": {
           "description": "The identity of the residence to assign to the residence relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -12667,7 +12667,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12677,7 +12677,7 @@
           "404": {
             "description": "The room or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12687,7 +12687,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12697,7 +12697,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12750,7 +12750,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/staffMemberCollectionResponseDocument"
                 }
@@ -12772,7 +12772,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12873,7 +12873,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the staffMember to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -12899,7 +12899,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryStaffMemberResponseDocument"
                 }
@@ -12912,7 +12912,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12922,7 +12922,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12932,7 +12932,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12942,7 +12942,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -12952,7 +12952,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13016,7 +13016,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryStaffMemberResponseDocument"
                 }
@@ -13038,7 +13038,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13048,7 +13048,7 @@
           "404": {
             "description": "The staffMember does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13174,7 +13174,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the staffMember to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -13190,7 +13190,7 @@
           "200": {
             "description": "The staffMember was successfully updated, which resulted in additional changes. The updated staffMember is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryStaffMemberResponseDocument"
                 }
@@ -13203,7 +13203,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13213,7 +13213,7 @@
           "404": {
             "description": "The staffMember or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13223,7 +13223,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13233,7 +13233,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13268,7 +13268,7 @@
           "404": {
             "description": "The staffMember does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13321,7 +13321,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/toiletCollectionResponseDocument"
                 }
@@ -13343,7 +13343,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13444,7 +13444,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the toilet to create.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -13470,7 +13470,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryToiletResponseDocument"
                 }
@@ -13483,7 +13483,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13493,7 +13493,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13503,7 +13503,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13513,7 +13513,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13523,7 +13523,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13587,7 +13587,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryToiletResponseDocument"
                 }
@@ -13609,7 +13609,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13619,7 +13619,7 @@
           "404": {
             "description": "The toilet does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13745,7 +13745,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the toilet to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -13761,7 +13761,7 @@
           "200": {
             "description": "The toilet was successfully updated, which resulted in additional changes. The updated toilet is returned.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryToiletResponseDocument"
                 }
@@ -13774,7 +13774,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13784,7 +13784,7 @@
           "404": {
             "description": "The toilet or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13794,7 +13794,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13804,7 +13804,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13839,7 +13839,7 @@
           "404": {
             "description": "The toilet does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13903,7 +13903,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/secondaryResidenceResponseDocument"
                 }
@@ -13925,7 +13925,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -13935,7 +13935,7 @@
           "404": {
             "description": "The toilet does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -14081,7 +14081,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/residenceIdentifierResponseDocument"
                 }
@@ -14103,7 +14103,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -14113,7 +14113,7 @@
           "404": {
             "description": "The toilet does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -14226,7 +14226,7 @@
         "requestBody": {
           "description": "The identity of the residence to assign to the residence relationship.",
           "content": {
-            "application/vnd.api+json; ext=openapi": {
+            "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
               "schema": {
                 "allOf": [
                   {
@@ -14245,7 +14245,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -14255,7 +14255,7 @@
           "404": {
             "description": "The toilet or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -14265,7 +14265,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -14275,7 +14275,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=openapi": {
+              "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }

@@ -7,6 +7,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation.CustomExten
 internal static class ServerTimeMediaTypes
 {
     public static readonly JsonApiMediaType ServerTime = new([ServerTimeMediaTypeExtension.ServerTime]);
+
+    [Obsolete("This media type is no longer needed and will be removed in a future version. Use ServerTime instead.")]
     public static readonly JsonApiMediaType RelaxedServerTime = new([ServerTimeMediaTypeExtension.RelaxedServerTime]);
 
     public static readonly JsonApiMediaType AtomicOperationsWithServerTime = new([
@@ -14,6 +16,7 @@ internal static class ServerTimeMediaTypes
         ServerTimeMediaTypeExtension.ServerTime
     ]);
 
+    [Obsolete("This media type is no longer needed and will be removed in a future version. Use AtomicOperationsWithServerTime instead.")]
     public static readonly JsonApiMediaType RelaxedAtomicOperationsWithRelaxedServerTime = new([
         JsonApiMediaTypeExtension.RelaxedAtomicOperations,
         ServerTimeMediaTypeExtension.RelaxedServerTime

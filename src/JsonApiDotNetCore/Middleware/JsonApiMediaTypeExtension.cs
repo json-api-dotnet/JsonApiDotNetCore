@@ -9,6 +9,8 @@ namespace JsonApiDotNetCore.Middleware;
 public sealed class JsonApiMediaTypeExtension : IEquatable<JsonApiMediaTypeExtension>
 {
     public static readonly JsonApiMediaTypeExtension AtomicOperations = new("https://jsonapi.org/ext/atomic");
+
+    [Obsolete("This media type is no longer needed and will be removed in a future version. Use AtomicOperations instead.")]
     public static readonly JsonApiMediaTypeExtension RelaxedAtomicOperations = new("atomic");
 
     public string UnescapedValue { get; }

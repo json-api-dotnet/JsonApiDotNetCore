@@ -94,7 +94,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         {
             var requestInfo = new RequestInformation(Method.DELETE, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
         }
 
@@ -109,8 +109,8 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
-            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=openapi", body);
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
+            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"", body);
             return requestInfo;
         }
 

@@ -13,6 +13,7 @@ public static class HeaderConstants
     [Obsolete($"Use {nameof(JsonApiMediaType)}.{nameof(JsonApiMediaType.AtomicOperations)}.ToString() instead.")]
     public const string AtomicOperationsMediaType = $"{MediaType}; ext=\"https://jsonapi.org/ext/atomic\"";
 
-    [Obsolete($"Use {nameof(JsonApiMediaType)}.{nameof(JsonApiMediaType.RelaxedAtomicOperations)}.ToString() instead.")]
+    [Obsolete($"This media type is no longer needed and will be removed in a future version. " +
+        $"Use {nameof(JsonApiMediaType)}.{nameof(JsonApiMediaType.AtomicOperations)}.ToString() instead.")]
     public const string RelaxedAtomicOperationsMediaType = $"{MediaType}; ext=atomic";
 }

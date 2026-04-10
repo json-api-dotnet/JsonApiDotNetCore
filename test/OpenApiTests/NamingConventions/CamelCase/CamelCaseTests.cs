@@ -7,8 +7,10 @@ namespace OpenApiTests.NamingConventions.CamelCase;
 
 public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
-    private const string EscapedJsonApiMediaType = "['application/vnd.api+json; ext=openapi']";
-    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic; ext=openapi']";
+    private const string EscapedJsonApiMediaType = """['application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"']""";
+
+    private const string EscapedOperationsMediaType =
+        """['application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic https://www.jsonapi.net/ext/openapi\"']""";
 
     private readonly OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 

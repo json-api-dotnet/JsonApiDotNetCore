@@ -1,6 +1,6 @@
 # JSON:API Extension for OpenAPI
 
-This extension facilitates using OpenAPI client generators targeting JSON:API documents.
+This extension facilitates the use of OpenAPI client generators targeting JSON:API documents.
 
 In JSON:API, a resource object contains the `type` member, which defines the structure of nested [attributes](https://jsonapi.org/format/#document-resource-object-attributes) and [relationships](https://jsonapi.org/format/#document-resource-object-relationships) objects.
 While OpenAPI supports such constraints using `allOf` inheritance with a discriminator property for the `data` member,
@@ -11,30 +11,10 @@ This extension addresses that limitation by defining additional discriminator pr
 ## URI
 
 This extension has the URI `https://www.jsonapi.net/ext/openapi`.
-Because code generators often choke on the double quotes in `Accept` and `Content-Type` HTTP header values, a relaxed form is also permitted: `openapi`.
 
-For example, the following `Content-Type` header:
-
-```http
-Content-Type: application/vnd.api+json; ext="https://www.jsonapi.net/ext/openapi"
-```
-
-is equivalent to:
-
-```http
-Content-Type: application/vnd.api+json; ext=openapi
-```
-
-To avoid the need for double quotes when multiple extensions are used, the following relaxed form can be used:
-
-```http
-Content-Type: application/vnd.api+json; ext=openapi; ext=atomic
-```
-
-> [!NOTE]
-> The [base specification](https://jsonapi.org/format/#media-type-parameter-rules) *forbids* the use of multiple `ext` parameters
-> and *requires* that each extension name must be a URI.
-> This extension relaxes both constraints for practical reasons, to workaround bugs in client generators that produce broken code otherwise.
+> [!CAUTION]
+> Early preview versions of this specification also permitted using `openapi` instead of the URI to work around bugs in client generators.
+> This is no longer supported and is not part of the final version.
 
 ## Namespace
 
@@ -55,7 +35,7 @@ in [attributes](https://jsonapi.org/format/#document-resource-object-attributes)
 
 * `openapi:discriminator` - A string that MUST be identical to the `type` member in the containing [resource object](https://jsonapi.org/format/#document-resource-objects).
 
-Here's how an article (i.e. a resource of type "articles") might appear in a document:
+Here's how an article (a resource of type "articles") might appear in a document:
 
 ```json
 {
@@ -81,7 +61,7 @@ Here's how an article (i.e. a resource of type "articles") might appear in a doc
 In addition to the members allowed by the [Atomic Operations extension](https://jsonapi.org/ext/atomic/),
 the following member MAY be included in elements of an `atomic:operations` array:
 
-* `openapi:discriminator` - A free-format string to facilitate generation of client code.
+* `openapi:discriminator` - A free-format string to facilitate the generation of client code.
 
 For example:
 

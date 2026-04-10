@@ -30,7 +30,9 @@ public sealed class CustomExtensionsAcceptHeaderTests : IClassFixture<Integratio
         });
 
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+#pragma warning disable CS0618 // Type or member is obsolete
         options.IncludeExtensions(ServerTimeMediaTypeExtension.ServerTime, ServerTimeMediaTypeExtension.RelaxedServerTime);
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     [Fact]
@@ -68,7 +70,9 @@ public sealed class CustomExtensionsAcceptHeaderTests : IClassFixture<Integratio
         {
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.Default.ToString()));
+#pragma warning disable CS0618 // Type or member is obsolete
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(ServerTimeMediaTypes.RelaxedServerTime.ToString()));
+#pragma warning restore CS0618 // Type or member is obsolete
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(ServerTimeMediaTypes.ServerTime.ToString()));
         };
 
@@ -143,8 +147,10 @@ public sealed class CustomExtensionsAcceptHeaderTests : IClassFixture<Integratio
 
         responseDocument.Errors.Should().HaveCount(1);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         string detail = $"Include '{JsonApiMediaType.AtomicOperations}' or '{ServerTimeMediaTypes.AtomicOperationsWithServerTime}' or " +
             $"'{JsonApiMediaType.RelaxedAtomicOperations}' or '{ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime}' in the Accept header values.";
+#pragma warning restore CS0618 // Type or member is obsolete
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
