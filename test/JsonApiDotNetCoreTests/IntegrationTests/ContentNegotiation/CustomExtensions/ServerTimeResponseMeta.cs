@@ -12,7 +12,10 @@ internal sealed class ServerTimeResponseMeta(IJsonApiRequest request, RequestDoc
 
     public IDictionary<string, object?>? GetMeta()
     {
-        if (_request.Extensions.Contains(ServerTimeMediaTypeExtension.ServerTime))
+#pragma warning disable CS0618 // Type or member is obsolete
+        if (_request.Extensions.Contains(ServerTimeMediaTypeExtension.ServerTime) ||
+            _request.Extensions.Contains(ServerTimeMediaTypeExtension.RelaxedServerTime))
+#pragma warning restore CS0618 // Type or member is obsolete
         {
             if (_documentStore.Document is not { Meta: not null } || !_documentStore.Document.Meta.TryGetValue("useLocalTime", out object? useLocalTimeValue) ||
                 useLocalTimeValue == null || !bool.TryParse(useLocalTimeValue.ToString(), out bool useLocalTime))
