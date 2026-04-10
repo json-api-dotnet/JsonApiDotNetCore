@@ -155,7 +155,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension})">
   JsonApiMediaType(IEnumerable&lt;JsonApiMediaTypeExtension&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -186,7 +186,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IReadOnlySet_JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IReadOnlySet{JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension})">
   JsonApiMediaType(IReadOnlySet&lt;JsonApiMediaTypeExtension&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -282,7 +282,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType_RelaxedAtomicOperations" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.RelaxedAtomicOperations">
   RelaxedAtomicOperations
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the JSON:API media type with the &quot;atomic&quot; extension.</p>
@@ -290,7 +290,8 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly JsonApiMediaType RelaxedAtomicOperations</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;This media type is no longer needed and will be removed in a future version. Use AtomicOperations instead.&quot;)]
+public static readonly JsonApiMediaType RelaxedAtomicOperations</code></pre>
   </div>
 
 
@@ -318,7 +319,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType_Extensions" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.Extensions">
   Extensions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -353,7 +354,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType_Equals_JsonApiDotNetCore_Middleware_JsonApiMediaType_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(JsonApiDotNetCore.Middleware.JsonApiMediaType)">
   Equals(JsonApiMediaType?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L158"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -392,7 +393,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType_Equals_System_Object_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L173"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the specified object is equal to the current object.</p>
@@ -430,7 +431,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType_GetHashCode" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L178"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
@@ -463,7 +464,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType_ToString" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>

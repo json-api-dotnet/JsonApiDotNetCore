@@ -76,28 +76,17 @@
         <article data-uid="">
 <h1 id="jsonapi-extension-for-openapi">JSON:API Extension for OpenAPI</h1>
 
-<p>This extension facilitates using OpenAPI client generators targeting JSON:API documents.</p>
+<p>This extension facilitates the use of OpenAPI client generators targeting JSON:API documents.</p>
 <p>In JSON:API, a resource object contains the <code>type</code> member, which defines the structure of nested <a href="https://jsonapi.org/format/#document-resource-object-attributes">attributes</a> and <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a> objects.
 While OpenAPI supports such constraints using <code>allOf</code> inheritance with a discriminator property for the <code>data</code> member,
 it provides no way to express that the discriminator recursively applies to nested objects.</p>
 <p>This extension addresses that limitation by defining additional discriminator properties to guide code generation tools.</p>
 <h2 id="uri">URI</h2>
-<p>This extension has the URI <code>https://www.jsonapi.net/ext/openapi</code>.
-Because code generators often choke on the double quotes in <code>Accept</code> and <code>Content-Type</code> HTTP header values, a relaxed form is also permitted: <code>openapi</code>.</p>
-<p>For example, the following <code>Content-Type</code> header:</p>
-<pre><code class="lang-http">Content-Type: application/vnd.api+json; ext=&quot;https://www.jsonapi.net/ext/openapi&quot;
-</code></pre>
-<p>is equivalent to:</p>
-<pre><code class="lang-http">Content-Type: application/vnd.api+json; ext=openapi
-</code></pre>
-<p>To avoid the need for double quotes when multiple extensions are used, the following relaxed form can be used:</p>
-<pre><code class="lang-http">Content-Type: application/vnd.api+json; ext=openapi; ext=atomic
-</code></pre>
-<div class="NOTE">
-<h5>Note</h5>
-<p>The <a href="https://jsonapi.org/format/#media-type-parameter-rules">base specification</a> <em>forbids</em> the use of multiple <code>ext</code> parameters
-and <em>requires</em> that each extension name must be a URI.
-This extension relaxes both constraints for practical reasons, to workaround bugs in client generators that produce broken code otherwise.</p>
+<p>This extension has the URI <code>https://www.jsonapi.net/ext/openapi</code>.</p>
+<div class="CAUTION">
+<h5>Caution</h5>
+<p>Early preview versions of this specification also permitted using <code>openapi</code> instead of the URI to work around bugs in client generators.
+This is no longer supported and is not part of the final version.</p>
 </div>
 <h2 id="namespace">Namespace</h2>
 <p>This extension uses the namespace <code>openapi</code>.</p>
@@ -114,7 +103,7 @@ in <a href="https://jsonapi.org/format/#document-resource-object-attributes">att
 <ul>
 <li><code>openapi:discriminator</code> - A string that MUST be identical to the <code>type</code> member in the containing <a href="https://jsonapi.org/format/#document-resource-objects">resource object</a>.</li>
 </ul>
-<p>Here's how an article (i.e. a resource of type &quot;articles&quot;) might appear in a document:</p>
+<p>Here's how an article (a resource of type &quot;articles&quot;) might appear in a document:</p>
 <pre><code class="lang-json">{
   &quot;data&quot;: {
     &quot;type&quot;: &quot;articles&quot;,
@@ -136,7 +125,7 @@ in <a href="https://jsonapi.org/format/#document-resource-object-attributes">att
 <p>In addition to the members allowed by the <a href="https://jsonapi.org/ext/atomic/">Atomic Operations extension</a>,
 the following member MAY be included in elements of an <code>atomic:operations</code> array:</p>
 <ul>
-<li><code>openapi:discriminator</code> - A free-format string to facilitate generation of client code.</li>
+<li><code>openapi:discriminator</code> - A free-format string to facilitate the generation of client code.</li>
 </ul>
 <p>For example:</p>
 <pre><code class="lang-http">POST /operations HTTP/1.1
