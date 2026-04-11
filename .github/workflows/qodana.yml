@@ -1,3 +1,5 @@
+# This workflow is disabled due to bugs, see https://youtrack.jetbrains.com/issue/QD-12100.
+
 name: Qodana
 on:
   workflow_dispatch:
