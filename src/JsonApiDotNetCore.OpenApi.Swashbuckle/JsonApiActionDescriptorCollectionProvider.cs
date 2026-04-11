@@ -31,6 +31,23 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     private const int FilterScope = 10;
     private static readonly Type ErrorDocumentType = typeof(ErrorResponseDocument);
 
+    private static readonly ConsumesMediaTypeCollection RegularMediaTypes = new([
+        JsonApiMediaType.Default,
+        OpenApiMediaTypes.OpenApi,
+#pragma warning disable CS0618 // Type or member is obsolete
+        OpenApiMediaTypes.RelaxedOpenApi
+#pragma warning restore CS0618 // Type or member is obsolete
+    ]);
+
+    private static readonly ConsumesMediaTypeCollection OperationsMediaTypes = new([
+        JsonApiMediaType.AtomicOperations,
+        OpenApiMediaTypes.AtomicOperationsWithOpenApi,
+#pragma warning disable CS0618 // Type or member is obsolete
+        JsonApiMediaType.RelaxedAtomicOperations,
+        OpenApiMediaTypes.RelaxedAtomicOperationsWithRelaxedOpenApi
+#pragma warning restore CS0618 // Type or member is obsolete
+    ]);
+
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
@@ -220,14 +237,14 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         {
             case AtomicOperationsRequestMetadata atomicOperationsRequestMetadata:
             {
-                SetConsumes(descriptor, atomicOperationsRequestMetadata.DocumentType, JsonApiMediaType.AtomicOperations);
+                SetConsumes(descriptor, atomicOperationsRequestMetadata.DocumentType, OperationsMediaTypes);
                 UpdateRequestBodyParameterDescriptor(descriptor, atomicOperationsRequestMetadata.DocumentType, null);
 
                 break;
             }
             case PrimaryRequestMetadata primaryRequestMetadata:
             {
-                SetConsumes(descriptor, primaryRequestMetadata.DocumentType, JsonApiMediaType.Default);
+                SetConsumes(descriptor, primaryRequestMetadata.DocumentType, RegularMediaTypes);
                 UpdateRequestBodyParameterDescriptor(descriptor, primaryRequestMetadata.DocumentType, null);
 
                 break;
@@ -243,7 +260,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
                     RemovePathParameter(relationshipDescriptor.Parameters, "relationshipName");
                     ExpandTemplate(relationshipDescriptor.AttributeRouteInfo!, relationship.PublicName);
-                    SetConsumes(descriptor, documentType, JsonApiMediaType.Default);
+                    SetConsumes(descriptor, documentType, RegularMediaTypes);
                     UpdateRequestBodyParameterDescriptor(relationshipDescriptor, documentType, relationship.PublicName);
 
                     descriptorsByRelationship[relationship] = relationshipDescriptor;
@@ -302,13 +319,9 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         return isNonPrimaryEndpoint ? descriptorsByRelationship.Values.ToArray() : [descriptor];
     }
 
-    private static void SetConsumes(ActionDescriptor descriptor, Type requestType, JsonApiMediaType mediaType)
+    private static void SetConsumes(ActionDescriptor descriptor, Type requestType, ConsumesMediaTypeCollection mediaTypes)
     {
         RemoveFiltersForRequestBody(descriptor);
-
-        // This value doesn't actually appear in the OpenAPI document, but is only used to invoke
-        // JsonApiRequestFormatMetadataProvider.GetSupportedContentTypes(), which determines the actual request content type.
-        string contentType = mediaType.ToString();
 
         if (descriptor is ControllerActionDescriptor controllerActionDescriptor &&
             controllerActionDescriptor.MethodInfo.GetCustomAttributes<ConsumesAttribute>().Any())
@@ -317,7 +330,12 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             controllerActionDescriptor.MethodInfo = new MethodInfoWrapper(controllerActionDescriptor.MethodInfo, [typeof(ConsumesAttribute)]);
         }
 
-        descriptor.FilterDescriptors.Add(new FilterDescriptor(new ConsumesAttribute(requestType, contentType), FilterScope));
+        // These media types don't actually appear in the OpenAPI document, but are used to invoke
+        // JsonApiRequestFormatMetadataProvider.GetSupportedContentTypes(), which determines the actual request content type.
+        // We need to pass all possible media types, otherwise ASP.NET Core's content negotiation returns HTTP 415.
+
+        var consumesAttribute = new ConsumesAttribute(requestType, mediaTypes.ContentType, mediaTypes.OtherContentTypes);
+        descriptor.FilterDescriptors.Add(new FilterDescriptor(consumesAttribute, FilterScope));
     }
 
     private static void RemoveFiltersForRequestBody(ActionDescriptor descriptor)
@@ -473,5 +491,19 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         SetProducesResponseTypes(relationshipDescriptor, documentType, successStatusCodes, errorStatusCodes);
 
         descriptorsByRelationship[relationship] = relationshipDescriptor;
+    }
+
+    private sealed class ConsumesMediaTypeCollection
+    {
+        public string ContentType { get; }
+        public string[] OtherContentTypes { get; }
+
+        public ConsumesMediaTypeCollection(JsonApiMediaType[] mediaTypes)
+        {
+            ArgumentGuard.NotNullNorEmpty(mediaTypes);
+
+            ContentType = mediaTypes[0].ToString();
+            OtherContentTypes = mediaTypes.Skip(1).Select(mediaType => mediaType.ToString()).ToArray();
+        }
     }
 }
