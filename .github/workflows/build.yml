@@ -271,8 +271,16 @@ jobs:
     steps:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
-    - name: Download artifacts
+    - name: Download package artifacts
       uses: actions/download-artifact@v8
+      with:
+        name: packages
+        path: packages
+    - name: Download documentation artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: documentation
+        path: documentation
     - name: Publish to GitHub Packages
       if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
       run: |
