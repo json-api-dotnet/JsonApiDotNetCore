@@ -182,7 +182,7 @@ public sealed class PaginationParseTests : BaseParseTests
         ResourceFieldChainExpression?[] scopeTrees = constraints.Select(expressionInScope => expressionInScope.Scope).ToArray();
 
         scopeTrees.Should().HaveSameCount(scopeTreesExpectedArray);
-        scopeTrees.Select(tree => tree?.ToString() ?? "").Should().BeEquivalentTo(scopeTreesExpectedArray, options => options.WithStrictOrdering());
+        scopeTrees.Select(tree => tree?.ToString() ?? string.Empty).Should().BeEquivalentTo(scopeTreesExpectedArray, options => options.WithStrictOrdering());
 
         string[] valueTreesExpectedArray = valueTreesExpected.Split("|");
         QueryExpression[] valueTrees = constraints.Select(expressionInScope => expressionInScope.Expression).ToArray();

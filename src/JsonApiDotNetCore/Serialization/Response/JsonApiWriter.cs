@@ -65,7 +65,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            string requestMethod = httpContext.Request.Method.Replace(Environment.NewLine, "");
+            string requestMethod = httpContext.Request.Method.Replace(Environment.NewLine, string.Empty);
             string requestUrl = httpContext.Request.GetEncodedUrl();
             LogResponse(requestMethod, requestUrl, responseBody, httpContext.Response.StatusCode);
         }

@@ -312,10 +312,10 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         blogs[0].Posts[1].Caption = "A";
         blogs[0].Posts[2].Caption = "A";
         blogs[0].Posts[3].Caption = "C";
-        blogs[0].Posts[0].Url = "";
+        blogs[0].Posts[0].Url = string.Empty;
         blogs[0].Posts[1].Url = "www.some2.com";
         blogs[0].Posts[2].Url = "www.some1.com";
-        blogs[0].Posts[3].Url = "";
+        blogs[0].Posts[3].Url = string.Empty;
 
         blogs[0].Posts[0].Comments = _fakers.Comment.GenerateSet(3);
         blogs[0].Posts[0].Comments.ElementAt(0).CreatedAt = 1.January(2015).AsUtc();

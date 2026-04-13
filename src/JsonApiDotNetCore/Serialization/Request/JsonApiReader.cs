@@ -42,7 +42,7 @@ public sealed partial class JsonApiReader : IJsonApiReader
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            string requestMethod = httpRequest.Method.Replace(Environment.NewLine, "");
+            string requestMethod = httpRequest.Method.Replace(Environment.NewLine, string.Empty);
             string requestUrl = httpRequest.GetEncodedUrl();
             LogRequest(requestMethod, requestUrl, requestBody);
         }
