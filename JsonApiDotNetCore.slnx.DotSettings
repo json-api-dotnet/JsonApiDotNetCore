@@ -195,8 +195,7 @@
 	<s:String x:Key="/Default/CodeStyle/CodeFormatting/XmlFormatter/TagAttributesFormat/@EntryValue">OnSingleLine</s:String>
 	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/XmlFormatter/USE_INDENT_FROM_VS/@EntryValue">False</s:Boolean>
 	<s:Int64 x:Key="/Default/CodeStyle/CodeFormatting/XmlFormatter/WRAP_LIMIT/@EntryValue">160</s:Int64>
-	<s:String x:Key="/Default/CodeStyle/CSharpFileLayoutPatterns/Pattern/@EntryValue">&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
-&lt;Patterns xmlns="urn:schemas-jetbrains-com:member-reordering-patterns"&gt;&#xD;
+	<s:String x:Key="/Default/CodeStyle/CSharpFileLayoutPatterns/Pattern/@EntryValue">&lt;Patterns xmlns="urn:schemas-jetbrains-com:member-reordering-patterns"&gt;&#xD;
   &lt;TypePattern DisplayName="Non-reorderable types" RemoveRegions="All"&gt;&#xD;
     &lt;TypePattern.Match&gt;&#xD;
       &lt;Or&gt;&#xD;
@@ -220,7 +219,7 @@
         &lt;HasMember&gt;&#xD;
           &lt;And&gt;&#xD;
             &lt;Kind Is="Method" /&gt;&#xD;
-            &lt;HasAttribute Name="Xunit.FactAttribute" Inherited="True" /&gt;&#xD;
+            &lt;HasAttribute Inherited="True" Name="Xunit.FactAttribute" /&gt;&#xD;
           &lt;/And&gt;&#xD;
         &lt;/HasMember&gt;&#xD;
       &lt;/And&gt;&#xD;
@@ -232,7 +231,7 @@
         &lt;/And&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
-        &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+        &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
       &lt;/Entry.SortBy&gt;&#xD;
     &lt;/Entry&gt;&#xD;
     &lt;Group DisplayName="Fields"&gt;&#xD;
@@ -245,7 +244,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Static"&gt;&#xD;
@@ -259,7 +258,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance Readonly"&gt;&#xD;
@@ -273,7 +272,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance"&gt;&#xD;
@@ -289,7 +288,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
     &lt;/Group&gt;&#xD;
@@ -302,7 +301,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance"&gt;&#xD;
@@ -315,7 +314,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
     &lt;/Group&gt;&#xD;
@@ -326,7 +325,7 @@
         &lt;/And&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
-        &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+        &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
       &lt;/Entry.SortBy&gt;&#xD;
     &lt;/Entry&gt;&#xD;
     &lt;Group DisplayName="Events"&gt;&#xD;
@@ -338,7 +337,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance"&gt;&#xD;
@@ -351,7 +350,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
     &lt;/Group&gt;&#xD;
@@ -366,7 +365,7 @@
         &lt;/Or&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
-        &lt;Kind Order="Constructor" /&gt;&#xD;
+        &lt;Kind Is="0" Order="Constructor" /&gt;&#xD;
       &lt;/Entry.SortBy&gt;&#xD;
     &lt;/Entry&gt;&#xD;
     &lt;Entry DisplayName="Test methods" Priority="100"&gt;&#xD;
@@ -397,7 +396,7 @@
         &lt;/And&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
-        &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+        &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
       &lt;/Entry.SortBy&gt;&#xD;
     &lt;/Entry&gt;&#xD;
     &lt;Entry DisplayName="Nested types"&gt;&#xD;
@@ -414,7 +413,7 @@
         &lt;/And&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
-        &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+        &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
       &lt;/Entry.SortBy&gt;&#xD;
     &lt;/Entry&gt;&#xD;
     &lt;Group DisplayName="Fields"&gt;&#xD;
@@ -427,7 +426,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Static"&gt;&#xD;
@@ -441,7 +440,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance Readonly"&gt;&#xD;
@@ -455,7 +454,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance"&gt;&#xD;
@@ -471,7 +470,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
     &lt;/Group&gt;&#xD;
@@ -484,7 +483,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance"&gt;&#xD;
@@ -497,7 +496,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
     &lt;/Group&gt;&#xD;
@@ -508,7 +507,7 @@
         &lt;/And&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
-        &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+        &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
       &lt;/Entry.SortBy&gt;&#xD;
     &lt;/Entry&gt;&#xD;
     &lt;Group DisplayName="Events"&gt;&#xD;
@@ -520,7 +519,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
       &lt;Entry DisplayName="Instance"&gt;&#xD;
@@ -533,7 +532,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+          &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
     &lt;/Group&gt;&#xD;
@@ -556,7 +555,7 @@
           &lt;/And&gt;&#xD;
         &lt;/Entry.Match&gt;&#xD;
         &lt;Entry.SortBy&gt;&#xD;
-          &lt;Access /&gt;&#xD;
+          &lt;Access Is="0" /&gt;&#xD;
         &lt;/Entry.SortBy&gt;&#xD;
       &lt;/Entry&gt;&#xD;
     &lt;/Group&gt;&#xD;
@@ -577,7 +576,7 @@
         &lt;/And&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
-        &lt;Access Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
+        &lt;Access Is="0" Order="Private Internal Protected ProtectedInternal Public" /&gt;&#xD;
       &lt;/Entry.SortBy&gt;&#xD;
     &lt;/Entry&gt;&#xD;
     &lt;Entry DisplayName="Nested types"&gt;&#xD;
