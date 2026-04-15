@@ -500,8 +500,8 @@ public sealed class AttributeTypeTests : IClassFixture<IntegrationTestContext<At
     [InlineData(nameof(TypeContainer.TestNullableIPAddress), "An invalid IP address was specified.")]
     [InlineData(nameof(TypeContainer.TestIPNetwork), "An invalid IP network was specified.")]
     [InlineData(nameof(TypeContainer.TestNullableIPNetwork), "An invalid IP network was specified.")]
-    [InlineData(nameof(TypeContainer.TestVersion), "The JSON value is not in a supported Version format.")]
-    [InlineData(nameof(TypeContainer.TestNullableVersion), "The JSON value is not in a supported Version format.")]
+    [InlineData(nameof(TypeContainer.TestVersion), "The JSON value could not be converted to System.Version.")]
+    [InlineData(nameof(TypeContainer.TestNullableVersion), "The JSON value could not be converted to System.Version.")]
     public async Task Cannot_update_resource_with_attribute_set_to_invalid_value(string propertyName, string innerParseError)
     {
         // Arrange
