@@ -98,7 +98,7 @@ public sealed partial class JsonApiMiddleware
         if (CodeTimingSessionManager.IsEnabled && _logger.IsEnabled(LogLevel.Information))
         {
             string timingResults = CodeTimingSessionManager.Current.GetResults();
-            string requestMethod = httpContext.Request.Method.Replace(Environment.NewLine, "");
+            string requestMethod = httpContext.Request.Method.Replace(Environment.NewLine, string.Empty);
             string requestUrl = httpContext.Request.GetEncodedUrl();
             LogMeasurement(requestMethod, requestUrl, Environment.NewLine, timingResults);
         }

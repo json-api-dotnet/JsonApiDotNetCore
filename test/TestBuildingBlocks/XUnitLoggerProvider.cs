@@ -145,7 +145,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
                 LogLevel.Warning => "WARN",
                 LogLevel.Error => "FAIL",
                 LogLevel.Critical => "CRIT",
-                LogLevel.None => "",
+                LogLevel.None => string.Empty,
                 _ => throw new ArgumentOutOfRangeException(nameof(logLevel))
             };
         }
