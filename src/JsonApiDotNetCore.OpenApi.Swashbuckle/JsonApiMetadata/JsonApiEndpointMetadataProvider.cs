@@ -8,6 +8,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.Resources.Annotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -280,7 +281,7 @@ internal sealed class JsonApiEndpointMetadataProvider
         ConsistencyGuard.ThrowIf(actionMethod == null);
 
         HashSet<string> httpMethods = actionMethod.GetCustomAttributes<HttpMethodAttribute>(true).SelectMany(httpMethod => httpMethod.HttpMethods).ToHashSet();
-        bool skipHasOneAtRelationshipEndpoint = httpMethods.Contains("POST") || httpMethods.Contains("DELETE");
+        bool skipHasOneAtRelationshipEndpoint = httpMethods.Any(httpMethod => HttpMethods.IsPost(httpMethod) || HttpMethods.IsDelete(httpMethod));
 
         IJsonApiRequestMetadata? requestMetadata = GetCustomRequestMetadata(descriptor, controllerResourceType, hasParameterForId,
             hasParameterForRelationshipName, skipHasOneAtRelationshipEndpoint);
