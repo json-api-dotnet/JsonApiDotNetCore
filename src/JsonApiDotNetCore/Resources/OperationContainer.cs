@@ -37,9 +37,7 @@ public sealed class OperationContainer
         return new OperationContainer(resource, TargetedFields, Request);
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     public ISet<IIdentifiable> GetSecondaryResources()
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         var secondaryResources = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
 

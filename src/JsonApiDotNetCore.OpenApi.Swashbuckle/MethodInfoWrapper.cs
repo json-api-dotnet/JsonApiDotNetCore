@@ -49,7 +49,6 @@ internal sealed class MethodInfoWrapper : MethodInfo
     {
         List<object> customAttributes = _innerMethod.GetCustomAttributes(inherit).ToList();
 
-#pragma warning disable AV1530 // Loop variable should not be written to in loop body
         for (int index = 0; index < customAttributes.Count; index++)
         {
             if (_attributeTypesToHide.Any(attribute => attribute.IsInstanceOfType(customAttributes[index])))
@@ -58,7 +57,6 @@ internal sealed class MethodInfoWrapper : MethodInfo
                 index--;
             }
         }
-#pragma warning restore AV1530 // Loop variable should not be written to in loop body
 
         return customAttributes.ToArray();
     }
@@ -67,7 +65,6 @@ internal sealed class MethodInfoWrapper : MethodInfo
     {
         List<object> customAttributes = _innerMethod.GetCustomAttributes(attributeType, inherit).ToList();
 
-#pragma warning disable AV1530 // Loop variable should not be written to in loop body
         for (int index = 0; index < customAttributes.Count; index++)
         {
             if (_attributeTypesToHide.Any(attribute => attribute.IsInstanceOfType(customAttributes[index])))
@@ -76,7 +73,6 @@ internal sealed class MethodInfoWrapper : MethodInfo
                 index--;
             }
         }
-#pragma warning restore AV1530 // Loop variable should not be written to in loop body
 
         object[] typedArray = (object[])Array.CreateInstance(attributeType, customAttributes.Count);
 
@@ -92,7 +88,6 @@ internal sealed class MethodInfoWrapper : MethodInfo
     {
         List<CustomAttributeData> customAttributes = _innerMethod.GetCustomAttributesData().ToList();
 
-#pragma warning disable AV1530 // Loop variable should not be written to in loop body
         for (int index = 0; index < customAttributes.Count; index++)
         {
             if (_attributeTypesToHide.Any(attribute => attribute.IsAssignableFrom(customAttributes[index].AttributeType)))
@@ -101,7 +96,6 @@ internal sealed class MethodInfoWrapper : MethodInfo
                 index--;
             }
         }
-#pragma warning restore AV1530 // Loop variable should not be written to in loop body
 
         return customAttributes.ToArray();
     }

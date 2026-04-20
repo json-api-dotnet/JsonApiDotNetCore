@@ -105,9 +105,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
             return responseBody;
         }
-#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
         catch (Exception exception)
-#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
         {
             IReadOnlyList<ErrorObject> errors = _exceptionHandler.HandleException(exception);
             httpContext.Response.StatusCode = (int)ErrorObject.GetResponseStatusCode(errors);

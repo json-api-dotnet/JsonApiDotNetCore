@@ -3,8 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
-#pragma warning disable AV1008 // Class should not be static
-
 internal static class ConsistencyGuard
 {
     [ExcludeFromCodeCoverage]

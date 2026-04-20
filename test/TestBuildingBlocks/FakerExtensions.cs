@@ -20,9 +20,7 @@ public static class FakerExtensions
         return faker;
     }
 
-#pragma warning disable AV1008 // Class should not be static
     public static int GetFakerSeed()
-#pragma warning restore AV1008 // Class should not be static
     {
         // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
 
@@ -91,7 +89,6 @@ public static class FakerExtensions
         return faker.Generate();
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     public static List<T> GenerateList<T>(this Faker<T> faker, int count)
         where T : class
     {
@@ -110,5 +107,4 @@ public static class FakerExtensions
     {
         return faker.Generate(count).Cast<TOut>().ToHashSet();
     }
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 }

@@ -27,11 +27,9 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Configures JsonApiDotNetCore by registering resources manually.
     /// </summary>
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public static IServiceCollection AddJsonApi(this IServiceCollection services, Action<JsonApiOptions>? options = null,
         Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null,
         ICollection<Type>? dbContextTypes = null)
-#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         ArgumentNullException.ThrowIfNull(services);
         AssertCompatibleOpenApiVersion();

@@ -12,7 +12,6 @@
     <File Path=".github/workflows/build.yml" />
     <File Path=".gitignore" />
     <File Path="CodingGuidelines.ruleset" />
-    <File Path="CSharpGuidelinesAnalyzer.config" />
     <File Path="Directory.Build.props" />
     <File Path="package-versions.props" />
     <File Path="tests.runsettings" />

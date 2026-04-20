@@ -206,10 +206,8 @@ public partial class ResourceGraphBuilder
     /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
     /// type name.
     /// </param>
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public ResourceGraphBuilder Add<TResource, TId>(string? publicName = null)
         where TResource : class, IIdentifiable<TId>
-#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         return Add(typeof(TResource), typeof(TId), publicName);
     }
@@ -227,9 +225,7 @@ public partial class ResourceGraphBuilder
     /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
     /// type name.
     /// </param>
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public ResourceGraphBuilder Add(Type resourceClrType, Type? idClrType = null, string? publicName = null)
-#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         ArgumentNullException.ThrowIfNull(resourceClrType);
 

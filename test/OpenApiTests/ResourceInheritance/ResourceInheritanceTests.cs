@@ -8,8 +8,6 @@ using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
 
-#pragma warning disable AV1755 // Name of async method should end with Async or TaskAsync
-
 namespace OpenApiTests.ResourceInheritance;
 
 public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>>

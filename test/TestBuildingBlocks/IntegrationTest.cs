@@ -42,10 +42,8 @@ public abstract class IntegrationTest : IAsyncLifetime
         return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Get, requestUrl, null, null, setRequestHeaders);
     }
 
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAsync<TResponseDocument>(string requestUrl,
         object requestBody, string? contentType = null, Action<HttpRequestHeaders>? setRequestHeaders = null)
-#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         MediaTypeHeaderValue mediaType = contentType == null ? DefaultMediaType : MediaTypeHeaderValue.Parse(contentType);
 

@@ -168,9 +168,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     /// <summary>
     /// Provides the value for 'included' in the response body. Uses relationship declaration order.
     /// </summary>
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     public IList<ResourceObject> GetResponseIncluded()
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         AssertIsTreeRoot();
 

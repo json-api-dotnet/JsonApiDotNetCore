@@ -19,10 +19,8 @@ public static class FluentMetaExtensions
     /// Asserts that a "meta" dictionary contains a single element named "total" with the specified value.
     /// </summary>
     [CustomAssertion]
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public static void ContainTotal(this GenericDictionaryAssertions<IDictionary<string, object?>, string, object?> source, int expected,
         string? keyName = null)
-#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         JsonElement element = GetMetaJsonElement(source, keyName ?? "total");
         element.GetInt32().Should().Be(expected);
@@ -32,9 +30,7 @@ public static class FluentMetaExtensions
     /// Asserts that a "meta" dictionary does not contain a single element named "total" when not null.
     /// </summary>
     [CustomAssertion]
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public static void NotContainTotal(this GenericDictionaryAssertions<IDictionary<string, object?>, string, object?> source, string? keyName = null)
-#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         source.Subject?.Should().NotContainKey(keyName ?? "total");
     }

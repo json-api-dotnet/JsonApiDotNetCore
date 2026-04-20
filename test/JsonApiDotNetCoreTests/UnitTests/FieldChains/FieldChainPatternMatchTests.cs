@@ -11,7 +11,6 @@ using Xunit;
 using Xunit.Abstractions;
 
 // ReSharper disable InconsistentNaming
-#pragma warning disable AV1706 // Identifier contains an abbreviation or is too short
 
 namespace JsonApiDotNetCoreTests.UnitTests.FieldChains;
 

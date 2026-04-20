@@ -1,7 +1,5 @@
 using System.Reflection;
 
-#pragma warning disable AV1008 // Class should not be static
-
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Decrypt;
 
 internal static class DatabaseFunctionStub
