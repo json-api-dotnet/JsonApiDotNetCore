@@ -254,7 +254,6 @@ internal sealed class SourceCodeWriter
         _sourceBuilder.Append(indent);
     }
 
-#pragma warning disable AV1008 // Class should not be static
     private static class Tokens
     {
         public const string OpenCurly = "{";
@@ -262,5 +261,4 @@ internal sealed class SourceCodeWriter
         public const string CloseParen = ")";
         public const string Comma = ",";
     }
-#pragma warning restore AV1008 // Class should not be static
 }

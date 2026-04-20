@@ -2,8 +2,6 @@ using JsonApiDotNetCore.Middleware;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
-#pragma warning disable AV1008 // Class should not be static
-
 internal static class OpenApiMediaTypeExtension
 {
     public const string ExtensionNamespace = "openapi";

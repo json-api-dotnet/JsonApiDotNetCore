@@ -71,9 +71,7 @@ internal sealed class ResourceFactory : IResourceFactory
                 ? (IIdentifiable)Activator.CreateInstance(type)!
                 : (IIdentifiable)ActivatorUtilities.CreateInstance(serviceProvider, type);
         }
-#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
         catch (Exception exception)
-#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
         {
             throw new InvalidOperationException(
                 hasSingleConstructorWithoutParameters
@@ -105,9 +103,7 @@ internal sealed class ResourceFactory : IResourceFactory
                 Expression argumentExpression = SystemExpressionBuilder.CloseOver(constructorArgument);
                 constructorArguments.Add(argumentExpression);
             }
-#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             catch (Exception exception)
-#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
                 throw new InvalidOperationException(
                     $"Failed to create an instance of '{resourceClrType.FullName}': Parameter '{constructorParameter.Name}' could not be resolved.", exception);

@@ -8,7 +8,6 @@
   <!-- Workaround for compiler regression at https://github.com/dotnet/roslyn/issues/80756 -->
   <Target Name="DisableSlowAnalyzers" Condition="'$(Configuration)' == 'Debug'" BeforeTargets="CoreCompile">
     <ItemGroup>
-      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CSharpGuidelinesAnalyzer'" />
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.CodeAnalysis.CSharp.CodeStyle'" />
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.CodeAnalysis.NetAnalyzers'" />
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.CodeAnalysis.CSharp.NetAnalyzers'" />

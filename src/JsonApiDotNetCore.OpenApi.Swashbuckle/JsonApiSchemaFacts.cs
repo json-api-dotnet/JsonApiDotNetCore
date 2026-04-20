@@ -1,8 +1,6 @@
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 
-#pragma warning disable AV1008 // Class should not be static
-
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal static class JsonApiSchemaFacts

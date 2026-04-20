@@ -108,16 +108,12 @@ public interface IResourceDefinition<TResource, in TId>
     /// }
     /// ]]></code>
     /// </example>
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     QueryStringParameterHandlers<TResource>? OnRegisterQueryableHandlersForQueryStringParameters();
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 
     /// <summary>
     /// Enables adding JSON:API meta information, specific to this resource.
     /// </summary>
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     IDictionary<string, object?>? GetMeta(TResource resource);
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 
     /// <summary>
     /// Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.

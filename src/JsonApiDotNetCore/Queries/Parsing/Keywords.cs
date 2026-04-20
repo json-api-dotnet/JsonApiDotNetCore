@@ -1,8 +1,5 @@
 using JetBrains.Annotations;
 
-#pragma warning disable AV1008 // Class should not be static
-#pragma warning disable AV1010 // Member hides inherited member
-
 namespace JsonApiDotNetCore.Queries.Parsing;
 
 [PublicAPI]

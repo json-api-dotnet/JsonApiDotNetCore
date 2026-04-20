@@ -102,8 +102,6 @@ internal static class CollectionExtensions
 
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
     {
-#pragma warning disable AV1250 // Evaluate LINQ query before returning it
         return source.Where(element => element is not null)!;
-#pragma warning restore AV1250 // Evaluate LINQ query before returning it
     }
 }

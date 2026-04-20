@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
-#pragma warning disable AV1561 // Signature contains too many parameters
-
 namespace JsonApiDotNetCoreTests.UnitTests.Middleware;
 
 public sealed class JsonApiMiddlewareTests

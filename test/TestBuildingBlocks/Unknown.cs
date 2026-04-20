@@ -2,7 +2,6 @@ using JsonApiDotNetCore.Resources;
 
 // ReSharper disable MemberCanBeInternal
 // ReSharper disable MemberCanBePrivate.Global
-#pragma warning disable AV1008 // Class should not be static
 
 namespace TestBuildingBlocks;
 

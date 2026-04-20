@@ -2,8 +2,6 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using JetBrains.Annotations;
 
-#pragma warning disable AV1008 // Class should not be static
-
 namespace JsonApiDotNetCore.Resources;
 
 /// <summary>

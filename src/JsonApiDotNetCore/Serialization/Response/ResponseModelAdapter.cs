@@ -234,9 +234,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return resourceObject;
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
         IImmutableSet<ResourceFieldAttribute> fieldSet)
     {
         ArgumentNullException.ThrowIfNull(resource);

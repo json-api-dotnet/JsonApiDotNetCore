@@ -235,10 +235,7 @@ public sealed class ControllerSourceGenerator : IIncrementalGenerator
         foreach ((TypeInfo controllerType, string hintFileName) in collection.OrderBy(static element => element.ControllerType.ToString(),
             StringComparer.Ordinal))
         {
-#pragma warning disable AV1532 // Loop statement contains nested loop
-            // Justification: optimized for performance.
             for (int index = -1;; index++)
-#pragma warning restore AV1532 // Loop statement contains nested loop
             {
                 if (index == -1)
                 {
@@ -284,9 +281,7 @@ public sealed class ControllerSourceGenerator : IIncrementalGenerator
 
             fileContent = writer.Write(in fullController);
         }
-#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
         catch (Exception exception)
-#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
         {
             fileContent = GetErrorText(exception, in fullController);
         }

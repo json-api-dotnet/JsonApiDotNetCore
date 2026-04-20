@@ -4,10 +4,6 @@ using JetBrains.Annotations;
 
 // Adapted from https://github.com/PrismLibrary/Prism/blob/9.0.537/src/Prism.Core/Mvvm/BindableBase.cs for JsonApiDotNetCore.
 
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
-#pragma warning disable AV1554 // Method contains optional parameter in type hierarchy
-#pragma warning disable AV1562 // Do not declare a parameter as ref or out
-
 namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 /// <summary>

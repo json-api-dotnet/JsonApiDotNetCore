@@ -1,5 +1,3 @@
-#pragma warning disable AV1008 // Class should not be static
-
 namespace JsonApiDotNetCore.Diagnostics;
 
 internal static class MeasurementSettings

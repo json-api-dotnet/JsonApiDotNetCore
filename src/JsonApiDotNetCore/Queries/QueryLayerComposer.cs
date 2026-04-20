@@ -587,9 +587,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return pagination;
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual FieldSelection? GetSelectionForSparseAttributeSet(ResourceType resourceType)
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 

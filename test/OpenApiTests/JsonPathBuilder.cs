@@ -3,8 +3,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources.Annotations;
 
-#pragma warning disable AV1008 // Class should not be static
-
 namespace OpenApiTests;
 
 internal static class JsonPathBuilder

@@ -17,7 +17,5 @@ public interface IMetaBuilder
     /// <summary>
     /// Builds the top-level meta data object.
     /// </summary>
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     IDictionary<string, object?>? Build();
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 }
