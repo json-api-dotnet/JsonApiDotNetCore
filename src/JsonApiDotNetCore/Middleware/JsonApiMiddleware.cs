@@ -134,7 +134,7 @@ public sealed partial class JsonApiMiddleware
     {
         AssertNoAtomicOperationsExtension(extensions);
 
-        request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
+        request.IsReadOnly = HttpMethods.IsGet(httpRequest.Method) || HttpMethods.IsHead(httpRequest.Method);
         request.PrimaryResourceType = primaryResourceType;
         request.PrimaryId = GetPrimaryRequestId(routeValues);
 
@@ -148,9 +148,9 @@ public sealed partial class JsonApiMiddleware
             // @formatter:keep_existing_linebreaks true
 
             request.WriteOperation =
-                httpRequest.Method == HttpMethod.Post.Method ? WriteOperationKind.AddToRelationship :
-                httpRequest.Method == HttpMethod.Patch.Method ? WriteOperationKind.SetRelationship :
-                httpRequest.Method == HttpMethod.Delete.Method ? WriteOperationKind.RemoveFromRelationship : null;
+                HttpMethods.IsPost(httpRequest.Method) ? WriteOperationKind.AddToRelationship :
+                HttpMethods.IsPatch(httpRequest.Method) ? WriteOperationKind.SetRelationship :
+                HttpMethods.IsDelete(httpRequest.Method) ? WriteOperationKind.RemoveFromRelationship : null;
 
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore
@@ -171,9 +171,9 @@ public sealed partial class JsonApiMiddleware
             // @formatter:keep_existing_linebreaks true
 
             request.WriteOperation =
-                httpRequest.Method == HttpMethod.Post.Method ? WriteOperationKind.CreateResource :
-                httpRequest.Method == HttpMethod.Patch.Method ? WriteOperationKind.UpdateResource :
-                httpRequest.Method == HttpMethod.Delete.Method ? WriteOperationKind.DeleteResource : null;
+                HttpMethods.IsPost(httpRequest.Method) ? WriteOperationKind.CreateResource :
+                HttpMethods.IsPatch(httpRequest.Method) ? WriteOperationKind.UpdateResource :
+                HttpMethods.IsDelete(httpRequest.Method) ? WriteOperationKind.DeleteResource : null;
 
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore

@@ -57,7 +57,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
         string? responseBody = GetResponseBody(model, httpContext);
 
-        if (httpContext.Request.Method == HttpMethod.Head.Method)
+        if (HttpMethods.IsHead(httpContext.Request.Method))
         {
             httpContext.Response.GetTypedHeaders().ContentLength = responseBody == null ? 0 : Encoding.UTF8.GetByteCount(responseBody);
             return;
@@ -136,7 +136,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
     private bool SetETagResponseHeader(HttpRequest request, HttpResponse response, string responseContent)
     {
-        bool isReadOnly = request.Method == HttpMethod.Get.Method || request.Method == HttpMethod.Head.Method;
+        bool isReadOnly = HttpMethods.IsGet(request.Method) || HttpMethods.IsHead(request.Method);
 
         if (isReadOnly && response.StatusCode == (int)HttpStatusCode.OK)
         {
