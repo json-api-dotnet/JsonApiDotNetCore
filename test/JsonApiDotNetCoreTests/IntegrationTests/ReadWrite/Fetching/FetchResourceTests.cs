@@ -16,6 +16,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
         _testContext = testContext;
 
         testContext.UseController<WorkItemsController>();
+        testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<UserAccountsController>();
         testContext.UseController<WorkTagsController>();
     }
@@ -192,6 +193,34 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
+    public async Task Cannot_get_secondary_ManyToOne_resource_with_blocked_capability()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItems/{workItem.StringId}/group";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be("Retrieving the relationship 'group' of type 'workItems' is not allowed.");
+    }
+
+    [Fact]
     public async Task Can_get_secondary_OneToMany_resources()
     {
         // Arrange
@@ -250,6 +279,34 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Cannot_get_secondary_OneToMany_resources_with_blocked_capability()
+    {
+        // Arrange
+        WorkItemGroup group = _fakers.WorkItemGroup.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Groups.Add(group);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItemGroups/{group.StringId}/items";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be("Retrieving the relationship 'items' of type 'workItemGroups' is not allowed.");
     }
 
     [Fact]

@@ -289,7 +289,7 @@ Indicates whether the relationship can be returned in responses. When not allowe
 Otherwise, the relationship (and its related resources, when included) are silently omitted.
 
 > [!WARNING]
-> This setting does not affect retrieving the related resources directly.
+> This setting affects the secondary and relationship endpoints, but it does not affect retrieving the related resources directly.
 
 ```c#
 #nullable enable
