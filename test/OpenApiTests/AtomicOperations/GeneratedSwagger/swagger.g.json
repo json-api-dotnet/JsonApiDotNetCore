@@ -2038,13 +2038,6 @@
           {
             "type": "object",
             "properties": {
-              "taughtBy": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/toManyTeacherInRequest"
-                  }
-                ]
-              },
               "enrollments": {
                 "allOf": [
                   {
@@ -2290,13 +2283,6 @@
           {
             "type": "object",
             "properties": {
-              "taughtBy": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/toManyTeacherInRequest"
-                  }
-                ]
-              },
               "enrollments": {
                 "allOf": [
                   {
@@ -3078,28 +3064,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/studentIdentifierInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "toManyTeacherInRequest": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/teacherIdentifierInRequest"
             }
           },
           "meta": {
