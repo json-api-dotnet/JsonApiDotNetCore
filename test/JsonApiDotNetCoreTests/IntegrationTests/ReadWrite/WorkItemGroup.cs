@@ -22,6 +22,8 @@ public sealed class WorkItemGroup : Identifiable<Guid>
     [HasOne]
     public RgbColor? Color { get; set; }
 
-    [HasMany(Capabilities = HasManyCapabilities.All & ~(HasManyCapabilities.AllowSet | HasManyCapabilities.AllowAdd | HasManyCapabilities.AllowRemove))]
+    [HasMany(Capabilities =
+        HasManyCapabilities.All &
+        ~(HasManyCapabilities.AllowView | HasManyCapabilities.AllowSet | HasManyCapabilities.AllowAdd | HasManyCapabilities.AllowRemove))]
     public IList<WorkItem> Items { get; set; } = new List<WorkItem>();
 }

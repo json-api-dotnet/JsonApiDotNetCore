@@ -21,6 +21,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         _testContext = testContext;
 
         testContext.UseController<CalendarsController>();
+        testContext.UseController<AppointmentsController>();
         testContext.UseController<RemindersController>();
 
         testContext.ConfigureServices(services =>
@@ -202,22 +203,22 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
         DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
-        Calendar calendar = _fakers.Calendar.GenerateOne();
-        calendar.Appointments = _fakers.Appointment.GenerateSet(2);
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
 
-        calendar.Appointments.ElementAt(0).Reminders = _fakers.Reminder.GenerateList(1);
-        calendar.Appointments.ElementAt(0).Reminders[0].RemindsAt = utcNow.UtcDateTime;
+        appointments[0].Reminders = _fakers.Reminder.GenerateList(1);
+        appointments[0].Reminders[0].RemindsAt = utcNow.UtcDateTime;
 
-        calendar.Appointments.ElementAt(1).Reminders = _fakers.Reminder.GenerateList(1);
-        calendar.Appointments.ElementAt(1).Reminders[0].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(30)).UtcDateTime;
+        appointments[1].Reminders = _fakers.Reminder.GenerateList(1);
+        appointments[1].Reminders[0].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(30)).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Calendars.Add(calendar);
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/calendars/{calendar.StringId}/appointments?filter=has(reminders,equals(remindsAt,timeOffset('%2B0:30:00')))";
+        const string route = "/appointments?filter=has(reminders,equals(remindsAt,timeOffset('%2B0:30:00')))";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -227,6 +228,6 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Data.ManyValue[0].Id.Should().Be(calendar.Appointments.ElementAt(1).StringId);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
     }
 }

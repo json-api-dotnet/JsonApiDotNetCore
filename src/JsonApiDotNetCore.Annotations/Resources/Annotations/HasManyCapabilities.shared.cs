@@ -16,7 +16,7 @@ public enum HasManyCapabilities
     /// disabled will return an HTTP 400 response. Otherwise, the relationship (and its related resources, when included) are silently omitted.
     /// </summary>
     /// <remarks>
-    /// Note this setting does not affect retrieving the related resources directly.
+    /// Note this setting affects the secondary and relationship endpoints, but it does not affect retrieving the related resources directly.
     /// </remarks>
     AllowView = 1,
 

@@ -115,6 +115,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         AssertHasRelationship(_request.Relationship, relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertSecondaryResourceTypeInJsonApiRequestIsNotNull(_request.SecondaryResourceType);
+        AssertCanViewRelationship(_request.Relationship);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get secondary resource(s)");
 
@@ -167,6 +168,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         AssertHasRelationship(_request.Relationship, relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertSecondaryResourceTypeInJsonApiRequestIsNotNull(_request.SecondaryResourceType);
+        AssertCanViewRelationship(_request.Relationship);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get relationship");
 
@@ -693,6 +695,22 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         if (relationship == null)
         {
             throw new RelationshipNotFoundException(name, _request.PrimaryResourceType!.PublicName);
+        }
+    }
+
+    [AssertionMethod]
+    private void AssertCanViewRelationship(RelationshipAttribute relationship)
+    {
+        bool allowView = relationship switch
+        {
+            HasOneAttribute hasOneRelationship when !hasOneRelationship.Capabilities.HasFlag(HasOneCapabilities.AllowView) => false,
+            HasManyAttribute hasManyRelationship when !hasManyRelationship.Capabilities.HasFlag(HasManyCapabilities.AllowView) => false,
+            _ => true
+        };
+
+        if (!allowView)
+        {
+            throw new BlockedGetRelationshipException(relationship);
         }
     }
 
