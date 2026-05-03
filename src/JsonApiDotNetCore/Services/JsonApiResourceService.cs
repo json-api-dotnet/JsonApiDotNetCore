@@ -701,14 +701,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     [AssertionMethod]
     private void AssertCanViewRelationship(RelationshipAttribute relationship)
     {
-        bool allowView = relationship switch
-        {
-            HasOneAttribute hasOneRelationship when !hasOneRelationship.Capabilities.HasFlag(HasOneCapabilities.AllowView) => false,
-            HasManyAttribute hasManyRelationship when !hasManyRelationship.Capabilities.HasFlag(HasManyCapabilities.AllowView) => false,
-            _ => true
-        };
-
-        if (!allowView)
+        if (relationship.IsViewBlocked())
         {
             throw new BlockedGetRelationshipException(relationship);
         }

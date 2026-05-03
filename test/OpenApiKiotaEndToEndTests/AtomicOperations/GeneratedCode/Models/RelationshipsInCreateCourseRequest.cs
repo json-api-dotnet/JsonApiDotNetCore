@@ -21,13 +21,6 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             set { BackingStore?.Set("enrollments", value); }
         }
 
-        /// <summary>The taughtBy property</summary>
-        public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyTeacherInRequest? TaughtBy
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyTeacherInRequest?>("taughtBy"); }
-            set { BackingStore?.Set("taughtBy", value); }
-        }
-
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
@@ -48,7 +41,6 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
                 { "enrollments", n => { Enrollments = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyEnrollmentInRequest>(global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyEnrollmentInRequest.CreateFromDiscriminatorValue); } },
-                { "taughtBy", n => { TaughtBy = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyTeacherInRequest>(global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyTeacherInRequest.CreateFromDiscriminatorValue); } },
             };
         }
 
@@ -61,7 +53,6 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyEnrollmentInRequest>("enrollments", Enrollments);
-            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ToManyTeacherInRequest>("taughtBy", TaughtBy);
         }
     }
 }

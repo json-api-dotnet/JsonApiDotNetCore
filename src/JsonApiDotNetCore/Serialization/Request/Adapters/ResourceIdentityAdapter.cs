@@ -300,7 +300,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     private static void AssertAddToRelationshipNotBlocked(HasManyAttribute relationship, RequestAdapterState state)
     {
-        if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd))
+        if (relationship.IsAddBlocked())
         {
             throw new ModelConversionException(state.Position, "Relationship cannot be added to.",
                 $"The relationship '{relationship}' on resource type '{relationship.LeftType}' cannot be added to.");
@@ -309,7 +309,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     private static void AssertRemoveFromRelationshipNotBlocked(HasManyAttribute relationship, RequestAdapterState state)
     {
-        if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove))
+        if (relationship.IsRemoveBlocked())
         {
             throw new ModelConversionException(state.Position, "Relationship cannot be removed from.",
                 $"The relationship '{relationship}' on resource type '{relationship.LeftType}' cannot be removed from.");
