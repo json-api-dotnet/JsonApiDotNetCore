@@ -149,17 +149,17 @@ public sealed class DisablePaginationOnRelationshipTests : IClassFixture<Integra
     public async Task Ignores_pagination_from_query_string()
     {
         // Arrange
-        Calendar calendar = _fakers.Calendar.GenerateOne();
-        calendar.Appointments = _fakers.Appointment.GenerateSet(3);
-        calendar.Appointments.ElementAt(0).Reminders = _fakers.Reminder.GenerateList(7);
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(3);
+        appointments[0].Reminders = _fakers.Reminder.GenerateList(7);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Calendars.Add(calendar);
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"calendars/{calendar.StringId}/appointments?include=reminders&page[size]=2,reminders:4";
+        const string route = "appointments?include=reminders&page[size]=2,reminders:4";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -170,7 +170,7 @@ public sealed class DisablePaginationOnRelationshipTests : IClassFixture<Integra
         responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("appointments"));
 
-        ResourceObject firstAppointment = responseDocument.Data.ManyValue.Single(resource => resource.Id == calendar.Appointments.ElementAt(0).StringId);
+        ResourceObject firstAppointment = responseDocument.Data.ManyValue.Single(resource => resource.Id == appointments[0].StringId);
 
         firstAppointment.Relationships.Should().ContainKey("reminders").WhoseValue.With(value =>
         {

@@ -16,6 +16,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         _testContext = testContext;
 
         testContext.UseController<WorkItemsController>();
+        testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<UserAccountsController>();
     }
 
@@ -66,6 +67,33 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.Value.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Cannot_get_ManyToOne_relationship_with_blocked_capability()
+    {
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItems/{workItem.StringId}/relationships/group";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be("Retrieving the relationship 'group' of type 'workItems' is not allowed.");
     }
 
     [Fact]
@@ -123,6 +151,33 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Cannot_get_OneToMany_relationship_with_blocked_capability()
+    {
+        WorkItemGroup group = _fakers.WorkItemGroup.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Groups.Add(group);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItemGroups/{group.StringId}/relationships/items";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be("Retrieving the relationship 'items' of type 'workItemGroups' is not allowed.");
     }
 
     [Fact]

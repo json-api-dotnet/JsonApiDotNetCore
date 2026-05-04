@@ -47,6 +47,6 @@ public sealed class WorkItem : Identifiable<int>
     [HasMany]
     public IList<WorkItem> RelatedTo { get; set; } = new List<WorkItem>();
 
-    [HasOne(Capabilities = HasOneCapabilities.All & ~HasOneCapabilities.AllowSet)]
+    [HasOne(Capabilities = HasOneCapabilities.All & ~(HasOneCapabilities.AllowView | HasOneCapabilities.AllowSet))]
     public WorkItemGroup? Group { get; set; }
 }
