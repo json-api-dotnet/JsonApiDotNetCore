@@ -128,7 +128,7 @@ public sealed class TypeContainer : Identifiable<long>
     public char? TestNullableChar { get; set; }
 
     [Attr]
-    public required string TestString { get; set; }
+    public string TestString { get; set; } = null!;
 
     [Attr]
     public string? TestNullableString { get; set; }
@@ -186,13 +186,13 @@ public sealed class TypeContainer : Identifiable<long>
     public Guid? TestNullableGuid { get; set; }
 
     [Attr]
-    public required Uri TestUri { get; set; }
+    public Uri TestUri { get; set; } = null!;
 
     [Attr]
     public Uri? TestNullableUri { get; set; }
 
     [Attr]
-    public required IPAddress TestIPAddress { get; set; }
+    public IPAddress TestIPAddress { get; set; } = null!;
 
     [Attr]
     public IPAddress? TestNullableIPAddress { get; set; }
@@ -204,7 +204,7 @@ public sealed class TypeContainer : Identifiable<long>
     public IPNetwork? TestNullableIPNetwork { get; set; }
 
     [Attr]
-    public required Version TestVersion { get; set; }
+    public Version TestVersion { get; set; } = null!;
 
     [Attr]
     public Version? TestNullableVersion { get; set; }
