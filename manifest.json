@@ -931,6 +931,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Errors.BlockedGetRelationshipException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Errors.BlockedGetRelationshipException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "JsonApiDotNetCore.Errors.BlockedGetRelationshipException",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException.yml",
       "output": {
         ".html": {

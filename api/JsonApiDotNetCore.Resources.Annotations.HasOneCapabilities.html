@@ -137,7 +137,7 @@ public enum HasOneCapabilities</code></pre>
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowView"><code>AllowView = 1</code></dt>
   <dd><p>Whether or not the relationship can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
 disabled will return an HTTP 400 response. Otherwise, the relationship (and its related resources, when included) are silently omitted.</p>
-<p>Note this setting does not affect retrieving the related resources directly.</p>
+<p>Note this setting affects the secondary and relationship endpoints, but it does not affect retrieving the related resources directly.</p>
 </dd>
   
     <dt id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_None"><code>None = 0</code></dt>

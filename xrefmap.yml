@@ -3931,6 +3931,31 @@ references:
   commentId: N:JsonApiDotNetCore.Errors
   fullName: JsonApiDotNetCore.Errors
   nameWithType: JsonApiDotNetCore.Errors
+- uid: JsonApiDotNetCore.Errors.BlockedGetRelationshipException
+  name: BlockedGetRelationshipException
+  href: api/JsonApiDotNetCore.Errors.BlockedGetRelationshipException.html
+  commentId: T:JsonApiDotNetCore.Errors.BlockedGetRelationshipException
+  fullName: JsonApiDotNetCore.Errors.BlockedGetRelationshipException
+  nameWithType: BlockedGetRelationshipException
+- uid: JsonApiDotNetCore.Errors.BlockedGetRelationshipException.#ctor(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  name: BlockedGetRelationshipException(RelationshipAttribute)
+  href: api/JsonApiDotNetCore.Errors.BlockedGetRelationshipException.html#JsonApiDotNetCore_Errors_BlockedGetRelationshipException__ctor_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_
+  commentId: M:JsonApiDotNetCore.Errors.BlockedGetRelationshipException.#ctor(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  name.vb: New(RelationshipAttribute)
+  fullName: JsonApiDotNetCore.Errors.BlockedGetRelationshipException.BlockedGetRelationshipException(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  fullName.vb: JsonApiDotNetCore.Errors.BlockedGetRelationshipException.New(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  nameWithType: BlockedGetRelationshipException.BlockedGetRelationshipException(RelationshipAttribute)
+  nameWithType.vb: BlockedGetRelationshipException.New(RelationshipAttribute)
+- uid: JsonApiDotNetCore.Errors.BlockedGetRelationshipException.#ctor*
+  name: BlockedGetRelationshipException
+  href: api/JsonApiDotNetCore.Errors.BlockedGetRelationshipException.html#JsonApiDotNetCore_Errors_BlockedGetRelationshipException__ctor_
+  commentId: Overload:JsonApiDotNetCore.Errors.BlockedGetRelationshipException.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.Errors.BlockedGetRelationshipException.BlockedGetRelationshipException
+  fullName.vb: JsonApiDotNetCore.Errors.BlockedGetRelationshipException.New
+  nameWithType: BlockedGetRelationshipException.BlockedGetRelationshipException
+  nameWithType.vb: BlockedGetRelationshipException.New
 - uid: JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException
   name: CannotClearRequiredRelationshipException
   href: api/JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException.html
