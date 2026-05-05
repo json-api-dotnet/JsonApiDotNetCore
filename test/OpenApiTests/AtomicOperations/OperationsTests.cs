@@ -556,13 +556,6 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     {
                       "type": "object",
                       "properties": {
-                        "taughtBy": {
-                          "allOf": [
-                            {
-                              "$ref": "#/components/schemas/toManyTeacherInRequest"
-                            }
-                          ]
-                        },
                         "enrollments": {
                           "allOf": [
                             {
@@ -694,13 +687,6 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     {
                       "type": "object",
                       "properties": {
-                        "taughtBy": {
-                          "allOf": [
-                            {
-                              "$ref": "#/components/schemas/toManyTeacherInRequest"
-                            }
-                          ]
-                        },
                         "enrollments": {
                           "allOf": [
                             {

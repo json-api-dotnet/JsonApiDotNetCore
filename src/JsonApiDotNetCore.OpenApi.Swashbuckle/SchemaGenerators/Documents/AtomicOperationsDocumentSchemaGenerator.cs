@@ -433,7 +433,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
         if (writeOperation == WriteOperationKind.SetRelationship)
         {
-            isEnabled = relationship.Capabilities.HasFlag(HasOneCapabilities.AllowSet);
+            isEnabled = !relationship.IsSetBlocked();
         }
 
         ConsistencyGuard.ThrowIf(isEnabled == null);
@@ -446,15 +446,15 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
         if (writeOperation == WriteOperationKind.SetRelationship)
         {
-            isEnabled = relationship.Capabilities.HasFlag(HasManyCapabilities.AllowSet);
+            isEnabled = !relationship.IsSetBlocked();
         }
         else if (writeOperation == WriteOperationKind.AddToRelationship)
         {
-            isEnabled = relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd);
+            isEnabled = !relationship.IsAddBlocked();
         }
         else if (writeOperation == WriteOperationKind.RemoveFromRelationship)
         {
-            isEnabled = relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove);
+            isEnabled = !relationship.IsRemoveBlocked();
         }
 
         ConsistencyGuard.ThrowIf(isEnabled == null);

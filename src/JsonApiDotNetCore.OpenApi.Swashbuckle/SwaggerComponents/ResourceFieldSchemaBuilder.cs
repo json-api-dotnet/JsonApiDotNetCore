@@ -185,19 +185,66 @@ internal sealed class ResourceFieldSchemaBuilder
         ArgumentNullException.ThrowIfNull(schemaRepository);
         AssertHasNoProperties(inlineSchemaForRelationships);
 
+        HasOneCapabilities hasOneRequiredCapability = GetRequiredCapabilityForHasOneRelationships(_resourceSchemaType.SchemaOpenType);
+        HasManyCapabilities hasManyRequiredCapability = GetRequiredCapabilityForHasManyRelationships(_resourceSchemaType.SchemaOpenType);
+
         foreach (string publicName in _schemasForResourceFields.Keys)
         {
             RelationshipAttribute? matchingRelationship = _resourceSchemaType.ResourceType.FindRelationshipByPublicName(publicName);
 
             if (matchingRelationship != null)
             {
-                Type identifierSchemaOpenType = forRequestSchema ? typeof(IdentifierInRequest<>) : typeof(IdentifierInResponse<>);
-                Type identifierSchemaConstructedType = identifierSchemaOpenType.MakeGenericType(matchingRelationship.RightType.ClrType);
+                bool hasRequiredCapability = matchingRelationship switch
+                {
+                    HasOneAttribute hasOneRelationship => hasOneRelationship.Capabilities.HasFlag(hasOneRequiredCapability),
+                    HasManyAttribute hasManyRelationship => hasManyRelationship.Capabilities.HasFlag(hasManyRequiredCapability),
+                    _ => throw new InvalidOperationException($"Unknown relationship type '{matchingRelationship.GetType().Name}'.")
+                };
 
-                _ = _dataSchemaGenerator.GenerateSchema(identifierSchemaConstructedType, forRequestSchema, schemaRepository);
-                AddRelationshipSchemaToResourceData(matchingRelationship, inlineSchemaForRelationships, schemaRepository);
+                if (hasRequiredCapability)
+                {
+                    Type identifierSchemaOpenType = forRequestSchema ? typeof(IdentifierInRequest<>) : typeof(IdentifierInResponse<>);
+                    Type identifierSchemaConstructedType = identifierSchemaOpenType.MakeGenericType(matchingRelationship.RightType.ClrType);
+
+                    _ = _dataSchemaGenerator.GenerateSchema(identifierSchemaConstructedType, forRequestSchema, schemaRepository);
+                    AddRelationshipSchemaToResourceData(matchingRelationship, inlineSchemaForRelationships, schemaRepository);
+                }
             }
         }
+    }
+
+    private static HasOneCapabilities GetRequiredCapabilityForHasOneRelationships(Type resourceDataOpenType)
+    {
+        HasOneCapabilities? capabilities = null;
+
+        if (resourceDataOpenType == typeof(DataInResponse<>))
+        {
+            capabilities = HasOneCapabilities.AllowView;
+        }
+        else if (resourceDataOpenType == typeof(DataInCreateRequest<>) || resourceDataOpenType == typeof(DataInUpdateRequest<>))
+        {
+            capabilities = HasOneCapabilities.AllowSet;
+        }
+
+        ConsistencyGuard.ThrowIf(capabilities == null);
+        return capabilities.Value;
+    }
+
+    private static HasManyCapabilities GetRequiredCapabilityForHasManyRelationships(Type resourceDataOpenType)
+    {
+        HasManyCapabilities? capabilities = null;
+
+        if (resourceDataOpenType == typeof(DataInResponse<>))
+        {
+            capabilities = HasManyCapabilities.AllowView;
+        }
+        else if (resourceDataOpenType == typeof(DataInCreateRequest<>) || resourceDataOpenType == typeof(DataInUpdateRequest<>))
+        {
+            capabilities = HasManyCapabilities.AllowSet;
+        }
+
+        ConsistencyGuard.ThrowIf(capabilities == null);
+        return capabilities.Value;
     }
 
     private void AddRelationshipSchemaToResourceData(RelationshipAttribute relationship, OpenApiSchema inlineSchemaForRelationships,

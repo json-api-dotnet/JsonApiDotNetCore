@@ -42,4 +42,22 @@ internal static class CapabilitiesExtensions
             _ => false
         };
     }
+
+    public static bool IsAddBlocked(this RelationshipAttribute relationship)
+    {
+        return relationship switch
+        {
+            HasManyAttribute hasManyRelationship => !hasManyRelationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd),
+            _ => false
+        };
+    }
+
+    public static bool IsRemoveBlocked(this RelationshipAttribute relationship)
+    {
+        return relationship switch
+        {
+            HasManyAttribute hasManyRelationship => !hasManyRelationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove),
+            _ => false
+        };
+    }
 }

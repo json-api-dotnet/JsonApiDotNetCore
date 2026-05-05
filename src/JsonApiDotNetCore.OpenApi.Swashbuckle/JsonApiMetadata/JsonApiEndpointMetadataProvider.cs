@@ -92,7 +92,7 @@ internal sealed class JsonApiEndpointMetadataProvider
             JsonApiEndpoints.Post => GetPostResourceRequestMetadata(primaryResourceType.ClrType),
             JsonApiEndpoints.Patch => GetPatchResourceRequestMetadata(primaryResourceType.ClrType),
             JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship => GetRelationshipRequestMetadata(
-                primaryResourceType.Relationships, endpoint != JsonApiEndpoints.PatchRelationship),
+                endpoint, primaryResourceType.Relationships),
             _ => null
         };
     }
@@ -111,14 +111,27 @@ internal sealed class JsonApiEndpointMetadataProvider
         return new PrimaryRequestMetadata(documentType);
     }
 
-    private RelationshipRequestMetadata GetRelationshipRequestMetadata(IReadOnlyCollection<RelationshipAttribute> relationships, bool ignoreHasOneRelationships)
+    private RelationshipRequestMetadata GetRelationshipRequestMetadata(JsonApiEndpoints endpoint, IReadOnlyCollection<RelationshipAttribute> relationships)
     {
-        IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>() : relationships;
+        IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = FilterRelationshipsForEndpoint(endpoint, relationships);
 
         Dictionary<RelationshipAttribute, Type> documentTypesByRelationship = relationshipsOfEndpoint.ToDictionary(relationship => relationship,
             _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest);
 
         return new RelationshipRequestMetadata(documentTypesByRelationship.AsReadOnly());
+    }
+
+    private static IEnumerable<RelationshipAttribute> FilterRelationshipsForEndpoint(JsonApiEndpoints endpoint,
+        IReadOnlyCollection<RelationshipAttribute> relationships)
+    {
+        return endpoint switch
+        {
+            JsonApiEndpoints.GetRelationship => relationships.Where(relationship => !relationship.IsViewBlocked()),
+            JsonApiEndpoints.PatchRelationship => relationships.Where(relationship => !relationship.IsSetBlocked()),
+            JsonApiEndpoints.PostRelationship => relationships.OfType<HasManyAttribute>().Where(relationship => !relationship.IsAddBlocked()),
+            JsonApiEndpoints.DeleteRelationship => relationships.OfType<HasManyAttribute>().Where(relationship => !relationship.IsRemoveBlocked()),
+            _ => relationships
+        };
     }
 
     private IJsonApiResponseMetadata? GetResponseMetadata(JsonApiEndpoints endpoint, ResourceType primaryResourceType,
@@ -131,11 +144,9 @@ internal sealed class JsonApiEndpointMetadataProvider
                 successStatusCodes, errorStatusCodes),
             JsonApiEndpoints.Delete => GetEmptyPrimaryResponseMetadata(successStatusCodes, errorStatusCodes),
             JsonApiEndpoints.GetSecondary => GetSecondaryResponseMetadata(primaryResourceType.Relationships, successStatusCodes, errorStatusCodes),
-            JsonApiEndpoints.GetRelationship => GetRelationshipResponseMetadata(primaryResourceType.Relationships, false, successStatusCodes, errorStatusCodes),
-            JsonApiEndpoints.PatchRelationship => GetEmptyRelationshipResponseMetadata(primaryResourceType.Relationships, false, successStatusCodes,
-                errorStatusCodes),
-            JsonApiEndpoints.PostRelationship or JsonApiEndpoints.DeleteRelationship => GetEmptyRelationshipResponseMetadata(primaryResourceType.Relationships,
-                true, successStatusCodes, errorStatusCodes),
+            JsonApiEndpoints.GetRelationship => GetRelationshipResponseMetadata(primaryResourceType.Relationships, successStatusCodes, errorStatusCodes),
+            JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.PostRelationship or JsonApiEndpoints.DeleteRelationship =>
+                GetEmptyRelationshipResponseMetadata(endpoint, primaryResourceType.Relationships, successStatusCodes, errorStatusCodes),
             _ => null
         };
     }
@@ -238,10 +249,9 @@ internal sealed class JsonApiEndpointMetadataProvider
     }
 
     private RelationshipResponseMetadata GetRelationshipResponseMetadata(IReadOnlyCollection<RelationshipAttribute> relationships,
-        bool ignoreHasOneRelationships, ReadOnlyCollection<HttpStatusCode> successStatusCodes, ReadOnlyCollection<HttpStatusCode> errorStatusCodes)
+        ReadOnlyCollection<HttpStatusCode> successStatusCodes, ReadOnlyCollection<HttpStatusCode> errorStatusCodes)
     {
-        IReadOnlyCollection<RelationshipAttribute> relationshipsOfEndpoint =
-            ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>().ToList().AsReadOnly() : relationships;
+        IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = FilterRelationshipsForEndpoint(JsonApiEndpoints.GetRelationship, relationships);
 
         Dictionary<RelationshipAttribute, Type> documentTypesByRelationship = relationshipsOfEndpoint.ToDictionary(relationship => relationship,
             _nonPrimaryDocumentTypeFactory.GetForRelationshipResponse);
@@ -249,13 +259,13 @@ internal sealed class JsonApiEndpointMetadataProvider
         return new RelationshipResponseMetadata(documentTypesByRelationship.AsReadOnly(), successStatusCodes, errorStatusCodes);
     }
 
-    private static EmptyRelationshipResponseMetadata GetEmptyRelationshipResponseMetadata(IReadOnlyCollection<RelationshipAttribute> relationships,
-        bool ignoreHasOneRelationships, ReadOnlyCollection<HttpStatusCode> successStatusCodes, ReadOnlyCollection<HttpStatusCode> errorStatusCodes)
+    private static EmptyRelationshipResponseMetadata GetEmptyRelationshipResponseMetadata(JsonApiEndpoints endpoint,
+        IReadOnlyCollection<RelationshipAttribute> relationships, ReadOnlyCollection<HttpStatusCode> successStatusCodes,
+        ReadOnlyCollection<HttpStatusCode> errorStatusCodes)
     {
-        IReadOnlyCollection<RelationshipAttribute> relationshipsOfEndpoint =
-            ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>().ToList().AsReadOnly() : relationships;
+        IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = FilterRelationshipsForEndpoint(endpoint, relationships);
 
-        return new EmptyRelationshipResponseMetadata(relationshipsOfEndpoint, successStatusCodes, errorStatusCodes);
+        return new EmptyRelationshipResponseMetadata(relationshipsOfEndpoint.ToArray().AsReadOnly(), successStatusCodes, errorStatusCodes);
     }
 
     private JsonApiEndpointMetadata GetCustomMetadata(ActionDescriptor descriptor, ResourceType controllerResourceType)
@@ -281,19 +291,18 @@ internal sealed class JsonApiEndpointMetadataProvider
         ConsistencyGuard.ThrowIf(actionMethod == null);
 
         HashSet<string> httpMethods = actionMethod.GetCustomAttributes<HttpMethodAttribute>(true).SelectMany(httpMethod => httpMethod.HttpMethods).ToHashSet();
-        bool skipHasOneAtRelationshipEndpoint = httpMethods.Any(httpMethod => HttpMethods.IsPost(httpMethod) || HttpMethods.IsDelete(httpMethod));
 
         IJsonApiRequestMetadata? requestMetadata = GetCustomRequestMetadata(descriptor, controllerResourceType, hasParameterForId,
-            hasParameterForRelationshipName, skipHasOneAtRelationshipEndpoint);
+            hasParameterForRelationshipName, httpMethods);
 
         IJsonApiResponseMetadata? responseMetadata = GetCustomResponseMetadata(descriptor, controllerResourceType, hasParameterForRelationshipName,
-            hasRelationshipsInRoute, skipHasOneAtRelationshipEndpoint);
+            hasRelationshipsInRoute, httpMethods);
 
         return new JsonApiEndpointMetadata(requestMetadata, responseMetadata);
     }
 
     private IJsonApiRequestMetadata? GetCustomRequestMetadata(ActionDescriptor descriptor, ResourceType controllerResourceType, bool hasParameterForId,
-        bool hasParameterForRelationshipName, bool skipHasOneAtRelationshipEndpoint)
+        bool hasParameterForRelationshipName, HashSet<string> httpMethods)
     {
         ConsumesAttribute? consumes = descriptor.FilterDescriptors.Select(filter => filter.Filter).OfType<ConsumesAttribute>().FirstOrDefault();
 
@@ -310,14 +319,19 @@ internal sealed class JsonApiEndpointMetadataProvider
                     : GetPostResourceRequestMetadata(primaryResourceType.ClrType);
             }
 
-            return GetRelationshipRequestMetadata(primaryResourceType.Relationships, skipHasOneAtRelationshipEndpoint);
+            JsonApiEndpoints? relationshipEndpoint = InferRelationshipEndpoint(httpMethods);
+
+            if (relationshipEndpoint != null)
+            {
+                return GetRelationshipRequestMetadata(relationshipEndpoint.Value, primaryResourceType.Relationships);
+            }
         }
 
         return null;
     }
 
     private IJsonApiResponseMetadata? GetCustomResponseMetadata(ActionDescriptor descriptor, ResourceType controllerResourceType,
-        bool hasParameterForRelationshipName, bool hasRelationshipsInRoute, bool skipHasOneAtRelationshipEndpoint)
+        bool hasParameterForRelationshipName, bool hasRelationshipsInRoute, HashSet<string> httpMethods)
     {
         ResourceType? successResponseBodyType = null;
         bool isResponseBodyCollection = false;
@@ -363,10 +377,43 @@ internal sealed class JsonApiEndpointMetadataProvider
 
         if (hasParameterForRelationshipName && hasRelationshipsInRoute)
         {
-            return successResponseBodyType != null
-                ? GetRelationshipResponseMetadata(primaryResourceType.Relationships, skipHasOneAtRelationshipEndpoint, successStatusCodes, errorStatusCodes)
-                : GetEmptyRelationshipResponseMetadata(primaryResourceType.Relationships, skipHasOneAtRelationshipEndpoint, successStatusCodes,
+            if (successResponseBodyType != null)
+            {
+                return GetRelationshipResponseMetadata(primaryResourceType.Relationships, successStatusCodes, errorStatusCodes);
+            }
+
+            JsonApiEndpoints? relationshipEndpoint = InferRelationshipEndpoint(httpMethods);
+
+            if (relationshipEndpoint != null)
+            {
+                return GetEmptyRelationshipResponseMetadata(relationshipEndpoint.Value, primaryResourceType.Relationships, successStatusCodes,
                     errorStatusCodes);
+            }
+        }
+
+        return null;
+    }
+
+    private static JsonApiEndpoints? InferRelationshipEndpoint(HashSet<string> httpMethods)
+    {
+        if (httpMethods.All(HttpMethods.IsPost))
+        {
+            return JsonApiEndpoints.PostRelationship;
+        }
+
+        if (httpMethods.All(HttpMethods.IsPatch))
+        {
+            return JsonApiEndpoints.PatchRelationship;
+        }
+
+        if (httpMethods.All(HttpMethods.IsDelete))
+        {
+            return JsonApiEndpoints.DeleteRelationship;
+        }
+
+        if (httpMethods.All(method => HttpMethods.IsGet(method) || HttpMethods.IsHead(method)))
+        {
+            return JsonApiEndpoints.GetRelationship;
         }
 
         return null;
