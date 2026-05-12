@@ -10,9 +10,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class BuildingRepository(
     ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor,
+    IJsonApiOptions options)
     : EntityFrameworkCoreRepository<Building, long>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
-        resourceDefinitionAccessor)
+        resourceDefinitionAccessor, options)
 {
     public override async Task<Building> GetForCreateAsync(Type resourceClrType, long id, CancellationToken cancellationToken)
     {

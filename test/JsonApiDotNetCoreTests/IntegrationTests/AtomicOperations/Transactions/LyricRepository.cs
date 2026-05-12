@@ -16,8 +16,8 @@ public sealed class LyricRepository : EntityFrameworkCoreRepository<Lyric, long>
 
     public LyricRepository(ExtraDbContext extraDbContext, ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
         IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+        IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options)
+        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor, options)
     {
         _extraDbContext = extraDbContext;
 

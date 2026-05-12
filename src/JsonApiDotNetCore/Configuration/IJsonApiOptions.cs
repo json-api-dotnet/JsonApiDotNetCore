@@ -105,6 +105,13 @@ public interface IJsonApiOptions
     bool IncludeTotalResourceCount { get; }
 
     /// <summary>
+    /// Whether to use the PostgreSQL row estimate from <c>pg_class.reltuples</c> instead of an exact <c>COUNT(*)</c> query when
+    /// <see cref="IncludeTotalResourceCount" /> is <c>true</c>. Only applies when using PostgreSQL and no filter is active; falls back to exact count
+    /// otherwise. The estimate is updated by VACUUM/ANALYZE and may be inaccurate for tables that have not yet been analyzed. <c>false</c> by default.
+    /// </summary>
+    bool UseEstimatedResourceCount { get; }
+
+    /// <summary>
     /// The page size (10 by default) that is used when not specified in query string. Set to <c>null</c> to not use pagination by default. This setting can
     /// be overruled per relationship by setting <see cref="HasManyAttribute.DisablePagination" /> to <c>true</c>.
     /// </summary>

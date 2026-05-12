@@ -11,9 +11,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public class CarCompositeKeyAwareRepository<TResource, TId>(
     ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor,
+    IJsonApiOptions options)
     : EntityFrameworkCoreRepository<TResource, TId>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
-        resourceDefinitionAccessor)
+        resourceDefinitionAccessor, options)
     where TResource : class, IIdentifiable<TId>
 {
     private readonly CarExpressionRewriter _writer = new(resourceGraph);

@@ -10,7 +10,8 @@ namespace MultiDbContextExample.Repositories;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class DbContextBRepository<TResource>(
     ITargetedFields targetedFields, DbContextResolver<DbContextB> dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor,
+    IJsonApiOptions options)
     : EntityFrameworkCoreRepository<TResource, long>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
-        resourceDefinitionAccessor)
+        resourceDefinitionAccessor, options)
     where TResource : class, IIdentifiable<long>;
