@@ -7,12 +7,15 @@ namespace OpenApiTests.ModelStateValidation;
 
 public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
 {
+#pragma warning disable CA1825 // Avoid zero-length array allocations
+    // Workaround for bug at https://github.com/dotnet/sdk/issues/54275.
     public static readonly TheoryData<string> SchemaNames =
     [
         "attributesInCreateSocialMediaAccountRequest",
         "attributesInUpdateSocialMediaAccountRequest",
         "attributesInSocialMediaAccountResponse"
     ];
+#pragma warning restore CA1825 // Avoid zero-length array allocations
 
     private readonly OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> _testContext;
 
