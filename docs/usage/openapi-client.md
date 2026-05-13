@@ -18,7 +18,8 @@ The following code generators are supported, though you may try others as well:
 For C# clients, we provide an additional package that provides workarounds for bugs in NSwag and enables using partial POST/PATCH requests.
 
 To add it to your project, run the following command:
-```
+
+```shell
 dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
 ```
 
@@ -27,7 +28,8 @@ dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
 For C# clients, we provide an additional package that provides workarounds for bugs in Kiota, as well as MSBuild integration.
 
 To add it to your project, run the following command:
-```
+
+```shell
 dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota --prerelease
 ```
 
@@ -59,7 +61,7 @@ The following steps describe how to generate and use a JSON:API client in C#, co
 
 1.  Add our client package to your project:
 
-    ```
+    ```shell
     dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
     ```
 
@@ -151,12 +153,18 @@ From here, continue from step 3 in the list of steps for Visual Studio.
 
 To generate your C# client, first add the Kiota tool to your solution:
 
-```
+```shell
 dotnet tool install microsoft.openapi.kiota
 ```
 
-After adding the `JsonApiDotNetCore.OpenApi.Client.Kiota` package to your project, add a `KiotaReference` element
-to your project file to import your OpenAPI file. For example:
+Next, add the following packages to your project:
+
+```shell
+dotnet add package Microsoft.Kiota.Bundle
+dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota --prerelease
+```
+
+Finally, add a `KiotaReference` element to your project file to import your OpenAPI file. For example:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -248,7 +256,7 @@ The use of HTTP headers varies per client generator. To use [ETags for caching](
 
 To gain access to HTTP response headers, add the following in a `PropertyGroup` or directly in the `OpenApiReference`:
 
-```
+```xml
 <NSwagWrapResponses>true</NSwagWrapResponses>
 ```
 
