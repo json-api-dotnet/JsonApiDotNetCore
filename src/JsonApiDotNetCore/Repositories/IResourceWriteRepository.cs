@@ -24,7 +24,7 @@ public interface IResourceWriteRepository<TResource, in TId>
     /// <remarks>
     /// This method can be overridden to assign resource-specific required relationships.
     /// </remarks>
-    Task<TResource> GetForCreateAsync(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken);
+    Task<TResource> GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates a new resource in the underlying data store.

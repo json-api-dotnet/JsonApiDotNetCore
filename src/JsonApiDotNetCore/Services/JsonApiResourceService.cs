@@ -97,6 +97,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             id
         });
 
+        ArgumentNullException.ThrowIfNull(id);
+
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get single resource");
 
         return await GetPrimaryResourceByIdAsync(id, TopFieldSelection.PreserveExisting, cancellationToken);
@@ -111,6 +113,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             relationshipName
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(relationshipName);
         AssertHasRelationship(_request.Relationship, relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
@@ -164,6 +167,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             relationshipName
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(relationshipName);
         AssertHasRelationship(_request.Relationship, relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
@@ -237,9 +241,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         await AccurizeResourceTypesInHierarchyToAssignInRelationshipsAsync(resourceFromRequest, cancellationToken);
 
         Type resourceClrType = resourceFromRequest.GetClrType();
-
-        TResource resourceForDatabase =
-            await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resourceClrType, resourceFromRequest.Id!, cancellationToken);
+        TResource resourceForDatabase = await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resourceClrType, resourceFromRequest.Id, cancellationToken);
 
         AccurizeJsonApiRequest(resourceForDatabase);
 
@@ -380,6 +382,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentNullException.ThrowIfNull(relationshipName);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
@@ -486,6 +489,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             resource
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(resource);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Update resource");
@@ -530,6 +534,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightValue
         });
 
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentNullException.ThrowIfNull(relationshipName);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -564,6 +569,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         {
             id
         });
+
+        ArgumentNullException.ThrowIfNull(id);
 
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
 
@@ -601,6 +608,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentNullException.ThrowIfNull(relationshipName);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
@@ -622,6 +630,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task<TResource> GetPrimaryResourceByIdAsync([DisallowNull] TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         TResource? primaryResource = await GetPrimaryResourceByIdOrDefaultAsync(id, fieldSelection, cancellationToken);
         AssertPrimaryResourceExists(primaryResource);
 
@@ -642,6 +652,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task<TResource> GetPrimaryResourceForUpdateAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(id);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
 
         QueryLayer queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResourceType);
