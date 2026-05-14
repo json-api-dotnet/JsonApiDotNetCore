@@ -36,6 +36,8 @@ public interface IAtomicOperationFilter
     {
         public bool IsEnabled(ResourceType resourceType, WriteOperationKind writeOperation)
         {
+            ArgumentNullException.ThrowIfNull(resourceType);
+
             return true;
         }
     }
