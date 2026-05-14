@@ -118,14 +118,14 @@
 
 <p>For C# clients, we provide an additional package that provides workarounds for bugs in NSwag and enables using partial POST/PATCH requests.</p>
 <p>To add it to your project, run the following command:</p>
-<pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
+<pre><code class="lang-shell">dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
 </code></pre>
 </section>
 <section id="tabpanel_1_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
 
 <p>For C# clients, we provide an additional package that provides workarounds for bugs in Kiota, as well as MSBuild integration.</p>
 <p>To add it to your project, run the following command:</p>
-<pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota --prerelease
+<pre><code class="lang-shell">dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota --prerelease
 </code></pre>
 </section>
 </div>
@@ -160,7 +160,7 @@ right-click <strong>Dependencies</strong> &gt; <strong>Manage Connected Services
 <li><p>Run package update now, which fixes incompatibilities and bugs from older versions.</p>
 </li>
 <li><p>Add our client package to your project:</p>
-<pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
+<pre><code class="lang-shell">dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
 </code></pre>
 </li>
 <li><p>Add code that calls one of your JSON:API endpoints.</p>
@@ -244,10 +244,13 @@ This keeps the server and client automatically in sync, which is handy when both
 <section id="tabpanel_2_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
 
 <p>To generate your C# client, first add the Kiota tool to your solution:</p>
-<pre><code>dotnet tool install microsoft.openapi.kiota
+<pre><code class="lang-shell">dotnet tool install microsoft.openapi.kiota
 </code></pre>
-<p>After adding the <code>JsonApiDotNetCore.OpenApi.Client.Kiota</code> package to your project, add a <code>KiotaReference</code> element
-to your project file to import your OpenAPI file. For example:</p>
+<p>Next, add the following packages to your project:</p>
+<pre><code class="lang-shell">dotnet add package Microsoft.Kiota.Bundle
+dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota --prerelease
+</code></pre>
+<p>Finally, add a <code>KiotaReference</code> element to your project file to import your OpenAPI file. For example:</p>
 <pre><code class="lang-xml">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
   &lt;ItemGroup&gt;
     &lt;KiotaReference Include=&quot;path/to/openapi.json&quot;&gt;
@@ -343,7 +346,7 @@ which seems to work. If you're an MSBuild expert, please help out!</p>
 <section id="tabpanel_4_nswag" role="tabpanel" data-tab="nswag">
 
 <p>To gain access to HTTP response headers, add the following in a <code>PropertyGroup</code> or directly in the <code>OpenApiReference</code>:</p>
-<pre><code>&lt;NSwagWrapResponses&gt;true&lt;/NSwagWrapResponses&gt;
+<pre><code class="lang-xml">&lt;NSwagWrapResponses&gt;true&lt;/NSwagWrapResponses&gt;
 </code></pre>
 <p>This enables the following code, which is explained below:</p>
 <pre><code class="lang-c#">var getResponse = await ApiResponse.TranslateAsync(() =&gt; apiClient.GetPersonCollectionAsync());
