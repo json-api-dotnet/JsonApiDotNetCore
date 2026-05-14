@@ -67,7 +67,7 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
-    public async Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
+    public async Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
         ArgumentNullException.ThrowIfNull(resourceClrType);
@@ -112,6 +112,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task DeleteAsync<TResource, TId>(TResource? resourceFromDatabase, [DisallowNull] TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         await repository.DeleteAsync(resourceFromDatabase, id, cancellationToken);
     }
@@ -131,6 +133,7 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
         CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         dynamic repository = GetWriteRepository(typeof(TResource));

@@ -117,6 +117,8 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
     /// <inheritdoc />
     public Task<TResource> GetAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         QueryLayer queryLayer = _queryLayerComposer.ComposeForGetById(id, _resourceType, TopFieldSelection.PreserveExisting);
 
         IEnumerable<TResource> dataSource = GetDataSource(_resourceType).Cast<TResource>();
@@ -134,6 +136,8 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
     /// <inheritdoc />
     public Task<object?> GetSecondaryAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         RelationshipAttribute? relationship = _resourceType.FindRelationshipByPublicName(relationshipName);
 
         if (relationship == null)
@@ -199,6 +203,8 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
     /// <inheritdoc />
     public Task<object?> GetRelationshipAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         return GetSecondaryAsync(id, relationshipName, cancellationToken);
     }
 
