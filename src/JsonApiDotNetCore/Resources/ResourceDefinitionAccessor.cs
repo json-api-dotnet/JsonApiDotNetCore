@@ -44,9 +44,14 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(existingIncludes);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-        return resourceDefinition.OnApplyIncludes(existingIncludes);
+        object resourceDefinition = ResolveResourceDefinition(resourceType);
+
+        Func<object, IImmutableSet<IncludeElementExpression>, IImmutableSet<IncludeElementExpression>> method =
+            ResourceDefinitionAccessorCache.GetOnApplyIncludesDelegate(resourceDefinition.GetType());
+
+        return method(resourceDefinition, existingIncludes);
     }
 
     /// <inheritdoc />
@@ -54,8 +59,11 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-        return resourceDefinition.OnApplyFilter(existingFilter);
+        object resourceDefinition = ResolveResourceDefinition(resourceType);
+
+        Func<object, FilterExpression?, FilterExpression?> method = ResourceDefinitionAccessorCache.GetOnApplyFilterDelegate(resourceDefinition.GetType());
+
+        return method(resourceDefinition, existingFilter);
     }
 
     /// <inheritdoc />
@@ -63,8 +71,11 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-        return resourceDefinition.OnApplySort(existingSort);
+        object resourceDefinition = ResolveResourceDefinition(resourceType);
+
+        Func<object, SortExpression?, SortExpression?> method = ResourceDefinitionAccessorCache.GetOnApplySortDelegate(resourceDefinition.GetType());
+
+        return method(resourceDefinition, existingSort);
     }
 
     /// <inheritdoc />
@@ -72,8 +83,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-        return resourceDefinition.OnApplyPagination(existingPagination);
+        object resourceDefinition = ResolveResourceDefinition(resourceType);
+
+        Func<object, PaginationExpression?, PaginationExpression?> method =
+            ResourceDefinitionAccessorCache.GetOnApplyPaginationDelegate(resourceDefinition.GetType());
+
+        return method(resourceDefinition, existingPagination);
     }
 
     /// <inheritdoc />
@@ -81,8 +96,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-        return resourceDefinition.OnApplySparseFieldSet(existingSparseFieldSet);
+        object resourceDefinition = ResolveResourceDefinition(resourceType);
+
+        Func<object, SparseFieldSetExpression?, SparseFieldSetExpression?> method =
+            ResourceDefinitionAccessorCache.GetOnApplySparseFieldSetDelegate(resourceDefinition.GetType());
+
+        return method(resourceDefinition, existingSparseFieldSet);
     }
 
     /// <inheritdoc />
@@ -91,18 +110,11 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentNullException.ThrowIfNull(resourceClrType);
         ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resourceClrType);
-        dynamic? handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
+        object resourceDefinition = ResolveResourceDefinition(resourceClrType);
 
-        if (handlers != null)
-        {
-            if (handlers.ContainsKey(parameterName))
-            {
-                return handlers[parameterName];
-            }
-        }
+        Func<object, string, object?> method = ResourceDefinitionAccessorCache.GetGetQueryableHandlerDelegate(resourceDefinition.GetType());
 
-        return null;
+        return method(resourceDefinition, parameterName);
     }
 
     /// <inheritdoc />
@@ -111,8 +123,11 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(resourceInstance);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-        return resourceDefinition.GetMeta((dynamic)resourceInstance);
+        object resourceDefinition = ResolveResourceDefinition(resourceType);
+
+        Func<object, IIdentifiable, IDictionary<string, object?>?> method = ResourceDefinitionAccessorCache.GetGetMetaDelegate(resourceDefinition.GetType());
+
+        return method(resourceDefinition, resourceInstance);
     }
 
     /// <inheritdoc />
@@ -121,8 +136,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
-        await resourceDefinition.OnPrepareWriteAsync((dynamic)resource, writeOperation, cancellationToken);
+        object resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+
+        Func<object, IIdentifiable, WriteOperationKind, CancellationToken, Task> method =
+            ResourceDefinitionAccessorCache.GetOnPrepareWriteAsyncDelegate(resourceDefinition.GetType());
+
+        await method(resourceDefinition, resource, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -133,10 +152,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentNullException.ThrowIfNull(leftResource);
         ArgumentNullException.ThrowIfNull(hasOneRelationship);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+        object resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
 
-        return await resourceDefinition.OnSetToOneRelationshipAsync((dynamic)leftResource, hasOneRelationship, rightResourceId, writeOperation,
-            cancellationToken);
+        Func<object, IIdentifiable, HasOneAttribute, IIdentifiable?, WriteOperationKind, CancellationToken, Task<IIdentifiable?>> method =
+            ResourceDefinitionAccessorCache.GetOnSetToOneRelationshipAsyncDelegate(resourceDefinition.GetType());
+
+        return await method(resourceDefinition, leftResource, hasOneRelationship, rightResourceId, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -148,8 +169,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentNullException.ThrowIfNull(hasManyRelationship);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
-        await resourceDefinition.OnSetToManyRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
+        object resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+
+        Func<object, IIdentifiable, HasManyAttribute, ISet<IIdentifiable>, WriteOperationKind, CancellationToken, Task> method =
+            ResourceDefinitionAccessorCache.GetOnSetToManyRelationshipAsyncDelegate(resourceDefinition.GetType());
+
+        await method(resourceDefinition, leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -161,8 +186,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentNullException.ThrowIfNull(hasManyRelationship);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
-        await resourceDefinition.OnAddToRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
+        object resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+
+        Func<object, IIdentifiable, HasManyAttribute, ISet<IIdentifiable>, CancellationToken, Task> method =
+            ResourceDefinitionAccessorCache.GetOnAddToRelationshipAsyncDelegate(resourceDefinition.GetType());
+
+        await method(resourceDefinition, leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -174,8 +203,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentNullException.ThrowIfNull(hasManyRelationship);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
-        await resourceDefinition.OnRemoveFromRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
+        object resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+
+        Func<object, IIdentifiable, HasManyAttribute, ISet<IIdentifiable>, CancellationToken, Task> method =
+            ResourceDefinitionAccessorCache.GetOnRemoveFromRelationshipAsyncDelegate(resourceDefinition.GetType());
+
+        await method(resourceDefinition, leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -184,8 +217,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
-        await resourceDefinition.OnWritingAsync((dynamic)resource, writeOperation, cancellationToken);
+        object resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+
+        Func<object, IIdentifiable, WriteOperationKind, CancellationToken, Task> method =
+            ResourceDefinitionAccessorCache.GetOnWritingAsyncDelegate(resourceDefinition.GetType());
+
+        await method(resourceDefinition, resource, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -194,8 +231,12 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
-        await resourceDefinition.OnWriteSucceededAsync((dynamic)resource, writeOperation, cancellationToken);
+        object resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+
+        Func<object, IIdentifiable, WriteOperationKind, CancellationToken, Task> method =
+            ResourceDefinitionAccessorCache.GetOnWriteSucceededAsyncDelegate(resourceDefinition.GetType());
+
+        await method(resourceDefinition, resource, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -203,8 +244,11 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
-        resourceDefinition.OnDeserialize((dynamic)resource);
+        object resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+
+        Action<object, IIdentifiable> method = ResourceDefinitionAccessorCache.GetOnDeserializeDelegate(resourceDefinition.GetType());
+
+        method(resourceDefinition, resource);
     }
 
     /// <inheritdoc />
@@ -212,8 +256,11 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
-        resourceDefinition.OnSerialize((dynamic)resource);
+        object resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+
+        Action<object, IIdentifiable> method = ResourceDefinitionAccessorCache.GetOnSerializeDelegate(resourceDefinition.GetType());
+
+        method(resourceDefinition, resource);
     }
 
     protected object ResolveResourceDefinition(Type resourceClrType)
@@ -228,7 +275,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        Type resourceDefinitionType = typeof(IResourceDefinition<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
+        Type resourceDefinitionType = ResourceDefinitionAccessorCache.GetResourceDefinitionType(resourceType);
         return _serviceProvider.GetRequiredService(resourceDefinitionType);
     }
 }

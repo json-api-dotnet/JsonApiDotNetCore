@@ -40,14 +40,26 @@ internal sealed class CollectionConverter
         ArgumentNullException.ThrowIfNull(collectionType);
 
         Type concreteCollectionType = ToConcreteCollectionType(collectionType);
-        dynamic concreteCollectionInstance = Activator.CreateInstance(concreteCollectionType)!;
+        object concreteCollectionInstance = Activator.CreateInstance(concreteCollectionType)!;
 
-        foreach (object item in source)
+        if (concreteCollectionInstance is IList list)
         {
-            concreteCollectionInstance.Add((dynamic)item);
+            foreach (object item in source)
+            {
+                list.Add(item);
+            }
+        }
+        else
+        {
+            Action<object, object> addMethod = CollectionConverterCache.GetAddDelegate(concreteCollectionType);
+
+            foreach (object item in source)
+            {
+                addMethod(concreteCollectionInstance, item);
+            }
         }
 
-        return concreteCollectionInstance;
+        return (IEnumerable)concreteCollectionInstance;
     }
 
     /// <summary>
