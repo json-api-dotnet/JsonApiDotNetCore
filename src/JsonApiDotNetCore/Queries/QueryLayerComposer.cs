@@ -47,6 +47,8 @@ public class QueryLayerComposer : IQueryLayerComposer
     [Obsolete("This method is no longer used and will be removed in a future version.")]
     public FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType)
     {
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
+
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
