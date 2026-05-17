@@ -37,6 +37,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     private readonly IResourceFactory _resourceFactory;
     private readonly IQueryConstraintProvider[] _constraintProviders;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+    private readonly IJsonApiOptions _options;
     private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
     /// <inheritdoc />
@@ -44,7 +45,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
     public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
         IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options)
     {
         ArgumentNullException.ThrowIfNull(targetedFields);
         ArgumentNullException.ThrowIfNull(dbContextResolver);
@@ -53,6 +54,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         ArgumentNullException.ThrowIfNull(constraintProviders);
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(options);
 
         _targetedFields = targetedFields;
         _dbContext = dbContextResolver.GetContext();
@@ -60,6 +62,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         _resourceFactory = resourceFactory;
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
+        _options = options;
         _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
     }
 
@@ -95,6 +98,16 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         using (CodeTimingSessionManager.Current.Measure("Repository - Count resources"))
         {
+            if (_options.UseEstimatedResourceCount && filter == null)
+            {
+                int? estimate = await TryGetPostgresEstimatedCountAsync(cancellationToken);
+
+                if (estimate != null)
+                {
+                    return estimate.Value;
+                }
+            }
+
             ResourceType resourceType = _resourceGraph.GetResourceType<TResource>();
 
             var layer = new QueryLayer(resourceType)
@@ -108,6 +121,37 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             {
                 return await query.CountAsync(cancellationToken);
             }
+        }
+    }
+
+    private async Task<int?> TryGetPostgresEstimatedCountAsync(CancellationToken cancellationToken)
+    {
+        string? providerName = _dbContext.Database.ProviderName;
+
+        if (providerName == null || (!providerName.Contains("PostgreSQL", StringComparison.OrdinalIgnoreCase) &&
+            !providerName.Contains("Npgsql", StringComparison.OrdinalIgnoreCase)))
+        {
+            return null;
+        }
+
+        IEntityType? entityType = _dbContext.Model.FindEntityType(typeof(TResource));
+        string? tableName = entityType?.GetTableName();
+
+        if (tableName == null)
+        {
+            return null;
+        }
+
+        string? schema = entityType!.GetSchema();
+
+        using (CodeTimingSessionManager.Current.Measure("Execute SQL (estimated count)", MeasurementSettings.ExcludeDatabaseInPercentages))
+        {
+            long estimate = await _dbContext.Database.SqlQuery<long>(
+                    $"SELECT reltuples::bigint FROM pg_class INNER JOIN pg_namespace ON pg_namespace.oid = pg_class.relnamespace WHERE pg_class.relname = {tableName} AND pg_namespace.nspname = COALESCE({schema}, current_schema())")
+                .FirstOrDefaultAsync(cancellationToken);
+
+            // reltuples = -1 means statistics have not been collected yet; fall back to exact count.
+            return estimate < 0 ? null : (int)Math.Min(estimate, int.MaxValue);
         }
     }
 

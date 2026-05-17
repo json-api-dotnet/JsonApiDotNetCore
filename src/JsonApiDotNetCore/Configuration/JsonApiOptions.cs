@@ -59,6 +59,9 @@ public sealed class JsonApiOptions : IJsonApiOptions
     public bool IncludeTotalResourceCount { get; set; }
 
     /// <inheritdoc />
+    public bool UseEstimatedResourceCount { get; set; }
+
+    /// <inheritdoc />
     public PageSize? DefaultPageSize { get; set; } = new(10);
 
     /// <inheritdoc />

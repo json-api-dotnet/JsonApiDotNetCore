@@ -10,9 +10,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class MusicTrackRepository(
     ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor,
+    IJsonApiOptions options)
     : EntityFrameworkCoreRepository<MusicTrack, Guid>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
-        resourceDefinitionAccessor)
+        resourceDefinitionAccessor, options)
 {
     public override string? TransactionId => null;
 }
