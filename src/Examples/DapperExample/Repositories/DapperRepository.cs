@@ -178,7 +178,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     }
 
     /// <inheritdoc />
-    public Task<TResource> GetForCreateAsync(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
+    public Task<TResource> GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(resourceClrType);
 
@@ -308,10 +308,10 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         IReadOnlyCollection<CommandDefinition> preSqlCommands =
             _dapperFacade.BuildSqlCommandsForOneToOneRelationshipsChangedToNotNull(changeDetector, cancellationToken);
 
-        CommandDefinition? updateCommand = _dapperFacade.BuildSqlCommandForUpdate(changeDetector, resourceFromDatabase.Id, cancellationToken);
+        CommandDefinition? updateCommand = _dapperFacade.BuildSqlCommandForUpdate(changeDetector, resourceFromDatabase.Id!, cancellationToken);
 
         IReadOnlyCollection<CommandDefinition> postSqlCommands =
-            _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, resourceFromDatabase.Id, cancellationToken);
+            _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, resourceFromDatabase.Id!, cancellationToken);
 
         if (preSqlCommands.Count > 0 || updateCommand != null || postSqlCommands.Count > 0)
         {
@@ -358,6 +358,8 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public async Task DeleteAsync(TResource? resourceFromDatabase, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         TResource placeholderResource = resourceFromDatabase ?? _resourceFactory.CreateInstance<TResource>();
         placeholderResource.Id = id;
 
@@ -404,10 +406,10 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         IReadOnlyCollection<CommandDefinition> preSqlCommands =
             _dapperFacade.BuildSqlCommandsForOneToOneRelationshipsChangedToNotNull(changeDetector, cancellationToken);
 
-        CommandDefinition? updateCommand = _dapperFacade.BuildSqlCommandForUpdate(changeDetector, leftResource.Id, cancellationToken);
+        CommandDefinition? updateCommand = _dapperFacade.BuildSqlCommandForUpdate(changeDetector, leftResource.Id!, cancellationToken);
 
         IReadOnlyCollection<CommandDefinition> postSqlCommands =
-            _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, leftResource.Id, cancellationToken);
+            _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, leftResource.Id!, cancellationToken);
 
         if (preSqlCommands.Count > 0 || updateCommand != null || postSqlCommands.Count > 0)
         {
@@ -455,6 +457,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     public async Task AddToToManyRelationshipAsync(TResource? leftResource, [DisallowNull] TId leftId, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
@@ -474,8 +477,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
             RelationshipForeignKey foreignKey = _dataModelService.GetForeignKey(relationship);
             object[] rightResourceIdValues = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
-            CommandDefinition sqlCommand =
-                _dapperFacade.BuildSqlCommandForAddToToMany(foreignKey, leftPlaceholderResource.Id!, rightResourceIdValues, cancellationToken);
+            CommandDefinition sqlCommand = _dapperFacade.BuildSqlCommandForAddToToMany(foreignKey, leftId, rightResourceIdValues, cancellationToken);
 
             await ExecuteInTransactionAsync(async transaction =>
             {
