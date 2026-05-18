@@ -68,7 +68,7 @@ public sealed class OverrideTotalResourceCountTests : IClassFixture<IntegrationT
         : JsonApiResourceService<SupportTicket, long>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
             resourceChangeTracker, resourceDefinitionAccessor)
     {
-        protected override bool ShouldIncludeTotalResourceCount()
+        protected override bool CanIncludeTotalResourceCount()
         {
             return false;
         }
