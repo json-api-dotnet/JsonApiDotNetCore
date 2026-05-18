@@ -35,7 +35,7 @@ public interface IResourceRepositoryAccessor
     /// <summary>
     /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.GetForCreateAsync" /> for the specified resource type.
     /// </summary>
-    Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
+    Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>;
 
     /// <summary>

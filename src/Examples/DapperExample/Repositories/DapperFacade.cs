@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Dapper;
 using DapperExample.TranslationToSql.Builders;
 using DapperExample.TranslationToSql.DataModel;
@@ -77,9 +78,10 @@ internal sealed class DapperFacade
     }
 
     public IReadOnlyCollection<CommandDefinition> BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide<TId>(ResourceChangeDetector changeDetector,
-        TId leftId, CancellationToken cancellationToken)
+        [DisallowNull] TId leftId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(changeDetector);
+        ArgumentNullException.ThrowIfNull(leftId);
 
         List<CommandDefinition> sqlCommands = [];
 
@@ -115,7 +117,7 @@ internal sealed class DapperFacade
 
             if (rightIdsToAdd.Length > 0)
             {
-                CommandDefinition sqlCommand = BuildSqlCommandForAddToToMany(foreignKey, leftId!, rightIdsToAdd, cancellationToken);
+                CommandDefinition sqlCommand = BuildSqlCommandForAddToToMany(foreignKey, leftId, rightIdsToAdd, cancellationToken);
                 sqlCommands.Add(sqlCommand);
             }
         }
@@ -174,16 +176,18 @@ internal sealed class DapperFacade
         return GetSqlCommand(insertNode, cancellationToken);
     }
 
-    public CommandDefinition? BuildSqlCommandForUpdate<TId>(ResourceChangeDetector changeDetector, TId leftId, CancellationToken cancellationToken)
+    public CommandDefinition? BuildSqlCommandForUpdate<TId>(ResourceChangeDetector changeDetector, [DisallowNull] TId leftId,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(changeDetector);
+        ArgumentNullException.ThrowIfNull(leftId);
 
         IReadOnlyDictionary<string, object?> columnsToUpdate = changeDetector.GetChangedColumnValues();
 
         if (columnsToUpdate.Count > 0)
         {
             var updateBuilder = new UpdateResourceStatementBuilder(_dataModelService);
-            UpdateNode updateNode = updateBuilder.Build(changeDetector.ResourceType, columnsToUpdate, leftId!);
+            UpdateNode updateNode = updateBuilder.Build(changeDetector.ResourceType, columnsToUpdate, leftId);
             return GetSqlCommand(updateNode, cancellationToken);
         }
 

@@ -185,7 +185,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     }
 
     /// <inheritdoc />
-    public virtual Task<TResource> GetForCreateAsync(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
+    public virtual Task<TResource> GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -348,6 +348,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             id
         });
 
+        ArgumentNullException.ThrowIfNull(id);
+
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Delete resource");
 
         // This enables OnWritingAsync() to fetch the resource, which adds it to the change tracker.
@@ -450,6 +452,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             rightResourceIds
         });
 
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Add to to-many relationship");

@@ -8,6 +8,8 @@ internal sealed class AlwaysEnabledJsonApiEndpointFilter : IJsonApiEndpointFilte
     /// <inheritdoc />
     public bool IsEnabled(ResourceType resourceType, JsonApiEndpoints endpoint)
     {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
         return true;
     }
 }

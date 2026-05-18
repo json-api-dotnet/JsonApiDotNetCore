@@ -150,6 +150,8 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public IReadOnlySet<ResourceObjectTreeNode>? GetRightNodesInRelationship(RelationshipAttribute relationship)
     {
+        ArgumentNullException.ThrowIfNull(relationship);
+
         return _childrenByRelationship != null && _childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode>? rightNodes)
             ? rightNodes.AsReadOnly()
             : null;

@@ -47,6 +47,8 @@ public class QueryLayerComposer : IQueryLayerComposer
     [Obsolete("This method is no longer used and will be removed in a future version.")]
     public FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType)
     {
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
+
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
@@ -67,6 +69,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
     {
+        ArgumentNullException.ThrowIfNull(primaryId);
         ArgumentNullException.ThrowIfNull(hasManyRelationship);
 
         if (hasManyRelationship.InverseNavigationProperty == null)
@@ -312,6 +315,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeForGetById<TId>([DisallowNull] TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection)
     {
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(primaryResourceType);
 
         AttrAttribute idAttribute = GetIdAttribute(primaryResourceType);
@@ -366,6 +370,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     {
         ArgumentNullException.ThrowIfNull(secondaryLayer);
         ArgumentNullException.ThrowIfNull(primaryResourceType);
+        ArgumentNullException.ThrowIfNull(primaryId);
         ArgumentNullException.ThrowIfNull(relationship);
 
         IncludeExpression? innerInclude = secondaryLayer.Include;
@@ -440,6 +445,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeForUpdate<TId>([DisallowNull] TId id, ResourceType primaryResourceType)
     {
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(primaryResourceType);
 
         ImmutableHashSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
@@ -504,6 +510,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, [DisallowNull] TId leftId, ICollection<IIdentifiable> rightResourceIds)
     {
         ArgumentNullException.ThrowIfNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         AttrAttribute leftIdAttribute = GetIdAttribute(hasManyRelationship.LeftType);

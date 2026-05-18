@@ -122,6 +122,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             id
         });
 
+        ArgumentNullException.ThrowIfNull(id);
+
         if (_getById == null)
         {
             throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
@@ -152,6 +154,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             relationshipName
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_getSecondary == null)
@@ -184,6 +187,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             relationshipName
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_getRelationship == null)
@@ -276,6 +280,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightResourceIds
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(relationshipName);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 
@@ -306,6 +311,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             resource
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(resource);
 
         if (_update == null)
@@ -356,6 +362,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightValue
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_setRelationship == null)
@@ -382,6 +389,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
         {
             id
         });
+
+        ArgumentNullException.ThrowIfNull(id);
 
         if (_delete == null)
         {
@@ -423,6 +432,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightResourceIds
         });
 
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(relationshipName);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 

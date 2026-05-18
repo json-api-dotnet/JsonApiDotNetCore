@@ -109,6 +109,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     public IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceInstance);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
         return resourceDefinition.GetMeta((dynamic)resourceInstance);
@@ -156,6 +157,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
+        ArgumentNullException.ThrowIfNull(leftResource);
         ArgumentNullException.ThrowIfNull(hasManyRelationship);
         ArgumentNullException.ThrowIfNull(rightResourceIds);
 

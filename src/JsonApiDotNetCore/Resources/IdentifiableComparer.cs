@@ -37,6 +37,8 @@ public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
 
     public int GetHashCode(IIdentifiable obj)
     {
+        ArgumentNullException.ThrowIfNull(obj);
+
         // LocalId is intentionally omitted here, it is okay for hashes to collide.
         return HashCode.Combine(obj.GetClrType(), obj.StringId);
     }
