@@ -45,6 +45,12 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\CustomRoutes\GeneratedSwagger\swagger.g.json">
+      <Name>CustomRoutes</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\Headers\GeneratedSwagger\swagger.g.json">
       <Name>Headers</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>

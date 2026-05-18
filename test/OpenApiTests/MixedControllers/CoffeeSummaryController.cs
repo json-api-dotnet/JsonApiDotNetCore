@@ -21,6 +21,12 @@ public sealed class CoffeeSummaryController : BaseJsonApiController<CoffeeSummar
         _dbContext = dbContext;
     }
 
+    /// <response code="200">
+    /// Successfully returns the coffee summary.
+    /// </response>
+    /// <response code="404">
+    /// The coffee summary does not exist.
+    /// </response>
     [HttpGet("summary", Name = "get-coffee-summary")]
     [HttpHead("summary", Name = "head-coffee-summary")]
     [EndpointDescription("Summarizes all cups of coffee, indicating their ingredients.")]

@@ -29,6 +29,9 @@ partial class CupOfCoffeesController
         _dbContext = dbContext;
     }
 
+    /// <response code="200">
+    /// Successfully returns the cups of black coffee, or an empty array if none were found.
+    /// </response>
     [HttpGet("onlyBlack", Name = "get-only-black")]
     [HttpHead("onlyBlack", Name = "head-only-black")]
     [EndpointDescription("Gets all cups of coffee without sugar and milk.")]
@@ -39,6 +42,12 @@ partial class CupOfCoffeesController
         return Ok(cups);
     }
 
+    /// <response code="200">
+    /// Successfully returns the cup of black coffee.
+    /// </response>
+    /// <response code="404">
+    /// The cup of coffee does not exist or is not black.
+    /// </response>
     [HttpGet("onlyBlack/{id}", Name = "get-only-if-black")]
     [HttpHead("onlyBlack/{id}", Name = "head-only-if-black")]
     [EndpointDescription("Gets a cup of coffee by ID, if the cup is without sugar and milk. Returns 404 otherwise.")]
@@ -57,6 +66,12 @@ partial class CupOfCoffeesController
         return Ok(cup);
     }
 
+    /// <response code="204">
+    /// All cups of coffee have been created successfully.
+    /// </response>
+    /// <response code="400">
+    /// Invalid batch size.
+    /// </response>
     [HttpPost("batch", Name = "batchCreateCupsOfCoffee")]
     [EndpointDescription("Creates cups of coffee in batch.")]
     [Consumes(typeof(CupOfCoffee), "application/vnd.api+json")]
@@ -94,6 +109,9 @@ partial class CupOfCoffeesController
         return NoContent();
     }
 
+    /// <response code="204">
+    /// All cups of coffee have been reset to black.
+    /// </response>
     [HttpPatch("batch", Name = "batchResetToBlack")]
     [EndpointDescription("Resets all cups of coffee to black.")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -111,6 +129,12 @@ partial class CupOfCoffeesController
         return NoContent();
     }
 
+    /// <response code="204">
+    /// All cups of coffee have been deleted.
+    /// </response>
+    /// <response code="404">
+    /// No cups of coffee were found.
+    /// </response>
     [HttpDelete("batch", Name = "deleteAll")]
     [EndpointDescription("Deletes all cups of coffee. Returns 404 when none found.")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
