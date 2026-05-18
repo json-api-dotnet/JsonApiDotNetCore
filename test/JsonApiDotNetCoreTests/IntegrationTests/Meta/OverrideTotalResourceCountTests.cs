@@ -62,9 +62,9 @@ public sealed class OverrideTotalResourceCountTests : IClassFixture<IntegrationT
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private sealed class CountDisabledSupportTicketService(
-        IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
-        IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-        IResourceChangeTracker<SupportTicket> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+        IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options,
+        ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<SupportTicket> resourceChangeTracker,
+        IResourceDefinitionAccessor resourceDefinitionAccessor)
         : JsonApiResourceService<SupportTicket, long>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
             resourceChangeTracker, resourceDefinitionAccessor)
     {

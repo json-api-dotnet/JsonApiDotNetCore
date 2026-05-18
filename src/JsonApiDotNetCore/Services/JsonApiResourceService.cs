@@ -213,8 +213,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <summary>
-    /// Indicates whether the total resource count should be retrieved and included in the response. This is called for paginated collection endpoints
-    /// when <see cref="IJsonApiOptions.IncludeTotalResourceCount" /> is <c>true</c>. Override this method to conditionally disable counting for
+    /// Indicates whether the total resource count should be retrieved and included in the response. This is called for paginated collection endpoints when
+    /// <see cref="IJsonApiOptions.IncludeTotalResourceCount" /> is <c>true</c>. Override this method to conditionally disable counting for
     /// <typeparamref name="TResource" />, for example based on the request context.
     /// </summary>
     protected virtual bool CanIncludeTotalResourceCount()
