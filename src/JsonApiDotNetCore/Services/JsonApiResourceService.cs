@@ -65,7 +65,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
         int? pageSize = queryLayer.Pagination?.PageSize?.Value;
 
-        if (_options.IncludeTotalResourceCount && pageSize != null)
+        if (ShouldIncludeTotalResourceCount() && pageSize != null)
         {
             _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(_request.PrimaryResourceType, queryLayer.Filter, cancellationToken);
 
@@ -123,7 +123,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         int? pageSize = secondaryLayer.Pagination?.PageSize?.Value;
 
-        if (_options.IncludeTotalResourceCount && _request.IsCollection && pageSize != null)
+        if (ShouldIncludeTotalResourceCount() && _request.IsCollection && pageSize != null)
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
@@ -176,7 +176,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         int? pageSize = secondaryLayer.Pagination?.PageSize?.Value;
 
-        if (_options.IncludeTotalResourceCount && _request.IsCollection && pageSize != null)
+        if (ShouldIncludeTotalResourceCount() && _request.IsCollection && pageSize != null)
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
@@ -206,6 +206,16 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         }
 
         return rightValue;
+    }
+
+    /// <summary>
+    /// Indicates whether the total resource count should be retrieved and included in the response. This is called for paginated collection endpoints
+    /// when <see cref="IJsonApiOptions.IncludeTotalResourceCount" /> is <c>true</c>. Override this method to conditionally disable counting for
+    /// <typeparamref name="TResource" />, for example based on the request context.
+    /// </summary>
+    protected virtual bool ShouldIncludeTotalResourceCount()
+    {
+        return _options.IncludeTotalResourceCount;
     }
 
     private async Task RetrieveResourceCountForNonPrimaryEndpointAsync([DisallowNull] TId id, HasManyAttribute relationship,
