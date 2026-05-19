@@ -59,7 +59,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               "operationId": "get-coffee-summary",
               "responses": {
                 "200": {
-                  "description": "OK",
+                  "description": "Successfully returns the coffee summary.",
                   "content": {
                     "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
@@ -69,7 +69,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                   }
                 },
                 "404": {
-                  "description": "Not Found",
+                  "description": "The coffee summary does not exist.",
                   "content": {
                     "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
@@ -91,10 +91,10 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               "operationId": "head-coffee-summary",
               "responses": {
                 "200": {
-                  "description": "OK"
+                  "description": "Successfully returns the coffee summary."
                 },
                 "404": {
-                  "description": "Not Found"
+                  "description": "The coffee summary does not exist."
                 }
               }
             }
@@ -117,7 +117,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               "operationId": "get-only-black",
               "responses": {
                 "200": {
-                  "description": "OK",
+                  "description": "Successfully returns the cups of black coffee, or an empty array if none were found.",
                   "content": {
                     "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
@@ -139,7 +139,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               "operationId": "head-only-black",
               "responses": {
                 "200": {
-                  "description": "OK"
+                  "description": "Successfully returns the cups of black coffee, or an empty array if none were found."
                 }
               }
             }
@@ -174,7 +174,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               ],
               "responses": {
                 "200": {
-                  "description": "OK",
+                  "description": "Successfully returns the cup of black coffee.",
                   "content": {
                     "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
@@ -184,7 +184,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                   }
                 },
                 "404": {
-                  "description": "Not Found",
+                  "description": "The cup of coffee does not exist or is not black.",
                   "content": {
                     "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
@@ -218,10 +218,10 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               ],
               "responses": {
                 "200": {
-                  "description": "OK"
+                  "description": "Successfully returns the cup of black coffee."
                 },
                 "404": {
-                  "description": "Not Found"
+                  "description": "The cup of coffee does not exist or is not black."
                 }
               }
             }
@@ -271,10 +271,10 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               },
               "responses": {
                 "204": {
-                  "description": "No Content"
+                  "description": "All cups of coffee have been created successfully."
                 },
                 "400": {
-                  "description": "Bad Request",
+                  "description": "Invalid batch size.",
                   "content": {
                     "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
@@ -304,7 +304,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               "operationId": "batchResetToBlack",
               "responses": {
                 "204": {
-                  "description": "No Content"
+                  "description": "All cups of coffee have been reset to black."
                 }
               }
             }
@@ -327,10 +327,10 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               "operationId": "deleteAll",
               "responses": {
                 "204": {
-                  "description": "No Content"
+                  "description": "All cups of coffee have been deleted."
                 },
                 "404": {
-                  "description": "Not Found",
+                  "description": "No cups of coffee were found.",
                   "content": {
                     "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                       "schema": {
@@ -380,7 +380,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               },
               "responses": {
                 "200": {
-                  "description": "OK",
+                  "description": "Successfully stores the uploaded file and returns its size in bytes.",
                   "content": {
                     "text/plain": {
                       "schema": {
@@ -390,7 +390,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                   }
                 },
                 "400": {
-                  "description": "Bad Request"
+                  "description": "The file is empty."
                 }
               }
             }
@@ -422,10 +422,10 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               ],
               "responses": {
                 "200": {
-                  "description": "OK"
+                  "description": "The file is available for download."
                 },
                 "404": {
-                  "description": "Not Found"
+                  "description": "The file does not exist."
                 }
               }
             }
@@ -449,10 +449,10 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               ],
               "responses": {
                 "200": {
-                  "description": "OK"
+                  "description": "The file is available for download."
                 },
                 "404": {
-                  "description": "Not Found"
+                  "description": "The file does not exist."
                 }
               }
             }
@@ -484,7 +484,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               ],
               "responses": {
                 "200": {
-                  "description": "OK",
+                  "description": "Successfully returns the file content.",
                   "content": {
                     "application/octet-stream": {
                       "schema": {
@@ -495,7 +495,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                   }
                 },
                 "404": {
-                  "description": "Not Found"
+                  "description": "The file does not exist."
                 }
               }
             }
@@ -519,10 +519,10 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
               ],
               "responses": {
                 "200": {
-                  "description": "OK"
+                  "description": "Successfully returns the file content."
                 },
                 "404": {
-                  "description": "Not Found"
+                  "description": "The file does not exist."
                 }
               }
             }

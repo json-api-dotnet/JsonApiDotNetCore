@@ -19,7 +19,7 @@
         "operationId": "get-coffee-summary",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully returns the coffee summary.",
             "content": {
               "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
@@ -29,7 +29,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "The coffee summary does not exist.",
             "content": {
               "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
@@ -48,10 +48,10 @@
         "operationId": "head-coffee-summary",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successfully returns the coffee summary."
           },
           "404": {
-            "description": "Not Found"
+            "description": "The coffee summary does not exist."
           }
         }
       }
@@ -65,7 +65,7 @@
         "operationId": "get-only-black",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully returns the cups of black coffee, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
@@ -84,7 +84,7 @@
         "operationId": "head-only-black",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successfully returns the cups of black coffee, or an empty array if none were found."
           }
         }
       }
@@ -110,7 +110,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully returns the cup of black coffee.",
             "content": {
               "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
@@ -120,7 +120,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "The cup of coffee does not exist or is not black.",
             "content": {
               "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
@@ -151,10 +151,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successfully returns the cup of black coffee."
           },
           "404": {
-            "description": "Not Found"
+            "description": "The cup of coffee does not exist or is not black."
           }
         }
       }
@@ -195,10 +195,10 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "All cups of coffee have been created successfully."
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Invalid batch size.",
             "content": {
               "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
@@ -217,7 +217,7 @@
         "operationId": "batchResetToBlack",
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "All cups of coffee have been reset to black."
           }
         }
       },
@@ -229,10 +229,10 @@
         "operationId": "deleteAll",
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "All cups of coffee have been deleted."
           },
           "404": {
-            "description": "Not Found",
+            "description": "No cups of coffee were found.",
             "content": {
               "application/vnd.api+json; ext=\"https://www.jsonapi.net/ext/openapi\"": {
                 "schema": {
@@ -567,7 +567,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully stores the uploaded file and returns its size in bytes.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -577,7 +577,7 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "The file is empty."
           }
         }
       },
@@ -598,7 +598,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully returns the file content.",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -609,7 +609,7 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "The file does not exist."
           }
         }
       },
@@ -630,10 +630,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successfully returns the file content."
           },
           "404": {
-            "description": "Not Found"
+            "description": "The file does not exist."
           }
         }
       }
@@ -656,10 +656,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "The file is available for download."
           },
           "404": {
-            "description": "Not Found"
+            "description": "The file does not exist."
           }
         }
       },
@@ -680,10 +680,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "The file is available for download."
           },
           "404": {
-            "description": "Not Found"
+            "description": "The file does not exist."
           }
         }
       }

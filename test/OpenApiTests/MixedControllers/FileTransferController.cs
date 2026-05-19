@@ -18,6 +18,12 @@ public sealed class FileTransferController : ControllerBase
         _inMemoryFileStorage = inMemoryFileStorage;
     }
 
+    /// <response code="200">
+    /// Successfully stores the uploaded file and returns its size in bytes.
+    /// </response>
+    /// <response code="400">
+    /// The file is empty.
+    /// </response>
     [HttpPost(Name = "upload")]
     [EndpointDescription("Uploads a file. Returns HTTP 400 if the file is empty.")]
     [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
@@ -41,6 +47,12 @@ public sealed class FileTransferController : ControllerBase
         return BadRequest("Empty files cannot be uploaded.");
     }
 
+    /// <response code="200">
+    /// The file is available for download.
+    /// </response>
+    /// <response code="404">
+    /// The file does not exist.
+    /// </response>
     [HttpGet("find", Name = "exists")]
     [HttpHead("find", Name = "tryExists")]
     [EndpointDescription("Returns whether the specified file is available for download.")]
@@ -51,6 +63,12 @@ public sealed class FileTransferController : ControllerBase
         return _inMemoryFileStorage.Files.ContainsKey(fileName) ? Ok() : NotFound();
     }
 
+    /// <response code="200">
+    /// Successfully returns the file content.
+    /// </response>
+    /// <response code="404">
+    /// The file does not exist.
+    /// </response>
     [HttpGet(Name = "download")]
     [HttpHead(Name = "tryDownload")]
     [EndpointDescription("Downloads the file with the specified name. Returns HTTP 404 if not found.")]

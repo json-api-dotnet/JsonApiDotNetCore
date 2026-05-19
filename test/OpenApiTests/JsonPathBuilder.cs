@@ -23,49 +23,53 @@ internal static class JsonPathBuilder
 
     public static IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> GetEndpointPaths(ResourceType resourceType)
     {
+        string routeTemplate = resourceType.PublicName;
+        return GetEndpointPaths(routeTemplate, resourceType.Relationships);
+    }
+
+    public static IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> GetEndpointPaths(string routeTemplate,
+        IReadOnlyCollection<RelationshipAttribute> relationships)
+    {
         var endpointToPathMap = new Dictionary<JsonApiEndpoints, List<string>>
         {
             [JsonApiEndpoints.GetCollection] =
             [
-                $"paths./{resourceType.PublicName}.get",
-                $"paths./{resourceType.PublicName}.head"
+                $"paths./{routeTemplate}.get",
+                $"paths./{routeTemplate}.head"
             ],
             [JsonApiEndpoints.GetSingle] =
             [
-                $"paths./{resourceType.PublicName}/{{id}}.get",
-                $"paths./{resourceType.PublicName}/{{id}}.head"
+                $"paths./{routeTemplate}/{{id}}.get",
+                $"paths./{routeTemplate}/{{id}}.head"
             ],
             [JsonApiEndpoints.GetSecondary] = [],
             [JsonApiEndpoints.GetRelationship] = [],
-            [JsonApiEndpoints.Post] = [$"paths./{resourceType.PublicName}.post"],
+            [JsonApiEndpoints.Post] = [$"paths./{routeTemplate}.post"],
             [JsonApiEndpoints.PostRelationship] = [],
-            [JsonApiEndpoints.Patch] = [$"paths./{resourceType.PublicName}/{{id}}.patch"],
+            [JsonApiEndpoints.Patch] = [$"paths./{routeTemplate}/{{id}}.patch"],
             [JsonApiEndpoints.PatchRelationship] = [],
-            [JsonApiEndpoints.Delete] = [$"paths./{resourceType.PublicName}/{{id}}.delete"],
+            [JsonApiEndpoints.Delete] = [$"paths./{routeTemplate}/{{id}}.delete"],
             [JsonApiEndpoints.DeleteRelationship] = []
         };
 
-        foreach (RelationshipAttribute relationship in resourceType.Relationships)
+        foreach (RelationshipAttribute relationship in relationships)
         {
             endpointToPathMap[JsonApiEndpoints.GetSecondary].AddRange([
-                $"paths./{resourceType.PublicName}/{{id}}/{relationship.PublicName}.get",
-                $"paths./{resourceType.PublicName}/{{id}}/{relationship.PublicName}.head"
+                $"paths./{routeTemplate}/{{id}}/{relationship.PublicName}.get",
+                $"paths./{routeTemplate}/{{id}}/{relationship.PublicName}.head"
             ]);
 
             endpointToPathMap[JsonApiEndpoints.GetRelationship].AddRange([
-                $"paths./{resourceType.PublicName}/{{id}}/relationships/{relationship.PublicName}.get",
-                $"paths./{resourceType.PublicName}/{{id}}/relationships/{relationship.PublicName}.head"
+                $"paths./{routeTemplate}/{{id}}/relationships/{relationship.PublicName}.get",
+                $"paths./{routeTemplate}/{{id}}/relationships/{relationship.PublicName}.head"
             ]);
 
-            endpointToPathMap[JsonApiEndpoints.PatchRelationship].Add($"paths./{resourceType.PublicName}/{{id}}/relationships/{relationship.PublicName}.patch");
+            endpointToPathMap[JsonApiEndpoints.PatchRelationship].Add($"paths./{routeTemplate}/{{id}}/relationships/{relationship.PublicName}.patch");
 
             if (relationship is HasManyAttribute)
             {
-                endpointToPathMap[JsonApiEndpoints.PostRelationship].Add(
-                    $"paths./{resourceType.PublicName}/{{id}}/relationships/{relationship.PublicName}.post");
-
-                endpointToPathMap[JsonApiEndpoints.DeleteRelationship].Add(
-                    $"paths./{resourceType.PublicName}/{{id}}/relationships/{relationship.PublicName}.delete");
+                endpointToPathMap[JsonApiEndpoints.PostRelationship].Add($"paths./{routeTemplate}/{{id}}/relationships/{relationship.PublicName}.post");
+                endpointToPathMap[JsonApiEndpoints.DeleteRelationship].Add($"paths./{routeTemplate}/{{id}}/relationships/{relationship.PublicName}.delete");
             }
         }
 
