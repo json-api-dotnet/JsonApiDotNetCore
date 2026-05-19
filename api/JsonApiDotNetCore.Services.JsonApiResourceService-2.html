@@ -237,7 +237,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AddToToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AddToToManyRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   AddToToManyRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L375"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L380"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handles a JSON:API request to add resources to a to-many relationship.</p>
@@ -284,7 +284,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertPrimaryResourceDoesNotExistAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertPrimaryResourceDoesNotExistAsync(`0,System.Threading.CancellationToken)">
   AssertPrimaryResourceDoesNotExistAsync(TResource, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L271"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L276"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -322,7 +322,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertResourcesToAssignInRelationshipsExistAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertResourcesToAssignInRelationshipsExistAsync(`0,System.Threading.CancellationToken)">
   AssertResourcesToAssignInRelationshipsExistAsync(TResource, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L298"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L303"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -360,7 +360,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertRightResourcesExistAsync_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertRightResourcesExistAsync(System.Object,System.Threading.CancellationToken)">
   AssertRightResourcesExistAsync(object?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L454"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L459"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -394,11 +394,42 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
 
 
+  <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_CanIncludeTotalResourceCount_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.CanIncludeTotalResourceCount*"></a>
+
+  <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_CanIncludeTotalResourceCount" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.CanIncludeTotalResourceCount">
+  CanIncludeTotalResourceCount()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L215"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual bool CanIncludeTotalResourceCount()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_CreateAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.CreateAsync*"></a>
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_CreateAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.CreateAsync(`0,System.Threading.CancellationToken)">
   CreateAsync(TResource, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L227"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L232"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handles a JSON:API request to create a new resource with attributes, relationships, or both.</p>
@@ -437,7 +468,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_DeleteAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.DeleteAsync(`1,System.Threading.CancellationToken)">
   DeleteAsync(TId, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L566"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L571"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handles a JSON:API request to delete an existing resource.</p>
@@ -552,7 +583,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceByIdAsync__1_JsonApiDotNetCore_Queries_TopFieldSelection_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetPrimaryResourceByIdAsync(`1,JsonApiDotNetCore.Queries.TopFieldSelection,System.Threading.CancellationToken)">
   GetPrimaryResourceByIdAsync(TId, TopFieldSelection, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L631"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L636"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -592,7 +623,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceForUpdateAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetPrimaryResourceForUpdateAsync(`1,System.Threading.CancellationToken)">
   GetPrimaryResourceForUpdateAsync(TId, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L653"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L658"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -713,7 +744,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_InitializeResourceAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.InitializeResourceAsync(`0,System.Threading.CancellationToken)">
   InitializeResourceAsync(TResource, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L286"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L291"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -751,7 +782,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_RemoveFromToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.RemoveFromToManyRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   RemoveFromToManyRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L601"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L606"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handles a JSON:API request to remove resources from a to-many relationship.</p>
@@ -798,7 +829,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_SetRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.SetRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)">
   SetRelationshipAsync(TId, string, object?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L528"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L533"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handles a JSON:API request to perform a complete replacement of a relationship on an existing resource.</p>
@@ -845,7 +876,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
 
   <h3 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_UpdateAsync__1__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.UpdateAsync(`1,`0,System.Threading.CancellationToken)">
   UpdateAsync(TId, TResource, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L484"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L489"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handles a JSON:API request to update the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced.

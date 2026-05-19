@@ -21988,6 +21988,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).AssertRightResourcesExistAsync
   nameWithType: JsonApiResourceService<TResource, TId>.AssertRightResourcesExistAsync
   nameWithType.vb: JsonApiResourceService(Of TResource, TId).AssertRightResourcesExistAsync
+- uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.CanIncludeTotalResourceCount
+  name: CanIncludeTotalResourceCount()
+  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_CanIncludeTotalResourceCount
+  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`2.CanIncludeTotalResourceCount
+  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource, TId>.CanIncludeTotalResourceCount()
+  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).CanIncludeTotalResourceCount()
+  nameWithType: JsonApiResourceService<TResource, TId>.CanIncludeTotalResourceCount()
+  nameWithType.vb: JsonApiResourceService(Of TResource, TId).CanIncludeTotalResourceCount()
+- uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.CanIncludeTotalResourceCount*
+  name: CanIncludeTotalResourceCount
+  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_CanIncludeTotalResourceCount_
+  commentId: Overload:JsonApiDotNetCore.Services.JsonApiResourceService`2.CanIncludeTotalResourceCount
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource, TId>.CanIncludeTotalResourceCount
+  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).CanIncludeTotalResourceCount
+  nameWithType: JsonApiResourceService<TResource, TId>.CanIncludeTotalResourceCount
+  nameWithType.vb: JsonApiResourceService(Of TResource, TId).CanIncludeTotalResourceCount
 - uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.CreateAsync(`0,System.Threading.CancellationToken)
   name: CreateAsync(TResource, CancellationToken)
   href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_CreateAsync__0_System_Threading_CancellationToken_
