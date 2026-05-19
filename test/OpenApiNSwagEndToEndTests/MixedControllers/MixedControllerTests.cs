@@ -94,7 +94,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Message.Should().Be("HTTP 404: The coffee summary does not exist.");
         exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
@@ -176,7 +176,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Message.Should().Be("HTTP 404: The cup of coffee does not exist or is not black.");
         exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
@@ -249,7 +249,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        exception.Message.Should().Be("HTTP 400: Bad Request");
+        exception.Message.Should().Be("HTTP 400: Invalid batch size.");
         exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
@@ -338,7 +338,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Message.Should().Be("HTTP 404: No cups of coffee were found.");
         exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
@@ -384,7 +384,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        exception.Message.Should().Be("HTTP 400: Bad Request");
+        exception.Message.Should().Be("HTTP 400: The file is empty.");
         exception.Response.Should().Be("Empty files cannot be uploaded.");
     }
 
@@ -420,7 +420,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Message.Should().Be("HTTP 404: The file does not exist.");
         exception.Response.Should().BeNull();
     }
 
@@ -463,7 +463,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Message.Should().Be("HTTP 404: Not Found");
+        exception.Message.Should().Be("HTTP 404: The file does not exist.");
         exception.Response.Should().Be("The file 'demo-missing-file.txt' does not exist.");
     }
 
