@@ -25,14 +25,14 @@ The following steps describe how to create a JSON:API project.
 
 1. Create a new ASP.NET Core Web API project:
 
-   ```bash
+   ```shell
    dotnet new webapi --no-openapi --use-controllers --name ExampleJsonApi
    cd ExampleJsonApi
    ```
 
 1. Install the JsonApiDotNetCore package, along with your preferred Entity Framework Core provider:
 
-   ```bash
+   ```shell
    dotnet add package JsonApiDotNetCore
    dotnet add package Microsoft.EntityFrameworkCore.Sqlite
    ```
@@ -109,13 +109,13 @@ The following steps describe how to create a JSON:API project.
 
 1. Start your API
 
-   ```bash
+   ```shell
    dotnet run
    ```
 
 1. Send a GET request to retrieve data:
 
-   ```bash
+   ```http
    GET http://localhost:5000/people?filter=equals(firstName,'John')&include=children HTTP/1.1
    ```
 
@@ -265,25 +265,25 @@ Have a question, found a bug or want to submit code changes? See our [contributi
 
 To build the code from this repository locally, run:
 
-```bash
+```shell
 dotnet build
 ```
 
 Running tests locally requires access to a PostgreSQL database. If you have docker installed, this can be started via:
 
-```bash
+```shell
 pwsh run-docker-postgres.ps1
 ```
 
 And then to run the tests:
 
-```bash
+```shell
 dotnet test
 ```
 
 Alternatively, to build, run all tests, generate code coverage and NuGet packages:
 
-```bash
+```shell
 pwsh Build.ps1
 ```
 
