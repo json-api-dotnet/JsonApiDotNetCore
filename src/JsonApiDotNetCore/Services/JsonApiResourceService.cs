@@ -65,7 +65,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
         int? pageSize = queryLayer.Pagination?.PageSize?.Value;
 
-        if (CanIncludeTotalResourceCount() && pageSize != null)
+        if (pageSize != null && CanIncludeTotalResourceCount())
         {
             _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(_request.PrimaryResourceType, queryLayer.Filter, cancellationToken);
 
@@ -126,7 +126,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         int? pageSize = secondaryLayer.Pagination?.PageSize?.Value;
 
-        if (CanIncludeTotalResourceCount() && _request.IsCollection && pageSize != null)
+        if (_request.IsCollection && pageSize != null && CanIncludeTotalResourceCount())
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
@@ -180,7 +180,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         int? pageSize = secondaryLayer.Pagination?.PageSize?.Value;
 
-        if (CanIncludeTotalResourceCount() && _request.IsCollection && pageSize != null)
+        if (_request.IsCollection && pageSize != null && CanIncludeTotalResourceCount())
         {
             await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
 
