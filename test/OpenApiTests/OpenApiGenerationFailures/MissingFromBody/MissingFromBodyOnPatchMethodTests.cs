@@ -1,17 +1,18 @@
 using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using Xunit;
-using Xunit.Abstractions;
+using Xunit.DependencyInjection;
 
 namespace OpenApiTests.OpenApiGenerationFailures.MissingFromBody;
 
 public sealed class MissingFromBodyOnPatchMethodTests : OpenApiTestContext<OpenApiStartup<MissingFromBodyDbContext>, MissingFromBodyDbContext>
 {
-    public MissingFromBodyOnPatchMethodTests(ITestOutputHelper testOutputHelper)
+    public MissingFromBodyOnPatchMethodTests(ITestOutputHelperAccessor accessor)
+        : base(accessor)
     {
         UseController<MissingFromBodyOnPatchController>();
 
-        SetTestOutputHelper(testOutputHelper);
+        SetTestOutputHelper(accessor.Output);
     }
 
     [Fact]

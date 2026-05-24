@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.DependencyInjection;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
 
@@ -10,7 +11,8 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
 {
     private readonly CapturingLoggerProvider _loggerProvider;
 
-    public ApiControllerAttributeLogTests()
+    public ApiControllerAttributeLogTests(ITestOutputHelperAccessor accessor)
+        : base(accessor)
     {
         UseController<CiviliansController>();
 

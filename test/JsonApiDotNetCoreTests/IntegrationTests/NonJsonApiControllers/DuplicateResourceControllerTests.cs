@@ -2,12 +2,14 @@ using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.DependencyInjection;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
 
 public sealed class DuplicateResourceControllerTests : IntegrationTestContext<TestableStartup<KnownDbContext>, KnownDbContext>
 {
-    public DuplicateResourceControllerTests()
+    public DuplicateResourceControllerTests(ITestOutputHelperAccessor accessor)
+        : base(accessor)
     {
         UseController<KnownResourcesController>();
         UseController<DuplicateKnownResourcesController>();

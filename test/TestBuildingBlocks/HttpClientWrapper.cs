@@ -8,7 +8,7 @@ namespace TestBuildingBlocks;
 /// <summary>
 /// A wrapper for <see cref="HttpClient" /> that conveniently enables executing HTTP requests against JSON:API endpoints.
 /// </summary>
-public sealed class HttpClientWrapper
+internal sealed class HttpClientWrapper
 {
     private static readonly MediaTypeHeaderValue DefaultMediaType = MediaTypeHeaderValue.Parse(JsonApiMediaType.Default.ToString());
 

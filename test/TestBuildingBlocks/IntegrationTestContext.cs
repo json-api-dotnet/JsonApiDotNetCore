@@ -2,9 +2,9 @@ using System.Diagnostics;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -12,11 +12,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Xunit.DependencyInjection;
 
 namespace TestBuildingBlocks;
 
 /// <summary>
-/// Base class for a test context that creates a new database and server instance before running tests and cleans up afterwards. You can either use this
+/// Base class for a test context that creates a new database and server instance before running tests and cleans up afterward. You can either use this
 /// as a fixture on your tests class (init/cleanup runs once before/after all tests) or have your tests class inherit from it (init/cleanup runs once
 /// before/after each test). See <see href="https://xunit.net/docs/shared-context" /> for details on shared context usage.
 /// </summary>
@@ -28,90 +29,35 @@ namespace TestBuildingBlocks;
 /// </typeparam>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
-    where TStartup : class
+    where TStartup : IStartup, new()
     where TDbContext : TestableDbContext
 {
-    private readonly Lazy<WebApplicationFactory<TStartup>> _lazyFactory;
+    private readonly ITestOutputHelperAccessor _accessor;
     private readonly TestControllerProvider _testControllerProvider = new();
-    private Action<ILoggingBuilder>? _loggingConfiguration;
+    private readonly Lazy<WebApplication> _lazyApp;
     private Action<IServiceCollection>? _configureServices;
     private Action<IServiceCollection>? _postConfigureServices;
+    private Action<ILoggingBuilder>? _configureLogging;
+
+    private WebApplication App => _lazyApp.Value;
+
+    protected bool CaptureHttpTraffic { get; init; } = true;
 
     protected override JsonSerializerOptions SerializerOptions
     {
         get
         {
-            var options = Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = App.Services.GetRequiredService<IJsonApiOptions>();
             return options.SerializerOptions;
         }
     }
 
-    public WebApplicationFactory<TStartup> Factory => _lazyFactory.Value;
+    public FactoryBridge Factory => new(App, _accessor, CaptureHttpTraffic);
 
-    public IntegrationTestContext()
+    public IntegrationTestContext(ITestOutputHelperAccessor accessor)
     {
-        _lazyFactory = new Lazy<WebApplicationFactory<TStartup>>(CreateFactory);
-    }
-
-    public void UseController<TController>()
-        where TController : ControllerBase
-    {
-        _testControllerProvider.AddController(typeof(TController));
-    }
-
-    protected override HttpClient CreateClient()
-    {
-        return Factory.CreateClient();
-    }
-
-    private WebApplicationFactory<TStartup> CreateFactory()
-    {
-        string dbConnectionString = $"Host=localhost;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true";
-
-        var factory = new IntegrationTestWebApplicationFactory();
-
-        factory.ConfigureLogging(_loggingConfiguration);
-
-        factory.ConfigureServices(services =>
-        {
-            _configureServices?.Invoke(services);
-
-            services.TryAddSingleton<TimeProvider>(new FrozenTimeProvider(DefaultDateTimeUtc));
-
-            services.ReplaceControllers(_testControllerProvider);
-
-            services.AddDbContext<TDbContext>(options =>
-            {
-                options.UseNpgsql(dbConnectionString, builder => builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-                SetDbContextDebugOptions(options);
-            });
-        });
-
-        factory.PostConfigureServices(_postConfigureServices);
-
-        using IServiceScope scope = factory.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
-        dbContext.Database.EnsureCreated();
-
-        return factory;
-    }
-
-    [Conditional("DEBUG")]
-    private static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
-    {
-        options.EnableDetailedErrors();
-        options.EnableSensitiveDataLogging();
-        options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
-    }
-
-    public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
-    {
-        if (_loggingConfiguration != null && _loggingConfiguration != loggingConfiguration)
-        {
-            throw new InvalidOperationException($"Do not call {nameof(ConfigureLogging)} multiple times.");
-        }
-
-        _loggingConfiguration = loggingConfiguration;
+        _accessor = accessor;
+        _lazyApp = new Lazy<WebApplication>(BuildApp, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     public void ConfigureServices(Action<IServiceCollection> configureServices)
@@ -134,84 +80,105 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         _postConfigureServices = postConfigureServices;
     }
 
+    public void ConfigureLogging(Action<ILoggingBuilder> configureLogging)
+    {
+        if (_configureLogging != null && _configureLogging != configureLogging)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(ConfigureLogging)} multiple times.");
+        }
+
+        _configureLogging = configureLogging;
+    }
+
+    public void UseController<TController>()
+        where TController : ControllerBase
+    {
+        _testControllerProvider.AddController(typeof(TController));
+    }
+
+    private WebApplication BuildApp()
+    {
+        var startup = new TStartup();
+
+        WebApplicationBuilder builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions
+        {
+            ApplicationName = startup.GetType().Assembly.GetName().Name
+        });
+
+        _configureServices?.Invoke(builder.Services);
+        startup.ConfigureServices(builder.Services);
+        _postConfigureServices?.Invoke(builder.Services);
+
+        builder.Services.TryAddSingleton<TimeProvider>(new FrozenTimeProvider(DefaultDateTimeUtc));
+        builder.Services.ReplaceControllers(_testControllerProvider);
+
+        string dbConnectionString = $"Host=localhost;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true";
+
+        builder.Services.AddDbContext<TDbContext>(options =>
+        {
+            options.UseNpgsql(dbConnectionString, static optionsBuilder => optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+            SetDbContextDebugOptions(options);
+        });
+
+        _configureLogging?.Invoke(builder.Logging);
+
+        builder.Host.UseDefaultServiceProvider(ConfigureServiceProvider);
+        builder.WebHost.UseDefaultServiceProvider(ConfigureServiceProvider);
+        builder.WebHost.UseTestServer();
+
+        WebApplication app = builder.Build();
+        startup.Configure(app);
+
+        RunOnDatabase(app, static dbContext => dbContext.Database.EnsureCreated());
+
+        app.Start();
+
+        return app;
+    }
+
+    [Conditional("DEBUG")]
+    private static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+    {
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
+        options.ConfigureWarnings(static builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
+    }
+
+    private static void RunOnDatabase(WebApplication app, Action<TDbContext> action)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
+
+        action(dbContext);
+    }
+
     public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)
     {
-        await using AsyncServiceScope scope = Factory.Services.CreateAsyncScope();
+        await using AsyncServiceScope scope = App.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
         await asyncAction(dbContext);
     }
 
-    public override async Task DisposeAsync()
+    protected override HttpClient CreateClient()
     {
-        try
-        {
-            if (_lazyFactory.IsValueCreated)
-            {
-                await RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync());
-                await _lazyFactory.Value.DisposeAsync();
-            }
-        }
-        finally
-        {
-            await base.DisposeAsync();
-        }
+        return Factory.CreateClient();
     }
 
-    private sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<TStartup>
+    public override async Task DisposeAsync()
     {
-        private Action<ILoggingBuilder>? _loggingConfiguration;
-        private Action<IServiceCollection>? _configureServices;
-        private Action<IServiceCollection>? _postConfigureServices;
-
-        public void ConfigureLogging(Action<ILoggingBuilder>? loggingConfiguration)
+        if (_lazyApp.IsValueCreated)
         {
-            _loggingConfiguration = loggingConfiguration;
-        }
-
-        public void ConfigureServices(Action<IServiceCollection>? configureServices)
-        {
-            _configureServices = configureServices;
-        }
-
-        public void PostConfigureServices(Action<IServiceCollection>? configureServices)
-        {
-            _postConfigureServices = configureServices;
-        }
-
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
-            // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
-            builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}");
-        }
-
-        protected override IHostBuilder CreateHostBuilder()
-        {
-            // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:wrap_before_first_method_call true
-
-            return Host
-                .CreateDefaultBuilder(null)
-                .ConfigureAppConfiguration(builder =>
-                {
-                    // For tests asserting on log output, we discard the log levels from appsettings.json and environment variables.
-                    // But using appsettings.json for all other tests makes it easy to quickly toggle when debugging tests.
-                    if (_loggingConfiguration != null)
-                    {
-                        builder.Sources.Clear();
-                    }
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.ConfigureServices(services => _configureServices?.Invoke(services));
-                    webBuilder.UseStartup<TStartup>();
-                    webBuilder.ConfigureServices(services => _postConfigureServices?.Invoke(services));
-                })
-                .ConfigureLogging(options => _loggingConfiguration?.Invoke(options));
-
-            // @formatter:wrap_before_first_method_call restore
-            // @formatter:wrap_chained_method_calls restore
+            try
+            {
+                await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                Factory.Dispose();
+                await App.DisposeAsync();
+            }
+            catch (Exception)
+            {
+                // Ignore. Any exception thrown here (app fails to start) masks the original error.
+            }
         }
     }
 }

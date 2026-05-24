@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace TestBuildingBlocks;
 
-public class TestableStartup<TDbContext>
+public class TestableStartup<TDbContext> : IStartup
     where TDbContext : TestableDbContext
 {
     public virtual void ConfigureServices(IServiceCollection services)

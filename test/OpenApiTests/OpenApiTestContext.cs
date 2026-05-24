@@ -4,12 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit.Abstractions;
+using Xunit.DependencyInjection;
 
 namespace OpenApiTests;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<TStartup, TDbContext>
-    where TStartup : class
+    where TStartup : IStartup, new()
     where TDbContext : TestableDbContext
 {
     private readonly Lazy<Task<JsonElement>> _lazyDocument;
@@ -17,8 +18,10 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     internal string? OpenApiDocumentOutputDirectory { get; set; }
 
-    public OpenApiTestContext()
+    public OpenApiTestContext(ITestOutputHelperAccessor accessor)
+        : base(accessor)
     {
+        CaptureHttpTraffic = false;
         _lazyDocument = new Lazy<Task<JsonElement>>(CreateOpenApiDocumentAsync, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
@@ -39,7 +42,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         return rootElement;
     }
 
-    internal void SetTestOutputHelper(ITestOutputHelper testOutputHelper)
+    internal void SetTestOutputHelper(ITestOutputHelper? testOutputHelper)
     {
         ArgumentNullException.ThrowIfNull(testOutputHelper);
 

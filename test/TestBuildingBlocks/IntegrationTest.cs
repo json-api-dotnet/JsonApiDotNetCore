@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using FluentAssertions.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace TestBuildingBlocks;
@@ -12,6 +13,12 @@ namespace TestBuildingBlocks;
 public abstract class IntegrationTest : IAsyncLifetime
 {
     private static readonly SemaphoreSlim ThrottleSemaphore = GetDefaultThrottleSemaphore();
+
+    protected static readonly Action<ServiceProviderOptions> ConfigureServiceProvider = static options =>
+    {
+        options.ValidateScopes = true;
+        options.ValidateOnBuild = true;
+    };
 
     public static DateTimeOffset DefaultDateTimeUtc { get; } = 1.January(2020).At(1, 2, 3).AsUtc();
 

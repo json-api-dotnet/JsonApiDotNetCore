@@ -432,7 +432,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/policies";
-        string contentType = $"{JsonApiMediaType.Default}; charset=ISO-8859-4";
+        string contentType = $"{JsonApiMediaType.Default}; charset=utf-8";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);

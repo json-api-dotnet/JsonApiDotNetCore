@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.OpenApi.Client.Kiota;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
@@ -21,10 +20,9 @@ internal sealed class TestableHttpClientRequestAdapterFactory : IDisposable
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
     }
 
-    public HttpClientRequestAdapter CreateAdapter<TStartup>(WebApplicationFactory<TStartup> webApplicationFactory)
-        where TStartup : class
+    public HttpClientRequestAdapter CreateAdapter(FactoryBridge bridge)
     {
-        ArgumentNullException.ThrowIfNull(webApplicationFactory);
+        ArgumentNullException.ThrowIfNull(bridge);
 
         DelegatingHandler[] handlers =
         [
@@ -33,7 +31,7 @@ internal sealed class TestableHttpClientRequestAdapterFactory : IDisposable
             _logHttpMessageHandler
         ];
 
-        HttpClient httpClient = webApplicationFactory.CreateDefaultClient(handlers);
+        HttpClient httpClient = bridge.GetTestClient(handlers);
         return new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
     }
 

@@ -4,20 +4,21 @@ using System.Text.Json;
 using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
-using Xunit.Abstractions;
+using Xunit.DependencyInjection;
 
 namespace OpenApiTests.LegacyOpenApi;
 
 public sealed class LegacyTests : OpenApiTestContext<LegacyStartup<LegacyIntegrationDbContext>, LegacyIntegrationDbContext>
 {
-    public LegacyTests(ITestOutputHelper testOutputHelper)
+    public LegacyTests(ITestOutputHelperAccessor accessor)
+        : base(accessor)
     {
         UseController<AirplanesController>();
         UseController<FlightsController>();
         UseController<FlightAttendantsController>();
         UseController<PassengersController>();
 
-        SetTestOutputHelper(testOutputHelper);
+        SetTestOutputHelper(accessor.Output);
         OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
