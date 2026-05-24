@@ -76,7 +76,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         {
             _configureServices?.Invoke(services);
 
-            services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(DefaultDateTimeUtc)));
+            services.TryAddSingleton<TimeProvider>(new FrozenTimeProvider(DefaultDateTimeUtc));
 
             services.ReplaceControllers(_testControllerProvider);
 

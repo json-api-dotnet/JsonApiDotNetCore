@@ -4,7 +4,6 @@ using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -26,7 +25,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         testContext.UseController<GiftCertificatesController>();
         testContext.UseController<PostOfficesController>();
 
-        testContext.PostConfigureServices(services => services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime))));
+        testContext.ConfigureServices(services => services.AddSingleton<TimeProvider>(new FrozenTimeProvider(CurrentTime)));
 
         var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
         timeProvider.Reset();

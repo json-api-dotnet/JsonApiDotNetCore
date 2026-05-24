@@ -107,7 +107,7 @@ internal sealed class JsonApiApplicationBuilder
         if (_options.ValidateModelState)
         {
             _mvcBuilder.AddDataAnnotations();
-            _services.Replace(new ServiceDescriptor(typeof(IModelMetadataProvider), typeof(JsonApiModelMetadataProvider), ServiceLifetime.Singleton));
+            _services.Replace(ServiceDescriptor.Singleton<IModelMetadataProvider, JsonApiModelMetadataProvider>());
         }
     }
 
