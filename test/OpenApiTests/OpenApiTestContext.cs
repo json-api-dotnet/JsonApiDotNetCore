@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,11 +33,8 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
         JsonElement rootElement = ParseDocument(content);
 
-        if (OpenApiDocumentOutputDirectory != null)
-        {
-            string absoluteOutputPath = GetAbsoluteOutputPath(OpenApiDocumentOutputDirectory);
-            await WriteToDiskAsync(absoluteOutputPath, rootElement);
-        }
+        string? absoluteOutputPath = GetAbsoluteOutputPath();
+        await WriteToDiskAsync(absoluteOutputPath, rootElement);
 
         return rootElement;
     }
@@ -60,12 +56,26 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         }
     }
 
-    private static string GetAbsoluteOutputPath(string relativePath)
+    private string? GetAbsoluteOutputPath()
     {
-        string testRootDirectory = Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../");
-        string outputPath = Path.Combine(testRootDirectory, relativePath, "swagger.g.json");
+        if (OpenApiDocumentOutputDirectory != null)
+        {
+#if NET10_0
+            Version frameworkVersion = typeof(object).Assembly.GetName().Version!;
+            string targetFrameworkName = $"net{frameworkVersion.Major}.{frameworkVersion.Minor}";
 
-        return Path.GetFullPath(outputPath);
+            string testRootDirectory = Path.Combine(typeof(TDbContext).Assembly.Location, "../../../../../");
+            string outputPath = Path.Combine(testRootDirectory, OpenApiDocumentOutputDirectory, targetFrameworkName, "swagger.g.json");
+
+            return Path.GetFullPath(outputPath);
+#elif NET10_0_OR_GREATER
+#error Unsupported newer target framework. Please update the preprocessor directives in this file and references in consuming projects.
+#else
+            // Not writing to disk for simplicity and performance on lower target frameworks.
+#endif
+        }
+
+        return null;
     }
 
     private async Task<string> GetAsync(string requestUrl)
@@ -84,27 +94,34 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         return jsonDocument.RootElement.Clone();
     }
 
-    private static async Task WriteToDiskAsync(string path, JsonElement jsonElement)
+    private static async Task WriteToDiskAsync(string? path, JsonElement jsonElement)
     {
-        while (true)
+        if (path != null)
         {
-            try
+            string directory = Path.GetDirectoryName(path)!;
+            Directory.CreateDirectory(directory);
+
+            string newContent = jsonElement.ToString();
+
+#if !DEBUG
+            // Fail test when changes to the generated OpenAPI document haven't been committed in PRs.
+            bool fileExists = File.Exists(path);
+            string oldContent = fileExists ? await File.ReadAllTextAsync(path) : string.Empty;
+#endif
+
+            await File.WriteAllTextAsync(path, newContent);
+
+#if !DEBUG
+            if (!fileExists)
             {
-                string directory = Path.GetDirectoryName(path)!;
-                Directory.CreateDirectory(directory);
-
-                string contents = jsonElement.ToString();
-                await File.WriteAllTextAsync(path, contents);
-
-                return;
+                throw new InvalidOperationException($"""WARNING: File "{path}" is missing. Please commit the new file.""");
             }
-            catch (IOException)
+
+            if (newContent != oldContent)
             {
-                // This sometimes happens when running tests locally.
-                // Multi-targeted projects should not use the same output path.
-
-                await Task.Delay(TimeSpan.FromMilliseconds(50));
+                throw new InvalidOperationException($"""WARNING: File "{path}" has changed. Please commit the changes.""");
             }
+#endif
         }
     }
 }
