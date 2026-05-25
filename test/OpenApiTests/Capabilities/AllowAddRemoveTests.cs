@@ -22,7 +22,7 @@ public sealed class AllowAddRemoveTests : IClassFixture<OpenApiTestContext<OpenA
     public async Task Does_not_hide_relationship_property()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldOnName = "childrenOn";
@@ -55,7 +55,7 @@ public sealed class AllowAddRemoveTests : IClassFixture<OpenApiTestContext<OpenA
     public async Task Hides_add_or_remove_ToMany_relationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./allowAddRemoveCapabilities/{id}/relationships/childrenOn").With(endpointElement =>

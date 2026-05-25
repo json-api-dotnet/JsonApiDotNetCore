@@ -22,7 +22,7 @@ public sealed class CustomRouteTests : IClassFixture<OpenApiTestContext<OpenApiS
         testContext.UseController<BallotsController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -41,7 +41,7 @@ public sealed class CustomRouteTests : IClassFixture<OpenApiTestContext<OpenApiS
         IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> defaultEndpointToPathMap = JsonPathBuilder.GetEndpointPaths(resourceType);
 
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string[] customPaths = JsonPathBuilder.KnownEndpoints.SelectMany(endpoint => customEndpointToPathMap[endpoint]).ToArray();
@@ -62,7 +62,7 @@ public sealed class CustomRouteTests : IClassFixture<OpenApiTestContext<OpenApiS
     public async Task Winner_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./voting-api/overview/winner/{id}").Should().BeJson("""

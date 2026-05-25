@@ -30,7 +30,7 @@ public sealed class MetaTests : IClassFixture<OpenApiTestContext<OpenApiStartup<
     public async Task Includes_meta_definition()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.meta").With(metaElement =>
@@ -91,7 +91,7 @@ public sealed class MetaTests : IClassFixture<OpenApiTestContext<OpenApiStartup<
     public async Task Includes_meta_property(string schemaId)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{schemaId}.properties").With(propertiesElement =>

@@ -24,14 +24,14 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
         testContext.UseController<OperationsController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]
     public async Task Casing_convention_is_applied_to_GetCollection_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -162,7 +162,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_GetSingle_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -200,7 +200,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -237,7 +237,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/backup-store-manager.get").With(getElement =>
@@ -256,7 +256,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
@@ -275,7 +275,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -314,7 +314,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.get").With(getElement =>
@@ -333,7 +333,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -376,7 +376,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_Post_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -432,7 +432,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_PostRelationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
@@ -448,7 +448,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_Patch_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -486,7 +486,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/relationships/store-manager.patch").With(getElement =>
@@ -502,7 +502,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.patch").With(getElement =>
@@ -518,7 +518,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
@@ -534,7 +534,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_Delete_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}.delete").With(getElement =>
@@ -550,7 +550,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_DeleteRelationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
@@ -566,7 +566,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_PostOperations_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./operations.post").With(getElement =>
@@ -680,7 +680,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     public async Task Casing_convention_is_applied_to_error_schema()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.error-response-document");

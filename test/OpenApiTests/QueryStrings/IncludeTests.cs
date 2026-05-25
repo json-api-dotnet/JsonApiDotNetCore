@@ -34,7 +34,7 @@ public sealed class IncludeTests : IClassFixture<OpenApiTestContext<OpenApiStart
         int count = resourceGraph.GetResourceTypes().Count;
 
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>

@@ -21,7 +21,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
         testContext.UseController<CoffeeSummaryController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
 
         testContext.ConfigureServices(services =>
         {
@@ -35,7 +35,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Default_JsonApi_endpoints_are_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./cupOfCoffees.get");
@@ -47,7 +47,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Get_coffee_summaries_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./coffeeSummaries/summary.get").Should().BeJson("""
@@ -105,7 +105,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Get_black_cups_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./cupOfCoffees/onlyBlack.get").Should().BeJson("""
@@ -150,7 +150,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Get_black_cup_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./cupOfCoffees/onlyBlack/{id}.get").Should().BeJson("""
@@ -232,7 +232,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Batch_create_cups_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./cupOfCoffees/batch.post").Should().BeJson("""
@@ -292,7 +292,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Batch_update_cups_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./cupOfCoffees/batch.patch").Should().BeJson("""
@@ -315,7 +315,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Batch_delete_cups_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./cupOfCoffees/batch.delete").Should().BeJson("""
@@ -348,7 +348,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Upload_file_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./fileTransfers.post").Should().BeJson("""
@@ -401,7 +401,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task File_exists_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./fileTransfers/find.get").Should().BeJson("""
@@ -463,7 +463,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Download_file_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./fileTransfers.get").Should().BeJson("""
@@ -533,7 +533,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Send_email_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./emails/send.post").Should().BeJson("""
@@ -581,7 +581,7 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
     public async Task Emails_sent_since_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./emails/sent-since.get").Should().BeJson("""

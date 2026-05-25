@@ -24,14 +24,14 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
         testContext.UseController<OperationsController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]
     public async Task Casing_convention_is_applied_to_GetCollection_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -162,7 +162,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_GetSingle_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -200,7 +200,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -237,7 +237,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/BackupStoreManager.get").With(getElement =>
@@ -256,7 +256,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/Cashiers.get").With(getElement =>
@@ -275,7 +275,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -314,7 +314,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/relationships/BackupStoreManager.get").With(getElement =>
@@ -333,7 +333,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -376,7 +376,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_Post_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -430,7 +430,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_PostRelationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/relationships/Cashiers.post").With(getElement =>
@@ -446,7 +446,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_Patch_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -484,7 +484,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/relationships/StoreManager.patch").With(getElement =>
@@ -500,7 +500,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/relationships/BackupStoreManager.patch").With(getElement =>
@@ -516,7 +516,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/relationships/Cashiers.patch").With(getElement =>
@@ -532,7 +532,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_Delete_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}.delete").With(getElement =>
@@ -548,7 +548,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_DeleteRelationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Supermarkets/{id}/relationships/Cashiers.delete").With(getElement =>
@@ -564,7 +564,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_PostOperations_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./Operations.post").With(getElement =>
@@ -676,7 +676,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
     public async Task Casing_convention_is_applied_to_error_schema()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.ErrorResponseDocument");

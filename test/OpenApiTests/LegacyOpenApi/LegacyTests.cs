@@ -18,14 +18,14 @@ public sealed class LegacyTests : OpenApiTestContext<LegacyStartup<LegacyIntegra
         UseController<PassengersController>();
 
         SetTestOutputHelper(testOutputHelper);
-        SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]
     public async Task Retrieved_swagger_document_matches_expected_document()
     {
         // Act
-        JsonElement jsonElement = await GetSwaggerDocumentAsync();
+        JsonElement jsonElement = await GetOpenApiDocumentAsync();
 
         // Assert
         string expectedJsonText = await GetExpectedSwaggerDocumentAsync();

@@ -19,7 +19,7 @@ public sealed class IdObfuscationTests : IClassFixture<OpenApiTestContext<Obfusc
         testContext.UseController<OperationsController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -46,7 +46,7 @@ public sealed class IdObfuscationTests : IClassFixture<OpenApiTestContext<Obfusc
     public async Task Hides_underlying_ID_type_in_path_parameter(string endpointPath)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"paths.{endpointPath}.parameters").With(parametersElement =>
@@ -79,7 +79,7 @@ public sealed class IdObfuscationTests : IClassFixture<OpenApiTestContext<Obfusc
     public async Task Hides_underlying_ID_type_in_component_schema(string schemaId, bool isWrapped)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string path = isWrapped ? $"components.schemas.{schemaId}.allOf[1].properties.id" : $"components.schemas.{schemaId}.properties.id";

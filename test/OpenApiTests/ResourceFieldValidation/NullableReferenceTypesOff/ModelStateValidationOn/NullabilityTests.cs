@@ -17,7 +17,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         testContext.UseController<NrtOffResourcesController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -26,7 +26,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
     public async Task Schema_property_for_attribute_is_nullable(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.attributesInResourceResponse.allOf[1].properties").With(schemaProperties =>
@@ -46,7 +46,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
     public async Task Schema_property_for_attribute_is_not_nullable(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.attributesInResourceResponse.allOf[1].properties").With(schemaProperties =>
@@ -63,7 +63,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
     public async Task Schema_property_for_relationship_is_nullable(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.allOf[1].properties").With(schemaProperties =>
@@ -85,7 +85,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
     public async Task Schema_property_for_relationship_is_not_nullable(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.allOf[1].properties").With(schemaProperties =>

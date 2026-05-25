@@ -26,7 +26,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     public async Task Schema_property_for_attribute_is_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.attributesInCreateResourceRequest.allOf[1]").With(attributesSchema =>
@@ -44,7 +44,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     public async Task Schema_property_for_attribute_is_not_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.attributesInCreateResourceRequest.allOf[1]").With(attributesSchema =>
@@ -61,7 +61,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     public async Task Schema_property_for_relationship_is_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.allOf[1]").With(relationshipsSchema =>
@@ -78,7 +78,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     public async Task Schema_property_for_relationship_is_not_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.allOf[1]").With(relationshipsSchema =>
@@ -92,7 +92,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     public async Task No_attribute_schema_properties_are_required_for_updating_resource()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.attributesInUpdateResourceRequest.allOf[1]").With(attributesSchema =>
@@ -105,7 +105,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     public async Task No_relationship_schema_properties_are_required_for_updating_resource()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.relationshipsInUpdateResourceRequest.allOf[1]").With(relationshipsSchema =>

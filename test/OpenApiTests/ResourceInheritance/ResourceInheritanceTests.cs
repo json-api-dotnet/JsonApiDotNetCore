@@ -24,7 +24,7 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
 
         if (writeToDisk)
         {
-            testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+            testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
         }
     }
 
@@ -36,7 +36,7 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
         IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> endpointToPathMap = JsonPathBuilder.GetEndpointPaths(resourceType);
 
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         string[] pathsExpected = JsonPathBuilder.KnownEndpoints.Where(endpoint => expected.HasFlag(endpoint))
@@ -58,7 +58,7 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
     public virtual async Task Operations_endpoint_is_exposed(bool enabled)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         if (enabled)
@@ -74,7 +74,7 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
     public virtual async Task Expected_names_appear_in_type_discriminator_mapping(string schemaName, bool isWrapped, string? discriminatorValues)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         if (discriminatorValues == null)
@@ -116,7 +116,7 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
     public virtual async Task Expected_names_appear_in_openapi_discriminator_mapping(string prefixedSchemaName, string? discriminatorValues)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         string schemaName = prefixedSchemaName.StartsWith('!') ? prefixedSchemaName[1..] : prefixedSchemaName;
         string discriminatorPath = prefixedSchemaName.StartsWith('!') ? "allOf[1].discriminator" : "discriminator";
@@ -159,7 +159,7 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
     public virtual async Task Expected_names_appear_in_resource_type_enum(string schemaName, string? enumValues)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         if (enumValues == null)
@@ -194,7 +194,7 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
     public virtual async Task Component_schemas_have_expected_base_type(string schemaName, bool isAbstract, string? baseType, string? properties)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         if (baseType == null && properties == null)

@@ -18,7 +18,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
         testContext.UseController<OperationsController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeJsonApiVersion = true;
@@ -28,7 +28,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Operations_endpoint_is_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./operations.post").Should().BeJson("""
@@ -126,7 +126,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Operations_request_component_schemas_are_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -364,7 +364,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Operations_response_component_schemas_are_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -439,7 +439,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Course_operation_component_schemas_are_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -905,7 +905,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Student_operation_component_schemas_are_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -1475,7 +1475,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Teacher_operation_component_schemas_are_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -1989,7 +1989,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Enrollment_operation_component_schemas_are_exposed()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>

@@ -22,7 +22,7 @@ public sealed class AllowSetTests : IClassFixture<OpenApiTestContext<OpenApiStar
     public async Task Hides_readonly_attribute_property_in_response()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldReadOnlyName = "attributeReadOnly";
@@ -51,7 +51,7 @@ public sealed class AllowSetTests : IClassFixture<OpenApiTestContext<OpenApiStar
     public async Task Hides_ToOne_relationship_property_in_create_and_update_resource_request()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldOnName = "parentSetOn";
@@ -80,7 +80,7 @@ public sealed class AllowSetTests : IClassFixture<OpenApiTestContext<OpenApiStar
     public async Task Hides_update_ToOne_relationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./allowSetCapabilities/{id}/relationships/parentSetOn").With(endpointElement =>
@@ -102,7 +102,7 @@ public sealed class AllowSetTests : IClassFixture<OpenApiTestContext<OpenApiStar
     public async Task Hides_ToMany_relationship_property_in_create_and_update_resource_request()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldOnName = "childrenSetOn";
@@ -131,7 +131,7 @@ public sealed class AllowSetTests : IClassFixture<OpenApiTestContext<OpenApiStar
     public async Task Hides_update_ToMany_relationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./allowSetCapabilities/{id}/relationships/childrenSetOn").With(endpointElement =>

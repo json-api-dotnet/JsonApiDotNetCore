@@ -13,30 +13,30 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
     where TStartup : class
     where TDbContext : TestableDbContext
 {
-    private readonly Lazy<Task<JsonElement>> _lazySwaggerDocument;
+    private readonly Lazy<Task<JsonElement>> _lazyDocument;
     private ITestOutputHelper? _testOutputHelper;
 
-    internal string? SwaggerDocumentOutputDirectory { get; set; }
+    internal string? OpenApiDocumentOutputDirectory { get; set; }
 
     public OpenApiTestContext()
     {
-        _lazySwaggerDocument = new Lazy<Task<JsonElement>>(CreateSwaggerDocumentAsync, LazyThreadSafetyMode.ExecutionAndPublication);
+        _lazyDocument = new Lazy<Task<JsonElement>>(CreateOpenApiDocumentAsync, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    internal async Task<JsonElement> GetSwaggerDocumentAsync()
+    internal async Task<JsonElement> GetOpenApiDocumentAsync()
     {
-        return await _lazySwaggerDocument.Value;
+        return await _lazyDocument.Value;
     }
 
-    internal async Task<JsonElement> CreateSwaggerDocumentAsync()
+    internal async Task<JsonElement> CreateOpenApiDocumentAsync()
     {
         string content = await GetAsync("/swagger/v1/swagger.json");
 
-        JsonElement rootElement = ParseSwaggerDocument(content);
+        JsonElement rootElement = ParseDocument(content);
 
-        if (SwaggerDocumentOutputDirectory != null)
+        if (OpenApiDocumentOutputDirectory != null)
         {
-            string absoluteOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputDirectory);
+            string absoluteOutputPath = GetAbsoluteOutputPath(OpenApiDocumentOutputDirectory);
             await WriteToDiskAsync(absoluteOutputPath, rootElement);
         }
 
@@ -60,7 +60,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         }
     }
 
-    private static string GetSwaggerDocumentAbsoluteOutputPath(string relativePath)
+    private static string GetAbsoluteOutputPath(string relativePath)
     {
         string testRootDirectory = Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../");
         string outputPath = Path.Combine(testRootDirectory, relativePath, "swagger.g.json");
@@ -78,7 +78,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         return await responseMessage.Content.ReadAsStringAsync();
     }
 
-    private static JsonElement ParseSwaggerDocument(string content)
+    private static JsonElement ParseDocument(string content)
     {
         using JsonDocument jsonDocument = JsonDocument.Parse(content);
         return jsonDocument.RootElement.Clone();

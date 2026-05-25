@@ -41,7 +41,7 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
     public async Task All_configurable_link_schemas_are_hidden(string schemaId)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -54,7 +54,7 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
     public async Task Error_links_schema_is_visible()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas.errorLinks").With(linksElement =>
@@ -97,7 +97,7 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
     public async Task All_container_schemas_contain_no_link_property(string containerSchemaId)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>

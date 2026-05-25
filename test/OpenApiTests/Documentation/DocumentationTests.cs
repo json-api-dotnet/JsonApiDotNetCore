@@ -44,7 +44,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task API_is_documented()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("info").With(infoElement =>
@@ -71,7 +71,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Endpoints_are_documented()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./skyscrapers").With(skyscrapersElement =>
@@ -639,7 +639,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Applies_restrictions_from_DisableQueryString_annotation_on_controller(string endpointPath, JsonApiQueryStringParameters queryStringParameters)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"paths.{endpointPath}.parameters").With(parametersElement =>
@@ -683,7 +683,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Resource_types_are_documented()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -706,7 +706,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Attributes_are_documented()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -743,7 +743,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Relationships_are_documented()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -780,7 +780,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Enums_are_documented()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -793,7 +793,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Forbidden_status_is_added_when_client_generated_IDs_are_disabled()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./elevators.post.responses").With(responsesElement =>

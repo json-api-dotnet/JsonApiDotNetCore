@@ -32,7 +32,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Applicable_error_status_codes_with_schema_are_provided_on_endpoints()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./skyscrapers").With(skyscrapersElement =>
@@ -308,7 +308,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
     public async Task Forbidden_status_is_added_when_client_generated_IDs_are_disabled()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./elevators.post.responses").With(responsesElement =>

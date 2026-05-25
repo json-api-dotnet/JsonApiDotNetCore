@@ -17,7 +17,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
         testContext.UseController<CountriesController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -32,7 +32,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
     public async Task Endpoints_have_caching_headers(string endpointPath)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"paths.{endpointPath}.parameters").With(parametersElement =>
@@ -82,7 +82,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
     public async Task Endpoints_do_not_have_caching_headers(string endpointPath)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"paths.{endpointPath}.parameters").With(parametersElement =>
@@ -107,7 +107,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
     public async Task Endpoints_have_content_length_response_header(string endpointPath)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"paths.{endpointPath}.responses.200.headers.Content-Length").With(contentLengthElement =>
@@ -128,7 +128,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
     public async Task Post_resource_endpoint_has_location_response_header()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./countries.post.responses.201.headers.Location").With(locationElement =>

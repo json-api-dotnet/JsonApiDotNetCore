@@ -21,7 +21,7 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
         testContext.UseController<ExcursionsController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -35,7 +35,7 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
     public async Task All_configurable_link_schemas_are_exposed(string schemaId, LinkTypes expected)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -80,7 +80,7 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
     public async Task All_container_schemas_contain_correct_link_property(string linkSchemaId, string containerSchemaId, bool isRequired)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>

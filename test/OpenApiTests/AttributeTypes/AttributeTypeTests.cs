@@ -26,7 +26,7 @@ public sealed class AttributeTypeTests : IClassFixture<OpenApiTestContext<Attrib
         testContext.UseController<TypeContainersController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -34,7 +34,7 @@ public sealed class AttributeTypeTests : IClassFixture<OpenApiTestContext<Attrib
     public async Task Types_produce_expected_schemas(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties").Should().BeJson("""
