@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -30,9 +29,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         {
             services.AddResourceService<SoftDeletionAwareResourceService<Company, long>>();
             services.AddResourceService<SoftDeletionAwareResourceService<Department, long>>();
-        });
 
-        testContext.PostConfigureServices(services => services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime))));
+            services.AddSingleton<TimeProvider>(new FrozenTimeProvider(CurrentTime));
+        });
 
         var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
         timeProvider.Reset();

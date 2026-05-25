@@ -18,7 +18,7 @@ public sealed class MissingFromBodyOnPostMethodTests : OpenApiTestContext<OpenAp
     public async Task Cannot_use_Post_controller_action_method_without_FromBody_attribute()
     {
         // Act
-        Func<Task> action = async () => _ = await GetSwaggerDocumentAsync();
+        Func<Task> action = async () => _ = await GetOpenApiDocumentAsync();
 
         // Assert
         string? actionMethod = typeof(MissingFromBodyOnPostController).GetMethod(nameof(MissingFromBodyOnPostController.AlternatePostAsync))!.ToString();

@@ -43,7 +43,7 @@ public sealed class LinksMixedTests : IClassFixture<OpenApiTestContext<OpenApiSt
     public async Task Expected_configurable_link_schemas_are_exposed(string schemaId, LinkTypes expected)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>

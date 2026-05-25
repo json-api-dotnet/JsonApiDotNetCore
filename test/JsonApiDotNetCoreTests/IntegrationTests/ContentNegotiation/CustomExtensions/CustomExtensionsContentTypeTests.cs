@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -40,10 +39,9 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
                 var requestDocumentStore = serviceProvider.GetRequiredService<RequestDocumentStore>();
                 return new CapturingDocumentAdapter(documentAdapter, requestDocumentStore);
             });
-        });
 
-        testContext.PostConfigureServices(services => services.Replace(
-            ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime, TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")))));
+            services.AddSingleton<TimeProvider>(new FrozenTimeProvider(CurrentTime, TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")));
+        });
 
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
 #pragma warning disable CS0618 // Type or member is obsolete

@@ -23,7 +23,7 @@ public sealed class AllowCreateChangeTests : IClassFixture<OpenApiTestContext<Op
     public async Task Hides_attribute_property_in_create_or_update_resource_request()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldOnName = "attributeOn";

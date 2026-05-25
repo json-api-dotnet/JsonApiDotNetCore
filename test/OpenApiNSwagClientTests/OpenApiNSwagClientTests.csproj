@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
     <TargetFramework>net10.0</TargetFramework>
@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApi\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApi\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Namespace>$(MSBuildProjectName).LegacyOpenApi.GeneratedCode</Namespace>
       <ClassName>LegacyClient</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
@@ -35,25 +35,25 @@
       <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
       <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConventions\KebabCase\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\NamingConventions\KebabCase\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>KebabCase</Name>
       <Namespace>$(MSBuildProjectName).NamingConventions.%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConventions\CamelCase\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\NamingConventions\CamelCase\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>CamelCase</Name>
       <Namespace>$(MSBuildProjectName).NamingConventions.%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConventions\PascalCase\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\NamingConventions\PascalCase\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>PascalCase</Name>
       <Namespace>$(MSBuildProjectName).NamingConventions.%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOff\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOff\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>NrtOffMsvOff</Name>
       <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff.GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
@@ -62,7 +62,7 @@
       <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
       <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOn\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOn\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>NrtOffMsvOn</Name>
       <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOn.GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
@@ -71,7 +71,7 @@
       <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
       <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOff\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOff\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>NrtOnMsvOff</Name>
       <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOff.GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
@@ -80,7 +80,7 @@
       <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
       <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOn\GeneratedSwagger\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOn\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>NrtOnMsvOn</Name>
       <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOn.GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>

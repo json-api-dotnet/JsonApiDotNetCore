@@ -18,7 +18,7 @@ public sealed class MissingFromBodyOnPatchMethodTests : OpenApiTestContext<OpenA
     public async Task Cannot_use_Patch_controller_action_method_without_FromBody_attribute()
     {
         // Act
-        Func<Task> action = async () => _ = await GetSwaggerDocumentAsync();
+        Func<Task> action = async () => _ = await GetOpenApiDocumentAsync();
 
         // Assert
         string? actionMethod = typeof(MissingFromBodyOnPatchController).GetMethod(nameof(MissingFromBodyOnPatchController.AlternatePatchAsync))!.ToString();

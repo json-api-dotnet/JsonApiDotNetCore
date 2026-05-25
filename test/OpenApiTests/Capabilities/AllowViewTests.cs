@@ -22,7 +22,7 @@ public sealed class AllowViewTests : IClassFixture<OpenApiTestContext<OpenApiSta
     public async Task Hides_attribute_property_in_response()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldOnName = "attributeViewOn";
@@ -51,7 +51,7 @@ public sealed class AllowViewTests : IClassFixture<OpenApiTestContext<OpenApiSta
     public async Task Hides_ToOne_relationship_property_in_response()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldOnName = "parentViewOn";
@@ -80,7 +80,7 @@ public sealed class AllowViewTests : IClassFixture<OpenApiTestContext<OpenApiSta
     public async Task Hides_get_ToOne_relationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./allowViewCapabilities/{id}/relationships/parentViewOn").With(endpointElement =>
@@ -102,7 +102,7 @@ public sealed class AllowViewTests : IClassFixture<OpenApiTestContext<OpenApiSta
     public async Task Hides_ToMany_relationship_property_in_response()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         const string fieldOnName = "childrenViewOn";
@@ -131,7 +131,7 @@ public sealed class AllowViewTests : IClassFixture<OpenApiTestContext<OpenApiSta
     public async Task Hides_get_ToMany_relationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath("paths./allowViewCapabilities/{id}/relationships/childrenViewOn").With(endpointElement =>

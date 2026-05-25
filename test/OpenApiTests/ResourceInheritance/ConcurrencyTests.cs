@@ -28,7 +28,7 @@ public sealed class ConcurrencyTests : ResourceInheritanceTests
 
         for (int index = 0; index < count; index++)
         {
-            downloadTasks[index] = _testContext.CreateSwaggerDocumentAsync();
+            downloadTasks[index] = _testContext.CreateOpenApiDocumentAsync();
         }
 
         // Act

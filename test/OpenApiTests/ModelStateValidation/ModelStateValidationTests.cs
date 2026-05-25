@@ -27,7 +27,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         testContext.UseController<SocialMediaAccountsController>();
 
         testContext.SetTestOutputHelper(testOutputHelper);
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -35,7 +35,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Guid_type_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.alternativeId").With(alternativeIdElement =>
@@ -50,7 +50,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Length_annotation_on_resource_string_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.firstName").With(firstNameElement =>
@@ -66,7 +66,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Required_annotation_with_AllowEmptyStrings_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.lastName").With(lastNameElement =>
@@ -81,7 +81,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task StringLength_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.userName").With(userNameElement =>
@@ -97,7 +97,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task RegularExpression_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.userName").With(userNameElement =>
@@ -112,7 +112,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task CreditCard_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.creditCard").With(creditCardElement =>
@@ -127,7 +127,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Email_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.email").With(emailElement =>
@@ -142,7 +142,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Min_max_length_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.password").With(passwordElement =>
@@ -159,7 +159,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Phone_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.phone").With(phoneElement =>
@@ -174,7 +174,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Range_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.age").With(ageElement =>
@@ -193,7 +193,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Url_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.profilePicture").With(profilePictureElement =>
@@ -208,7 +208,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Uri_type_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.backgroundPicture").With(backgroundPictureElement =>
@@ -223,7 +223,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task Length_annotation_on_resource_list_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.tags").With(tagsElement =>
@@ -244,7 +244,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task TimeSpan_range_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.nextRevalidation").With(nextRevalidationElement =>
@@ -259,7 +259,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task DateTime_type_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.validatedAt").With(validatedAtElement =>
@@ -274,7 +274,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task DateOnly_type_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.validatedAtDate").With(validatedDateAtElement =>
@@ -289,7 +289,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     public async Task TimeOnly_type_produces_expected_schema(string modelName)
     {
         // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
 
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.validatedAtTime").With(validatedTimeAtElement =>
