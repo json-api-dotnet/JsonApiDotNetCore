@@ -33,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="SauceControl.InheritDoc" Version="$(InheritDocVersion)" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleFrozenVersion)" />
   </ItemGroup>
