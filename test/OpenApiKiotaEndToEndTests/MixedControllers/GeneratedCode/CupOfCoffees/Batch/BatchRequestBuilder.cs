@@ -24,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public BatchRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/cupOfCoffees/batch?size={size}", pathParameters)
+        public BatchRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/cupOfCoffees/batch", pathParameters)
         {
         }
 
@@ -33,7 +33,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public BatchRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/cupOfCoffees/batch?size={size}", rawUrl)
+        public BatchRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/cupOfCoffees/batch", rawUrl)
         {
         }
 
@@ -89,7 +89,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToDeleteRequestInformation(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.DELETE, "{+baseurl}/cupOfCoffees/batch", PathParameters);
+            var requestInfo = new RequestInformation(Method.DELETE, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
@@ -102,7 +102,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToPatchRequestInformation(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.PATCH, "{+baseurl}/cupOfCoffees/batch", PathParameters);
+            var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             return requestInfo;
         }
@@ -116,7 +116,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.
         public RequestInformation ToPostRequestInformation(global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Models.CreateCupOfCoffeeRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.Batch.BatchRequestBuilder.BatchRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
-            var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
+            var requestInfo = new RequestInformation(Method.POST, "{+baseurl}/cupOfCoffees/batch?size={size}", PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"", body);

@@ -23,7 +23,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.NonJsonApi
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public NonJsonApiRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/NonJsonApi{?name*}", pathParameters)
+        public NonJsonApiRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/NonJsonApi", pathParameters)
         {
         }
 
@@ -32,7 +32,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.NonJsonApi
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public NonJsonApiRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/NonJsonApi{?name*}", rawUrl)
+        public NonJsonApiRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/NonJsonApi", rawUrl)
         {
         }
         /// <returns>A <see cref="Stream"/></returns>
@@ -176,7 +176,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.NonJsonApi
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToPutRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.NonJsonApi.NonJsonApiRequestBuilder.NonJsonApiRequestBuilderPutQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.PUT, UrlTemplate, PathParameters);
+            var requestInfo = new RequestInformation(Method.PUT, "{+baseurl}/NonJsonApi{?name*}", PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "text/plain;q=0.9");
             return requestInfo;

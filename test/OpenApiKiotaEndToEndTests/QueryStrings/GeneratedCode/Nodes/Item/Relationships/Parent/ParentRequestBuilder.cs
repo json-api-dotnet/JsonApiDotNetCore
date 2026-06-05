@@ -125,7 +125,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relati
         public RequestInformation ToPatchRequestInformation(global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableToOneNodeInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
-            var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
+            var requestInfo = new RequestInformation(Method.PATCH, "{+baseurl}/nodes/{id}/relationships/parent", PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"", body);

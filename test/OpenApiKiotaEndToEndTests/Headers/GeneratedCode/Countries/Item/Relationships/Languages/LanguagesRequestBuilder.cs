@@ -24,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public LanguagesRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships/languages{?query*}", pathParameters)
+        public LanguagesRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships/languages", pathParameters)
         {
         }
 
@@ -33,7 +33,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public LanguagesRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships/languages{?query*}", rawUrl)
+        public LanguagesRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships/languages", rawUrl)
         {
         }
 
@@ -162,7 +162,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relationships.Languages.LanguagesRequestBuilder.LanguagesRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
+            var requestInfo = new RequestInformation(Method.GET, "{+baseurl}/countries/{id}/relationships/languages{?query*}", PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
@@ -175,7 +175,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relationships.Languages.LanguagesRequestBuilder.LanguagesRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
+            var requestInfo = new RequestInformation(Method.HEAD, "{+baseurl}/countries/{id}/relationships/languages{?query*}", PathParameters);
             requestInfo.Configure(requestConfiguration);
             return requestInfo;
         }
