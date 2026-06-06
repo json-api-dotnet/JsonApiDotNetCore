@@ -24,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.NoOperations.GeneratedCo
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public StaffRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/mansions/{id}/relationships/staff", pathParameters)
+        public StaffRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/mansions/{id}/relationships/staff{?query*}", pathParameters)
         {
         }
 
@@ -33,7 +33,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.NoOperations.GeneratedCo
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public StaffRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/mansions/{id}/relationships/staff", rawUrl)
+        public StaffRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/mansions/{id}/relationships/staff{?query*}", rawUrl)
         {
         }
 
@@ -162,7 +162,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.NoOperations.GeneratedCo
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ResourceInheritance.NoOperations.GeneratedCode.Mansions.Item.Relationships.Staff.StaffRequestBuilder.StaffRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.GET, "{+baseurl}/mansions/{id}/relationships/staff{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
@@ -175,7 +175,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.NoOperations.GeneratedCo
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ResourceInheritance.NoOperations.GeneratedCode.Mansions.Item.Relationships.Staff.StaffRequestBuilder.StaffRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.HEAD, "{+baseurl}/mansions/{id}/relationships/staff{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             return requestInfo;
         }

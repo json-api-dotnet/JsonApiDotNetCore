@@ -24,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RoadsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/districts/{id}/relationships/roads", pathParameters)
+        public RoadsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/districts/{id}/relationships/roads{?query*}", pathParameters)
         {
         }
 
@@ -33,7 +33,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RoadsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/districts/{id}/relationships/roads", rawUrl)
+        public RoadsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/districts/{id}/relationships/roads{?query*}", rawUrl)
         {
         }
 
@@ -162,7 +162,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Districts.Item.Relationships.Roads.RoadsRequestBuilder.RoadsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.GET, "{+baseurl}/districts/{id}/relationships/roads{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
@@ -175,7 +175,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Districts.Item.Relationships.Roads.RoadsRequestBuilder.RoadsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.HEAD, "{+baseurl}/districts/{id}/relationships/roads{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             return requestInfo;
         }

@@ -24,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.CustomRoutes.GeneratedCode.VotingApi.Overvie
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public VotesRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/voting-api/overview/{id}/relationships/votes", pathParameters)
+        public VotesRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/voting-api/overview/{id}/relationships/votes{?query*}", pathParameters)
         {
         }
 
@@ -33,7 +33,7 @@ namespace OpenApiKiotaEndToEndTests.CustomRoutes.GeneratedCode.VotingApi.Overvie
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public VotesRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/voting-api/overview/{id}/relationships/votes", rawUrl)
+        public VotesRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/voting-api/overview/{id}/relationships/votes{?query*}", rawUrl)
         {
         }
 
@@ -162,7 +162,7 @@ namespace OpenApiKiotaEndToEndTests.CustomRoutes.GeneratedCode.VotingApi.Overvie
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.CustomRoutes.GeneratedCode.VotingApi.Overview.Item.Relationships.Votes.VotesRequestBuilder.VotesRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.GET, "{+baseurl}/voting-api/overview/{id}/relationships/votes{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
@@ -175,7 +175,7 @@ namespace OpenApiKiotaEndToEndTests.CustomRoutes.GeneratedCode.VotingApi.Overvie
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.CustomRoutes.GeneratedCode.VotingApi.Overview.Item.Relationships.Votes.VotesRequestBuilder.VotesRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.HEAD, "{+baseurl}/voting-api/overview/{id}/relationships/votes{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             return requestInfo;
         }

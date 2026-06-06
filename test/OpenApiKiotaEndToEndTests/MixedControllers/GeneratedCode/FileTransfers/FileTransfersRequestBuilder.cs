@@ -115,7 +115,7 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.FileTransfers
         public RequestInformation ToPostRequestInformation(MultipartBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
-            var requestInfo = new RequestInformation(Method.POST, "{+baseurl}/fileTransfers", PathParameters);
+            var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "text/plain;q=0.9");
             requestInfo.SetContentFromParsable(RequestAdapter, "multipart/form-data", body);

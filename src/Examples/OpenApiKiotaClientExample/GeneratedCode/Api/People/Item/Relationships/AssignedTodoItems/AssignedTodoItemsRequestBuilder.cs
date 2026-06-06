@@ -24,7 +24,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AssignedTodoItemsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships/assignedTodoItems", pathParameters)
+        public AssignedTodoItemsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships/assignedTodoItems{?query*}", pathParameters)
         {
         }
 
@@ -33,7 +33,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AssignedTodoItemsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships/assignedTodoItems", rawUrl)
+        public AssignedTodoItemsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships/assignedTodoItems{?query*}", rawUrl)
         {
         }
 
@@ -162,7 +162,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.GET, "{+baseurl}/api/people/{id}/relationships/assignedTodoItems{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
@@ -175,7 +175,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.HEAD, "{+baseurl}/api/people/{id}/relationships/assignedTodoItems{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             return requestInfo;
         }

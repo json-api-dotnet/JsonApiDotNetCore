@@ -31,7 +31,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public WriteOnlyChannelsItemRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "", pathParameters)
+        public WriteOnlyChannelsItemRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}{?query*}", pathParameters)
         {
         }
 
@@ -40,7 +40,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public WriteOnlyChannelsItemRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "", rawUrl)
+        public WriteOnlyChannelsItemRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}{?query*}", rawUrl)
         {
         }
 
@@ -92,7 +92,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToDeleteRequestInformation(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.DELETE, "{+baseurl}/writeOnlyChannels/{id}", PathParameters);
+            var requestInfo = new RequestInformation(Method.DELETE, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
@@ -107,7 +107,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         public RequestInformation ToPatchRequestInformation(global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.UpdateWriteOnlyChannelRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.Item.WriteOnlyChannelsItemRequestBuilder.WriteOnlyChannelsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
-            var requestInfo = new RequestInformation(Method.PATCH, "{+baseurl}/writeOnlyChannels/{id}{?query*}", PathParameters);
+            var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"", body);

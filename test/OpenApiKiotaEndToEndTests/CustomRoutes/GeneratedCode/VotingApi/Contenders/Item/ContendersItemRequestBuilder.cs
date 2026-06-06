@@ -129,7 +129,7 @@ namespace OpenApiKiotaEndToEndTests.CustomRoutes.GeneratedCode.VotingApi.Contend
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         public RequestInformation ToDeleteRequestInformation(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
-            var requestInfo = new RequestInformation(Method.DELETE, "{+baseurl}/voting-api/contenders/{id}", PathParameters);
+            var requestInfo = new RequestInformation(Method.DELETE, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
             requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=\"https://www.jsonapi.net/ext/openapi\"");
             return requestInfo;
