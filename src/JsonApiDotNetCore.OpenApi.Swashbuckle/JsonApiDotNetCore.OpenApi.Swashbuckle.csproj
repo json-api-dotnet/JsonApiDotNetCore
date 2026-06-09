@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Workaround: Microsoft.EntityFrameworkCore 8.0.0 depends on Microsoft.Extensions.Caching.Memory 8.0.0, which is vulnerable. -->
     <FrameworkReference Include="Microsoft.AspNetCore.App" Condition="'$(TargetFramework)' == 'net8.0'" />
   </ItemGroup>
   
