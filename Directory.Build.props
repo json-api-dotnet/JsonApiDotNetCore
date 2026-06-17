@@ -63,6 +63,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.*" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2026.2.*" PrivateAssets="All" />
   </ItemGroup>
 </Project>
