@@ -31,7 +31,7 @@ jobs:
           9.0.*
           10.0.*
     - name: Git checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         persist-credentials: false
         ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit

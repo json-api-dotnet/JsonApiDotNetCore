@@ -57,7 +57,7 @@ jobs:
         psql --version
         Write-Host "Active .NET SDK: $(dotnet --version)"
     - name: Git checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         persist-credentials: false
     - name: Restore tools
@@ -167,7 +167,7 @@ jobs:
           9.0.*
           10.0.*
     - name: Git checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         persist-credentials: false
     - name: Restore tools
@@ -225,7 +225,7 @@ jobs:
           9.0.*
           10.0.*
     - name: Git checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         persist-credentials: false
         fetch-depth: 2

@@ -34,7 +34,7 @@ jobs:
           9.0.*
           10.0.*
     - name: Git checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         persist-credentials: false
     - name: Initialize CodeQL
