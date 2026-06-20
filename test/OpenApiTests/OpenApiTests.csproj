@@ -3,6 +3,7 @@
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
+    <!-- CS1591: Missing XML comment for publicly visible type or member -->
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
