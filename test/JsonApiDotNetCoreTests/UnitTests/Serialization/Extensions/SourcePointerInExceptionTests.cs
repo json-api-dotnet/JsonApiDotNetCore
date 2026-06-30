@@ -1,4 +1,5 @@
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -91,6 +92,7 @@ public sealed class SourcePointerInExceptionTests
     {
         private readonly string? _relativeSourcePointer = relativeSourcePointer;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         private protected override void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, ResourceType resourceType,
             Utf8JsonReader reader)
         {

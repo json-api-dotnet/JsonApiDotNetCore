@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using Xunit;
 using Xunit.Abstractions;

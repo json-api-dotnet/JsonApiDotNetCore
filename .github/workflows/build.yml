@@ -43,6 +43,12 @@ jobs:
       with:
         username: postgres
         password: postgres
+    - name: Configure PostgreSQL
+      shell: bash
+      run: |
+        PGDATA="$RUNNER_TEMP/pgdata"
+        echo "max_connections = 500" >> "$PGDATA/postgresql.conf"
+        pg_ctl restart --pgdata="$PGDATA" --wait
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:

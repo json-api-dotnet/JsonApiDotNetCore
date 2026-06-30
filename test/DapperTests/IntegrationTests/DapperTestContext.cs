@@ -14,12 +14,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests;
 
 [PublicAPI]
-public sealed class DapperTestContext : IntegrationTest
+public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 {
     private const string SqlServerClearAllTablesScript = """
         EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';
@@ -46,6 +47,11 @@ public sealed class DapperTestContext : IntegrationTest
     public DapperTestContext()
     {
         _lazyFactory = new Lazy<WebApplicationFactory<TodoItem>>(CreateFactory);
+    }
+
+    public async Task InitializeAsync()
+    {
+        await AcquireDatabaseThrottleAsync();
     }
 
     private WebApplicationFactory<TodoItem> CreateFactory()
@@ -141,7 +147,7 @@ public sealed class DapperTestContext : IntegrationTest
         return Factory.CreateClient();
     }
 
-    public override async Task DisposeAsync()
+    public async Task DisposeAsync()
     {
         try
         {
@@ -159,7 +165,7 @@ public sealed class DapperTestContext : IntegrationTest
         }
         finally
         {
-            await base.DisposeAsync();
+            ReleaseDatabaseThrottle();
         }
     }
 }
