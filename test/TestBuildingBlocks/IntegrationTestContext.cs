@@ -36,7 +36,6 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
     private Action<IServiceCollection>? _configureServices;
     private Action<IServiceCollection>? _postConfigureServices;
     private Action<ILoggingBuilder>? _configureLogging;
-    private Task? _createDatabaseTask;
     private WebApplication App => _lazyApp.Value;
 
     protected override JsonSerializerOptions SerializerOptions
@@ -135,17 +134,9 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         builder.WebHost.UseTestServer();
 
         WebApplication app = builder.Build();
-
-        _createDatabaseTask = CreateDatabaseAsync(app);
-
-        // Runs before startup middleware, ensuring the schema exists when the first request arrives.
-        app.Use(async (context, next) =>
-        {
-            await _createDatabaseTask;
-            await next(context);
-        });
-
         startup.Configure(app);
+
+        RunOnDatabase(app, static dbContext => dbContext.Database.EnsureCreated());
 
         app.Start();
 
@@ -186,20 +177,17 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         options.ConfigureWarnings(static builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
     }
 
-    private static async Task CreateDatabaseAsync(WebApplication app)
+    private static void RunOnDatabase(WebApplication app, Action<TDbContext> action)
     {
-        await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+        using IServiceScope scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
-        await dbContext.Database.EnsureCreatedAsync();
+        action(dbContext);
     }
 
     public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)
     {
-        WebApplication app = App;
-        await _createDatabaseTask!;
-
-        await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+        await using AsyncServiceScope scope = App.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
         await asyncAction(dbContext);
@@ -221,13 +209,13 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         {
             if (_lazyApp.IsValueCreated)
             {
-                if (_createDatabaseTask?.IsCompletedSuccessfully == true)
-                {
-                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
-                }
-
+                await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
                 await App.DisposeAsync();
             }
+        }
+        catch (Exception)
+        {
+            // Ignore. Any exception thrown here (app fails to start) masks the original error.
         }
         finally
         {
