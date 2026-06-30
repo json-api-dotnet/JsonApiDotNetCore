@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
-using Xunit.DependencyInjection;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
@@ -15,8 +14,7 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
 {
     private readonly QueryStringFakers _fakers = new();
 
-    public SerializerIgnoreConditionTests(ITestOutputHelperAccessor accessor)
-        : base(accessor)
+    public SerializerIgnoreConditionTests()
     {
         UseController<CalendarsController>();
     }

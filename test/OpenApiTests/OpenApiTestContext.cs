@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit.Abstractions;
-using Xunit.DependencyInjection;
 
 namespace OpenApiTests;
 
@@ -18,10 +17,8 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     internal string? OpenApiDocumentOutputDirectory { get; set; }
 
-    public OpenApiTestContext(ITestOutputHelperAccessor accessor)
-        : base(accessor)
+    public OpenApiTestContext()
     {
-        CaptureHttpTraffic = false;
         _lazyDocument = new Lazy<Task<JsonElement>>(CreateOpenApiDocumentAsync, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 

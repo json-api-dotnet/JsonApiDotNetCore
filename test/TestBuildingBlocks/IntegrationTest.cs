@@ -2,32 +2,39 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using FluentAssertions.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace TestBuildingBlocks;
 
 /// <summary>
-/// A base class for tests that conveniently enables executing HTTP requests against JSON:API endpoints. It throttles tests that are running in parallel
-/// to avoid exceeding the maximum active database connections.
+/// A base class for tests that conveniently enables executing HTTP requests against JSON:API endpoints.
 /// </summary>
-public abstract class IntegrationTest : IAsyncLifetime
+/// <remarks>
+/// Tests that use a database should call <see cref="AcquireDatabaseThrottleAsync" /> and <see cref="ReleaseDatabaseThrottle" /> to avoid exceeding the
+/// maximum active database connections.
+/// </remarks>
+public abstract class IntegrationTest
 {
-    private static readonly SemaphoreSlim ThrottleSemaphore = GetDefaultThrottleSemaphore();
-
-    protected static readonly Action<ServiceProviderOptions> ConfigureServiceProvider = static options =>
-    {
-        options.ValidateScopes = true;
-        options.ValidateOnBuild = true;
-    };
+    private static readonly SemaphoreSlim DatabaseThrottleSemaphore = CreateDatabaseThrottleSemaphore();
+    protected static readonly Action<ServiceProviderOptions> ConfigureServiceProvider = static options => options.ValidateScopes = true;
 
     public static DateTimeOffset DefaultDateTimeUtc { get; } = 1.January(2020).At(1, 2, 3).AsUtc();
 
     protected abstract JsonSerializerOptions SerializerOptions { get; }
 
-    private static SemaphoreSlim GetDefaultThrottleSemaphore()
+    private static SemaphoreSlim CreateDatabaseThrottleSemaphore()
     {
         int maxConcurrentTestRuns = OperatingSystem.IsWindows() && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSAPPIDDIR")) ? 32 : 64;
         return new SemaphoreSlim(maxConcurrentTestRuns);
+    }
+
+    protected async Task AcquireDatabaseThrottleAsync()
+    {
+        await DatabaseThrottleSemaphore.WaitAsync();
+    }
+
+    protected void ReleaseDatabaseThrottle()
+    {
+        DatabaseThrottleSemaphore.Release();
     }
 
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
@@ -79,15 +86,4 @@ public abstract class IntegrationTest : IAsyncLifetime
     }
 
     protected abstract HttpClient CreateClient();
-
-    public async Task InitializeAsync()
-    {
-        await ThrottleSemaphore.WaitAsync();
-    }
-
-    public virtual Task DisposeAsync()
-    {
-        _ = ThrottleSemaphore.Release();
-        return Task.CompletedTask;
-    }
 }

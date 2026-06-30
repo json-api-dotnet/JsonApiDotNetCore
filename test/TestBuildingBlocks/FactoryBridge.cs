@@ -1,29 +1,22 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
-using Xunit.DependencyInjection;
 
 namespace TestBuildingBlocks;
 
 /// <summary>
 /// A temporary bridge to prevent adapting all existing tests.
 /// </summary>
-public sealed class FactoryBridge : IDisposable
+public sealed class FactoryBridge
 {
     private readonly WebApplication _app;
-    private readonly ITestOutputHelperAccessor _accessor;
-    private readonly bool _captureHttpTraffic;
-    private XUnitLogHttpMessageHandler? _handler;
 
     public IServiceProvider Services => _app.Services;
 
-    internal FactoryBridge(WebApplication app, ITestOutputHelperAccessor accessor, bool captureHttpTraffic)
+    internal FactoryBridge(WebApplication app)
     {
         ArgumentNullException.ThrowIfNull(app);
-        ArgumentNullException.ThrowIfNull(accessor);
 
         _app = app;
-        _accessor = accessor;
-        _captureHttpTraffic = captureHttpTraffic;
     }
 
     public HttpClient CreateClient()
@@ -40,15 +33,6 @@ public sealed class FactoryBridge : IDisposable
     {
         if (handlers.Length == 0)
         {
-            if (_captureHttpTraffic)
-            {
-                _handler ??= new XUnitLogHttpMessageHandler(_accessor.Output!);
-                handlers = [_handler];
-            }
-        }
-
-        if (handlers.Length == 0)
-        {
             return _app.GetTestClient();
         }
 
@@ -57,23 +41,17 @@ public sealed class FactoryBridge : IDisposable
         HttpClient httpClient = CreateHttpClient(serverHandler, handlers);
 
         httpClient.BaseAddress ??= new Uri("http://localhost");
-
         return httpClient;
     }
 
     private static HttpClient CreateHttpClient(HttpMessageHandler serverHandler, params DelegatingHandler[] handlers)
     {
-        for (int i = handlers.Length - 1; i > 0; i--)
+        for (int index = handlers.Length - 1; index > 0; index--)
         {
-            handlers[i - 1].InnerHandler = handlers[i];
+            handlers[index - 1].InnerHandler = handlers[index];
         }
 
         handlers[^1].InnerHandler = serverHandler;
         return new HttpClient(handlers[0]);
-    }
-
-    public void Dispose()
-    {
-        _handler?.Dispose();
     }
 }

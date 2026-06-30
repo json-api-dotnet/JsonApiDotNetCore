@@ -2,14 +2,12 @@ using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using TestBuildingBlocks;
 using Xunit;
-using Xunit.DependencyInjection;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
 
 public sealed class UnknownResourceControllerTests : IntegrationTestContext<TestableStartup<EmptyDbContext>, EmptyDbContext>
 {
-    public UnknownResourceControllerTests(ITestOutputHelperAccessor accessor)
-        : base(accessor)
+    public UnknownResourceControllerTests()
     {
         UseController<UnknownResourcesController>();
     }

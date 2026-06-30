@@ -3,7 +3,6 @@ using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Xunit.DependencyInjection;
+using Xunit;
 
 namespace TestBuildingBlocks;
 
@@ -22,26 +21,23 @@ namespace TestBuildingBlocks;
 /// before/after each test). See <see href="https://xunit.net/docs/shared-context" /> for details on shared context usage.
 /// </summary>
 /// <typeparam name="TStartup">
-/// The server Startup class, which can be defined in the test project or API project.
+/// The Startup class that configures the server.
 /// </typeparam>
 /// <typeparam name="TDbContext">
-/// The Entity Framework Core database context, which can be defined in the test project or API project.
+/// The Entity Framework Core database context that defines the entity models.
 /// </typeparam>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
+public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAsyncLifetime
     where TStartup : IStartup, new()
     where TDbContext : TestableDbContext
 {
-    private readonly ITestOutputHelperAccessor _accessor;
     private readonly TestControllerProvider _testControllerProvider = new();
     private readonly Lazy<WebApplication> _lazyApp;
     private Action<IServiceCollection>? _configureServices;
     private Action<IServiceCollection>? _postConfigureServices;
     private Action<ILoggingBuilder>? _configureLogging;
-
+    private Task? _createDatabaseTask;
     private WebApplication App => _lazyApp.Value;
-
-    protected bool CaptureHttpTraffic { get; init; } = true;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -52,11 +48,17 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         }
     }
 
-    public FactoryBridge Factory => new(App, _accessor, CaptureHttpTraffic);
-
-    public IntegrationTestContext(ITestOutputHelperAccessor accessor)
+    public FactoryBridge Factory
     {
-        _accessor = accessor;
+        get
+        {
+            field ??= new FactoryBridge(App);
+            return field;
+        }
+    }
+
+    public IntegrationTestContext()
+    {
         _lazyApp = new Lazy<WebApplication>(BuildApp, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
@@ -120,20 +122,60 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
             SetDbContextDebugOptions(options);
         });
 
-        _configureLogging?.Invoke(builder.Logging);
+        if (_configureLogging == null)
+        {
+            ConfigureMinLevels(builder);
+        }
+        else
+        {
+            _configureLogging.Invoke(builder.Logging);
+        }
 
         builder.Host.UseDefaultServiceProvider(ConfigureServiceProvider);
-        builder.WebHost.UseDefaultServiceProvider(ConfigureServiceProvider);
         builder.WebHost.UseTestServer();
 
         WebApplication app = builder.Build();
-        startup.Configure(app);
 
-        RunOnDatabase(app, static dbContext => dbContext.Database.EnsureCreated());
+        _createDatabaseTask = CreateDatabaseAsync(app);
+
+        // Runs before startup middleware, ensuring the schema exists when the first request arrives.
+        app.Use(async (context, next) =>
+        {
+            await _createDatabaseTask;
+            await next(context);
+        });
+
+        startup.Configure(app);
 
         app.Start();
 
         return app;
+    }
+
+    [Conditional("RELEASE")]
+    private static void ConfigureMinLevels(WebApplicationBuilder builder)
+    {
+        /*
+        var appSettings = new Dictionary<string, string?>
+        {
+            ["Logging:LogLevel:Default"] = "Warning",
+            ["Logging:LogLevel:Microsoft.AspNetCore.Hosting.Diagnostics"] = "None",
+            ["Logging:LogLevel:Microsoft.Hosting.Lifetime"] = "Warning",
+            ["Logging:LogLevel:Microsoft.EntityFrameworkCore"] = "Warning",
+            ["Logging:LogLevel:Microsoft.EntityFrameworkCore.Model.Validation"] = "Critical",
+            ["Logging:LogLevel:Microsoft.EntityFrameworkCore.Update"] = "Critical",
+            ["Logging:LogLevel:Microsoft.EntityFrameworkCore.Database.Command"] = "Critical",
+            ["Logging:LogLevel:JsonApiDotNetCore"] = "Critical"
+        };
+
+        var configurationBuilder = new ConfigurationBuilder();
+        configurationBuilder.AddInMemoryCollection(appSettings);
+        IConfigurationRoot configuration = configurationBuilder.Build();
+
+        builder.Logging.AddConfiguration(configuration);
+        */
+
+        builder.Logging.ClearProviders();
     }
 
     [Conditional("DEBUG")]
@@ -144,17 +186,20 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         options.ConfigureWarnings(static builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
     }
 
-    private static void RunOnDatabase(WebApplication app, Action<TDbContext> action)
+    private static async Task CreateDatabaseAsync(WebApplication app)
     {
-        using IServiceScope scope = app.Services.CreateScope();
+        await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
-        action(dbContext);
+        await dbContext.Database.EnsureCreatedAsync();
     }
 
     public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)
     {
-        await using AsyncServiceScope scope = App.Services.CreateAsyncScope();
+        WebApplication app = App;
+        await _createDatabaseTask!;
+
+        await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
         await asyncAction(dbContext);
@@ -165,20 +210,28 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         return Factory.CreateClient();
     }
 
-    public override async Task DisposeAsync()
+    public async Task InitializeAsync()
     {
-        if (_lazyApp.IsValueCreated)
+        await AcquireDatabaseThrottleAsync();
+    }
+
+    public virtual async Task DisposeAsync()
+    {
+        try
         {
-            try
+            if (_lazyApp.IsValueCreated)
             {
-                await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
-                Factory.Dispose();
+                if (_createDatabaseTask?.IsCompletedSuccessfully == true)
+                {
+                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                }
+
                 await App.DisposeAsync();
             }
-            catch (Exception)
-            {
-                // Ignore. Any exception thrown here (app fails to start) masks the original error.
-            }
+        }
+        finally
+        {
+            ReleaseDatabaseThrottle();
         }
     }
 }
