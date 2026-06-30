@@ -60,7 +60,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
     {
         if (OpenApiDocumentOutputDirectory != null)
         {
-#if NET10_0
+#if NET11_0
             Version frameworkVersion = typeof(object).Assembly.GetName().Version!;
             string targetFrameworkName = $"net{frameworkVersion.Major}.{frameworkVersion.Minor}";
 
@@ -68,7 +68,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
             string outputPath = Path.Combine(testRootDirectory, OpenApiDocumentOutputDirectory, targetFrameworkName, "swagger.g.json");
 
             return Path.GetFullPath(outputPath);
-#elif NET10_0_OR_GREATER
+#elif NET11_0_OR_GREATER
 #error Unsupported newer target framework. Please update the preprocessor directives in this file and references in consuming projects.
 #else
             // Not writing to disk for simplicity and performance on lower target frameworks.
