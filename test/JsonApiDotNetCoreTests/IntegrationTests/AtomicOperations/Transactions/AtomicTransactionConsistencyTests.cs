@@ -28,7 +28,7 @@ public sealed class AtomicTransactionConsistencyTests
             services.AddResourceRepository<LyricRepository>();
 
             string dbConnectionString =
-                $"Host=localhost;Database=JsonApiTest-Extra-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true";
+                $"Host=localhost;Database=JsonApiTest-Extra-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true;Command Timeout=600";
 
             services.AddDbContext<ExtraDbContext>(options => options.UseNpgsql(dbConnectionString));
         });

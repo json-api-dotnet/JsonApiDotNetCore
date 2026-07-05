@@ -9,7 +9,7 @@ namespace OpenApiTests;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<TStartup, TDbContext>
-    where TStartup : class
+    where TStartup : IStartup, new()
     where TDbContext : TestableDbContext
 {
     private readonly Lazy<Task<JsonElement>> _lazyDocument;
