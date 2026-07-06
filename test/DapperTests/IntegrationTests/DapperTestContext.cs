@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using DapperExample;
 using DapperExample.Data;
@@ -14,12 +15,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests;
 
 [PublicAPI]
-public sealed class DapperTestContext : IntegrationTest
+public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 {
     private const string SqlServerClearAllTablesScript = """
         EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';
@@ -31,6 +33,7 @@ public sealed class DapperTestContext : IntegrationTest
 
     private readonly Lazy<WebApplicationFactory<TodoItem>> _lazyFactory;
     private ITestOutputHelper? _testOutputHelper;
+    private bool _throttleAcquired;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -48,6 +51,12 @@ public sealed class DapperTestContext : IntegrationTest
         _lazyFactory = new Lazy<WebApplicationFactory<TodoItem>>(CreateFactory);
     }
 
+    public async Task InitializeAsync()
+    {
+        await AcquireDatabaseThrottleAsync();
+        _throttleAcquired = true;
+    }
+
     private WebApplicationFactory<TodoItem> CreateFactory()
     {
 #pragma warning disable CA2000 // Dispose objects before losing scope
@@ -56,7 +65,7 @@ public sealed class DapperTestContext : IntegrationTest
 #pragma warning restore CA2000 // Dispose objects before losing scope
         {
             builder.UseSetting("ConnectionStrings:DapperExamplePostgreSql",
-                $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true");
+                $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true;Command Timeout=600");
 
             builder.UseSetting("ConnectionStrings:DapperExampleMySql",
                 $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=root;Password=mysql;SSL Mode=None;AllowPublicKeyRetrieval=True");
@@ -68,15 +77,15 @@ public sealed class DapperTestContext : IntegrationTest
 
             builder.ConfigureLogging(loggingBuilder =>
             {
+                ClearLoggingProvidersInReleaseBuild(loggingBuilder);
+
                 if (_testOutputHelper != null)
                 {
-#if !DEBUG
-                    // Reduce logging output when running tests in ci-build.
-                    loggingBuilder.ClearProviders();
-#endif
                     loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XUnitLoggerProvider(_testOutputHelper, "DapperExample."));
                 }
             });
+
+            builder.UseDefaultServiceProvider(ConfigureServiceProvider);
 
             builder.ConfigureServices(services =>
             {
@@ -84,6 +93,12 @@ public sealed class DapperTestContext : IntegrationTest
                 services.Replace(ServiceDescriptor.Singleton<SqlCaptureStore, SqlCaptureStore>());
             });
         });
+    }
+
+    [Conditional("RELEASE")]
+    private static void ClearLoggingProvidersInReleaseBuild(ILoggingBuilder loggingBuilder)
+    {
+        loggingBuilder.ClearProviders();
     }
 
     public void SetTestOutputHelper(ITestOutputHelper testOutputHelper)
@@ -123,10 +138,20 @@ public sealed class DapperTestContext : IntegrationTest
 
     public async Task RunOnDatabaseAsync(Func<AppDbContext, Task> asyncAction)
     {
+        AssertThrottleAcquired();
+
         await using AsyncServiceScope scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         await asyncAction(dbContext);
+    }
+
+    private void AssertThrottleAcquired()
+    {
+        if (!_throttleAcquired)
+        {
+            throw new InvalidOperationException("Database throttle not acquired.");
+        }
     }
 
     public string AdaptSql(string text, bool hasClientGeneratedId = false)
@@ -141,7 +166,7 @@ public sealed class DapperTestContext : IntegrationTest
         return Factory.CreateClient();
     }
 
-    public override async Task DisposeAsync()
+    public async Task DisposeAsync()
     {
         try
         {
@@ -149,17 +174,17 @@ public sealed class DapperTestContext : IntegrationTest
             {
                 try
                 {
-                    await RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
                 }
                 finally
                 {
-                    await _lazyFactory.Value.DisposeAsync();
+                    await Factory.DisposeAsync();
                 }
             }
         }
         finally
         {
-            await base.DisposeAsync();
+            ReleaseDatabaseThrottle();
         }
     }
 }

@@ -128,7 +128,7 @@ public class LinkBuilder : ILinkBuilder
 
     private string GetLinkForTopLevelSelf()
     {
-        // Note: in tests, this does not properly escape special characters due to WebApplicationFactory short-circuiting.
+        // Note: in tests, this does not properly escape special characters due to WebApplicationFactory/TestServer short-circuiting.
         return _options.UseRelativeLinks ? HttpContext.Request.GetEncodedPathAndQuery() : HttpContext.Request.GetEncodedUrl();
     }
 
