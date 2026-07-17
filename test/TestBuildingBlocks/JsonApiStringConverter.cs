@@ -9,7 +9,7 @@ public static class JsonApiStringConverter
         try
         {
             using JsonDocument document = JsonDocument.Parse(responseBody);
-            return document.RootElement.GetProperty("errors").EnumerateArray().Single()!.GetProperty("id").GetString()!;
+            return document.RootElement.GetProperty("errors").EnumerateArray().Single().GetProperty("id").GetString()!;
         }
         catch (Exception exception)
         {
