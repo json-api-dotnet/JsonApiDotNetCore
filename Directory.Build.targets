@@ -1,23 +1,4 @@
 <Project>
-  <!--
-    Workaround: Swashbuckle 11.x (used on net10.0/net11.0) was compiled against Microsoft.OpenApi 3.9.0, so
-    CS1705 prevents us from downgrading it at compile time. We compile against 3.9.0 and then overwrite
-    the output DLL with 3.7.0 so the runtime uses the desired version. The Exists() condition limits this
-    to executable/test projects (they copy transitive package DLLs to output; library projects don't).
-    PackageDownload in Directory.Build.props ensures the 3.7.0 DLL is present in the NuGet cache.
-  -->
-  <Target Name="UseOpenApi370AtRuntime" AfterTargets="Build"
-      Condition="('$(TargetFramework)' == 'net11.0' OR '$(TargetFramework)' == 'net10.0') AND Exists('$(OutputPath)Microsoft.OpenApi.dll')">
-    <PropertyGroup>
-      <_NuGetPackagesRoot Condition="'$(NUGET_PACKAGES)' != ''">$(NUGET_PACKAGES)</_NuGetPackagesRoot>
-      <_NuGetPackagesRoot Condition="'$(_NuGetPackagesRoot)' == '' AND '$(USERPROFILE)' != ''">$(USERPROFILE)/.nuget/packages</_NuGetPackagesRoot>
-      <_NuGetPackagesRoot Condition="'$(_NuGetPackagesRoot)' == '' AND '$(HOME)' != ''">$(HOME)/.nuget/packages</_NuGetPackagesRoot>
-      <_OpenApi370Dll>$(_NuGetPackagesRoot)/microsoft.openapi/3.7.0/lib/net8.0/Microsoft.OpenApi.dll</_OpenApi370Dll>
-    </PropertyGroup>
-    <Copy SourceFiles="$(_OpenApi370Dll)" DestinationFolder="$(OutputPath)" OverwriteReadOnlyFiles="true"
-        Condition="Exists('$(_OpenApi370Dll)')" />
-  </Target>
-
   <Target Name="DisableCompileTimeOpenApiXmlGenerator" BeforeTargets="CoreCompile">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.AspNetCore.OpenApi.SourceGenerators'" />

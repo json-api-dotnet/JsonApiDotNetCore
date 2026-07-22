@@ -70,14 +70,4 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2026.2.*" PrivateAssets="All" />
   </ItemGroup>
-
-  <ItemGroup>
-    <!--
-      Workaround: Swashbuckle 11.x (used on net10.0/net11.0) was compiled against Microsoft.OpenApi 3.9.0.
-      CS1705 prevents compiling against a lower version, so we compile against 3.9.0 and overwrite
-      the output DLL with 3.7.0 at runtime. PackageDownload ensures 3.7.0 is in the NuGet cache.
-      See the UseOpenApi370AtRuntime target in Directory.Build.targets.
-    -->
-    <PackageDownload Include="Microsoft.OpenApi" Version="[3.7.0]" />
-  </ItemGroup>
 </Project>
