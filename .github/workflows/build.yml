@@ -50,7 +50,7 @@ jobs:
         echo "max_connections = 500" >> "$PGDATA/postgresql.conf"
         pg_ctl restart --pgdata="$PGDATA" --wait
     - name: Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
           8.0.*
@@ -159,7 +159,7 @@ jobs:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
           8.0.*
@@ -217,7 +217,7 @@ jobs:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
           8.0.*
