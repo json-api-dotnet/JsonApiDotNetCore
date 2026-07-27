@@ -17,7 +17,7 @@ focus on defining the resources and implementing your custom business logic. Thi
 dependency injection, making extensibility incredibly easy.
 
 > [!NOTE]
-> OpenAPI support is now [available](https://www.jsonapi.net/usage/openapi.html), currently in preview. Give it a try!
+> OpenAPI support is discontinued. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/2059.
 
 ## Getting started
 
