@@ -28,17 +28,15 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();
             services.AddResourceDefinition<AssignIdToRgbColorDefinition>();
         });
+
+        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = ClientIdGenerationMode.Required;
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
         newGroup.Id = Guid.NewGuid();
 
@@ -83,15 +81,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         property.PropertyType.Should().Be<Guid>();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
         newGroup.Id = Guid.NewGuid();
 
@@ -137,15 +130,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         property.PropertyType.Should().Be<Guid>();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -188,15 +176,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         property.PropertyType.Should().Be<string>();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects_with_fieldset(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects_with_fieldset()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -239,13 +222,12 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         property.PropertyType.Should().Be<string>();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    public async Task Can_create_resource_for_missing_client_generated_ID_having_side_effects(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_for_missing_client_generated_ID_having_side_effects()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
+        options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 
         string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
 
@@ -295,14 +277,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         property.PropertyType.Should().Be<string>();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_for_missing_client_generated_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_for_missing_client_generated_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -341,15 +319,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_with_client_generated_zero_guid_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_with_client_generated_zero_guid_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
 
         var requestBody = new
@@ -384,15 +357,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_with_client_generated_empty_guid_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_with_client_generated_empty_guid_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
 
         var requestBody = new
@@ -427,15 +395,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Can_create_resource_with_client_generated_empty_string_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_client_generated_empty_string_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -478,15 +441,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         property.PropertyType.Should().Be<string>();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_with_client_generated_zero_long_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_with_client_generated_zero_long_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         UserAccount newAccount = _fakers.UserAccount.GenerateOne();
 
         var requestBody = new
@@ -522,15 +480,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_with_client_generated_empty_long_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_with_client_generated_empty_long_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         UserAccount newAccount = _fakers.UserAccount.GenerateOne();
 
         var requestBody = new
@@ -566,15 +519,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_for_existing_client_generated_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_for_existing_client_generated_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         RgbColor existingColor = _fakers.RgbColor.GenerateOne();
 
         RgbColor newColor = _fakers.RgbColor.GenerateOne();

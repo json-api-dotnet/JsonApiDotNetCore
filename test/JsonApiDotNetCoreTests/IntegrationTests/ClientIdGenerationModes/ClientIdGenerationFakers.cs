@@ -5,11 +5,15 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_if_long
 // @formatter:wrap_before_first_method_call true
 
-namespace OpenApiTests.ClientIdGenerationModes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.ClientIdGenerationModes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class ClientIdGenerationFakers
 {
+    private readonly Lazy<Faker<Tournament>> _lazyTournamentFaker = new(() => new Faker<Tournament>()
+        .MakeDeterministic()
+        .RuleFor(tournament => tournament.Title, faker => faker.Commerce.ProductName()));
+
     private readonly Lazy<Faker<Player>> _lazyPlayerFaker = new(() => new Faker<Player>()
         .MakeDeterministic()
         .RuleFor(player => player.UserName, faker => faker.Person.UserName));
@@ -21,8 +25,9 @@ public sealed class ClientIdGenerationFakers
 
     private readonly Lazy<Faker<PlayerGroup>> _lazyGroupFaker = new(() => new Faker<PlayerGroup>()
         .MakeDeterministic()
-        .RuleFor(playerGroup => playerGroup.Name, faker => faker.Person.Company.Name));
+        .RuleFor(playerGroup => playerGroup.Name, faker => faker.Company.CompanyName()));
 
+    public Faker<Tournament> Tournament => _lazyTournamentFaker.Value;
     public Faker<Player> Player => _lazyPlayerFaker.Value;
     public Faker<Game> Game => _lazyGameFaker.Value;
     public Faker<PlayerGroup> Group => _lazyGroupFaker.Value;

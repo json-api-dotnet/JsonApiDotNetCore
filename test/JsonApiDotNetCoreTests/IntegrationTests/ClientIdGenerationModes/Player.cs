@@ -1,14 +1,12 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.ClientIdGenerationModes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.ClientIdGenerationModes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.ClientIdGenerationModes", ClientIdGeneration = ClientIdGenerationMode.Required,
-    GenerateControllerEndpoints = JsonApiEndpoints.Post)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ClientIdGenerationModes", ClientIdGeneration = ClientIdGenerationMode.Required)]
 public sealed class Player : Identifiable<Guid>
 {
     [Attr]

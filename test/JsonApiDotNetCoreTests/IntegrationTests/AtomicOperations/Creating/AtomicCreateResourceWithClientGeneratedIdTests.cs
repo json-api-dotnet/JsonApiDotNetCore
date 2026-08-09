@@ -29,17 +29,15 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
 
             services.AddSingleton<ResourceDefinitionHitCounter>();
         });
+
+        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = ClientIdGenerationMode.Required;
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         TextLanguage newLanguage = _fakers.TextLanguage.GenerateOne();
         newLanguage.Id = Guid.NewGuid();
 
@@ -91,15 +89,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         });
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Can_create_resource_with_client_generated_guid_ID_having_no_side_effects(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_client_generated_guid_ID_having_no_side_effects()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         MusicTrack newTrack = _fakers.MusicTrack.GenerateOne();
         newTrack.Id = Guid.NewGuid();
 
@@ -144,13 +137,12 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         });
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    public async Task Can_create_resource_for_missing_client_generated_ID_having_side_effects(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_for_missing_client_generated_ID_having_side_effects()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
+        options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 
         string? newIsoCode = _fakers.TextLanguage.GenerateOne().IsoCode;
 
@@ -202,14 +194,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         });
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_for_missing_client_generated_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_for_missing_client_generated_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         string? newIsoCode = _fakers.TextLanguage.GenerateOne().IsoCode;
 
         var requestBody = new
@@ -250,15 +238,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_for_existing_client_generated_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_for_existing_client_generated_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
         existingLanguage.Id = Guid.NewGuid();
 
@@ -310,15 +293,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Meta.Should().NotContainKey("requestBody");
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_for_incompatible_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_for_incompatible_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         string guid = Unknown.StringId.Guid;
 
         var requestBody = new
@@ -359,13 +337,12 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    public async Task Can_create_resource_with_local_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Can_create_resource_with_local_ID()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
+        options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 
         string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
@@ -416,14 +393,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         });
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_with_local_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_with_local_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         var requestBody = new
         {
             atomic__operations = new[]
@@ -459,15 +432,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Meta.Should().HaveRequestBody();
     }
 
-    [Theory]
-    [InlineData(ClientIdGenerationMode.Allowed)]
-    [InlineData(ClientIdGenerationMode.Required)]
-    public async Task Cannot_create_resource_for_ID_and_local_ID(ClientIdGenerationMode mode)
+    [Fact]
+    public async Task Cannot_create_resource_for_ID_and_local_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = mode;
-
         var requestBody = new
         {
             atomic__operations = new[]
