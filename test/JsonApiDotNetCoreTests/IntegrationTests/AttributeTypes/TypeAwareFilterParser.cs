@@ -4,7 +4,7 @@ using System.Text;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
 
-namespace OpenApiTests.AttributeTypes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
 public sealed class TypeAwareFilterParser(IResourceFactory resourceFactory)
     : FilterParser(resourceFactory)

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace OpenApiTests;
+namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
 internal abstract class ReferenceTypeJsonConverter<T>(Func<string, T> fromStringConverter, Func<T, string> toStringConverter) : JsonConverter<T>
     where T : class

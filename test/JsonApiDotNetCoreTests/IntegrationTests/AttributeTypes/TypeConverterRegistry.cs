@@ -4,9 +4,9 @@ using System.Numerics;
 using System.Text;
 using TestBuildingBlocks;
 
-namespace OpenApiTests.AttributeTypes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
-public sealed class TypeConverterRegistry
+internal sealed class TypeConverterRegistry
 {
     internal static Func<Int128, string> Int128ToString { get; } = value => value.ToString(CultureInfo.InvariantCulture);
     internal static Func<string, Int128> Int128FromString { get; } = value => Int128.Parse(value, CultureInfo.InvariantCulture);

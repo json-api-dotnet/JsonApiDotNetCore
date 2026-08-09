@@ -8,7 +8,7 @@ using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace OpenApiTests.AttributeTypes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class AttributeTypesDbContext(DbContextOptions<AttributeTypesDbContext> options)

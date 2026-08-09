@@ -39,16 +39,4 @@ public static class TimeExtensions
         long ticksInWholeMilliseconds = TruncateTicksInWholeMilliseconds(value.Ticks);
         return new TimeOnly(ticksInWholeMilliseconds);
     }
-
-    public static TimeOnly TruncateToWholeSeconds(this TimeOnly value)
-    {
-        long ticksInWholeSeconds = TruncateTicksInWholeSeconds(value.Ticks);
-        return new TimeOnly(ticksInWholeSeconds);
-    }
-
-    private static long TruncateTicksInWholeSeconds(long ticks)
-    {
-        long ticksToSubtract = ticks % TimeSpan.TicksPerSecond;
-        return ticks - ticksToSubtract;
-    }
 }

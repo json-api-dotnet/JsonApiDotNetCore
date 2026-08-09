@@ -33,12 +33,6 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\AttributeTypes\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
-      <Name>AttributeTypes</Name>
-      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
-      <ClassName>%(Name)Client</ClassName>
-      <OutputPath>%(ClassName).cs</OutputPath>
-    </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\ClientIdGenerationModes\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>ClientIdGenerationModes</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>

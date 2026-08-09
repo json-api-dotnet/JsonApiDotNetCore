@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 using System.Numerics;
 using System.Text;
@@ -5,10 +6,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.AttributeTypes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.AttributeTypes")]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes")]
 public sealed class TypeContainer : Identifiable<long>
 {
     // Integral numeric types
@@ -149,6 +150,10 @@ public sealed class TypeContainer : Identifiable<long>
 
     [Attr]
     public DateTime TestDateTime { get; set; }
+
+    [Attr]
+    [Column(TypeName = "timestamp without time zone")]
+    public DateTime TestDateTimeStoredInLocalTimeZone { get; set; }
 
     [Attr]
     public DateTime? TestNullableDateTime { get; set; }

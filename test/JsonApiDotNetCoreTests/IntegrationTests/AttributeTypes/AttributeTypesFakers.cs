@@ -10,7 +10,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_if_long
 // @formatter:wrap_before_first_method_call true
 
-namespace OpenApiTests.AttributeTypes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class AttributeTypesFakers
@@ -61,6 +61,8 @@ public sealed class AttributeTypesFakers
         .RuleFor(container => container.TestNullableDateTimeOffset, faker => faker.Date.PastOffset().ToUniversalTime().TruncateToWholeMilliseconds())
         .RuleFor(container => container.TestDateTime, faker => faker.Date.Past().ToUniversalTime().TruncateToWholeMilliseconds())
         .RuleFor(container => container.TestNullableDateTime, faker => faker.Date.Past().ToUniversalTime().TruncateToWholeMilliseconds())
+        .RuleFor(container => container.TestDateTimeStoredInLocalTimeZone,
+            faker => DateTime.SpecifyKind(faker.Date.Past().TruncateToWholeMilliseconds(), DateTimeKind.Unspecified))
         .RuleFor(container => container.TestDateOnly, faker => faker.Date.PastDateOnly())
         .RuleFor(container => container.TestNullableDateOnly, faker => faker.Date.PastDateOnly())
         .RuleFor(container => container.TestTimeOnly, faker => faker.Date.RecentTimeOnly().TruncateToWholeMilliseconds())

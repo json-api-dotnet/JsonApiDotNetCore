@@ -6,13 +6,12 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Parsing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using TestBuildingBlocks;
 
-namespace OpenApiTests.AttributeTypes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class AttributeTypesStartup : OpenApiStartup<AttributeTypesDbContext>
+public sealed class AttributeTypesStartup : TestableStartup<AttributeTypesDbContext>
 {
     public override void ConfigureServices(IServiceCollection services)
     {
@@ -33,61 +32,6 @@ public sealed class AttributeTypesStartup : OpenApiStartup<AttributeTypesDbConte
         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter<DayOfWeek>());
         options.SerializerOptions.Converters.Add(new IPAddressJsonConverter());
         options.SerializerOptions.Converters.Add(new IPNetworkJsonConverter());
-    }
-
-    protected override void ConfigureSwaggerGenOptions(SwaggerGenOptions options)
-    {
-        base.ConfigureSwaggerGenOptions(options);
-
-        options.MapType<Int128>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.String
-        });
-
-        options.MapType<UInt128>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.String
-        });
-
-        options.MapType<BigInteger>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.String
-        });
-
-        options.MapType<Half>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.Number,
-            Format = "float"
-        });
-
-        options.MapType<Complex>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.String
-        });
-
-        options.MapType<Rune>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.String,
-            MaxLength = 4
-        });
-
-        options.MapType<TimeSpan>(() => new OpenApiSchema
-        {
-            // Beware that "duration" does not round-trip universally. NSwag and Kiota are incompatible.
-            Type = JsonSchemaType.String,
-            Format = "duration"
-        });
-
-        options.MapType<IPAddress>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.String,
-            Format = "ipv4"
-        });
-
-        options.MapType<IPNetwork>(() => new OpenApiSchema
-        {
-            Type = JsonSchemaType.String
-        });
     }
 
     private sealed class Int128JsonConverter()
