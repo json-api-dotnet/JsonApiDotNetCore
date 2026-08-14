@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.ModelStateValidation;
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.ModelStateValidation", GenerateControllerEndpoints = JsonApiEndpoints.Post | JsonApiEndpoints.Patch)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState")]
 public sealed class SocialMediaAccount : Identifiable<Guid>
 {
     public const int MinPasswordChars = 15;

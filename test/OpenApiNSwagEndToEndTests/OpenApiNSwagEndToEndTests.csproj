@@ -64,12 +64,6 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
-      <Name>ModelStateValidation</Name>
-      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
-      <ClassName>%(Name)Client</ClassName>
-      <OutputPath>%(ClassName).cs</OutputPath>
-    </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>QueryStrings</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
