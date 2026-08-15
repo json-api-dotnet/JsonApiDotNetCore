@@ -17,6 +17,9 @@ public sealed class Town : Identifiable<long>
     [Attr]
     public double Longitude { get; set; }
 
+    [Attr]
+    public string? FounderName { get; set; }
+
     [HasMany]
     public ISet<Civilian> Civilians { get; set; } = new HashSet<Civilian>();
 }

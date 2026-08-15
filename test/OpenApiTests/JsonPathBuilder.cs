@@ -24,12 +24,7 @@ internal static class JsonPathBuilder
     public static IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> GetEndpointPaths(ResourceType resourceType)
     {
         string routeTemplate = resourceType.PublicName;
-        return GetEndpointPaths(routeTemplate, resourceType.Relationships);
-    }
 
-    public static IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> GetEndpointPaths(string routeTemplate,
-        IReadOnlyCollection<RelationshipAttribute> relationships)
-    {
         var endpointToPathMap = new Dictionary<JsonApiEndpoints, List<string>>
         {
             [JsonApiEndpoints.GetCollection] =
@@ -52,7 +47,7 @@ internal static class JsonPathBuilder
             [JsonApiEndpoints.DeleteRelationship] = []
         };
 
-        foreach (RelationshipAttribute relationship in relationships)
+        foreach (RelationshipAttribute relationship in resourceType.Relationships)
         {
             endpointToPathMap[JsonApiEndpoints.GetSecondary].AddRange([
                 $"paths./{routeTemplate}/{{id}}/{relationship.PublicName}.get",

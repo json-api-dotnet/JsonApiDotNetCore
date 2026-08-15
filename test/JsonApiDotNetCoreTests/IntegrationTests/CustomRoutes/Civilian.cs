@@ -15,4 +15,7 @@ public sealed class Civilian : Identifiable<long>
     [Attr]
     [Range(1900, 2050)]
     public int YearOfBirth { get; set; }
+
+    [HasOne]
+    public Town? LivesIn { get; set; }
 }
