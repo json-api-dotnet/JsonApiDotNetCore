@@ -16,7 +16,7 @@
     <GitHubActionsTestLoggerVersion>3.0.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <MiniValidationVersion>0.10.*</MiniValidationVersion>
-    <PolyfillVersion>10.10.*</PolyfillVersion>
+    <PolyfillVersion>11.2.*</PolyfillVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
     <TestSdkVersion>18.8.*</TestSdkVersion>
