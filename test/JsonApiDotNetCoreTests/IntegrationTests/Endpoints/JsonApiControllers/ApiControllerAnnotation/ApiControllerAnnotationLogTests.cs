@@ -4,15 +4,16 @@ using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.ApiControllerAnnotation;
 
-public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>, IAsyncDisposable
+public sealed class ApiControllerAnnotationLogTests
+    : IntegrationTestContext<TestableStartup<ApiControllerAnnotationDbContext>, ApiControllerAnnotationDbContext>, IAsyncDisposable
 {
     private readonly CapturingLoggerProvider _loggerProvider;
 
-    public ApiControllerAttributeLogTests()
+    public ApiControllerAnnotationLogTests()
     {
-        UseController<CiviliansController>();
+        UseController<LoginTokensController>();
 
         _loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
 
@@ -37,8 +38,8 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
         IReadOnlyList<string> logLines = _loggerProvider.GetLines();
         logLines.Should().HaveCount(1);
 
-        logLines[0].Should().Be(
-            $"[WARNING] Found JSON:API controller '{typeof(CiviliansController)}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.");
+        logLines[0].Should().Be($"[WARNING] Found JSON:API controller '{typeof(LoginTokensController)}' with [ApiController]. " +
+            $"Please remove this attribute for optimal JSON:API compliance.");
     }
 
     public override Task DisposeAsync()

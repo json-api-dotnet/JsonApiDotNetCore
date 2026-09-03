@@ -1,12 +1,10 @@
-using JsonApiDotNetCore.Controllers.Annotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.ApiControllerAnnotation;
 
 [ApiController]
-[DisableRoutingConvention]
-[Route("world-civilians")]
-partial class CiviliansController
+[Route("[controller]")]
+partial class LoginTokensController
 {
     [HttpGet("missing")]
     public async Task<IActionResult> GetMissingAsync()

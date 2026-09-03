@@ -1,8 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
-using TestBuildingBlocks;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
+namespace TestBuildingBlocks;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class EmptyDbContext(DbContextOptions<EmptyDbContext> options)

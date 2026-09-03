@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.ActionResults;
 
 public sealed class ActionResultTests : IClassFixture<IntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext>>
 {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomRoutes;
 
 [DisableRoutingConvention]
 [Route("world-api/civilization/popular/towns")]

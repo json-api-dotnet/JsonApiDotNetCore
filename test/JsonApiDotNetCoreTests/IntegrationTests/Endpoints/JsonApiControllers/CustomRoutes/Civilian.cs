@@ -1,20 +1,15 @@
-using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomRoutes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes")]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomRoutes")]
 public sealed class Civilian : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;
-
-    [Attr]
-    [Range(1900, 2050)]
-    public int YearOfBirth { get; set; }
 
     [HasOne]
     public Town? LivesIn { get; set; }

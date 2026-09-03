@@ -2,7 +2,7 @@ using System.Net;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.ActionResults;
 
 partial class ToothbrushesController
 {

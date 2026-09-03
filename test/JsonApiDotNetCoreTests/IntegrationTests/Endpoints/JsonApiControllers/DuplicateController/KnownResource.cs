@@ -2,10 +2,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.DuplicateController;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers")]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.DuplicateController")]
 public sealed class KnownResource : Identifiable<long>
 {
     [Attr]

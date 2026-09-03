@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.NonJsonApiControllers.Basic;
 
 [Route("[controller]")]
 public sealed class NonJsonApiController : ControllerBase

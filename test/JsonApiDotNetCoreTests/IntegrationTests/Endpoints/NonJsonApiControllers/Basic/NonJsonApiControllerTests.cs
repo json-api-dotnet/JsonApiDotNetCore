@@ -4,7 +4,7 @@ using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.NonJsonApiControllers.Basic;
 
 public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestContext<TestableStartup<EmptyDbContext>, EmptyDbContext>>
 {

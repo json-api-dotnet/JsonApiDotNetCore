@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Errors;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.DuplicateController;
 
 public sealed class DuplicateResourceControllerTests : IntegrationTestContext<TestableStartup<KnownDbContext>, KnownDbContext>
 {

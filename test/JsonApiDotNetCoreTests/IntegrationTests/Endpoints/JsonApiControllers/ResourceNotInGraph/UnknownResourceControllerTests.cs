@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Errors;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.ResourceNotInGraph;
 
 public sealed class UnknownResourceControllerTests : IntegrationTestContext<TestableStartup<EmptyDbContext>, EmptyDbContext>
 {
