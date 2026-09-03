@@ -51,7 +51,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
                 {
                     Ref = new EnrollmentIdentifierInRequest
                     {
-                        Id = existingEnrollment.StringId!
+                        Id = existingEnrollment.StringId
                     }
                 }
             ]

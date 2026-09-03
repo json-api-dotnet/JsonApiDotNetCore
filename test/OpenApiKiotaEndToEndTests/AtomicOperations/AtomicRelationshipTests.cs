@@ -57,13 +57,13 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     Ref = new EnrollmentStudentRelationshipIdentifier
                     {
                         Type = EnrollmentResourceType.Enrollments,
-                        Id = existingEnrollment.StringId!,
+                        Id = existingEnrollment.StringId,
                         Relationship = EnrollmentStudentRelationshipName.Student
                     },
                     Data = new StudentIdentifierInRequest
                     {
                         Type = ResourceType.Students,
-                        Id = existingStudent.StringId!
+                        Id = existingStudent.StringId
                     }
                 }
             ]
@@ -111,7 +111,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     Op = UpdateOperationCode.Update,
                     Ref = new TeacherTeachesRelationshipIdentifier
                     {
-                        Id = existingTeacher.StringId!,
+                        Id = existingTeacher.StringId,
                         Type = TeacherResourceType.Teachers,
                         Relationship = TeacherTeachesRelationshipName.Teaches
                     },
@@ -176,7 +176,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     Ref = new TeacherTeachesRelationshipIdentifier
                     {
                         Type = TeacherResourceType.Teachers,
-                        Id = existingTeacher.StringId!,
+                        Id = existingTeacher.StringId,
                         Relationship = TeacherTeachesRelationshipName.Teaches
                     },
                     Data =
@@ -239,7 +239,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     Ref = new TeacherTeachesRelationshipIdentifier
                     {
                         Type = TeacherResourceType.Teachers,
-                        Id = existingTeacher.StringId!,
+                        Id = existingTeacher.StringId,
                         Relationship = TeacherTeachesRelationshipName.Teaches
                     },
                     Data =

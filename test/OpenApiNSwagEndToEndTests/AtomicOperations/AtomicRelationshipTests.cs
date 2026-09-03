@@ -54,11 +54,11 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                 {
                     Ref = new EnrollmentStudentRelationshipIdentifier
                     {
-                        Id = existingEnrollment.StringId!
+                        Id = existingEnrollment.StringId
                     },
                     Data = new StudentIdentifierInRequest
                     {
-                        Id = existingStudent.StringId!
+                        Id = existingStudent.StringId
                     }
                 }
             ]
@@ -105,7 +105,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                 {
                     Ref = new TeacherTeachesRelationshipIdentifier
                     {
-                        Id = existingTeacher.StringId!
+                        Id = existingTeacher.StringId
                     },
                     Data =
                     [
@@ -164,7 +164,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                 {
                     Ref = new TeacherTeachesRelationshipIdentifier
                     {
-                        Id = existingTeacher.StringId!
+                        Id = existingTeacher.StringId
                     },
                     Data =
                     [
@@ -222,7 +222,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                 {
                     Ref = new TeacherTeachesRelationshipIdentifier
                     {
-                        Id = existingTeacher.StringId!
+                        Id = existingTeacher.StringId
                     },
                     Data =
                     [

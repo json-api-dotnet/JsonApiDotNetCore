@@ -6,8 +6,6 @@ using OpenApiTests.ResourceInheritance.Models;
 using Xunit;
 using Xunit.Abstractions;
 
-#pragma warning disable format
-
 namespace OpenApiTests.ResourceInheritance.NoOperations;
 
 public sealed class NoOperationsInheritanceTests : ResourceInheritanceTests

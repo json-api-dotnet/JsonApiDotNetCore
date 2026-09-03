@@ -120,7 +120,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                             {
                                 Data = new StudentIdentifierInRequest
                                 {
-                                    Id = existingStudent.StringId!
+                                    Id = existingStudent.StringId
                                 }
                             }
                         }

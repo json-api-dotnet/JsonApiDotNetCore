@@ -61,7 +61,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                         Data = new DataStreamIdentifierInRequest
                         {
                             Type = ResourceType.DataStreams,
-                            Id = existingVideoStream.StringId!
+                            Id = existingVideoStream.StringId
                         }
                     },
                     AudioStreams = new ToManyDataStreamInRequest
@@ -71,7 +71,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                             new DataStreamIdentifierInRequest
                             {
                                 Type = ResourceType.DataStreams,
-                                Id = existingAudioStream.StringId!
+                                Id = existingAudioStream.StringId
                             }
                         ]
                     }

@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MiniValidation;
 
-#pragma warning disable format
-
 namespace OpenApiTests.MixedControllers;
 
 public sealed class MinimalApiStartupFilter : IStartupFilter
