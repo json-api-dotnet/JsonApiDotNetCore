@@ -21,13 +21,6 @@
   href: meta.md
 - name: Caching
   href: caching.md
-- name: OpenAPI
-  href: openapi.md
-  items:
-  - name: Documentation
-    href: openapi-documentation.md
-  - name: Clients
-    href: openapi-client.md
 - name: Extensibility
   href: extensibility/toc.yml
 - name: Advanced

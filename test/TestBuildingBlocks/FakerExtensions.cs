@@ -20,7 +20,7 @@ public static class FakerExtensions
         return faker;
     }
 
-    public static int GetFakerSeed()
+    private static int GetFakerSeed()
     {
         // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
 

@@ -1,0 +1,17 @@
+using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+
+namespace JsonApiDotNetCoreTests.IntegrationTests.ClientIdGenerationModes;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ClientIdGenerationModes", ClientIdGeneration = ClientIdGenerationMode.Allowed)]
+public sealed class Game : Identifiable<Guid>
+{
+    [Attr]
+    public string Title { get; set; } = null!;
+
+    [Attr]
+    public decimal PurchasePrice { get; set; }
+}

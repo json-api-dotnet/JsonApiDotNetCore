@@ -15,7 +15,6 @@ Commonly used types are listed in the following sections.
     - <xref:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute>
     - <xref:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute>
     - <xref:JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute>
-- <xref:JsonApiDotNetCore.Configuration.ServiceCollectionExtensions>, <xref:JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions> (OpenAPI)
 - <xref:JsonApiDotNetCore.Configuration.ApplicationBuilderExtensions>
 - <xref:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention> implements <xref:JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention>
   - <xref:JsonApiDotNetCore.Controllers.Annotations.DisableRoutingConventionAttribute>

@@ -116,7 +116,7 @@ Entity Framework Core has great conventions and sane mapping defaults. But two o
 See [here](~/usage/resources/relationships.md#one-to-one-relationships-in-entity-framework-core) for how to get it right.
 
 #### Prefer model attributes over fluent mappings
-Validation attributes such as `[Required]` are detected by ASP.NET ModelState validation, Entity Framework Core, OpenAPI, and JsonApiDotNetCore.
+Validation attributes such as `[Required]` are detected by ASP.NET ModelState validation, Entity Framework Core, and JsonApiDotNetCore.
 When using a Fluent API instead, the other frameworks cannot know about it, resulting in a less streamlined experience.
 
 #### Validation of `[Required]` value types doesn't work

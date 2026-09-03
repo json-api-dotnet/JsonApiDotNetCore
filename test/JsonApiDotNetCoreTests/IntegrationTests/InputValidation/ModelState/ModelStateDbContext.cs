@@ -13,6 +13,7 @@ public sealed class ModelStateDbContext(DbContextOptions<ModelStateDbContext> op
     public DbSet<SystemVolume> Volumes => Set<SystemVolume>();
     public DbSet<SystemDirectory> Directories => Set<SystemDirectory>();
     public DbSet<SystemFile> Files => Set<SystemFile>();
+    public DbSet<SocialMediaAccount> SocialMediaAccounts => Set<SocialMediaAccount>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

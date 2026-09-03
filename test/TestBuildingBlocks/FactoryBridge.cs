@@ -21,32 +21,6 @@ public sealed class FactoryBridge
 
     public HttpClient CreateClient()
     {
-        return CreateDefaultClient();
-    }
-
-    public HttpClient CreateDefaultClient(params DelegatingHandler[] handlers)
-    {
-        if (handlers.Length == 0)
-        {
-            return _app.GetTestClient();
-        }
-
-        TestServer testServer = _app.GetTestServer();
-        HttpMessageHandler serverHandler = testServer.CreateHandler();
-        HttpClient httpClient = CreateHttpClient(serverHandler, handlers);
-
-        httpClient.BaseAddress ??= new Uri("http://localhost");
-        return httpClient;
-    }
-
-    private static HttpClient CreateHttpClient(HttpMessageHandler serverHandler, params DelegatingHandler[] handlers)
-    {
-        for (int index = handlers.Length - 1; index > 0; index--)
-        {
-            handlers[index - 1].InnerHandler = handlers[index];
-        }
-
-        handlers[^1].InnerHandler = serverHandler;
-        return new HttpClient(handlers[0]);
+        return _app.GetTestClient();
     }
 }

@@ -92,7 +92,7 @@ Content-Type: application/vnd.api+json;ext="https://jsonapi.org/ext/atomic"
 }
 ```
 
-For example requests, see our suite of tests in JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.
+For example requests, see our suite of tests [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests/AtomicOperations).
 
 ## Configuration
 

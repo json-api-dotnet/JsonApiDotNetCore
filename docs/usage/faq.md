@@ -3,11 +3,9 @@
 #### Where can I find documentation and examples?
 The [documentation](~/usage/resources/index.md) covers basic features, as well as [advanced use cases](~/usage/advanced/index.md). Several runnable example projects are available [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples).
 
-#### Why don't you use the built-in OpenAPI support in ASP.NET Core?
+#### Why is there no OpenAPI support?
 The structure of JSON:API request and response bodies differs significantly from the signature of JsonApiDotNetCore controllers.
-JsonApiDotNetCore provides OpenAPI support using [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore), a mature and feature-rich library that is highly extensible.
-The [OpenAPI support in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/overview) is still very young
-and doesn't provide the level of extensibility needed for JsonApiDotNetCore.
+After years of trying, we ultimately [decided to abandon](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/2059) the effort.
 
 #### What's available to implement a JSON:API client?
 To generate a typed client (specific to the resource types in your project), consider using our [OpenAPI](https://www.jsonapi.net/usage/openapi.html) NuGet package.

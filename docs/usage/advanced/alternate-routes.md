@@ -1,6 +1,6 @@
 # Alternate Routes
 
-The code [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests/CustomRoutes) shows how the default JSON:API routes can be changed.
+The code [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests/Endpoints/JsonApiControllers/CustomRoutes) shows how the default JSON:API routes can be changed.
 
 The classes `TownsController` and `CiviliansController`:
 - Are decorated with `[DisableRoutingConvention]` to turn off the default JSON:API routing convention.

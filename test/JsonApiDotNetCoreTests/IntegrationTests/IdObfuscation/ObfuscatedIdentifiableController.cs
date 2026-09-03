@@ -70,7 +70,6 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpPatch("{id}/relationships/{relationshipName}")]
-    // Parameter `[Required] object? rightValue` makes Swashbuckle generate the OpenAPI request body as required. We don't actually validate ModelState, so it doesn't hurt.
     public Task<IActionResult> PatchRelationshipAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
         [FromBody] [Required] object? rightValue, CancellationToken cancellationToken)
     {

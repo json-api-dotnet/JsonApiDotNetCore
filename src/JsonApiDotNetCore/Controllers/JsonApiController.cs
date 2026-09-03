@@ -102,7 +102,6 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
     /// <inheritdoc />
     [HttpPatch("{id}/relationships/{relationshipName}")]
     // `AllowEmptyStrings = true` in `[Required]` prevents the model binder from producing a validation error on whitespace when TId is string.
-    // Parameter `[Required] object? rightValue` makes Swashbuckle generate the OpenAPI request body as required. We don't actually validate ModelState, so it doesn't hurt.
     public override async Task<IActionResult> PatchRelationshipAsync([Required(AllowEmptyStrings = true)] [DisallowNull] TId id,
         [Required] string relationshipName, [Required] object? rightValue, CancellationToken cancellationToken)
     {

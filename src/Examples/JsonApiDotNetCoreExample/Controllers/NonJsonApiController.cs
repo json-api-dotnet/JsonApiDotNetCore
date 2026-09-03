@@ -3,13 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace JsonApiDotNetCoreExample.Controllers;
 
 [Route("[controller]")]
-[Tags("nonJsonApi")]
 public sealed class NonJsonApiController : ControllerBase
 {
-    [HttpGet(Name = "welcomeGet")]
-    [HttpHead(Name = "welcomeHead")]
-    [EndpointDescription("Returns a single-element JSON array.")]
-    [ProducesResponseType<List<string>>(StatusCodes.Status200OK, "application/json")]
+    [HttpGet]
+    [HttpHead]
     public IActionResult Get()
     {
         string[] result = ["Welcome!"];
@@ -18,10 +15,6 @@ public sealed class NonJsonApiController : ControllerBase
     }
 
     [HttpPost]
-    [EndpointDescription("Returns a greeting text, based on your name.")]
-    [Consumes("application/json")]
-    [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
-    [ProducesResponseType<string>(StatusCodes.Status400BadRequest, "text/plain")]
     public async Task<IActionResult> PostAsync([FromBody] string? name)
     {
         await Task.Yield();
@@ -36,8 +29,6 @@ public sealed class NonJsonApiController : ControllerBase
     }
 
     [HttpPut]
-    [EndpointDescription("Returns another greeting text.")]
-    [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
     public IActionResult Put([FromQuery] string? name)
     {
         string result = $"Hi, {name}";
@@ -45,8 +36,6 @@ public sealed class NonJsonApiController : ControllerBase
     }
 
     [HttpPatch]
-    [EndpointDescription("Wishes you a good day.")]
-    [ProducesResponseType<string>(StatusCodes.Status200OK, "text/plain")]
     public IActionResult Patch([FromHeader] string? name)
     {
         string result = $"Good day, {name}";
