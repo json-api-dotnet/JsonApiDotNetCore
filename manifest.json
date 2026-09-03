@@ -1735,188 +1735,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.yml\" sourcestartlinenumber=\"1\">Replacement for the auto-generated\n<code>\nApiException&lt;TResult&gt;\n</code>\nclass from NSwag.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.yml\" sourcestartlinenumber=\"1\">Replacement for the auto-generated\n<code>\nApiException\n</code>\nclass from NSwag.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse<TResult>",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.yml\" sourcestartlinenumber=\"1\">Replacement for the auto-generated\n<code>\nSwaggerResponse&lt;TResult&gt;\n</code>\nclass from NSwag.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.yml\" sourcestartlinenumber=\"1\">Replacement for the auto-generated\n<code>\nSwaggerResponse\n</code>\nclass from NSwag.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.yml\" sourcestartlinenumber=\"1\">Exists to block usage of the default\n<code>\nJsonInheritanceConverter\n</code>\nfrom NSwag, which is incompatible with JSON:API.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.yml\" sourcestartlinenumber=\"1\">Base class to inherit auto-generated NSwag OpenAPI clients from. Provides support for partial POST/PATCH in JSON:API requests, optionally combined\nwith OpenAPI inheritance.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.yml\" sourcestartlinenumber=\"1\">Implementation of <xref href=\"System.ComponentModel.INotifyPropertyChanged\" data-throw-if-not-resolved=\"false\"></xref> that unconditionally raises the <xref href=\"JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.PropertyChanged\" data-throw-if-not-resolved=\"false\"></xref> event when a property is\nassigned. Exists to support JSON:API partial POST/PATCH.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor<T>",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.yml\" sourcestartlinenumber=\"1\">Tracks assignment of property values, to support JSON:API partial POST/PATCH.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Client.NSwag",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute.yml\" sourcestartlinenumber=\"1\">Hides the underlying resource ID type in OpenAPI documents.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.OpenApi.Swashbuckle",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Queries.ExpressionInScope.yml",
       "output": {
         ".html": {
@@ -4355,36 +4173,6 @@
     },
     {
       "type": "Redirection",
-      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.ManyResponse-1.md",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.ManyResponse-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Redirection",
-      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.RequestSerializer.md",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.RequestSerializer.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Redirection",
-      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.md",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Redirection",
       "source_relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiDeserializer.md",
       "output": {
         ".html": {
@@ -5755,16 +5543,6 @@
       "version": ""
     },
     {
-      "type": "Conceptual",
-      "source_relative_path": "ext/openapi/index.md",
-      "output": {
-        ".html": {
-          "relative_path": "ext/openapi/index.html"
-        }
-      },
-      "version": ""
-    },
-    {
       "type": "Redirection",
       "source_relative_path": "getting-started/faq.md",
       "output": {
@@ -6212,36 +5990,6 @@
       "output": {
         ".html": {
           "relative_path": "usage/meta.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "usage/openapi-client.md",
-      "output": {
-        ".html": {
-          "relative_path": "usage/openapi-client.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "usage/openapi-documentation.md",
-      "output": {
-        ".html": {
-          "relative_path": "usage/openapi-documentation.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "usage/openapi.md",
-      "output": {
-        ".html": {
-          "relative_path": "usage/openapi.html"
         }
       },
       "version": ""

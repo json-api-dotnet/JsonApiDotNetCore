@@ -192,7 +192,7 @@ This is a lot more convenient compared to using <a href="https://learn.microsoft
 <p>Entity Framework Core has great conventions and sane mapping defaults. But two of them are problematic for JSON:API: identifying foreign keys and default delete behavior.
 See <a href="resources/relationships.html#one-to-one-relationships-in-entity-framework-core">here</a> for how to get it right.</p>
 <h4 id="prefer-model-attributes-over-fluent-mappings">Prefer model attributes over fluent mappings</h4>
-<p>Validation attributes such as <code>[Required]</code> are detected by ASP.NET ModelState validation, Entity Framework Core, OpenAPI, and JsonApiDotNetCore.
+<p>Validation attributes such as <code>[Required]</code> are detected by ASP.NET ModelState validation, Entity Framework Core, and JsonApiDotNetCore.
 When using a Fluent API instead, the other frameworks cannot know about it, resulting in a less streamlined experience.</p>
 <h4 id="validation-of-required-value-types-doesnt-work">Validation of <code>[Required]</code> value types doesn't work</h4>
 <p>This is a limitation of ASP.NET ModelState validation. For example:</p>

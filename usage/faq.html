@@ -92,11 +92,9 @@
 
 <h4 id="where-can-i-find-documentation-and-examples">Where can I find documentation and examples?</h4>
 <p>The <a href="resources/index.html">documentation</a> covers basic features, as well as <a href="advanced/index.html">advanced use cases</a>. Several runnable example projects are available <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples">here</a>.</p>
-<h4 id="why-dont-you-use-the-built-in-openapi-support-in-aspnet-core">Why don't you use the built-in OpenAPI support in ASP.NET Core?</h4>
+<h4 id="why-is-there-no-openapi-support">Why is there no OpenAPI support?</h4>
 <p>The structure of JSON:API request and response bodies differs significantly from the signature of JsonApiDotNetCore controllers.
-JsonApiDotNetCore provides OpenAPI support using <a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore">Swashbuckle</a>, a mature and feature-rich library that is highly extensible.
-The <a href="https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/overview">OpenAPI support in ASP.NET Core</a> is still very young
-and doesn't provide the level of extensibility needed for JsonApiDotNetCore.</p>
+After years of trying, we ultimately <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/2059">decided to abandon</a> the effort.</p>
 <h4 id="whats-available-to-implement-a-jsonapi-client">What's available to implement a JSON:API client?</h4>
 <p>To generate a typed client (specific to the resource types in your project), consider using our <a href="https://www.jsonapi.net/usage/openapi.html">OpenAPI</a> NuGet package.</p>
 <p>If you need a generic client, it depends on the programming language used. There's an overwhelming list of client libraries at <a href="https://jsonapi.org/implementations/#client-libraries">https://jsonapi.org/implementations/#client-libraries</a>.</p>
