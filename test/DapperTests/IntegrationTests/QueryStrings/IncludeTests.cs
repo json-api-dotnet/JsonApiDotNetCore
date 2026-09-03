@@ -116,31 +116,42 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
 
         responseDocument.Included.Should().HaveCount(6);
 
-        responseDocument.Included[0].Type.Should().Be("people");
-        responseDocument.Included[0].Id.Should().Be(owner.StringId);
-        responseDocument.Included[0].Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(owner.FirstName);
-        responseDocument.Included[0].Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(owner.LastName);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "people" && resource.Id == owner.StringId).Subject.With(resource =>
+        {
+            resource.Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(owner.FirstName);
+            resource.Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(owner.LastName);
+        });
 
-        responseDocument.Included[1].Type.Should().Be("tags");
-        responseDocument.Included[1].Id.Should().Be(todoItems[0].Tags.ElementAt(0).StringId);
-        responseDocument.Included[1].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[0].Tags.ElementAt(0).Name);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "tags" && resource.Id == todoItems[0].Tags.ElementAt(0).StringId).Subject
+            .With(resource =>
+            {
+                resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[0].Tags.ElementAt(0).Name);
+            });
 
-        responseDocument.Included[2].Type.Should().Be("tags");
-        responseDocument.Included[2].Id.Should().Be(todoItems[0].Tags.ElementAt(1).StringId);
-        responseDocument.Included[2].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[0].Tags.ElementAt(1).Name);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "tags" && resource.Id == todoItems[0].Tags.ElementAt(1).StringId).Subject
+            .With(resource =>
+            {
+                resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[0].Tags.ElementAt(1).Name);
+            });
 
-        responseDocument.Included[3].Type.Should().Be("people");
-        responseDocument.Included[3].Id.Should().Be(todoItems[1].Assignee!.StringId);
-        responseDocument.Included[3].Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(todoItems[1].Assignee!.FirstName);
-        responseDocument.Included[3].Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(todoItems[1].Assignee!.LastName);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "people" && resource.Id == todoItems[1].Assignee!.StringId).Subject
+            .With(resource =>
+            {
+                resource.Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(todoItems[1].Assignee!.FirstName);
+                resource.Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(todoItems[1].Assignee!.LastName);
+            });
 
-        responseDocument.Included[4].Type.Should().Be("tags");
-        responseDocument.Included[4].Id.Should().Be(todoItems[1].Tags.ElementAt(0).StringId);
-        responseDocument.Included[4].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[1].Tags.ElementAt(0).Name);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "tags" && resource.Id == todoItems[1].Tags.ElementAt(0).StringId).Subject
+            .With(resource =>
+            {
+                resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[1].Tags.ElementAt(0).Name);
+            });
 
-        responseDocument.Included[5].Type.Should().Be("tags");
-        responseDocument.Included[5].Id.Should().Be(todoItems[1].Tags.ElementAt(1).StringId);
-        responseDocument.Included[5].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[1].Tags.ElementAt(1).Name);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "tags" && resource.Id == todoItems[1].Tags.ElementAt(1).StringId).Subject
+            .With(resource =>
+            {
+                resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItems[1].Tags.ElementAt(1).Name);
+            });
 
         responseDocument.Meta.Should().ContainTotal(2);
 

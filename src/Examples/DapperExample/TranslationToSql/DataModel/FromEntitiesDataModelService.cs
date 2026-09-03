@@ -29,7 +29,7 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph)
         _databaseProvider = dbContext.Database.ProviderName switch
         {
             "Npgsql.EntityFrameworkCore.PostgreSQL" => DatabaseProvider.PostgreSql,
-            "Pomelo.EntityFrameworkCore.MySql" => DatabaseProvider.MySql,
+            "Pomelo.EntityFrameworkCore.MySql" or "Microting.EntityFrameworkCore.MySql" => DatabaseProvider.MySql,
             "Microsoft.EntityFrameworkCore.SqlServer" => DatabaseProvider.SqlServer,
             _ => throw new NotSupportedException($"Unknown database provider '{dbContext.Database.ProviderName}'.")
         };

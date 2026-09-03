@@ -15,7 +15,8 @@
     <PackageReference Include="Dapper" Version="$(DapperVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EntityFrameworkCoreVersion)" />
+    <PackageReference Include="Microting.EntityFrameworkCore.MySql" Condition="'$(TargetFramework)' != 'net9.0' And '$(TargetFramework)' != 'net8.0'" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(EntityFrameworkCoreVersion)" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="$(PomeloEntityFrameworkCoreVersion)" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Condition="'$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net8.0'" Version="$(EntityFrameworkCoreVersion)" />
   </ItemGroup>
 </Project>

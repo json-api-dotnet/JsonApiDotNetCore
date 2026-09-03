@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Resources;
 
@@ -36,6 +37,11 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
+            if (dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.SqlServer")
+            {
+                throw SkipException.ForSkip("Cascading deletes are not supported in SQL Server.");
+            }
+
             await _testContext.ClearAllTablesAsync(dbContext);
             dbContext.TodoItems.Add(existingTodoItem);
             await dbContext.SaveChangesAsync();

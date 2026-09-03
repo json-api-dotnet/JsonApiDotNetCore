@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace DapperTests.IntegrationTests.AtomicOperations;
 
@@ -33,6 +34,16 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
         Person newAssignee = _fakers.Person.GenerateOne();
         Tag newTag = _fakers.Tag.GenerateOne();
         TodoItem newTodoItem = _fakers.TodoItem.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await Task.Yield();
+
+            if (dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.SqlServer")
+            {
+                throw SkipException.ForSkip("Cascading deletes are not supported in SQL Server.");
+            }
+        });
 
         const string ownerLocalId = "new-owner";
         const string assigneeLocalId = "new-assignee";
