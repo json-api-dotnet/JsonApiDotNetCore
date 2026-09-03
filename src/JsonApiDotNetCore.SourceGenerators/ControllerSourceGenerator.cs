@@ -299,7 +299,7 @@ public sealed class ControllerSourceGenerator : IIncrementalGenerator
         builder.AppendLine($"// Input: {fullController}");
         builder.AppendLine();
 
-        foreach (string errorLine in exception.ToString().Split(LineBreak))
+        foreach (string errorLine in exception.ToString().Split([LineBreak], StringSplitOptions.None))
         {
             builder.AppendLine($"// {errorLine}");
         }
