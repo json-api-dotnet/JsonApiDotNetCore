@@ -18,7 +18,7 @@
     <MiniValidationVersion>0.10.*</MiniValidationVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
     <SystemTextJsonVersion>10.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>18.8.*</TestSdkVersion>
+    <TestSdkVersion>18.9.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>3.1.*</XunitVisualStudioVersion>
   </PropertyGroup>
