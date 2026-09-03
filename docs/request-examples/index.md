@@ -3,9 +3,7 @@
 Runnable example projects can be found [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples):
 
 - GettingStarted: A simple project with minimal configuration to develop a runnable project in minutes.
-- JsonApiDotNetCoreExample: Showcases commonly-used features, such as resource definitions, atomic operations, and OpenAPI.
-  - OpenApiNSwagClientExample: Uses [NSwag](https://github.com/RicoSuter/NSwag) to generate a typed OpenAPI client.
-  - OpenApiKiotaClientExample: Uses [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/) to generate a typed OpenAPI client.
+- JsonApiDotNetCoreExample: Showcases commonly-used features, such as resource definitions and atomic operations.
 - MultiDbContextExample: Shows how to use multiple `DbContext` classes, for connecting to multiple databases.
 - DatabasePerTenantExample: Uses a different database per tenant. See [here](~/usage/advanced/multi-tenancy.md) for using multiple tenants in the same database.
 - NoEntityFrameworkExample: Uses a read-only in-memory repository, instead of a real database.

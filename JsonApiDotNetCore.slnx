@@ -18,9 +18,6 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/JsonApiDotNetCore.Annotations/JsonApiDotNetCore.Annotations.csproj" />
-    <Project Path="src/JsonApiDotNetCore.OpenApi.Client.Kiota/JsonApiDotNetCore.OpenApi.Client.Kiota.csproj" />
-    <Project Path="src/JsonApiDotNetCore.OpenApi.Client.NSwag/JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
-    <Project Path="src/JsonApiDotNetCore.OpenApi.Swashbuckle/JsonApiDotNetCore.OpenApi.Swashbuckle.csproj" />
     <Project Path="src/JsonApiDotNetCore.SourceGenerators/JsonApiDotNetCore.SourceGenerators.csproj" />
     <Project Path="src/JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
   </Folder>
@@ -30,8 +27,6 @@
     <Project Path="src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
     <Project Path="src/Examples/MultiDbContextExample/MultiDbContextExample.csproj" />
     <Project Path="src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
-    <Project Path="src/Examples/OpenApiKiotaClientExample/OpenApiKiotaClientExample.csproj" />
-    <Project Path="src/Examples/OpenApiNSwagClientExample/OpenApiNSwagClientExample.csproj" />
     <Project Path="src/Examples/ReportsExample/ReportsExample.csproj" />
   </Folder>
   <Folder Name="/test/">
@@ -41,10 +36,6 @@
     <Project Path="test/JsonApiDotNetCoreTests/JsonApiDotNetCoreTests.csproj" />
     <Project Path="test/MultiDbContextTests/MultiDbContextTests.csproj" />
     <Project Path="test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj" />
-    <Project Path="test/OpenApiKiotaEndToEndTests/OpenApiKiotaEndToEndTests.csproj" />
-    <Project Path="test/OpenApiNSwagClientTests/OpenApiNSwagClientTests.csproj" />
-    <Project Path="test/OpenApiNSwagEndToEndTests/OpenApiNSwagEndToEndTests.csproj" />
-    <Project Path="test/OpenApiTests/OpenApiTests.csproj" />
     <Project Path="test/SourceGeneratorTests/SourceGeneratorTests.csproj" />
     <Project Path="test/TestBuildingBlocks/TestBuildingBlocks.csproj" />
     <Project Path="test/UnitTests/UnitTests.csproj" />

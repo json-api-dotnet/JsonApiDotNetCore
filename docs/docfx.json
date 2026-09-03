@@ -9,10 +9,7 @@
         {
           "files": [
             "**/JsonApiDotNetCore.csproj",
-            "**/JsonApiDotNetCore.Annotations.csproj",
-            "**/JsonApiDotNetCore.OpenApi.Swashbuckle.csproj",
-            "**/JsonApiDotNetCore.OpenApi.Client.NSwag.csproj",
-            "**/JsonApiDotNetCore.OpenApi.Client.Kiota"
+            "**/JsonApiDotNetCore.Annotations.csproj"
           ],
           "src": "../"
         }
