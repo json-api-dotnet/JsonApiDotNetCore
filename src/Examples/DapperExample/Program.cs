@@ -16,7 +16,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddSingleton<TimeProvider>();
+builder.Services.AddSingleton(TimeProvider.System);
 
 DatabaseProvider databaseProvider = GetDatabaseProvider(builder.Configuration);
 string? connectionString = builder.Configuration.GetConnectionString($"DapperExample{databaseProvider}");
