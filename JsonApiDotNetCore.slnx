@@ -13,7 +13,12 @@
     <File Path=".gitignore" />
     <File Path="CodingGuidelines.ruleset" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="docker-compose.yml" />
+    <File Path="nuget.config" />
     <File Path="package-versions.props" />
+    <File Path="PackageReadme.md" />
+    <File Path="README.md" />
     <File Path="tests.runsettings" />
   </Folder>
   <Folder Name="/src/">
