@@ -12,7 +12,6 @@ using Microsoft.Kiota.Serialization.Text;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CoffeeSummaries;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Emails;
-using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.FileTransfers;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -41,12 +40,6 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode
         public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Emails.EmailsRequestBuilder Emails
         {
             get => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Emails.EmailsRequestBuilder(PathParameters, RequestAdapter);
-        }
-
-        /// <summary>The fileTransfers property</summary>
-        public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.FileTransfers.FileTransfersRequestBuilder FileTransfers
-        {
-            get => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.FileTransfers.FileTransfersRequestBuilder(PathParameters, RequestAdapter);
         }
 
         /// <summary>

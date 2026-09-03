@@ -27,19 +27,14 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         _testContext = testContext;
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
 
-        testContext.UseController<FileTransferController>();
         testContext.UseController<CupOfCoffeesController>();
         testContext.UseController<CoffeeSummaryController>();
 
         testContext.ConfigureServices(services =>
         {
-            services.AddSingleton<InMemoryFileStorage>();
             services.AddSingleton<InMemoryOutgoingEmailsProvider>();
             services.TryAddEnumerable(ServiceDescriptor.Transient<IStartupFilter, MinimalApiStartupFilter>());
         });
-
-        var fileStorage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
-        fileStorage.Files.Clear();
 
         var emailsProvider = _testContext.Factory.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
         emailsProvider.SentEmails.Clear();
@@ -346,125 +341,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         error.Title.Should().BeNull();
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task Can_upload_file()
-    {
-        // Arrange
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        var apiClient = new MixedControllersClient(httpClient);
-
-        byte[] fileContents = "Hello upload"u8.ToArray();
-        using var stream = new MemoryStream();
-        stream.Write(fileContents);
-        stream.Seek(0, SeekOrigin.Begin);
-        var fileParameter = new FileParameter(stream, "demo-upload.txt", "text/plain");
-
-        // Act
-        string response = await apiClient.UploadAsync(fileParameter);
-
-        // Assert
-        response.Should().Be($"Received file with a size of {fileContents.Length} bytes.");
-    }
-
-    [Fact]
-    public async Task Cannot_upload_empty_file()
-    {
-        // Arrange
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        var apiClient = new MixedControllersClient(httpClient);
-
-        using var stream = new MemoryStream();
-        var fileParameter = new FileParameter(stream, "demo-empty.txt", "text/plain");
-
-        // Act
-        Func<Task> action = async () => await apiClient.UploadAsync(fileParameter);
-
-        // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-        exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        exception.Message.Should().Be("HTTP 400: The file is empty.");
-        exception.Response.Should().Be("Empty files cannot be uploaded.");
-    }
-
-    [Fact]
-    public async Task Finds_existing_file()
-    {
-        // Arrange
-        byte[] fileContents = "Hello find"u8.ToArray();
-
-        var storage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
-        storage.Files.TryAdd("demo-existing-file.txt", fileContents);
-
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        var apiClient = new MixedControllersClient(httpClient);
-
-        // Act
-        Func<Task> action = async () => await apiClient.ExistsAsync("demo-existing-file.txt");
-
-        // Assert
-        await action.Should().NotThrowAsync();
-    }
-
-    [Fact]
-    public async Task Does_not_find_missing_file()
-    {
-        // Arrange
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        var apiClient = new MixedControllersClient(httpClient);
-
-        // Act
-        Func<Task> action = async () => await apiClient.ExistsAsync("demo-missing-file.txt");
-
-        // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Message.Should().Be("HTTP 404: The file does not exist.");
-        exception.Response.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task Can_download_file()
-    {
-        // Arrange
-        byte[] fileContents = "Hello download"u8.ToArray();
-
-        var storage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
-        storage.Files.TryAdd("demo-download.txt", fileContents);
-
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        var apiClient = new MixedControllersClient(httpClient);
-
-        // Act
-        using FileResponse response = await apiClient.DownloadAsync("demo-download.txt");
-
-        // Assert
-        response.StatusCode.Should().Be((int)HttpStatusCode.OK);
-        response.Headers.Should().ContainKey("Content-Type").WhoseValue.Should().ContainSingle().Which.Should().Be("application/octet-stream");
-        response.Headers.Should().ContainKey("Content-Length").WhoseValue.Should().ContainSingle().Which.Should().Be(fileContents.Length.ToString());
-
-        using var streamReader = new StreamReader(response.Stream);
-        string downloadedContents = await streamReader.ReadToEndAsync();
-
-        downloadedContents.Should().Be("Hello download");
-    }
-
-    [Fact]
-    public async Task Cannot_download_missing_file()
-    {
-        // Arrange
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        var apiClient = new MixedControllersClient(httpClient);
-
-        // Act
-        Func<Task> action = async () => await apiClient.DownloadAsync("demo-missing-file.txt");
-
-        // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Message.Should().Be("HTTP 404: The file does not exist.");
-        exception.Response.Should().Be("The file 'demo-missing-file.txt' does not exist.");
     }
 
     [Fact]

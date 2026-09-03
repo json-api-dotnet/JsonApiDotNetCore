@@ -31,19 +31,14 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         _testContext = testContext;
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
 
-        testContext.UseController<FileTransferController>();
         testContext.UseController<CupOfCoffeesController>();
         testContext.UseController<CoffeeSummaryController>();
 
         testContext.ConfigureServices(services =>
         {
-            services.AddSingleton<InMemoryFileStorage>();
             services.AddSingleton<InMemoryOutgoingEmailsProvider>();
             services.TryAddEnumerable(ServiceDescriptor.Transient<IStartupFilter, MinimalApiStartupFilter>());
         });
-
-        var fileStorage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
-        fileStorage.Files.Clear();
 
         var emailsProvider = _testContext.Factory.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
         emailsProvider.SentEmails.Clear();
@@ -358,120 +353,6 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         error.Title.Should().BeNull();
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task Can_upload_file()
-    {
-        // Arrange
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        var apiClient = new MixedControllersClient(requestAdapter);
-
-        byte[] fileContents = "Hello upload"u8.ToArray();
-        using var stream = new MemoryStream();
-        stream.Write(fileContents);
-        stream.Seek(0, SeekOrigin.Begin);
-
-        var requestBody = new MultipartBody();
-        requestBody.AddOrReplacePart("file", "text/plain", stream, "demo-upload.txt");
-
-        // Act
-        string? response = await apiClient.FileTransfers.PostAsync(requestBody);
-
-        // Assert
-        response.Should().Be($"Received file with a size of {fileContents.Length} bytes.");
-    }
-
-    [Fact]
-    public async Task Cannot_upload_empty_file()
-    {
-        // Arrange
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        var apiClient = new MixedControllersClient(requestAdapter);
-
-        using var stream = new MemoryStream();
-        var requestBody = new MultipartBody();
-        requestBody.AddOrReplacePart("file", "text/plain", stream, "demo-empty.txt");
-
-        // Act
-        Func<Task> action = async () => await apiClient.FileTransfers.PostAsync(requestBody);
-
-        // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task Finds_existing_file()
-    {
-        // Arrange
-        byte[] fileContents = "Hello find"u8.ToArray();
-
-        var storage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
-        storage.Files.TryAdd("demo-existing-file.txt", fileContents);
-
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        var apiClient = new MixedControllersClient(requestAdapter);
-
-        // Act
-        Func<Task> action = async () => await apiClient.FileTransfers.Find.GetAsync(request => request.QueryParameters.FileName = "demo-existing-file.txt");
-
-        // Assert
-        await action.Should().NotThrowAsync();
-    }
-
-    [Fact]
-    public async Task Does_not_find_missing_file()
-    {
-        // Arrange
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        var apiClient = new MixedControllersClient(requestAdapter);
-
-        // Act
-        Func<Task> action = async () => await apiClient.FileTransfers.Find.GetAsync(request => request.QueryParameters.FileName = "demo-missing-file.txt");
-
-        // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
-    }
-
-    [Fact]
-    public async Task Can_download_file()
-    {
-        // Arrange
-        byte[] fileContents = "Hello download"u8.ToArray();
-
-        var storage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
-        storage.Files.TryAdd("demo-download.txt", fileContents);
-
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        var apiClient = new MixedControllersClient(requestAdapter);
-
-        // Act
-        await using Stream? response = await apiClient.FileTransfers.GetAsync(request => request.QueryParameters.FileName = "demo-download.txt");
-
-        // Assert
-        response.Should().NotBeNull();
-
-        using var streamReader = new StreamReader(response);
-        string downloadedContents = await streamReader.ReadToEndAsync();
-
-        downloadedContents.Should().Be("Hello download");
-    }
-
-    [Fact]
-    public async Task Cannot_download_missing_file()
-    {
-        // Arrange
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        var apiClient = new MixedControllersClient(requestAdapter);
-
-        // Act
-        Func<Task> action = async () => await apiClient.FileTransfers.GetAsync(request => request.QueryParameters.FileName = "demo-missing-file.txt");
-
-        // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
-        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
     }
 
     [Fact]
