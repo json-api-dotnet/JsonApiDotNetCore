@@ -60,7 +60,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                     Data = new DataInUpdateStudentRequest
                     {
                         Type = ResourceType.Students,
-                        Id = existingStudent.StringId!,
+                        Id = existingStudent.StringId,
                         Attributes = new AttributesInUpdateStudentRequest
                         {
                             Name = newName,
@@ -120,12 +120,12 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                     Ref = new StudentIdentifierInRequest
                     {
                         Type = ResourceType.Students,
-                        Id = existingStudent.StringId!
+                        Id = existingStudent.StringId
                     },
                     Data = new DataInUpdateStudentRequest
                     {
                         Type = ResourceType.Students,
-                        Id = existingStudent.StringId!,
+                        Id = existingStudent.StringId,
                         Attributes = new AttributesInUpdateStudentRequest
                         {
                             EmailAddress = newEmailAddress

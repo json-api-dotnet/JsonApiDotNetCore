@@ -96,8 +96,8 @@ public sealed class RequestTests
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights");
         wrapper.Request.Content.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
+        wrapper.Request.Content.Headers.ContentType.Should().NotBeNull();
+        wrapper.Request.Content.Headers.ContentType.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -168,8 +168,8 @@ public sealed class RequestTests
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}airplanes");
         wrapper.Request.Content.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
+        wrapper.Request.Content.Headers.ContentType.Should().NotBeNull();
+        wrapper.Request.Content.Headers.ContentType.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson($$"""
             {
@@ -223,8 +223,8 @@ public sealed class RequestTests
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}airplanes/{airplaneId}");
         wrapper.Request.Content.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
+        wrapper.Request.Content.Headers.ContentType.Should().NotBeNull();
+        wrapper.Request.Content.Headers.ContentType.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -347,8 +347,8 @@ public sealed class RequestTests
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/purser");
         wrapper.Request.Content.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
+        wrapper.Request.Content.Headers.ContentType.Should().NotBeNull();
+        wrapper.Request.Content.Headers.ContentType.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -412,8 +412,8 @@ public sealed class RequestTests
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
+        wrapper.Request.Content.Headers.ContentType.Should().NotBeNull();
+        wrapper.Request.Content.Headers.ContentType.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -463,8 +463,8 @@ public sealed class RequestTests
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
+        wrapper.Request.Content.Headers.ContentType.Should().NotBeNull();
+        wrapper.Request.Content.Headers.ContentType.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -514,8 +514,8 @@ public sealed class RequestTests
         wrapper.Request.Method.Should().Be(HttpMethod.Delete);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
+        wrapper.Request.Content.Headers.ContentType.Should().NotBeNull();
+        wrapper.Request.Content.Headers.ContentType.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {

@@ -508,11 +508,11 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
         response.Should().NotBeNull();
         response.Atomic_results.Should().HaveCount(2);
 
-        DataInBankAccountResponse accountData = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<DataInBankAccountResponse>().Subject!;
+        DataInBankAccountResponse accountData = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<DataInBankAccountResponse>().Subject;
         accountData.Relationships.Should().NotBeNull();
         accountData.Relationships.Cards.Should().NotBeNull();
 
-        DataInDebitCardResponse cardData = response.Atomic_results.ElementAt(1).Data.Should().BeOfType<DataInDebitCardResponse>().Subject!;
+        DataInDebitCardResponse cardData = response.Atomic_results.ElementAt(1).Data.Should().BeOfType<DataInDebitCardResponse>().Subject;
         cardData.Relationships.Should().NotBeNull();
         cardData.Relationships.Account.Should().NotBeNull();
 
