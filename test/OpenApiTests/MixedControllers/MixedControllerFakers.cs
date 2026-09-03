@@ -15,13 +15,5 @@ public sealed class MixedControllerFakers
         .RuleFor(cupOfCoffee => cupOfCoffee.HasSugar, faker => faker.Random.Bool())
         .RuleFor(cupOfCoffee => cupOfCoffee.HasMilk, faker => faker.Random.Bool()));
 
-    private readonly Lazy<Faker<Email>> _lazyEmailFaker = new(() => new Faker<Email>()
-        .MakeDeterministic()
-        .RuleFor(email => email.Subject, faker => faker.Lorem.Sentence())
-        .RuleFor(email => email.Body, faker => faker.Lorem.Paragraphs())
-        .RuleFor(email => email.From, faker => faker.Internet.Email())
-        .RuleFor(email => email.To, faker => faker.Internet.Email()));
-
     public Faker<CupOfCoffee> CupOfCoffee => _lazyCupOfCoffeeFaker.Value;
-    public Faker<Email> Email => _lazyEmailFaker.Value;
 }

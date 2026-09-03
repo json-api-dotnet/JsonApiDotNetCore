@@ -1,7 +1,4 @@
 using System.Text.Json;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
@@ -21,12 +18,6 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
 
         testContext.SetTestOutputHelper(testOutputHelper);
         testContext.OpenApiDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
-
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton<InMemoryOutgoingEmailsProvider>();
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IStartupFilter, MinimalApiStartupFilter>());
-        });
     }
 
     [Fact]
@@ -336,141 +327,6 @@ public sealed class MixedControllerTests : IClassFixture<OpenApiTestContext<Mixe
                       }
                     }
                   }
-                }
-              }
-            }
-            """);
-    }
-
-    [Fact]
-    public async Task Send_email_endpoint_is_exposed()
-    {
-        // Act
-        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath("paths./emails/send.post").Should().BeJson("""
-            {
-              "tags": [
-                "emails"
-              ],
-              "description": "Sends an email to the specified recipient.",
-              "operationId": "sendEmail",
-              "requestBody": {
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/email"
-                        }
-                      ],
-                      "description": "The email to send."
-                    }
-                  }
-                },
-                "required": true
-              },
-              "responses": {
-                "200": {
-                  "description": "OK"
-                },
-                "400": {
-                  "description": "Bad Request",
-                  "content": {
-                    "application/problem+json": {
-                      "schema": {
-                        "$ref": "#/components/schemas/httpValidationProblemDetails"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            """);
-    }
-
-    [Fact]
-    public async Task Emails_sent_since_endpoint_is_exposed()
-    {
-        // Act
-        JsonElement document = await _testContext.GetOpenApiDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath("paths./emails/sent-since.get").Should().BeJson("""
-            {
-              "tags": [
-                "emails"
-              ],
-              "description": "Gets all emails sent since the specified date/time.",
-              "operationId": "getSentSince",
-              "parameters": [
-                {
-                  "name": "sinceUtc",
-                  "in": "query",
-                  "description": "The date/time (in UTC) since which the email was sent.",
-                  "required": true,
-                  "schema": {
-                    "type": "string",
-                    "description": "The date/time (in UTC) since which the email was sent.",
-                    "format": "date-time"
-                  }
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "OK",
-                  "content": {
-                    "application/json": {
-                      "schema": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/email"
-                        }
-                      }
-                    }
-                  }
-                },
-                "400": {
-                  "description": "Bad Request",
-                  "content": {
-                    "application/problem+json": {
-                      "schema": {
-                        "$ref": "#/components/schemas/httpValidationProblemDetails"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            """);
-
-        document.Should().ContainPath("paths./emails/sent-since.head").Should().BeJson("""
-            {
-              "tags": [
-                "emails"
-              ],
-              "description": "Gets all emails sent since the specified date/time.",
-              "operationId": "tryGetSentSince",
-              "parameters": [
-                {
-                  "name": "sinceUtc",
-                  "in": "query",
-                  "description": "The date/time (in UTC) since which the email was sent.",
-                  "required": true,
-                  "schema": {
-                    "type": "string",
-                    "description": "The date/time (in UTC) since which the email was sent.",
-                    "format": "date-time"
-                  }
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "OK"
-                },
-                "400": {
-                  "description": "Bad Request"
                 }
               }
             }

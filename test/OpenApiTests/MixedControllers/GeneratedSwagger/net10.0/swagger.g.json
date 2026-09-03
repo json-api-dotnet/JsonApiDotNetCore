@@ -423,120 +423,6 @@
           }
         }
       }
-    },
-    "/emails/send": {
-      "post": {
-        "tags": [
-          "emails"
-        ],
-        "description": "Sends an email to the specified recipient.",
-        "operationId": "sendEmail",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/email"
-                  }
-                ],
-                "description": "The email to send."
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/httpValidationProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/emails/sent-since": {
-      "get": {
-        "tags": [
-          "emails"
-        ],
-        "description": "Gets all emails sent since the specified date/time.",
-        "operationId": "getSentSince",
-        "parameters": [
-          {
-            "name": "sinceUtc",
-            "in": "query",
-            "description": "The date/time (in UTC) since which the email was sent.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "The date/time (in UTC) since which the email was sent.",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/email"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/httpValidationProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "head": {
-        "tags": [
-          "emails"
-        ],
-        "description": "Gets all emails sent since the specified date/time.",
-        "operationId": "tryGetSentSince",
-        "parameters": [
-          {
-            "name": "sinceUtc",
-            "in": "query",
-            "description": "The date/time (in UTC) since which the email was sent.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "The date/time (in UTC) since which the email was sent.",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -819,43 +705,6 @@
         ],
         "additionalProperties": false
       },
-      "email": {
-        "required": [
-          "body",
-          "from",
-          "subject",
-          "to"
-        ],
-        "type": "object",
-        "properties": {
-          "subject": {
-            "maxLength": 255,
-            "type": "string",
-            "description": "The email subject."
-          },
-          "body": {
-            "type": "string",
-            "description": "The email body."
-          },
-          "from": {
-            "type": "string",
-            "description": "The email address of the sender.",
-            "format": "email"
-          },
-          "to": {
-            "type": "string",
-            "description": "The email address of the recipient.",
-            "format": "email"
-          },
-          "sentAtUtc": {
-            "type": "string",
-            "description": "The date/time (in UTC) at which this email was sent.",
-            "format": "date-time",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "errorLinks": {
         "type": "object",
         "properties": {
@@ -977,42 +826,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "httpValidationProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          },
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "additionalProperties": { }
       },
       "meta": {
         "type": "object",
@@ -1215,9 +1028,6 @@
     },
     {
       "name": "cupOfCoffees"
-    },
-    {
-      "name": "emails"
     }
   ]
 }

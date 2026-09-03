@@ -11,7 +11,6 @@ using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CoffeeSummaries;
 using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees;
-using OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Emails;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -34,12 +33,6 @@ namespace OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode
         public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.CupOfCoffeesRequestBuilder CupOfCoffees
         {
             get => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.CupOfCoffees.CupOfCoffeesRequestBuilder(PathParameters, RequestAdapter);
-        }
-
-        /// <summary>The emails property</summary>
-        public global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Emails.EmailsRequestBuilder Emails
-        {
-            get => new global::OpenApiKiotaEndToEndTests.MixedControllers.GeneratedCode.Emails.EmailsRequestBuilder(PathParameters, RequestAdapter);
         }
 
         /// <summary>
