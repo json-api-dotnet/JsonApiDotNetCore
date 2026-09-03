@@ -1,0 +1,81 @@
+name: jsonapi
+
+# This file starts a PostgreSQL database in a docker container, which is required for running tests locally.
+# It also starts pgAdmin (a web-based PostgreSQL management tool) in a second container, which lets you query the database.
+#
+# Usage:
+#   docker compose up --detach --wait
+#
+# To connect to pgAdmin, open http://localhost:5050. It will automatically log in and connect to the database.
+#
+# To stop:
+#   docker compose down
+#
+# To stop and remove persistent data (reset):
+#   docker compose down --volumes
+
+services:
+  postgres-db:
+    image: postgres:latest
+    pull_policy: always
+    container_name: jsonapi-postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    command: -N 500
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    pull_policy: always
+    container_name: jsonapi-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_DISABLE_POSTFIX: 'true'
+      PGADMIN_REPLACE_SERVERS_ON_STARTUP: 'True'
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres-db
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 25
+      start_period: 20s
+    configs:
+      - source: pgadmin-servers
+        target: /pgadmin4/servers.json
+
+volumes:
+  pgadmin-data:
+
+configs:
+  pgadmin-servers:
+    content: |
+      {
+        "Servers": {
+          "1": {
+            "Name": "jsonapi-postgres-database",
+            "Group": "Servers",
+            "Host": "postgres-db",
+            "Port": 5432,
+            "MaintenanceDB": "postgres",
+            "Username": "postgres",
+            "SSLMode": "prefer",
+            "PasswordExecCommand": "echo 'postgres'"
+          }
+        }
+      }
