@@ -2,12 +2,11 @@ using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace OpenApiTests.MixedControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomActionMethods;
 
 public sealed class CoffeeSummaryController : BaseJsonApiController<CoffeeSummary, long>
 {
@@ -21,17 +20,8 @@ public sealed class CoffeeSummaryController : BaseJsonApiController<CoffeeSummar
         _dbContext = dbContext;
     }
 
-    /// <response code="200">
-    /// Successfully returns the coffee summary.
-    /// </response>
-    /// <response code="404">
-    /// The coffee summary does not exist.
-    /// </response>
-    [HttpGet("summary", Name = "get-coffee-summary")]
-    [HttpHead("summary", Name = "head-coffee-summary")]
-    [EndpointDescription("Summarizes all cups of coffee, indicating their ingredients.")]
-    [ProducesResponseType<CoffeeSummary>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("summary")]
+    [HttpHead("summary")]
     public async Task<IActionResult> GetSummaryAsync(CancellationToken cancellationToken)
     {
         var summary = new CoffeeSummary

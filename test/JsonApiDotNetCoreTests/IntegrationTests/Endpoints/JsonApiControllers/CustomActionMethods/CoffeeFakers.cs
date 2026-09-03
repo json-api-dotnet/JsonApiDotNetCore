@@ -5,10 +5,10 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_if_long
 // @formatter:wrap_before_first_method_call true
 
-namespace OpenApiTests.MixedControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomActionMethods;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class MixedControllerFakers
+public sealed class CoffeeFakers
 {
     private readonly Lazy<Faker<CupOfCoffee>> _lazyCupOfCoffeeFaker = new(() => new Faker<CupOfCoffee>()
         .MakeDeterministic()

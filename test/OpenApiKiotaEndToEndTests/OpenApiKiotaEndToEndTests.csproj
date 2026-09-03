@@ -51,13 +51,6 @@
       <OutputPath>.\%(Name)\GeneratedCode</OutputPath>
       <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
     </KiotaReference>
-    <KiotaReference Include="..\OpenApiTests\MixedControllers\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
-      <Name>MixedControllers</Name>
-      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
-      <ClassName>%(Name)Client</ClassName>
-      <OutputPath>.\%(Name)\GeneratedCode</OutputPath>
-      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
-    </KiotaReference>
     <KiotaReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>QueryStrings</Name>
       <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>

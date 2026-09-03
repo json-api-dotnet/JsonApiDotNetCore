@@ -52,12 +52,6 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\MixedControllers\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
-      <Name>MixedControllers</Name>
-      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
-      <ClassName>%(Name)Client</ClassName>
-      <OutputPath>%(ClassName).cs</OutputPath>
-    </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>QueryStrings</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>

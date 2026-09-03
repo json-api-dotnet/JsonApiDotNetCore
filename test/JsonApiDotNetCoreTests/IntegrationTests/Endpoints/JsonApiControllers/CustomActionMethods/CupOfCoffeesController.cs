@@ -1,11 +1,9 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 #pragma warning disable format
 
-namespace OpenApiTests.MixedControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomActionMethods;
 
 partial class CupOfCoffeesController
 {
@@ -29,30 +27,16 @@ partial class CupOfCoffeesController
         _dbContext = dbContext;
     }
 
-    /// <response code="200">
-    /// Successfully returns the cups of black coffee, or an empty array if none were found.
-    /// </response>
-    [HttpGet("onlyBlack", Name = "get-only-black")]
-    [HttpHead("onlyBlack", Name = "head-only-black")]
-    [EndpointDescription("Gets all cups of coffee without sugar and milk.")]
-    [ProducesResponseType<ICollection<CupOfCoffee>>(StatusCodes.Status200OK)]
+    [HttpGet("onlyBlack")]
+    [HttpHead("onlyBlack")]
     public async Task<IActionResult> GetOnlyBlackAsync(CancellationToken cancellationToken)
     {
         List<CupOfCoffee> cups = await _dbContext.CupsOfCoffee.Where(cup => cup.HasSugar == false && cup.HasMilk == false).ToListAsync(cancellationToken);
         return Ok(cups);
     }
 
-    /// <response code="200">
-    /// Successfully returns the cup of black coffee.
-    /// </response>
-    /// <response code="404">
-    /// The cup of coffee does not exist or is not black.
-    /// </response>
-    [HttpGet("onlyBlack/{id}", Name = "get-only-if-black")]
-    [HttpHead("onlyBlack/{id}", Name = "head-only-if-black")]
-    [EndpointDescription("Gets a cup of coffee by ID, if the cup is without sugar and milk. Returns 404 otherwise.")]
-    [ProducesResponseType<CupOfCoffee>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("onlyBlack/{id}")]
+    [HttpHead("onlyBlack/{id}")]
     public async Task<IActionResult> GetIfOnlyBlackAsync([Required] long id, CancellationToken cancellationToken)
     {
         CupOfCoffee? cup = await _dbContext.CupsOfCoffee.Where(cup => cup.Id == id && cup.HasSugar == false && cup.HasMilk == false)
@@ -66,19 +50,9 @@ partial class CupOfCoffeesController
         return Ok(cup);
     }
 
-    /// <response code="204">
-    /// All cups of coffee have been created successfully.
-    /// </response>
-    /// <response code="400">
-    /// Invalid batch size.
-    /// </response>
-    [HttpPost("batch", Name = "batchCreateCupsOfCoffee")]
-    [EndpointDescription("Creates cups of coffee in batch.")]
-    [Consumes(typeof(CupOfCoffee), "application/vnd.api+json")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateBatchAsync([FromQuery] [Required] [Description("The batch size.")] int size,
-        [FromBody] [Required] CupOfCoffee template, CancellationToken cancellationToken)
+    [HttpPost("batch")]
+    public async Task<IActionResult> CreateBatchAsync([FromQuery] [Required] int size, [FromBody] [Required] CupOfCoffee template,
+        CancellationToken cancellationToken)
     {
         if (size < 1)
         {
@@ -109,12 +83,7 @@ partial class CupOfCoffeesController
         return NoContent();
     }
 
-    /// <response code="204">
-    /// All cups of coffee have been reset to black.
-    /// </response>
-    [HttpPatch("batch", Name = "batchResetToBlack")]
-    [EndpointDescription("Resets all cups of coffee to black.")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpPatch("batch")]
     public async Task<IActionResult> ResetAllToBlackAsync(CancellationToken cancellationToken)
     {
         // @formatter:keep_existing_linebreaks true
@@ -129,16 +98,7 @@ partial class CupOfCoffeesController
         return NoContent();
     }
 
-    /// <response code="204">
-    /// All cups of coffee have been deleted.
-    /// </response>
-    /// <response code="404">
-    /// No cups of coffee were found.
-    /// </response>
-    [HttpDelete("batch", Name = "deleteAll")]
-    [EndpointDescription("Deletes all cups of coffee. Returns 404 when none found.")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpDelete("batch")]
     public async Task DeleteAsync(CancellationToken cancellationToken)
     {
         int numDeleted = await _dbContext.CupsOfCoffee.ExecuteDeleteAsync(cancellationToken);

@@ -3,10 +3,11 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.MixedControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomActionMethods;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.MixedControllers", GenerateControllerEndpoints = JsonApiEndpoints.None)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomActionMethods",
+    GenerateControllerEndpoints = JsonApiEndpoints.None)]
 public sealed class CoffeeSummary : Identifiable<long>
 {
     [Attr]

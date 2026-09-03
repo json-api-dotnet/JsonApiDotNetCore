@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.MixedControllers;
+namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomActionMethods;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.MixedControllers", GenerateControllerEndpoints = JsonApiEndpoints.GetCollection | JsonApiEndpoints.Delete)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.CustomActionMethods")]
 public sealed class CupOfCoffee : Identifiable<long>
 {
     [Attr]
