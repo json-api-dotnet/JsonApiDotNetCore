@@ -2,8 +2,6 @@ using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
-#pragma warning disable format
-
 namespace JsonApiDotNetCore.Errors;
 
 /// <summary>

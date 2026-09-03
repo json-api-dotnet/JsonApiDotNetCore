@@ -2,8 +2,6 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
-#pragma warning disable format
-
 namespace JsonApiDotNetCore;
 
 internal static class ArgumentGuard
