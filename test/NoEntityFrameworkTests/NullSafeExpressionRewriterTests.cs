@@ -206,7 +206,9 @@ public sealed class NullSafeExpressionRewriterTests
         TestResource lastInDataSource = dataSource.Last();
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source =>
+#pragma warning disable CA1860 // Avoid using 'Enumerable.Any()' extension method
             source.Where(resource => resource.Parent!.Parent!.Children.Any());
+#pragma warning restore CA1860 // Avoid using 'Enumerable.Any()' extension method
 
         var rewriter = new NullSafeExpressionRewriter();
 

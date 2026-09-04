@@ -23,6 +23,16 @@
     <XunitVisualStudioVersion>4.0.*</XunitVisualStudioVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>11.0.*-*</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>11.0.*-*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>11.0.*-*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCoreMySqlVersion>10.0.*</EntityFrameworkCoreMySqlVersion>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <!-- Published dependencies (only update on major version change) -->
     <EntityFrameworkCoreFrozenVersion>10.0.0</EntityFrameworkCoreFrozenVersion>
@@ -30,6 +40,7 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>10.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>10.0.*-*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCoreMySqlVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCoreMySqlVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
@@ -39,6 +50,7 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>9.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>9.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCoreMySqlVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCoreMySqlVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -48,5 +60,6 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCoreMySqlVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCoreMySqlVersion>
   </PropertyGroup>
 </Project>
