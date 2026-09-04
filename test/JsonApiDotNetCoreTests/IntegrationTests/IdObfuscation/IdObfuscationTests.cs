@@ -22,7 +22,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
         testContext.UseController<DebitCardsController>();
         testContext.UseController<OperationsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
     }
 

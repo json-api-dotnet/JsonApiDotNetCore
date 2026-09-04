@@ -28,7 +28,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
 
         testContext.ConfigureServices(services => services.AddSingleton<IResourceDefinition<WorkItem, int>, RemoveExtraFromWorkItemDefinition>());
 
-        var workItemDefinition = (RemoveExtraFromWorkItemDefinition)testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
+        var workItemDefinition = (RemoveExtraFromWorkItemDefinition)testContext.App.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
         workItemDefinition.Reset();
     }
 
@@ -140,7 +140,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
             await dbContext.SaveChangesAsync();
         });
 
-        var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
+        var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.App.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
         workItemDefinition.ExtraSubscribersIdsToRemove.Add(existingWorkItem.Subscribers.ElementAt(2).Id);
 
         var requestBody = new
@@ -248,7 +248,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
             await dbContext.SaveChangesAsync();
         });
 
-        var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
+        var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.App.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
         workItemDefinition.ExtraTagIdsToRemove.Add(existingWorkItem.Tags.ElementAt(2).Id);
 
         var requestBody = new

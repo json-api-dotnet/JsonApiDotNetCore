@@ -29,7 +29,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             services.AddResourceDefinition<AssignIdToRgbColorDefinition>();
         });
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = ClientIdGenerationMode.Required;
     }
 
@@ -226,7 +226,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
     public async Task Can_create_resource_for_missing_client_generated_ID_having_side_effects()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 
         string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;

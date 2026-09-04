@@ -20,7 +20,7 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
 
         testContext.UseController<BlogsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.DefaultPageSize = new PageSize(DefaultPageSize);
         options.MaximumPageSize = null;
         options.MaximumPageNumber = null;

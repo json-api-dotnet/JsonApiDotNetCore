@@ -23,7 +23,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         testContext.UseController<BlogPostsController>();
         testContext.UseController<WebAccountsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = false;
         options.DefaultPageSize = new PageSize(DefaultPageSize);
         options.AllowUnknownQueryStringParameters = true;
@@ -33,7 +33,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Hides_pagination_links_when_unconstrained_page_size()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.DefaultPageSize = null;
 
         const string route = "/blogPosts?foo=bar";
@@ -56,7 +56,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Renders_pagination_links_when_page_size_is_specified_in_query_string_with_no_data()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.DefaultPageSize = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

@@ -30,7 +30,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });
 
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
     }
 
@@ -38,9 +38,9 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
     public async Task Hides_text_in_create_resource_with_side_effects()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
+        var provider = _testContext.App.Services.GetRequiredService<LyricPermissionProvider>();
         provider.CanViewText = false;
 
         List<Lyric> newLyrics = _fakers.Lyric.GenerateList(2);
@@ -113,9 +113,9 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
     public async Task Hides_text_in_update_resource_with_side_effects()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
+        var provider = _testContext.App.Services.GetRequiredService<LyricPermissionProvider>();
         provider.CanViewText = false;
 
         List<Lyric> existingLyrics = _fakers.Lyric.GenerateList(2);

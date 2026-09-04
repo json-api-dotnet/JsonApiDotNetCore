@@ -30,7 +30,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });
 
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
     }
 
@@ -38,7 +38,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
     public async Task Transforms_on_create_resource_with_side_effects()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<RecordCompany> newCompanies = _fakers.RecordCompany.GenerateList(2);
 
@@ -131,7 +131,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
     public async Task Skips_on_create_resource_with_ToOne_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
@@ -190,7 +190,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
     public async Task Transforms_on_update_resource_with_side_effects()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<RecordCompany> existingCompanies = _fakers.RecordCompany.GenerateList(2);
 
@@ -283,7 +283,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
     public async Task Skips_on_update_resource_with_ToOne_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
         RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
@@ -341,7 +341,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
     public async Task Skips_on_update_ToOne_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
         RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();

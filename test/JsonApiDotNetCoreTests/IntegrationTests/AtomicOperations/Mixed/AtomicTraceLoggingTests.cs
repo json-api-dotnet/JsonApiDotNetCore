@@ -35,7 +35,7 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
     public async Task Logs_execution_flow_at_Trace_level_on_operations_request()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using FluentAssertions;
+using Microsoft.AspNetCore.TestHost;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -23,7 +24,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Get, "/NonJsonApi");
 
-        using HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -52,7 +53,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
             }
         };
 
-        using HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -73,7 +74,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi");
 
-        using HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -102,7 +103,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
             }
         };
 
-        using HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -123,7 +124,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Patch, "/NonJsonApi?name=Janice");
 
-        using HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -144,7 +145,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Delete, "/NonJsonApi");
 
-        using HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage httpResponse = await client.SendAsync(request);

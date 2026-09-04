@@ -41,7 +41,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
             });
         });
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
     }
 

@@ -23,7 +23,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         testContext.UseController<ShipmentsController>();
         testContext.UseController<CustomersController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
     }
 

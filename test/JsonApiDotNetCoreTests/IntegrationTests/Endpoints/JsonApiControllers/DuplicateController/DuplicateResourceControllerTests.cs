@@ -17,7 +17,7 @@ public sealed class DuplicateResourceControllerTests : IntegrationTestContext<Te
     public void Fails_at_startup_when_multiple_controllers_exist_for_same_resource_type()
     {
         // Act
-        Action action = () => _ = Factory;
+        Action action = () => _ = App;
 
         // Assert
         InvalidConfigurationException exception = action.Should().ThrowExactly<InvalidConfigurationException>().Which;

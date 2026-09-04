@@ -27,7 +27,7 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         bool expectDefaultValueInDocument)
     {
         // Arrange
-        var options = (JsonApiOptions)Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)App.Services.GetRequiredService<IJsonApiOptions>();
         options.SerializerOptions.DefaultIgnoreCondition = configurationValue;
 
         Calendar calendar = _fakers.Calendar.GenerateOne();

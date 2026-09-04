@@ -29,10 +29,10 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
             services.AddSingleton<ResourceDefinitionHitCounter>();
         });
 
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
         messageBroker.Reset();
 
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
     }
 
@@ -40,8 +40,8 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
     public async Task Does_not_send_message_on_write_error()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         string unknownUserId = Unknown.StringId.For<DomainUser, Guid>();
 
@@ -72,9 +72,9 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
     public async Task Does_not_rollback_on_message_delivery_error()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
         messageBroker.SimulateFailure = true;
 
         DomainUser existingUser = _fakers.DomainUser.GenerateOne();

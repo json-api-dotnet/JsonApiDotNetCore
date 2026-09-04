@@ -27,7 +27,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
 
         testContext.ConfigureServices(services => services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>)));
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = true;
     }
 

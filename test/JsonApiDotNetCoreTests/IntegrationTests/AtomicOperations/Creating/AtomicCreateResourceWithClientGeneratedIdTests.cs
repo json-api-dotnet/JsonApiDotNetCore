@@ -30,7 +30,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
             services.AddSingleton<ResourceDefinitionHitCounter>();
         });
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = ClientIdGenerationMode.Required;
     }
 
@@ -141,7 +141,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
     public async Task Can_create_resource_for_missing_client_generated_ID_having_side_effects()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 
         string? newIsoCode = _fakers.TextLanguage.GenerateOne().IsoCode;
@@ -341,7 +341,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
     public async Task Can_create_resource_with_local_ID()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 
         string newTitle = _fakers.MusicTrack.GenerateOne().Title;

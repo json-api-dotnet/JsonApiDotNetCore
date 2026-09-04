@@ -72,7 +72,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Cannot_create_resource_when_violation_from_custom_ValidationAttribute()
     {
         // Arrange
-        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
         DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         var requestBody = new

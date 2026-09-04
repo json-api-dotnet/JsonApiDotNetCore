@@ -31,7 +31,7 @@ public sealed class ResourceDefinitionSerializationTests
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });
 
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
     }
 
@@ -39,8 +39,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_get_primary_resources()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<Student> students = _fakers.Student.GenerateList(2);
 
@@ -88,8 +88,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_get_primary_resources_with_ToMany_include()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<Scholarship> scholarships = _fakers.Scholarship.GenerateList(2);
         scholarships[0].Participants = _fakers.Student.GenerateList(2);
@@ -159,8 +159,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_get_primary_resource_by_ID()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Student student = _fakers.Student.GenerateOne();
 
@@ -198,8 +198,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_get_secondary_resources()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship scholarship = _fakers.Scholarship.GenerateOne();
         scholarship.Participants = _fakers.Student.GenerateList(2);
@@ -247,8 +247,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_get_secondary_resource()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship scholarship = _fakers.Scholarship.GenerateOne();
         scholarship.PrimaryContact = _fakers.Student.GenerateOne();
@@ -287,8 +287,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_get_secondary_resource_with_ToOne_include()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship scholarship = _fakers.Scholarship.GenerateOne();
         scholarship.PrimaryContact = _fakers.Student.GenerateOne();
@@ -329,8 +329,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Decrypts_on_create_resource()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         string newName = _fakers.Student.GenerateOne().Name;
         string newSocialSecurityNumber = _fakers.Student.GenerateOne().SocialSecurityNumber;
@@ -386,8 +386,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_create_resource_with_included_ToOne_relationship()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Student existingStudent = _fakers.Student.GenerateOne();
 
@@ -454,8 +454,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Decrypts_on_update_resource()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Student existingStudent = _fakers.Student.GenerateOne();
 
@@ -516,8 +516,8 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Encrypts_on_update_resource_with_included_ToMany_relationship()
     {
         // Arrange
-        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var encryptionService = _testContext.App.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
         existingScholarship.Participants = _fakers.Student.GenerateList(3);
@@ -601,7 +601,7 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Skips_on_get_ToOne_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship scholarship = _fakers.Scholarship.GenerateOne();
         scholarship.PrimaryContact = _fakers.Student.GenerateOne();
@@ -630,7 +630,7 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Skips_on_get_ToMany_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship scholarship = _fakers.Scholarship.GenerateOne();
         scholarship.Participants = _fakers.Student.GenerateList(2);
@@ -660,7 +660,7 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Skips_on_update_ToOne_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
         Student existingStudent = _fakers.Student.GenerateOne();
@@ -697,7 +697,7 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Skips_on_set_ToMany_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
         List<Student> existingStudents = _fakers.Student.GenerateList(2);
@@ -743,7 +743,7 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Skips_on_add_to_ToMany_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
         List<Student> existingStudents = _fakers.Student.GenerateList(2);
@@ -789,7 +789,7 @@ public sealed class ResourceDefinitionSerializationTests
     public async Task Skips_on_remove_from_ToMany_relationship()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
         existingScholarship.Participants = _fakers.Student.GenerateList(2);

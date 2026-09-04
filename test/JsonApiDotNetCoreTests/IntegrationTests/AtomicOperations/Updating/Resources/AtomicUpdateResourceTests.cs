@@ -31,7 +31,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             services.AddSingleton<ResourceDefinitionHitCounter>();
         });
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = false;
     }
 
@@ -215,7 +215,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_unknown_attribute()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
@@ -328,7 +328,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_unknown_relationship()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();

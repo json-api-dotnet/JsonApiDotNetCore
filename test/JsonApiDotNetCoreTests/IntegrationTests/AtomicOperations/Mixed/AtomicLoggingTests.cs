@@ -34,10 +34,10 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
     public async Task Logs_unhandled_exception_at_Error_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
-        var transactionFactory = (ThrowingOperationsTransactionFactory)_testContext.Factory.Services.GetRequiredService<IOperationsTransactionFactory>();
+        var transactionFactory = (ThrowingOperationsTransactionFactory)_testContext.App.Services.GetRequiredService<IOperationsTransactionFactory>();
         transactionFactory.ThrowOnOperationStart = true;
 
         var requestBody = new
@@ -85,10 +85,10 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
     public async Task Logs_invalid_request_body_error_at_Information_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
-        var transactionFactory = (ThrowingOperationsTransactionFactory)_testContext.Factory.Services.GetRequiredService<IOperationsTransactionFactory>();
+        var transactionFactory = (ThrowingOperationsTransactionFactory)_testContext.App.Services.GetRequiredService<IOperationsTransactionFactory>();
         transactionFactory.ThrowOnOperationStart = false;
 
         var requestBody = new

@@ -20,7 +20,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         testContext.UseController<WebAccountsController>();
         testContext.UseController<CalendarsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = false;
     }
 

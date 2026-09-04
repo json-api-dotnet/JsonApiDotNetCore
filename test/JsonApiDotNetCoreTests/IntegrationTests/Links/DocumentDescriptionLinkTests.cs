@@ -26,10 +26,10 @@ public sealed class DocumentDescriptionLinkTests : IClassFixture<IntegrationTest
     public async Task Get_primary_resource_by_ID_converts_relative_documentation_link_to_absolute()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = false;
 
-        var provider = (TestDocumentDescriptionLinkProvider)_testContext.Factory.Services.GetRequiredService<IDocumentDescriptionLinkProvider>();
+        var provider = (TestDocumentDescriptionLinkProvider)_testContext.App.Services.GetRequiredService<IDocumentDescriptionLinkProvider>();
         provider.Link = "description/json-schema?version=v1.0";
 
         string route = $"/photos/{Unknown.StringId.For<Photo, Guid>()}";
@@ -48,10 +48,10 @@ public sealed class DocumentDescriptionLinkTests : IClassFixture<IntegrationTest
     public async Task Get_primary_resource_by_ID_converts_absolute_documentation_link_to_relative()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
 
-        var provider = (TestDocumentDescriptionLinkProvider)_testContext.Factory.Services.GetRequiredService<IDocumentDescriptionLinkProvider>();
+        var provider = (TestDocumentDescriptionLinkProvider)_testContext.App.Services.GetRequiredService<IDocumentDescriptionLinkProvider>();
         provider.Link = "http://localhost:80/description/json-schema?version=v1.0";
 
         string route = $"/photos/{Unknown.StringId.For<Photo, Guid>()}";
@@ -70,10 +70,10 @@ public sealed class DocumentDescriptionLinkTests : IClassFixture<IntegrationTest
     public async Task Get_primary_resource_by_ID_cannot_convert_absolute_documentation_link_to_relative()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
 
-        var provider = (TestDocumentDescriptionLinkProvider)_testContext.Factory.Services.GetRequiredService<IDocumentDescriptionLinkProvider>();
+        var provider = (TestDocumentDescriptionLinkProvider)_testContext.App.Services.GetRequiredService<IDocumentDescriptionLinkProvider>();
         provider.Link = "https://docs.api.com/description/json-schema?version=v1.0";
 
         string route = $"/photos/{Unknown.StringId.For<Photo, Guid>()}";

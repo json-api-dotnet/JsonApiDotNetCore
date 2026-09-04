@@ -267,7 +267,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     public async Task Can_use_Queryable_handler_at_resource_endpoint()
     {
         // Arrange
-        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
         DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         List<MusicTrack> musicTracks = _fakers.MusicTrack.GenerateList(3);

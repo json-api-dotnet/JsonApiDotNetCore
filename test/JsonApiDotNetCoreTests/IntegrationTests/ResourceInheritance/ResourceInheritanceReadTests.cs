@@ -39,7 +39,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         testContext.ConfigureServices(services => services.AddResourceDefinition<WheelSortDefinition>());
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
         options.AllowUnknownQueryStringParameters = true;
     }

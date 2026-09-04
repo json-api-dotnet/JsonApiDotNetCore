@@ -23,7 +23,7 @@ public sealed class MaximumOperationsPerRequestTests : IClassFixture<Integration
     public async Task Cannot_process_more_operations_than_maximum()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumOperationsPerRequest = 2;
 
         var requestBody = new
@@ -80,7 +80,7 @@ public sealed class MaximumOperationsPerRequestTests : IClassFixture<Integration
     public async Task Can_process_operations_same_as_maximum()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumOperationsPerRequest = 2;
 
         var requestBody = new
@@ -125,7 +125,7 @@ public sealed class MaximumOperationsPerRequestTests : IClassFixture<Integration
     public async Task Can_process_high_number_of_operations_when_unconstrained()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumOperationsPerRequest = null;
 
         const int elementCount = 100;

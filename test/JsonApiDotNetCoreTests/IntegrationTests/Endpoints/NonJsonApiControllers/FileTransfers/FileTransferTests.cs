@@ -1,5 +1,6 @@
 using System.Net;
 using FluentAssertions;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -18,7 +19,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
 
         testContext.ConfigureServices(services => services.AddSingleton<InMemoryFileStorage>());
 
-        var fileStorage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
+        var fileStorage = _testContext.App.Services.GetRequiredService<InMemoryFileStorage>();
         fileStorage.Files.Clear();
     }
 
@@ -34,7 +35,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
 
         const string route = "/fileTransfers";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.PostAsync(route, content);
@@ -57,7 +58,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
 
         const string route = "/fileTransfers";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.PostAsync(route, content);
@@ -75,12 +76,12 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         // Arrange
         byte[] data = "Hello find"u8.ToArray();
 
-        var storage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
+        var storage = _testContext.App.Services.GetRequiredService<InMemoryFileStorage>();
         storage.Files.TryAdd("demo-existing-file.txt", data);
 
         const string route = "/fileTransfers/find?fileName=demo-existing-file.txt";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.GetAsync(route);
@@ -95,7 +96,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         // Arrange
         const string route = "/fileTransfers/find?fileName=demo-missing-file.txt";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.GetAsync(route);
@@ -110,12 +111,12 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         // Arrange
         byte[] data = "Hello download"u8.ToArray();
 
-        var storage = _testContext.Factory.Services.GetRequiredService<InMemoryFileStorage>();
+        var storage = _testContext.App.Services.GetRequiredService<InMemoryFileStorage>();
         storage.Files.TryAdd("demo-download.txt", data);
 
         const string route = "/fileTransfers?fileName=demo-download.txt";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.GetAsync(route);
@@ -137,7 +138,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         // Arrange
         const string route = "/fileTransfers?fileName=demo-missing-file.txt";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.GetAsync(route);

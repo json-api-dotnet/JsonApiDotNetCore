@@ -36,7 +36,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_in_primary_resources()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -80,7 +80,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_attribute_in_primary_resources()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -115,7 +115,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_relationship_in_primary_resources()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -158,7 +158,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_in_secondary_resources()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         Blog blog = _fakers.Blog.GenerateOne();
@@ -206,7 +206,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_in_primary_resource_by_ID()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -249,7 +249,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_of_ManyToOne_relationship()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -313,7 +313,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_of_OneToMany_relationship()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         WebAccount account = _fakers.WebAccount.GenerateOne();
@@ -374,7 +374,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         Blog blog = _fakers.Blog.GenerateOne();
@@ -437,7 +437,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_of_ManyToMany_relationship()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -489,7 +489,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_attributes_in_multiple_resource_types()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         Blog blog = _fakers.Blog.GenerateOne();
@@ -550,7 +550,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_only_top_level_fields_with_multiple_includes()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         Blog blog = _fakers.Blog.GenerateOne();
@@ -630,7 +630,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_ID()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -666,7 +666,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_empty_fieldset()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();
@@ -798,7 +798,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Fetches_all_scalar_properties_when_fieldset_contains_readonly_attribute()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         Blog blog = _fakers.Blog.GenerateOne();
@@ -834,7 +834,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_select_fields_on_resource_type_multiple_times()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
         BlogPost post = _fakers.BlogPost.GenerateOne();

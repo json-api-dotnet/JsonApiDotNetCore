@@ -55,7 +55,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         testContext.UseController<FilterableResourcesController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = false;
     }
 
