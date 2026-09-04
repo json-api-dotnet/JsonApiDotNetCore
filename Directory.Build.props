@@ -14,6 +14,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- .NET 11 Preview -->
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+
+    <!-- NU1608: Detected package version outside of dependency constraint (not all EF Core providers already offer preview 7 packages) -->
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <!--
       Disabled IDE analyzers for "Use collection expression" because they are dangerous in a subtle way.
       For example, a suggestion for the following code is raised:
