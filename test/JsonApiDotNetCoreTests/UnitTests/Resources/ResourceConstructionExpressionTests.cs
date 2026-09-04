@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Xunit;
 
-namespace UnitTests.Models;
+namespace JsonApiDotNetCoreTests.UnitTests.Resources;
 
 public sealed class ResourceConstructionExpressionTests
 {

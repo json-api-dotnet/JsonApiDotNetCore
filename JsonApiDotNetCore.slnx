@@ -43,7 +43,6 @@
     <Project Path="test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj" />
     <Project Path="test/SourceGeneratorTests/SourceGeneratorTests.csproj" />
     <Project Path="test/TestBuildingBlocks/TestBuildingBlocks.csproj" />
-    <Project Path="test/UnitTests/UnitTests.csproj" />
   </Folder>
   <Project Path="src/Examples/GettingStarted/GettingStarted.csproj" DefaultStartup="true" />
 </Solution>

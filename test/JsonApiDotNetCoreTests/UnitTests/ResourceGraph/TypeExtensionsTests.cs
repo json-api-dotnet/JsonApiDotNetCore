@@ -3,7 +3,7 @@ using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;
 using Xunit;
 
-namespace UnitTests.Internal;
+namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
 
 public sealed class TypeExtensionsTests
 {
@@ -11,7 +11,7 @@ public sealed class TypeExtensionsTests
     public void Implements_Returns_True_If_Type_Implements_Interface()
     {
         // Arrange
-        Type type = typeof(Model);
+        Type type = typeof(TestResource);
 
         // Act
         bool result = type.IsOrImplementsInterface<IIdentifiable>();
@@ -33,7 +33,7 @@ public sealed class TypeExtensionsTests
         result.Should().BeFalse();
     }
 
-    private sealed class Model : IIdentifiable
+    private sealed class TestResource : IIdentifiable
     {
         public string? StringId { get; set; }
         public string? LocalId { get; set; }

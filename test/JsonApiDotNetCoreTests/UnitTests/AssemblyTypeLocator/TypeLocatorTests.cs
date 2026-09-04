@@ -3,7 +3,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using Xunit;
 
-namespace UnitTests.Graph;
+namespace JsonApiDotNetCoreTests.UnitTests.AssemblyTypeLocator;
 
 public sealed class TypeLocatorTests
 {
@@ -22,7 +22,7 @@ public sealed class TypeLocatorTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Value.implementationType.Should().Be<Implementation>();
+        result.Value.implementationType.Should().Be<InterfaceImplementation>();
         result.Value.serviceInterface.Should().Be<IGenericInterface<int>>();
     }
 
@@ -30,7 +30,7 @@ public sealed class TypeLocatorTests
     public void GetIdType_Correctly_Identifies_JsonApiResource()
     {
         // Arrange
-        Type type = typeof(Model);
+        Type type = typeof(TestResource);
 
         var typeLocator = new TypeLocator();
 
@@ -60,7 +60,7 @@ public sealed class TypeLocatorTests
     public void ResolveResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
     {
         // Arrange
-        Type resourceClrType = typeof(Model);
+        Type resourceClrType = typeof(TestResource);
 
         var typeLocator = new TypeLocator();
 

@@ -2,7 +2,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
-namespace UnitTests.Models;
+namespace JsonApiDotNetCoreTests.UnitTests.Resources;
 
 public sealed class AttributesEqualsTests
 {
