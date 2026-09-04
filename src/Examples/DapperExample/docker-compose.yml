@@ -101,7 +101,7 @@ services:
       start_period: 2s
 
   sqlserver-db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2025-latest
     pull_policy: always
     container_name: dapper-example-sqlserver-db
     environment:
