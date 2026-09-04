@@ -141,7 +141,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         });
     }
 
+#if NET11_0_OR_GREATER
+    [Fact(Skip = "Blocked by https://github.com/dotnet/efcore/issues/38917")]
+#else
     [Fact]
+#endif
     public async Task Can_replace_OneToOne_relationship_from_principal_side()
     {
         // Arrange
