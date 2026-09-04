@@ -43,7 +43,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
             services.AddSingleton<TimeProvider>(new FrozenTimeProvider(CurrentTime, TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")));
         });
 
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
 #pragma warning disable CS0618 // Type or member is obsolete
         options.IncludeExtensions(ServerTimeMediaTypeExtension.ServerTime, ServerTimeMediaTypeExtension.RelaxedServerTime);
 #pragma warning restore CS0618 // Type or member is obsolete

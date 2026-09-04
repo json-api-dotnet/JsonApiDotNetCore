@@ -14,8 +14,8 @@ public sealed partial class FireForgetTests
     public async Task Create_group_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         string newGroupName = _fakers.DomainGroup.GenerateOne().Name;
 
@@ -62,8 +62,8 @@ public sealed partial class FireForgetTests
     public async Task Create_group_with_users_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainUser existingUserWithoutGroup = _fakers.DomainUser.GenerateOne();
 
@@ -150,8 +150,8 @@ public sealed partial class FireForgetTests
     public async Task Update_group_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -205,8 +205,8 @@ public sealed partial class FireForgetTests
     public async Task Update_group_with_users_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -298,8 +298,8 @@ public sealed partial class FireForgetTests
     public async Task Delete_group_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -335,8 +335,8 @@ public sealed partial class FireForgetTests
     public async Task Delete_group_with_users_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
         existingGroup.Users = _fakers.DomainUser.GenerateSet(1);
@@ -377,8 +377,8 @@ public sealed partial class FireForgetTests
     public async Task Replace_users_in_group_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -459,8 +459,8 @@ public sealed partial class FireForgetTests
     public async Task Add_users_to_group_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -528,8 +528,8 @@ public sealed partial class FireForgetTests
     public async Task Remove_users_from_group_sends_messages()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.App.Services.GetRequiredService<MessageBroker>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 

@@ -55,19 +55,19 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             services.AddResourceDefinition<ResourceTypeCapturingDefinition<VehicleManufacturer, long>>();
         });
 
-        var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
+        var bikeStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
         bikeStore.Reset();
 
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
         tandemStore.Reset();
 
-        var carStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Car, long>>();
+        var carStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Car, long>>();
         carStore.Reset();
 
-        var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
+        var carbonWheelStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
         carbonWheelStore.Reset();
 
-        var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
+        var manufacturerStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
         manufacturerStore.Reset();
     }
 
@@ -111,7 +111,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_create_concrete_base_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
-        var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
+        var bikeStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
         ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
@@ -241,7 +241,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_create_concrete_derived_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
-        var carStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Car, long>>();
+        var carStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Car, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
         CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
@@ -388,7 +388,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_create_concrete_derived_resource_at_concrete_base_endpoint_with_relationships_and_includes()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
         ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
@@ -626,7 +626,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_create_resource_with_concrete_base_ToOne_relationship_type_stored_as_derived_type_at_resource_endpoint()
     {
         // Arrange
-        var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
+        var carbonWheelStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
@@ -688,7 +688,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_create_resource_with_concrete_base_ToMany_relationship_type_stored_as_derived_type_at_resource_endpoint()
     {
         // Arrange
-        var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
+        var manufacturerStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
@@ -985,7 +985,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_update_concrete_base_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
-        var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
+        var bikeStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
         ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
@@ -1114,7 +1114,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_update_concrete_base_resource_stored_as_concrete_derived_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
         ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
@@ -1342,7 +1342,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_update_resource_with_concrete_base_ToOne_relationship_type_stored_as_derived_type_at_resource_endpoint()
     {
         // Arrange
-        var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
+        var carbonWheelStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
         CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
@@ -1403,7 +1403,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_update_resource_with_concrete_base_ToMany_relationship_type_stored_as_derived_type_at_resource_endpoint()
     {
         // Arrange
-        var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
+        var manufacturerStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
@@ -1680,7 +1680,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_delete_resource_stored_as_concrete_derived_at_abstract_endpoint()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
@@ -1744,7 +1744,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_set_abstract_resource_at_abstract_ToOne_relationship_endpoint()
     {
         // Arrange
-        var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
+        var carbonWheelStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
         CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
@@ -1795,7 +1795,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_set_abstract_resources_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
@@ -1849,7 +1849,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_set_concrete_base_resource_stored_as_derived_at_abstract_ToOne_relationship_endpoint()
     {
         // Arrange
-        var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
+        var carbonWheelStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
         CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
@@ -1900,7 +1900,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_set_concrete_base_resources_stored_as_derived_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
+        var manufacturerStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
@@ -2116,7 +2116,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_add_abstract_resources_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
         existingTandem.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
@@ -2173,7 +2173,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_add_concrete_derived_resources_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
         existingTandem.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
@@ -2230,7 +2230,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_add_concrete_base_resources_stored_as_derived_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
+        var manufacturerStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
         existingManufacturer.Vehicles = _fakers.Car.GenerateSet<Car, Vehicle>(1);
@@ -2415,7 +2415,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_remove_abstract_resources_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
         existingTandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
@@ -2467,7 +2467,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_remove_concrete_derived_resources_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
+        var tandemStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
         Tandem existingTandem = _fakers.Tandem.GenerateOne();
         existingTandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
@@ -2519,7 +2519,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Can_remove_concrete_base_resources_stored_as_derived_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
+        var manufacturerStore = _testContext.App.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
         VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
         existingManufacturer.Vehicles = _fakers.Tandem.GenerateSet<Tandem, Vehicle>(1).Concat(_fakers.Car.GenerateSet<Car, Vehicle>(1)).ToHashSet();

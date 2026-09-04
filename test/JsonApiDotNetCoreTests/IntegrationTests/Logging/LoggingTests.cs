@@ -36,7 +36,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_request_body_at_Trace_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         AuditEntry newEntry = _fakers.AuditEntry.GenerateOne();
@@ -73,7 +73,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_response_body_at_Trace_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         // Arrange
@@ -95,7 +95,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_invalid_request_body_error_at_Information_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         // Arrange
@@ -117,7 +117,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_method_parameters_of_abstract_resource_type_at_Trace_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         var existingBowl = new FruitBowl();
@@ -228,7 +228,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_method_parameters_of_concrete_resource_type_at_Trace_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         var existingBowl = new FruitBowl();
@@ -345,7 +345,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_query_layer_and_expression_at_Debug_level()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         var bowl = new FruitBowl();

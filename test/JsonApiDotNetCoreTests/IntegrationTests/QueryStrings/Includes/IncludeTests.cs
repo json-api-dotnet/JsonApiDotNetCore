@@ -23,7 +23,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         testContext.UseController<WebAccountsController>();
         testContext.UseController<CalendarsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = null;
     }
 
@@ -1068,7 +1068,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_at_configured_maximum_inclusion_depth()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = 1;
 
         Blog blog = _fakers.Blog.GenerateOne();
@@ -1092,7 +1092,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_exceed_configured_maximum_inclusion_depth()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = 1;
 
         var parameterValue = new MarkedText("^posts.comments", '^');

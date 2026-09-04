@@ -26,7 +26,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         testContext.UseController<UserAccountsController>();
         testContext.UseController<RgbColorsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = false;
         options.AllowUnknownFieldsInRequestBody = false;
     }
@@ -295,7 +295,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_create_resource_with_unknown_attribute()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         WorkItem newWorkItem = _fakers.WorkItem.GenerateOne();
@@ -382,7 +382,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_create_resource_with_unknown_relationship()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         var requestBody = new

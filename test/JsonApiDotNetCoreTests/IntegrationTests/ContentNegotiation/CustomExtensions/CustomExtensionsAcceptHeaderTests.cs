@@ -29,7 +29,7 @@ public sealed class CustomExtensionsAcceptHeaderTests : IClassFixture<Integratio
             services.AddScoped<RequestDocumentStore>();
         });
 
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
 #pragma warning disable CS0618 // Type or member is obsolete
         options.IncludeExtensions(ServerTimeMediaTypeExtension.ServerTime, ServerTimeMediaTypeExtension.RelaxedServerTime);
 #pragma warning restore CS0618 // Type or member is obsolete

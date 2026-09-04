@@ -32,7 +32,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
 
         testContext.ConfigureServices(services => services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>)));
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeExceptionStackTraceInErrors = false;
         options.IncludeJsonApiVersion = false;
         options.IncludeTotalResourceCount = true;
@@ -824,7 +824,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Includes_version_at_resource_endpoint()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeJsonApiVersion = true;
 
         MeetingAttendee attendee = _fakers.MeetingAttendee.GenerateOne();
@@ -860,7 +860,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Includes_version_on_error_at_resource_endpoint()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeJsonApiVersion = true;
 
         string attendeeId = Unknown.StringId.For<MeetingAttendee, Guid>();

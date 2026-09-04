@@ -3,7 +3,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Xunit;
 
-namespace UnitTests.Internal;
+namespace JsonApiDotNetCoreTests.UnitTests.Middleware;
 
 public sealed class ErrorObjectTests
 {

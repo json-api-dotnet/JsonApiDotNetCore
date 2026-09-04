@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
@@ -25,7 +26,7 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
             services.TryAddEnumerable(ServiceDescriptor.Transient<IStartupFilter, MinimalApiStartupFilter>());
         });
 
-        var emailsProvider = _testContext.Factory.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
+        var emailsProvider = _testContext.App.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
         emailsProvider.SentEmails.Clear();
     }
 
@@ -33,13 +34,13 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_send_email()
     {
         // Arrange
-        var emailsProvider = _testContext.Factory.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
+        var emailsProvider = _testContext.App.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
 
         Email newEmail = _fakers.Email.GenerateOne();
 
         const string route = "/emails/send";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.PostAsJsonAsync(route, newEmail);
@@ -60,7 +61,7 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
 
         const string route = "/emails/send";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.PostAsJsonAsync(route, newEmail);
@@ -88,8 +89,8 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_get_sent_emails()
     {
         // Arrange
-        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
-        var emailsProvider = _testContext.Factory.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
+        var emailsProvider = _testContext.App.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();
 
         DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
@@ -100,7 +101,7 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
         string sinceUtc = Uri.EscapeDataString(utcNow.AddHours(-2).ToString("O"));
         string route = $"/emails/sent-since?sinceUtc={sinceUtc}";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.GetAsync(route);
@@ -121,12 +122,12 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Cannot_get_sent_emails_in_future()
     {
         // Arrange
-        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
 
         string sinceUtc = Uri.EscapeDataString(timeProvider.GetUtcNow().AddHours(1).ToString("O"));
         string route = $"/emails/sent-since?sinceUtc={sinceUtc}";
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.GetAsync(route);
@@ -151,14 +152,14 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_try_get_sent_emails_in_future()
     {
         // Arrange
-        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
 
         string sinceUtc = Uri.EscapeDataString(timeProvider.GetUtcNow().AddHours(1).ToString("O"));
         string route = $"/emails/sent-since?sinceUtc={sinceUtc}";
 
         using var request = new HttpRequestMessage(HttpMethod.Head, route);
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
         using HttpResponseMessage response = await httpClient.SendAsync(request);

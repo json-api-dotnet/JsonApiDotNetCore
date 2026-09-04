@@ -32,7 +32,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
             services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();
         });
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = false;
     }
 
@@ -132,7 +132,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_unknown_attribute()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
@@ -232,7 +232,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_unknown_relationship()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();

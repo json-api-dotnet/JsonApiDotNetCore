@@ -15,7 +15,7 @@ public sealed partial class OutboxTests
     public async Task Create_group_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         string newGroupName = _fakers.DomainGroup.GenerateOne().Name;
 
@@ -71,7 +71,7 @@ public sealed partial class OutboxTests
     public async Task Create_group_with_users_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainUser existingUserWithoutGroup = _fakers.DomainUser.GenerateOne();
 
@@ -163,7 +163,7 @@ public sealed partial class OutboxTests
     public async Task Update_group_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -222,7 +222,7 @@ public sealed partial class OutboxTests
     public async Task Update_group_with_users_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -319,7 +319,7 @@ public sealed partial class OutboxTests
     public async Task Delete_group_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -360,7 +360,7 @@ public sealed partial class OutboxTests
     public async Task Delete_group_with_users_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
         existingGroup.Users = _fakers.DomainUser.GenerateSet(1);
@@ -406,7 +406,7 @@ public sealed partial class OutboxTests
     public async Task Replace_users_in_group_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -492,7 +492,7 @@ public sealed partial class OutboxTests
     public async Task Add_users_to_group_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
@@ -565,7 +565,7 @@ public sealed partial class OutboxTests
     public async Task Remove_users_from_group_writes_to_outbox()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 

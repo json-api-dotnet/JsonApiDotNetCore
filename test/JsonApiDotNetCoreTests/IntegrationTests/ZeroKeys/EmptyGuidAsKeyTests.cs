@@ -22,7 +22,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         testContext.UseController<GamesController>();
         testContext.UseController<MapsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
     }
 

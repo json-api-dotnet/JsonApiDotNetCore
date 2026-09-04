@@ -32,7 +32,7 @@ public sealed class ApiControllerAnnotationLogTests
         _loggerProvider.Clear();
 
         // Act
-        _ = Factory;
+        _ = App;
 
         // Assert
         IReadOnlyList<string> logLines = _loggerProvider.GetLines();

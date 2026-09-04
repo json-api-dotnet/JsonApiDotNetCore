@@ -33,7 +33,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
             services.AddSingleton<TimeProvider>(new FrozenTimeProvider(CurrentTime));
         });
 
-        var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = (FrozenTimeProvider)testContext.App.Services.GetRequiredService<TimeProvider>();
         timeProvider.Reset();
     }
 

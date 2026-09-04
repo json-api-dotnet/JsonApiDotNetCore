@@ -28,7 +28,7 @@ public sealed class OverrideTotalResourceCountTests : IClassFixture<IntegrationT
 
         testContext.ConfigureServices(services => services.AddResourceService<CountDisabledSupportTicketService>());
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = true;
     }
 

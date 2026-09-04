@@ -42,7 +42,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_for_custom_exception()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         var consumerArticle = new ConsumerArticle
@@ -90,7 +90,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_on_deserialization_failure()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         const string requestBody = """{ "data": { "type": "" } }""";
@@ -120,7 +120,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_on_serialization_failure()
     {
         // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        var loggerProvider = _testContext.App.Services.GetRequiredService<CapturingLoggerProvider>();
         loggerProvider.Clear();
 
         var throwingArticle = new ThrowingArticle();

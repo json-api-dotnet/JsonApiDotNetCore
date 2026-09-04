@@ -23,7 +23,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     public async Task Cannot_use_unknown_query_string_parameter()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownQueryStringParameters = false;
 
         const string route = "/calendars?foo=bar";
@@ -51,7 +51,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     public async Task Can_use_unknown_query_string_parameter()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownQueryStringParameters = true;
 
         const string route = "/calendars?foo=bar";
@@ -69,7 +69,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     public async Task Can_use_empty_query_string_parameter_name(string parameterValue)
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownQueryStringParameters = false;
 
         string route = $"calendars?={parameterValue}";
@@ -89,7 +89,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     public async Task Cannot_use_empty_query_string_parameter_value(string parameterName)
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownQueryStringParameters = false;
 
         string route = $"calendars?{parameterName}=";

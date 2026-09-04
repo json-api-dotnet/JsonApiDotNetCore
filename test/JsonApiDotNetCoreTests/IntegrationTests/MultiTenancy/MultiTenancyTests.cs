@@ -34,7 +34,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
             services.AddScoped<ITenantProvider, RouteTenantProvider>();
         });
 
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
         options.IncludeTotalResourceCount = true;
     }

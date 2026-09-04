@@ -45,7 +45,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_filter_comparison_on_relative_time(string filterValue, ComparisonOperator comparisonOperator, string matchingRowsExpected)
     {
         // Arrange
-        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
         DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         List<Reminder> reminders = _fakers.Reminder.GenerateList(7);
@@ -200,7 +200,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_filter_comparison_on_relative_time_in_nested_expression()
     {
         // Arrange
-        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
         DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         List<Appointment> appointments = _fakers.Appointment.GenerateList(2);

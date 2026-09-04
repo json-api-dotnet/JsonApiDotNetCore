@@ -16,7 +16,7 @@ public sealed class UnknownResourceControllerTests : IntegrationTestContext<Test
     public void Fails_at_startup_when_using_controller_for_resource_type_that_is_not_registered_in_resource_graph()
     {
         // Act
-        Action action = () => _ = Factory;
+        Action action = () => _ = App;
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"Controller '{typeof(UnknownResourcesController)}' " +

@@ -27,10 +27,10 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         testContext.ConfigureServices(services => services.AddSingleton<TimeProvider>(new FrozenTimeProvider(CurrentTime)));
 
-        var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = (FrozenTimeProvider)testContext.App.Services.GetRequiredService<TimeProvider>();
         timeProvider.Reset();
 
-        _fakers = new InjectionFakers(testContext.Factory.Services);
+        _fakers = new InjectionFakers(testContext.App.Services);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_filter_resources_by_ID()
     {
         // Arrange
-        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = (FrozenTimeProvider)_testContext.App.Services.GetRequiredService<TimeProvider>();
         timeProvider.SetUtcNow(OfficeIsOpenTime);
 
         List<PostOffice> postOffices = _fakers.PostOffice.GenerateList(2);
@@ -94,7 +94,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_secondary_resource_with_fieldset()
     {
         // Arrange
-        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = (FrozenTimeProvider)_testContext.App.Services.GetRequiredService<TimeProvider>();
         timeProvider.SetUtcNow(OfficeIsOpenTime);
 
         GiftCertificate certificate = _fakers.GiftCertificate.GenerateOne();
@@ -124,7 +124,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_create_resource_with_ToOne_relationship_and_include()
     {
         // Arrange
-        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = (FrozenTimeProvider)_testContext.App.Services.GetRequiredService<TimeProvider>();
         timeProvider.SetUtcNow(OfficeIsClosedTime);
 
         PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
@@ -206,7 +206,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_update_resource_with_ToMany_relationship()
     {
         // Arrange
-        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        var timeProvider = (FrozenTimeProvider)_testContext.App.Services.GetRequiredService<TimeProvider>();
         timeProvider.SetUtcNow(OfficeIsClosedTime);
 
         PostOffice existingOffice = _fakers.PostOffice.GenerateOne();

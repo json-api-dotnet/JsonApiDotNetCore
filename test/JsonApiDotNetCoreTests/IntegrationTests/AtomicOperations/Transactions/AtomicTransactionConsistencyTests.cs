@@ -172,7 +172,7 @@ public sealed class AtomicTransactionConsistencyTests
 
     private async Task DeleteExtraDatabaseAsync()
     {
-        await using AsyncServiceScope scope = _testContext.Factory.Services.CreateAsyncScope();
+        await using AsyncServiceScope scope = _testContext.App.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ExtraDbContext>();
 
         await dbContext.Database.EnsureDeletedAsync();

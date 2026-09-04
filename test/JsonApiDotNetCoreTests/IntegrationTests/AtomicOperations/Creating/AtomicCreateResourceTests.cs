@@ -26,7 +26,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         testContext.UseController<MusicTracksController>();
         testContext.UseController<PlaylistsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = false;
     }
 
@@ -268,7 +268,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_unknown_attribute()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         string newName = _fakers.Playlist.GenerateOne().Name;
@@ -373,7 +373,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_unknown_relationship()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
         string newLyricText = _fakers.Lyric.GenerateOne().Text;

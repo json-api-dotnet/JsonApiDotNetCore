@@ -29,11 +29,11 @@ public sealed class DisablePaginationOnRelationshipTests : IClassFixture<Integra
             services.AddSingleton<PaginationToggle>();
         });
 
-        var paginationToggle = testContext.Factory.Services.GetRequiredService<PaginationToggle>();
+        var paginationToggle = testContext.App.Services.GetRequiredService<PaginationToggle>();
         paginationToggle.IsEnabled = false;
         paginationToggle.IsCalled = false;
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.DefaultPageSize = new PageSize(5);
         options.UseRelativeLinks = true;
         options.IncludeTotalResourceCount = true;
@@ -188,7 +188,7 @@ public sealed class DisablePaginationOnRelationshipTests : IClassFixture<Integra
     public async Task Ignores_pagination_from_resource_definition()
     {
         // Arrange
-        var paginationToggle = _testContext.Factory.Services.GetRequiredService<PaginationToggle>();
+        var paginationToggle = _testContext.App.Services.GetRequiredService<PaginationToggle>();
         paginationToggle.IsEnabled = true;
 
         Appointment appointment = _fakers.Appointment.GenerateOne();

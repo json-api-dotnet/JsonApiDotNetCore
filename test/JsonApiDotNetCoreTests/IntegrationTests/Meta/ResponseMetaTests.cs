@@ -21,7 +21,7 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
 
         testContext.ConfigureServices(services => services.AddSingleton<IResponseMeta, SupportResponseMeta>());
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = false;
     }
 

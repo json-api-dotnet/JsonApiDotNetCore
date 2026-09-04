@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Xunit;
 
-namespace UnitTests.Graph;
+namespace JsonApiDotNetCoreTests.UnitTests.Configuration;
 
 public sealed class ResourceDescriptorAssemblyCacheTests
 {
@@ -11,7 +11,7 @@ public sealed class ResourceDescriptorAssemblyCacheTests
     public void GetResourceDescriptorsPerAssembly_Locates_Identifiable_Resource()
     {
         // Arrange
-        Type resourceClrType = typeof(Model);
+        Type resourceClrType = typeof(TestResource);
 
         var assemblyCache = new ResourceDescriptorAssemblyCache();
         assemblyCache.RegisterAssembly(resourceClrType.Assembly);
@@ -28,7 +28,7 @@ public sealed class ResourceDescriptorAssemblyCacheTests
     public void GetResourceDescriptorsPerAssembly_Only_Contains_IIdentifiable_Types()
     {
         // Arrange
-        Type resourceClrType = typeof(Model);
+        Type resourceClrType = typeof(TestResource);
 
         var assemblyCache = new ResourceDescriptorAssemblyCache();
         assemblyCache.RegisterAssembly(resourceClrType.Assembly);
@@ -40,4 +40,6 @@ public sealed class ResourceDescriptorAssemblyCacheTests
         descriptors.Should().NotBeEmpty();
         descriptors.Select(descriptor => descriptor.ResourceClrType).Should().AllBeAssignableTo<IIdentifiable>();
     }
+
+    private sealed class TestResource : Identifiable<long>;
 }

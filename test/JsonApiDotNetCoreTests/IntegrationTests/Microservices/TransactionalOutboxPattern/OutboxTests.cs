@@ -31,7 +31,7 @@ public sealed partial class OutboxTests : IClassFixture<IntegrationTestContext<T
             services.AddSingleton<ResourceDefinitionHitCounter>();
         });
 
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
     }
 
@@ -39,7 +39,7 @@ public sealed partial class OutboxTests : IClassFixture<IntegrationTestContext<T
     public async Task Does_not_add_to_outbox_on_write_error()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 

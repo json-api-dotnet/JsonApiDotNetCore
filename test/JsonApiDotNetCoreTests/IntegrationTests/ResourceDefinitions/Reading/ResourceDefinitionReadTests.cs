@@ -33,13 +33,13 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             services.AddSingleton<ResourceDefinitionHitCounter>();
         });
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = true;
 
-        var settingsProvider = (TestClientSettingsProvider)testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.ResetToDefaults();
 
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
     }
 
@@ -47,7 +47,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Has_total_when_pagination_disabled_at_primary_endpoint()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Constellation constellation = _fakers.Constellation.GenerateOne();
 
@@ -84,9 +84,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Include_from_resource_definition_is_blocked()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.BlockIncludePlanetMoons();
 
         Planet planet = _fakers.Planet.GenerateOne();
@@ -127,9 +127,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Include_from_resource_definition_is_added()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.AutoIncludeStarGivingLightToMoon();
 
         Moon moon = _fakers.Moon.GenerateOne();
@@ -185,9 +185,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Include_from_included_resource_definition_is_added()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.AutoIncludeStarGivingLightToMoon();
 
         Planet planet = _fakers.Planet.GenerateOne();
@@ -247,9 +247,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Filter_from_resource_definition_is_applied()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
         List<Planet> planets = _fakers.Planet.GenerateList(4);
@@ -294,9 +294,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Filter_from_resource_definition_and_query_string_are_applied()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
         List<Planet> planets = _fakers.Planet.GenerateList(4);
@@ -347,9 +347,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Filter_from_resource_definition_is_applied_at_secondary_endpoint()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
         Star star = _fakers.Star.GenerateOne();
@@ -398,9 +398,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Filter_from_resource_definition_is_applied_at_relationship_endpoint()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
         Star star = _fakers.Star.GenerateOne();
@@ -447,9 +447,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task No_total_when_resource_definition_has_filter_on_inverse_ManyToOne_at_secondary_endpoint()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HideVeryLargeStars();
 
         Star star = _fakers.Star.GenerateOne();
@@ -493,9 +493,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Has_total_when_resource_definition_has_filter_on_inverse_ManyToMany_at_secondary_endpoint()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HideConstellationsVisibleDuringWinter();
 
         Constellation constellation = _fakers.Constellation.GenerateOne();
@@ -543,9 +543,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task No_total_when_resource_definition_has_filter_on_inverse_ManyToOne_at_relationship_endpoint()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HideVeryLargeStars();
 
         Star star = _fakers.Star.GenerateOne();
@@ -588,9 +588,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Has_total_when_resource_definition_has_filter_on_inverse_ManyToMany_at_relationship_endpoint()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HideConstellationsVisibleDuringWinter();
 
         Constellation constellation = _fakers.Constellation.GenerateOne();
@@ -639,7 +639,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Sort_from_resource_definition_is_applied()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<Star> stars = _fakers.Star.GenerateList(3);
 
@@ -690,7 +690,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Sort_from_query_string_is_applied()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<Star> stars = _fakers.Star.GenerateList(3);
 
@@ -741,7 +741,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Page_size_from_resource_definition_is_applied()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<Star> stars = _fakers.Star.GenerateList(10);
 
@@ -782,7 +782,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Attribute_inclusion_from_resource_definition_is_applied_for_omitted_query_string()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Star star = _fakers.Star.GenerateOne();
 
@@ -822,7 +822,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Attribute_inclusion_from_resource_definition_is_applied_for_fields_query_string()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Star star = _fakers.Star.GenerateOne();
 
@@ -863,7 +863,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Attribute_exclusion_from_resource_definition_is_applied_for_omitted_query_string()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Star star = _fakers.Star.GenerateOne();
 
@@ -903,7 +903,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Attribute_exclusion_from_resource_definition_is_applied_for_fields_query_string()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Star star = _fakers.Star.GenerateOne();
 
@@ -943,7 +943,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Queryable_parameter_handler_from_resource_definition_is_applied()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<Moon> moons = _fakers.Moon.GenerateList(2);
 
@@ -989,7 +989,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Queryable_parameter_handler_from_resource_definition_and_query_string_filter_are_applied()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         List<Moon> moons = _fakers.Moon.GenerateList(4);
 
@@ -1045,7 +1045,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     public async Task Queryable_parameter_handler_from_resource_definition_is_not_applied_on_secondary_request()
     {
         // Arrange
-        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         Planet planet = _fakers.Planet.GenerateOne();
         planet.Moons = _fakers.Moon.GenerateSet(1);

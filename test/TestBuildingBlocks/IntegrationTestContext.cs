@@ -38,8 +38,6 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
     private Action<IServiceCollection>? _postConfigureServices;
     private bool _throttleAcquired;
 
-    private WebApplication App => _lazyApp.Value;
-
     protected override JsonSerializerOptions SerializerOptions
     {
         get
@@ -49,14 +47,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         }
     }
 
-    public FactoryBridge Factory
-    {
-        get
-        {
-            field ??= new FactoryBridge(App);
-            return field;
-        }
-    }
+    public WebApplication App => _lazyApp.Value;
 
     public IntegrationTestContext()
     {
@@ -71,7 +62,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
 
     protected override HttpClient CreateClient()
     {
-        return Factory.CreateClient();
+        return App.GetTestClient();
     }
 
     private WebApplication BuildApp()

@@ -22,7 +22,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         testContext.UseController<MapsController>();
         testContext.UseController<PlayersController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
     }
 

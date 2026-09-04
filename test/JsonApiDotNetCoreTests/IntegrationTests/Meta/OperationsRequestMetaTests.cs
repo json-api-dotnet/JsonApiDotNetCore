@@ -41,7 +41,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_update_resource_operation_with_ToOne_relationship()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -128,7 +128,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_update_resource_operation_with_ToMany_relationship()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -227,7 +227,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_add_resource_operation_with_ToOne_relationship()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -311,7 +311,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_add_resource_operation_with_ToMany_relationship()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -407,7 +407,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_update_ToOne_relationship_operation()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -472,7 +472,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_update_ToMany_relationship_operation()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -549,7 +549,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_add_to_ToMany_relationship_operation()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -626,7 +626,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_remove_from_ToMany_relationship_operation()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();
@@ -701,7 +701,7 @@ public sealed class OperationsRequestMetaTests : IClassFixture<IntegrationTestCo
     public async Task Accepts_meta_in_remove_resource_operation()
     {
         // Arrange
-        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+        var store = _testContext.App.Services.GetRequiredService<RequestDocumentStore>();
 
         Dictionary<string, object?> documentMeta = _fakers.DocumentMeta.GenerateOne();
         Dictionary<string, object?> operationMeta = _fakers.OperationMeta.GenerateOne();

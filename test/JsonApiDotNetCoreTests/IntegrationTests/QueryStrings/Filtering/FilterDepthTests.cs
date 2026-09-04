@@ -23,7 +23,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         testContext.UseController<BlogsController>();
         testContext.UseController<BlogPostsController>();
 
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = false;
     }
 
@@ -448,7 +448,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
     public async Task Can_filter_in_same_scope_multiple_times_using_legacy_notation()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = true;
 
         List<BlogPost> posts = _fakers.BlogPost.GenerateList(3);
