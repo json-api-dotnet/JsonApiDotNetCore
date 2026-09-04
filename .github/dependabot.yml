@@ -4,6 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "friday"
     pull-request-branch-name:
       separator: "-"
   - package-ecosystem: nuget
