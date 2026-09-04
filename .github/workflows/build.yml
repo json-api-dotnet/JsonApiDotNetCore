@@ -23,6 +23,7 @@ concurrency:
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  HOMEBREW_NO_REQUIRE_TAP_TRUST: 1 # https://github.com/ikalnytskyi/action-setup-postgres/issues/65
   SOLUTION_FILE: JsonApiDotNetCore.slnx
 
 jobs:
@@ -39,16 +40,11 @@ jobs:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup PostgreSQL
-      uses: ikalnytskyi/action-setup-postgres@v8
+      uses: ikalnytskyi/action-setup-postgres@0f1fdf59c857aabfa61ab1a2619e9af34de678d3 # No release > v8 has been published yet
       with:
         username: postgres
         password: postgres
-    - name: Configure PostgreSQL
-      shell: bash
-      run: |
-        PGDATA="$RUNNER_TEMP/pgdata"
-        echo "max_connections = 500" >> "$PGDATA/postgresql.conf"
-        pg_ctl restart --pgdata="$PGDATA" --wait
+        max-connections: 500
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
