@@ -1,0 +1,165 @@
+name: dapper-example
+
+# This file starts PostgreSQL, MySQL, and SQL Server databases in docker containers, along with admin tools.
+#
+# Usage:
+#   docker compose up --detach --wait
+#
+# Admin tools:
+#   - pgAdmin (PostgreSQL): http://localhost:5050 (auto-logs in and connects to postgres-db)
+#   - phpMyAdmin (MySQL):   http://localhost:8081 (auto-logs in and connects to mysql-db)
+#   - DbGate (SQL Server):  http://localhost:3000 (auto-logs in and connects to sqlserver-db)
+#
+# To stop:
+#   docker compose down
+#
+# To stop and remove persistent data (reset):
+#   docker compose down --volumes
+
+services:
+  postgres-db:
+    image: postgres:latest
+    pull_policy: always
+    container_name: dapper-example-postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    command: -N 500
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    pull_policy: always
+    container_name: dapper-example-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_DISABLE_POSTFIX: 'true'
+      PGADMIN_REPLACE_SERVERS_ON_STARTUP: 'True'
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres-db
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+    configs:
+      - source: pgadmin-servers
+        target: /pgadmin4/servers.json
+
+  mysql-db:
+    image: mysql:latest
+    pull_policy: always
+    container_name: dapper-example-mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: DapperExample
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u mysql -pmysql || exit 1"]
+      interval: 1s
+      timeout: 3s
+      retries: 25
+      start_period: 10s
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    pull_policy: always
+    container_name: dapper-example-phpmyadmin
+    environment:
+      PMA_HOST: mysql-db
+      PMA_USER: mysql
+      PMA_PASSWORD: mysql
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql-db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "http://localhost:80/"]
+      interval: 1s
+      timeout: 3s
+      retries: 10
+      start_period: 2s
+
+  sqlserver-db:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    pull_policy: always
+    container_name: dapper-example-sqlserver-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Passw0rd!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\" -b -o /dev/null"]
+      interval: 1s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  dbgate:
+    image: dbgate/dbgate:latest
+    pull_policy: always
+    container_name: dapper-example-dbgate
+    environment:
+      CONNECTIONS: sqlserver
+      LABEL_sqlserver: dapper-example-sqlserver-db
+      SERVER_sqlserver: sqlserver-db
+      PORT_sqlserver: 1433
+      USER_sqlserver: sa
+      PASSWORD_sqlserver: "Passw0rd!"
+      ENGINE_sqlserver: mssql@dbgate-plugin-mssql
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sqlserver-db
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"]
+      interval: 1s
+      timeout: 3s
+      retries: 10
+      start_period: 2s
+
+volumes:
+  pgadmin-data:
+  mysql-data:
+  sqlserver-data:
+
+configs:
+  pgadmin-servers:
+    content: |
+      {
+        "Servers": {
+          "1": {
+            "Name": "dapper-example-postgres-db",
+            "Group": "Servers",
+            "Host": "postgres-db",
+            "Port": 5432,
+            "MaintenanceDB": "postgres",
+            "Username": "postgres",
+            "SSLMode": "prefer",
+            "PasswordExecCommand": "echo 'postgres'"
+          }
+        }
+      }
