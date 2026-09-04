@@ -532,8 +532,8 @@ public sealed class AttributeTypeWriteTests : IClassFixture<IntegrationTestConte
     [InlineData(nameof(TypeContainer.TestNullableIPAddress), "An invalid IP address was specified.")]
     [InlineData(nameof(TypeContainer.TestIPNetwork), "An invalid IP network was specified.")]
     [InlineData(nameof(TypeContainer.TestNullableIPNetwork), "An invalid IP network was specified.")]
-    [InlineData(nameof(TypeContainer.TestVersion), $"{ErrorPrefixJsonSupport}Version format.")]
-    [InlineData(nameof(TypeContainer.TestNullableVersion), $"{ErrorPrefixJsonSupport}Version format.")]
+    [InlineData(nameof(TypeContainer.TestVersion), $"{ErrorPrefixJsonConvert}System.Version.")]
+    [InlineData(nameof(TypeContainer.TestNullableVersion), $"{ErrorPrefixJsonConvert}System.Version.")]
     public async Task Cannot_update_resource_with_attribute_set_to_invalid_value(string propertyName, string innerParseError)
     {
         // Arrange
