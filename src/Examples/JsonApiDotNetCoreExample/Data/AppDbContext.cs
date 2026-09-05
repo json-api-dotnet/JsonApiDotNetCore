@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Tag = JsonApiDotNetCoreExample.Models.Tag;
 
 // @formatter:wrap_chained_method_calls chop_always
 
@@ -24,6 +25,11 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
         builder.Entity<Person>()
             .HasMany(person => person.OwnedTodoItems)
             .WithOne(todoItem => todoItem.Owner);
+
+        // TODO: Why is adding this needed to satisfy MongoDB?
+        builder.Entity<Tag>()
+            .HasMany<TodoItem>(tag => tag.TodoItems)
+            .WithMany(todoItem => todoItem.Tags);
 
         AdjustDeleteBehaviorForJsonApi(builder);
     }

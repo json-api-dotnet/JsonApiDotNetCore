@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -48,8 +49,8 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
-        string? connectionString = builder.Configuration.GetConnectionString("Default");
-        options.UseNpgsql(connectionString);
+        string connectionString = builder.Configuration.GetConnectionString("MongoDefault")!;
+        options.UseMongoDB(connectionString, "JsonApiDotNetCoreMongoDbExample");
 
         SetDbContextDebugOptions(options);
     });
@@ -68,7 +69,12 @@ static void ConfigureServices(WebApplicationBuilder builder)
             options.IncludeRequestBodyInErrors = true;
             options.SerializerOptions.WriteIndented = true;
 #endif
-        }, discovery => discovery.AddCurrentAssembly());
+        }, discovery => discovery.AddCurrentAssembly(), resourceGraphBuilder =>
+        {
+            // TODO: Move these types to another assembly, so these exclusions can be omitted.
+            resourceGraphBuilder.Remove<IMongoIdentifiable>();
+            resourceGraphBuilder.Remove<MongoIdentifiable>();
+        });
     }
 }
 

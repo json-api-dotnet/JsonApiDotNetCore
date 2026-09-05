@@ -5,12 +5,13 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
+using MongoDB.Bson;
 
 namespace JsonApiDotNetCoreExample.Definitions;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class TodoItemDefinition(IResourceGraph resourceGraph, TimeProvider timeProvider)
-    : JsonApiResourceDefinition<TodoItem, long>(resourceGraph)
+    : JsonApiResourceDefinition<TodoItem, ObjectId>(resourceGraph)
 {
     private readonly TimeProvider _timeProvider = timeProvider;
 

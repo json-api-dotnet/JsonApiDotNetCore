@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class Tag : Identifiable<long>
+public sealed class Tag : MongoIdentifiable
 {
     [Attr]
     [MinLength(1)]
