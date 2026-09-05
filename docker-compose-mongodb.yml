@@ -16,6 +16,7 @@ services:
     image: mongo:latest
     pull_policy: always
     container_name: jsonapi-mongodb-mongo-db
+    command: ["mongod", "--replSet", "JsonApiReplicaSet", "--bind_ip_all"]
     ports:
       - "27017:27017"
     healthcheck:
@@ -25,17 +26,31 @@ services:
       retries: 15
       start_period: 2s
 
+  mongo-init:
+    image: mongo:latest
+    container_name: jsonapi-mongodb-mongo-init
+    depends_on:
+      mongo-db:
+        condition: service_healthy
+    entrypoint:
+      - mongosh
+      - --host
+      - mongo-db:27017
+      - --eval
+      - "try { rs.initiate({ _id:'JsonApiReplicaSet', members:[{ _id:0, host:'mongo-db:27017' }] }); print('Replica set initiated'); } catch(e) { if(e.code === 23) print('Already a replica set'); else throw e; }"
+
   mongo-express:
     image: mongo-express:latest
     pull_policy: always
     container_name: jsonapi-mongodb-mongo-express
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://mongo-db:27017
+      ME_CONFIG_MONGODB_URL: mongodb://mongo-db:27017/?replicaSet=JsonApiReplicaSet
       ME_CONFIG_BASICAUTH: 'false'
     ports:
       - "8081:8081"
     depends_on:
-      - mongo-db
+      mongo-init:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:8081/status', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"]
       interval: 1s
