@@ -124,6 +124,13 @@ public sealed class ServiceDiscoveryFacadeTests
             {
                 return this;
             }
+
+#if NET11_0_OR_GREATER
+            public override DbContextOptions WithoutExtension<TExtension>()
+            {
+                return this;
+            }
+#endif
         }
     }
 }
