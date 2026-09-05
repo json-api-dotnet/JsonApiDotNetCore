@@ -1,0 +1,44 @@
+name: jsonapi-mongodb
+
+# This file starts a MongoDB database in a docker container, which is required for running examples locally.
+# It also starts Mongo Express (a web-based MongoDB management tool) in a second container, which lets you query the database.
+#
+# Usage:
+#   docker compose --file docker-compose-mongodb.yml up --detach --wait
+#
+# To connect to Mongo Express, open http://localhost:8081. It will automatically log in and connect to the database.
+#
+# To stop:
+#   docker compose --file docker-compose-mongodb.yml down
+
+services:
+  mongo-db:
+    image: mongo:latest
+    pull_policy: always
+    container_name: jsonapi-mongodb-mongo-db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 1s
+      timeout: 3s
+      retries: 15
+      start_period: 2s
+
+  mongo-express:
+    image: mongo-express:latest
+    pull_policy: always
+    container_name: jsonapi-mongodb-mongo-express
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo-db:27017
+      ME_CONFIG_BASICAUTH: 'false'
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo-db
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:8081/status', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"]
+      interval: 1s
+      timeout: 3s
+      retries: 10
+      start_period: 2s
