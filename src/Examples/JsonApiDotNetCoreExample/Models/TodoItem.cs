@@ -32,4 +32,7 @@ public sealed class TodoItem : MongoIdentifiable
 
     [HasMany]
     public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
+
+    // Explicit join entities for EF Core many-to-many mapping
+    public ISet<TagTodoItem> TagTodoItems { get; set; } = new HashSet<TagTodoItem>();
 }

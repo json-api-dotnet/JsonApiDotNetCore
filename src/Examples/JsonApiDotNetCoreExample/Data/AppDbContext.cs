@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Tag = JsonApiDotNetCoreExample.Models.Tag;
 
 // @formatter:wrap_chained_method_calls chop_always
+// @formatter:keep_existing_linebreaks true
 
 namespace JsonApiDotNetCoreExample.Data;
 
@@ -13,6 +14,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options)
 {
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+    public DbSet<TagTodoItem> TagTodoItems => Set<TagTodoItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -26,10 +28,27 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasMany(person => person.OwnedTodoItems)
             .WithOne(todoItem => todoItem.Owner);
 
-        // TODO: Why is adding this needed to satisfy MongoDB?
+        // Use an explicit join entity for the many-to-many between Tag and TodoItem so EF Core
+        // does not create a shadow join table represented as Dictionary<string, object>.
         builder.Entity<Tag>()
             .HasMany<TodoItem>(tag => tag.TodoItems)
-            .WithMany(todoItem => todoItem.Tags);
+            .WithMany(todoItem => todoItem.Tags)
+            .UsingEntity<TagTodoItem>(rightSide => rightSide
+                    .HasOne(tagTodoItem => tagTodoItem.TodoItem)
+                    .WithMany(todoItem => todoItem.TagTodoItems)
+                    .HasForeignKey(tagTodoItem => tagTodoItem.TodoItemId),
+                leftSide => leftSide
+                    .HasOne(tagTodoItem => tagTodoItem.Tag)
+                    .WithMany(tag => tag.TagTodoItems)
+                    .HasForeignKey(tagTodoItem => tagTodoItem.TagId),
+                joinEntity =>
+                {
+                    joinEntity.HasKey(tagTodoItem => new
+                    {
+                        tagTodoItem.TagId,
+                        tagTodoItem.TodoItemId
+                    });
+                });
 
         AdjustDeleteBehaviorForJsonApi(builder);
     }
