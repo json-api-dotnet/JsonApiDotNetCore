@@ -116,7 +116,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         document.JsonApi = GetApiObject();
         document.Links = _linkBuilder.GetTopLevelLinks();
         document.Meta = _metaBuilder.Build();
-        document.Included = GetIncluded(rootNode);
+        document.Included = GetIncluded(rootNode, !document.Errors.IsNullOrEmpty());
 
         return document;
     }
@@ -395,7 +395,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return jsonApiObject;
     }
 
-    private IList<ResourceObject>? GetIncluded(ResourceObjectTreeNode rootNode)
+    private IList<ResourceObject>? GetIncluded(ResourceObjectTreeNode rootNode, bool hasErrors)
     {
         IList<ResourceObject> resourceObjects = rootNode.GetResponseIncluded();
 
@@ -404,6 +404,6 @@ public class ResponseModelAdapter : IResponseModelAdapter
             return resourceObjects;
         }
 
-        return _requestQueryStringAccessor.Query.ContainsKey("include") ? Array.Empty<ResourceObject>() : null;
+        return !hasErrors && _requestQueryStringAccessor.Query.ContainsKey("include") ? Array.Empty<ResourceObject>() : null;
     }
 }

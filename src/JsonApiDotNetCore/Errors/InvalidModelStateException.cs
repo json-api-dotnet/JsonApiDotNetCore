@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -183,14 +182,7 @@ public sealed class InvalidModelStateException(
 
         if (includeExceptionStackTraceInErrors && modelError.Exception != null)
         {
-            Exception exception = modelError.Exception.Demystify();
-            string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
-
-            if (stackTraceLines.Length > 0)
-            {
-                error.Meta ??= new Dictionary<string, object?>();
-                error.Meta["StackTrace"] = stackTraceLines;
-            }
+            error.TryIncludeStackTrace(modelError.Exception);
         }
 
         return error;
