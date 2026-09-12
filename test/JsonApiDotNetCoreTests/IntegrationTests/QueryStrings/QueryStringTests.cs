@@ -1,7 +1,6 @@
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
@@ -127,7 +126,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         error1.Detail.Should().StartWith("Relationship 'bad' does not exist on resource type 'calendars'. Failed at position ");
         error1.Source.Should().NotBeNull();
         error1.Source.Parameter.Should().Be("include");
-        error1.Meta.Should().HaveInStackTrace($"*{typeof(IncludeParser).FullName}*");
+        error1.Meta.Should().HaveInStackTrace($"*{typeof(IncludeQueryStringParameterReader).FullName}*");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -135,7 +134,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         error2.Detail.Should().StartWith("Field 'missing' does not exist on resource type 'calendars'. Failed at position ");
         error2.Source.Should().NotBeNull();
         error2.Source.Parameter.Should().Be("filter");
-        error2.Meta.Should().HaveInStackTrace($"*{typeof(FilterParser).FullName}*");
+        error2.Meta.Should().HaveInStackTrace($"*{typeof(FilterQueryStringParameterReader).FullName}*");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -143,7 +142,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         error3.Detail.Should().StartWith("Resource type 'wrong' does not exist. Failed at position ");
         error3.Source.Should().NotBeNull();
         error3.Source.Parameter.Should().Be("fields[wrong]");
-        error3.Meta.Should().HaveInStackTrace($"*{typeof(SparseFieldTypeParser).FullName}*");
+        error3.Meta.Should().HaveInStackTrace($"*{typeof(SparseFieldSetQueryStringParameterReader).FullName}*");
 
         ErrorObject error4 = responseDocument.Errors[3];
         error4.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -152,5 +151,6 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         error4.Source.Should().NotBeNull();
         error4.Source.Parameter.Should().Be("other");
         error4.Meta.Should().HaveInStackTrace($"*{typeof(QueryStringReader).FullName}*");
+        error4.Meta.Should().NotHaveInStackTrace($"*{typeof(QueryStringParameterReader).FullName}*");
     }
 }
