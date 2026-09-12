@@ -77,6 +77,17 @@ public static class FluentMetaExtensions
         stackTraceLines.Should().ContainMatch(pattern);
     }
 
+    /// <summary>
+    /// Asserts that a "meta" dictionary contains a single element named "stackTrace" that does not contain the specified pattern.
+    /// </summary>
+    [CustomAssertion]
+    public static void NotHaveInStackTrace(this GenericDictionaryAssertions<IDictionary<string, object?>, string, object?> source, string pattern)
+    {
+        JsonElement element = GetMetaJsonElement(source, "stackTrace");
+        IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
+        stackTraceLines.Should().NotContainMatch(pattern);
+    }
+
     private static JsonElement GetMetaJsonElement(GenericDictionaryAssertions<IDictionary<string, object?>, string, object?> source, string metaKey)
     {
         object? value = source.ContainKey(metaKey).WhoseValue;
