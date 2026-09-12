@@ -18654,6 +18654,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Objects.ErrorObject.Title
   nameWithType: ErrorObject.Title
+- uid: JsonApiDotNetCore.Serialization.Objects.ErrorObject.TryIncludeStackTrace(System.Exception)
+  name: TryIncludeStackTrace(Exception)
+  href: api/JsonApiDotNetCore.Serialization.Objects.ErrorObject.html#JsonApiDotNetCore_Serialization_Objects_ErrorObject_TryIncludeStackTrace_System_Exception_
+  commentId: M:JsonApiDotNetCore.Serialization.Objects.ErrorObject.TryIncludeStackTrace(System.Exception)
+  fullName: JsonApiDotNetCore.Serialization.Objects.ErrorObject.TryIncludeStackTrace(System.Exception)
+  nameWithType: ErrorObject.TryIncludeStackTrace(Exception)
+- uid: JsonApiDotNetCore.Serialization.Objects.ErrorObject.TryIncludeStackTrace*
+  name: TryIncludeStackTrace
+  href: api/JsonApiDotNetCore.Serialization.Objects.ErrorObject.html#JsonApiDotNetCore_Serialization_Objects_ErrorObject_TryIncludeStackTrace_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.ErrorObject.TryIncludeStackTrace
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.ErrorObject.TryIncludeStackTrace
+  nameWithType: ErrorObject.TryIncludeStackTrace
 - uid: JsonApiDotNetCore.Serialization.Objects.ErrorSource
   name: ErrorSource
   href: api/JsonApiDotNetCore.Serialization.Objects.ErrorSource.html
