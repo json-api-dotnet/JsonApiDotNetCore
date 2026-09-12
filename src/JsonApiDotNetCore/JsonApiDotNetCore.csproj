@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ben.Demystifier" Version="$(DemystifierFrozenVersion)" />
     <PackageReference Include="Humanizer.Core" Version="$(HumanizerFrozenVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCoreFrozenVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkCoreFrozenVersion)" />

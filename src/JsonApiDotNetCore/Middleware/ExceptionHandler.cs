@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -28,11 +27,8 @@ public partial class ExceptionHandler : IExceptionHandler
     {
         ArgumentNullException.ThrowIfNull(exception);
 
-        Exception demystified = exception.Demystify();
-
-        LogException(demystified);
-
-        return CreateErrorResponse(demystified);
+        LogException(exception);
+        return CreateErrorResponse(exception);
     }
 
     private void LogException(Exception exception)
@@ -91,26 +87,15 @@ public partial class ExceptionHandler : IExceptionHandler
             }.AsReadOnly()
         };
 
-        if (_options.IncludeExceptionStackTraceInErrors && exception is not InvalidModelStateException)
-        {
-            IncludeStackTraces(exception, errors);
-        }
-
-        return errors;
-    }
-
-    private void IncludeStackTraces(Exception exception, IReadOnlyList<ErrorObject> errors)
-    {
-        string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
-
-        if (stackTraceLines.Length > 0)
+        if (_options.IncludeExceptionStackTraceInErrors)
         {
             foreach (ErrorObject error in errors)
             {
-                error.Meta ??= new Dictionary<string, object?>();
-                error.Meta["StackTrace"] = stackTraceLines;
+                error.TryIncludeStackTrace(exception);
             }
         }
+
+        return errors;
     }
 
     [LoggerMessage(Message = "{Message}")]

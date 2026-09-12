@@ -49,6 +49,22 @@ public sealed class ErrorObject(HttpStatusCode statusCode)
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IDictionary<string, object?>? Meta { get; set; }
 
+    public void TryIncludeStackTrace(Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+
+        if (Meta == null || !Meta.ContainsKey("StackTrace"))
+        {
+            string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
+
+            if (stackTraceLines.Length > 0)
+            {
+                Meta ??= new Dictionary<string, object?>();
+                Meta["StackTrace"] = stackTraceLines;
+            }
+        }
+    }
+
     public static HttpStatusCode GetResponseStatusCode(IReadOnlyList<ErrorObject> errorObjects)
     {
         if (errorObjects.IsNullOrEmpty())

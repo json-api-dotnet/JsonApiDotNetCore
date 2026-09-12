@@ -1,6 +1,8 @@
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries.Parsing;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -17,15 +19,15 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         _testContext = testContext;
 
         testContext.UseController<CalendarsController>();
+
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
+        options.AllowUnknownQueryStringParameters = false;
     }
 
     [Fact]
     public async Task Cannot_use_unknown_query_string_parameter()
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
-        options.AllowUnknownQueryStringParameters = false;
-
         const string route = "/calendars?foo=bar";
 
         // Act
@@ -69,9 +71,6 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     public async Task Can_use_empty_query_string_parameter_name(string parameterValue)
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
-        options.AllowUnknownQueryStringParameters = false;
-
         string route = $"calendars?={parameterValue}";
 
         // Act
@@ -89,9 +88,6 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     public async Task Cannot_use_empty_query_string_parameter_value(string parameterName)
     {
         // Arrange
-        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
-        options.AllowUnknownQueryStringParameters = false;
-
         string route = $"calendars?{parameterName}=";
 
         // Act
@@ -108,5 +104,53 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         error.Detail.Should().Be($"Missing value for '{parameterName}' query string parameter.");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
+    }
+
+    [Fact]
+    public async Task Aggregates_multiple_query_string_errors()
+    {
+        // Arrange
+        const string route = "calendars?include=bad&filter=equals(missing,'1')&fields[wrong]=id&other=1";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Included.Should().BeNull();
+        responseDocument.Errors.Should().HaveCount(4);
+
+        ErrorObject error1 = responseDocument.Errors[0];
+        error1.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error1.Title.Should().Be("The specified include is invalid.");
+        error1.Detail.Should().StartWith("Relationship 'bad' does not exist on resource type 'calendars'. Failed at position ");
+        error1.Source.Should().NotBeNull();
+        error1.Source.Parameter.Should().Be("include");
+        error1.Meta.Should().HaveInStackTrace($"*{typeof(IncludeParser).FullName}*");
+
+        ErrorObject error2 = responseDocument.Errors[1];
+        error2.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error2.Title.Should().Be("The specified filter is invalid.");
+        error2.Detail.Should().StartWith("Field 'missing' does not exist on resource type 'calendars'. Failed at position ");
+        error2.Source.Should().NotBeNull();
+        error2.Source.Parameter.Should().Be("filter");
+        error2.Meta.Should().HaveInStackTrace($"*{typeof(FilterParser).FullName}*");
+
+        ErrorObject error3 = responseDocument.Errors[2];
+        error3.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error3.Title.Should().Be("The specified fieldset is invalid.");
+        error3.Detail.Should().StartWith("Resource type 'wrong' does not exist. Failed at position ");
+        error3.Source.Should().NotBeNull();
+        error3.Source.Parameter.Should().Be("fields[wrong]");
+        error3.Meta.Should().HaveInStackTrace($"*{typeof(SparseFieldTypeParser).FullName}*");
+
+        ErrorObject error4 = responseDocument.Errors[3];
+        error4.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error4.Title.Should().Be("Unknown query string parameter.");
+        error4.Detail.Should().StartWith("Query string parameter 'other' is unknown.");
+        error4.Source.Should().NotBeNull();
+        error4.Source.Parameter.Should().Be("other");
+        error4.Meta.Should().HaveInStackTrace($"*{typeof(QueryStringReader).FullName}*");
     }
 }
