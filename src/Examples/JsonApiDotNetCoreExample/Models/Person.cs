@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class Person : Identifiable<long>
+public sealed class Person : MongoIdentifiable
 {
     [Attr]
     public string? FirstName { get; set; }

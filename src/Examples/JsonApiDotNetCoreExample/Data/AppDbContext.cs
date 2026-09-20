@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Tag = JsonApiDotNetCoreExample.Models.Tag;
 
 // @formatter:wrap_chained_method_calls chop_always
 
@@ -24,6 +25,12 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
         builder.Entity<Person>()
             .HasMany(person => person.OwnedTodoItems)
             .WithOne(todoItem => todoItem.Owner);
+
+        // TODO: Why is adding this needed to satisfy MongoDB?
+        // Known limitation: Many-to-many relationships can be saved, but not yet queried. Tracked at https://jira.mongodb.org/browse/EF-454.
+        builder.Entity<Tag>()
+            .HasMany(tag => tag.TodoItems)
+            .WithMany(todoItem => todoItem.Tags);
 
         AdjustDeleteBehaviorForJsonApi(builder);
     }
