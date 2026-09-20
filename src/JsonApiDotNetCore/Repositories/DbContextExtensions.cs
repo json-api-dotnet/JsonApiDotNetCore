@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +10,38 @@ namespace JsonApiDotNetCore.Repositories;
 [PublicAPI]
 public static class DbContextExtensions
 {
+    private static readonly MethodInfo DbContextSetMethod = typeof(DbContext).GetMethod(nameof(DbContext.Set), Type.EmptyTypes)!;
+
+    // @formatter:wrap_chained_method_calls chop_if_long
+    // @formatter:wrap_before_first_method_call true
+
+    private static readonly MethodInfo QueryableLoadAsyncMethod = typeof(EntityFrameworkQueryableExtensions)
+        .GetMethods(BindingFlags.Public | BindingFlags.Static)
+        .Where(method => method.Name == nameof(EntityFrameworkQueryableExtensions.LoadAsync))
+        .Single(method => method.GetParameters().Length == 2);
+
+    // @formatter:wrap_before_first_method_call restore
+    // @formatter:wrap_chained_method_calls restore
+
+    // @formatter:wrap_chained_method_calls chop_if_long
+    // @formatter:wrap_before_first_method_call true
+
+    private static readonly MethodInfo QueryableWhereMethod = typeof(Queryable)
+        .GetMethods(BindingFlags.Public | BindingFlags.Static)
+        .Where(method => method.Name == nameof(Queryable.Where))
+        .Single(method => method.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericArguments().Length == 2);
+
+    // @formatter:wrap_before_first_method_call restore
+    // @formatter:wrap_chained_method_calls restore
+
     /// <summary>
     /// If not already tracked, attaches the specified resource to the change tracker in <see cref="EntityState.Unchanged" /> state.
     /// </summary>
+    /// <remarks>
+    /// Repeated calls to this method in repository operations may appear redundant at first glance, but are intentional safeguards. User-defined resource
+    /// definition callbacks execute external code that may query or attach entities into the change tracker. Calling this method ensures the repository
+    /// always transitions from detached placeholders to the actively tracked instances managed by EF Core.
+    /// </remarks>
     public static IIdentifiable GetTrackedOrAttach(this DbContext dbContext, IIdentifiable resource)
     {
         ArgumentNullException.ThrowIfNull(dbContext);
@@ -56,5 +87,39 @@ public static class DbContextExtensions
         ArgumentNullException.ThrowIfNull(dbContext);
 
         dbContext.ChangeTracker.Clear();
+    }
+
+    internal static IQueryable Set(this DbContext context, Type entityType)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(entityType);
+
+        MethodInfo setMethod = DbContextSetMethod.MakeGenericMethod(entityType);
+        return (IQueryable)setMethod.Invoke(context, null)!;
+    }
+
+    internal static Task LoadAsync(this IQueryable source, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        MethodInfo loadAsyncMethod = QueryableLoadAsyncMethod.MakeGenericMethod(source.ElementType);
+
+        return (Task)loadAsyncMethod.Invoke(null, [
+            source,
+            cancellationToken
+        ])!;
+    }
+
+    internal static IQueryable Where(this IQueryable source, LambdaExpression predicate)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        MethodInfo whereMethod = QueryableWhereMethod.MakeGenericMethod(source.ElementType);
+
+        return (IQueryable)whereMethod.Invoke(null, [
+            source,
+            predicate
+        ])!;
     }
 }

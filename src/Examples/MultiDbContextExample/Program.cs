@@ -26,21 +26,21 @@ builder.Services.AddResourceRepository<DbContextARepository<ResourceA>>();
 builder.Services.AddResourceRepository<DbContextBRepository<ResourceB>>();
 
 builder.Services.AddJsonApi(options =>
-{
-    options.Namespace = "api";
-    options.UseRelativeLinks = true;
-    options.IncludeTotalResourceCount = true;
+    {
+        options.Namespace = "api";
+        options.UseRelativeLinks = true;
+        options.IncludeTotalResourceCount = true;
 
 #if DEBUG
-    options.IncludeExceptionStackTraceInErrors = true;
-    options.IncludeRequestBodyInErrors = true;
-    options.SerializerOptions.WriteIndented = true;
+        options.IncludeExceptionStackTraceInErrors = true;
+        options.IncludeRequestBodyInErrors = true;
+        options.SerializerOptions.WriteIndented = true;
 #endif
-}, dbContextTypes: new[]
-{
-    typeof(DbContextA),
-    typeof(DbContextB)
-});
+    }, dbContextTypes:
+    [
+        typeof(DbContextA),
+        typeof(DbContextB)
+    ]);
 
 WebApplication app = builder.Build();
 

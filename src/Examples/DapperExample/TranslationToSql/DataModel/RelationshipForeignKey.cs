@@ -21,7 +21,7 @@ public sealed class RelationshipForeignKey
     public RelationshipAttribute Relationship { get; }
 
     /// <summary>
-    /// Indicates whether the foreign key column is defined at the left side of the JSON:API relationship.
+    /// Indicates whether the foreign key column is defined on the left side of the JSON:API relationship.
     /// </summary>
     public bool IsAtLeftSide { get; }
 
@@ -35,7 +35,13 @@ public sealed class RelationshipForeignKey
     /// </summary>
     public bool IsNullable { get; }
 
-    public RelationshipForeignKey(DatabaseProvider databaseProvider, RelationshipAttribute relationship, bool isAtLeftSide, string columnName, bool isNullable)
+    /// <summary>
+    /// Indicates whether the foreign key represents a one-to-one relationship.
+    /// </summary>
+    public bool IsOneToOne { get; }
+
+    public RelationshipForeignKey(DatabaseProvider databaseProvider, RelationshipAttribute relationship, bool isAtLeftSide, string columnName, bool isNullable,
+        bool isOneToOne)
     {
         ArgumentNullException.ThrowIfNull(relationship);
         ArgumentException.ThrowIfNullOrEmpty(columnName);
@@ -45,12 +51,13 @@ public sealed class RelationshipForeignKey
         IsAtLeftSide = isAtLeftSide;
         ColumnName = columnName;
         IsNullable = isNullable;
+        IsOneToOne = isOneToOne;
     }
 
     public override string ToString()
     {
         var builder = new StringBuilder();
-        builder.Append($"{Relationship.LeftType.ClrType.Name}.{Relationship.Property.Name} => ");
+        builder.Append($"{Relationship.LeftType.ClrType.Name}.{Relationship.Property.Name} ({GetMultiplicity()}) -> ");
 
         ResourceType tableType = IsAtLeftSide ? Relationship.LeftType : Relationship.RightType;
 
@@ -64,5 +71,13 @@ public sealed class RelationshipForeignKey
         }
 
         return builder.ToString();
+    }
+
+    private string GetMultiplicity()
+    {
+        string multiplicityAtPrincipalSide = IsNullable ? "0..1" : "1";
+        string multiplicityAtDependentSide = IsOneToOne ? "1" : "*";
+
+        return IsAtLeftSide ? $"{multiplicityAtPrincipalSide}:{multiplicityAtDependentSide}" : $"{multiplicityAtDependentSide}:{multiplicityAtPrincipalSide}";
     }
 }

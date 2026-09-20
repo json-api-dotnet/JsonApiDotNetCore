@@ -48,11 +48,12 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph)
 
             if (navigation != null)
             {
-                bool isAtLeftSide = navigation.ForeignKey.DeclaringEntityType.ClrType == relationship.LeftType.ClrType;
+                bool isAtLeftSide = navigation.IsOnDependent;
                 string columnName = navigation.ForeignKey.Properties.Single().Name;
                 bool isNullable = !navigation.ForeignKey.IsRequired;
+                bool isOneToOne = navigation.ForeignKey.IsUnique;
 
-                var foreignKey = new RelationshipForeignKey(DatabaseProvider, relationship, isAtLeftSide, columnName, isNullable);
+                var foreignKey = new RelationshipForeignKey(DatabaseProvider, relationship, isAtLeftSide, columnName, isNullable, isOneToOne);
                 _foreignKeysByRelationship[relationship] = foreignKey;
             }
         }
