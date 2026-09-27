@@ -20,13 +20,7 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class HasOneAttribute : RelationshipAttribute
 {
-    private readonly Lazy<bool> _lazyIsOneToOne;
     private HasOneCapabilities? _capabilities;
-
-    /// <summary>
-    /// Inspects <see cref="RelationshipAttribute.InverseNavigationProperty" /> to determine if this is a one-to-one relationship.
-    /// </summary>
-    internal bool IsOneToOne => _lazyIsOneToOne.Value;
 
     internal bool HasExplicitCapabilities => _capabilities != null;
 
@@ -46,22 +40,6 @@ public sealed class HasOneAttribute : RelationshipAttribute
     {
         get => _capabilities ?? default;
         set => _capabilities = value;
-    }
-
-    public HasOneAttribute()
-    {
-        _lazyIsOneToOne = new Lazy<bool>(EvaluateIsOneToOne, LazyThreadSafetyMode.PublicationOnly);
-    }
-
-    private bool EvaluateIsOneToOne()
-    {
-        if (InverseNavigationProperty != null)
-        {
-            Type? elementType = CollectionConverter.Instance.FindCollectionElementType(InverseNavigationProperty.PropertyType);
-            return elementType == null;
-        }
-
-        return false;
     }
 
     /// <inheritdoc />

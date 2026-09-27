@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -114,6 +115,11 @@ public sealed class ServiceDiscoveryFacadeTests
         public DbContext GetContext()
         {
             return new DbContext(_dbContextOptions);
+        }
+
+        public IReadOnlyList<IReadOnlyForeignKey> GetForeignKeysRequiringClientSetNullOnDelete(Type entityClrType)
+        {
+            return [];
         }
 
         private sealed class FakeDbContextOptions : DbContextOptions

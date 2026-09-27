@@ -13,11 +13,12 @@ public static class ApplicationBuilderExtensions
     /// The <see cref="IApplicationBuilder" /> to add the middleware to.
     /// </param>
     /// <example>
-    /// The code below is the minimal that is required for proper activation, which should be added to your Startup.Configure method.
+    /// The code below is the minimal that is required for proper activation, which should be added to your Program class.
     /// <code><![CDATA[
+    /// // Configure the HTTP request pipeline.
     /// app.UseRouting();
     /// app.UseJsonApi();
-    /// app.UseEndpoints(endpoints => endpoints.MapControllers());
+    /// app.MapControllers();
     /// ]]></code>
     /// </example>
     public static void UseJsonApi(this IApplicationBuilder builder)
