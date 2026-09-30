@@ -2367,6 +2367,22 @@ references:
   fullName.vb: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove(Of TResource)()
   nameWithType: ResourceGraphBuilder.Remove<TResource>()
   nameWithType.vb: ResourceGraphBuilder.Remove(Of TResource)()
+- uid: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.SuppressWarningNotIdentifiable*
+  name: SuppressWarningNotIdentifiable
+  href: api/JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html#JsonApiDotNetCore_Configuration_ResourceGraphBuilder_SuppressWarningNotIdentifiable_
+  commentId: Overload:JsonApiDotNetCore.Configuration.ResourceGraphBuilder.SuppressWarningNotIdentifiable
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.SuppressWarningNotIdentifiable
+  nameWithType: ResourceGraphBuilder.SuppressWarningNotIdentifiable
+- uid: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.SuppressWarningNotIdentifiable``1
+  name: SuppressWarningNotIdentifiable<TResource>()
+  href: api/JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html#JsonApiDotNetCore_Configuration_ResourceGraphBuilder_SuppressWarningNotIdentifiable__1
+  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraphBuilder.SuppressWarningNotIdentifiable``1
+  name.vb: SuppressWarningNotIdentifiable(Of TResource)()
+  fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.SuppressWarningNotIdentifiable<TResource>()
+  fullName.vb: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.SuppressWarningNotIdentifiable(Of TResource)()
+  nameWithType: ResourceGraphBuilder.SuppressWarningNotIdentifiable<TResource>()
+  nameWithType.vb: ResourceGraphBuilder.SuppressWarningNotIdentifiable(Of TResource)()
 - uid: JsonApiDotNetCore.Configuration.ResourceType
   name: ResourceType
   href: api/JsonApiDotNetCore.Configuration.ResourceType.html
