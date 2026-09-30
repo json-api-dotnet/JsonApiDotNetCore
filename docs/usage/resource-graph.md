@@ -47,15 +47,6 @@ Be aware that this does not register resource definitions, resource services and
 builder.Services.AddJsonApi<AppDbContext>(discovery: discovery => discovery.AddCurrentAssembly());
 ```
 
-Entities that don't implement `IIdentifiable` are skipped, and a warning is logged for each one. Add `[NoResource]` to such an entity to suppress the warning.
-For types defined in an external assembly, such as those from ASP.NET Core Identity, call `SuppressWarningNotIdentifiable` instead.
-
-```c#
-// Program.cs
-builder.Services.AddJsonApi<AppDbContext>(resources: resourceGraphBuilder =>
-    resourceGraphBuilder.SuppressWarningNotIdentifiable<IdentityUserRole<string>>());
-```
-
 ### Manual Specification
 
 You can manually construct the graph.

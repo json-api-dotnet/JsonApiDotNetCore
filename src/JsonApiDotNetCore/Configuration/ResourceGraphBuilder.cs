@@ -19,8 +19,7 @@ public partial class ResourceGraphBuilder
     private readonly IJsonApiOptions _options;
     private readonly ILogger<ResourceGraphBuilder> _logger;
     private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
-    private readonly HashSet<Type> _skippedNonIdentifiableTypes = [];
-    private readonly HashSet<Type> _suppressedNonIdentifiableTypes = [];
+    private readonly HashSet<Type> _nonIdentifiableTypes = [];
     private readonly TypeLocator _typeLocator = new();
 
     public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
@@ -37,9 +36,9 @@ public partial class ResourceGraphBuilder
     /// </summary>
     public IResourceGraph Build()
     {
-        foreach (Type skippedType in _skippedNonIdentifiableTypes.Except(_suppressedNonIdentifiableTypes))
+        foreach (Type nonIdentifiableType in _nonIdentifiableTypes)
         {
-            LogResourceTypeDoesNotImplementInterface(skippedType, nameof(IIdentifiable));
+            LogResourceTypeDoesNotImplementIdentifiable(nonIdentifiableType, nameof(IIdentifiable), nameof(SuppressWarningNotIdentifiable));
         }
 
         IReadOnlySet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet().AsReadOnly();
@@ -261,7 +260,7 @@ public partial class ResourceGraphBuilder
         {
             if (resourceClrType.GetCustomAttribute<NoResourceAttribute>() == null)
             {
-                _skippedNonIdentifiableTypes.Add(resourceClrType);
+                _nonIdentifiableTypes.Add(resourceClrType);
             }
         }
 
@@ -269,15 +268,15 @@ public partial class ResourceGraphBuilder
     }
 
     /// <summary>
-    /// Suppresses the warning, logged when building the resource graph, that the specified type does not implement <see cref="IIdentifiable" />. Use this
-    /// for types in an external assembly, such as those from ASP.NET Core Identity, where <see cref="NoResourceAttribute" /> cannot be added.
+    /// Suppresses the warning that the specified type does not implement <see cref="IIdentifiable" />. Use this for types in an external assembly, such as
+    /// those from ASP.NET Core Identity, where <see cref="NoResourceAttribute" /> cannot be added.
     /// </summary>
     /// <typeparam name="TResource">
     /// The CLR type to suppress the warning for.
     /// </typeparam>
     public ResourceGraphBuilder SuppressWarningNotIdentifiable<TResource>()
     {
-        _suppressedNonIdentifiableTypes.Add(typeof(TResource));
+        _nonIdentifiableTypes.Remove(typeof(TResource));
         return this;
     }
 
@@ -518,9 +517,9 @@ public partial class ResourceGraphBuilder
     private partial void LogResourceGraphIsEmpty();
 
     [LoggerMessage(Level = LogLevel.Warning,
-        Message =
-            "Skipping: Type '{ResourceType}' does not implement '{InterfaceType}'. Add [NoResource] or call SuppressWarningNotIdentifiable<TResource>() to suppress this warning.")]
-    private partial void LogResourceTypeDoesNotImplementInterface(Type resourceType, string interfaceType);
+        Message = "Skipping: Type '{ResourceType}' does not implement '{InterfaceType}'. " +
+            "Add [NoResource] or call {SuppressMemberName} to suppress this warning.")]
+    private partial void LogResourceTypeDoesNotImplementIdentifiable(Type resourceType, string interfaceType, string suppressMemberName);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{ResourceType}' does not contain any attributes.")]
     private partial void LogResourceTypeHasNoAttributes(Type resourceType);

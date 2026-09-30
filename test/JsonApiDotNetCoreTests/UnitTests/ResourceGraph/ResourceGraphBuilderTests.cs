@@ -320,7 +320,7 @@ public sealed class ResourceGraphBuilderTests
         logLines.Should().HaveCount(1);
 
         logLines[0].Should().Be($"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. " +
-            "Add [NoResource] or call SuppressWarningNotIdentifiable<TResource>() to suppress this warning.");
+            $"Add [NoResource] or call {nameof(ResourceGraphBuilder.SuppressWarningNotIdentifiable)} to suppress this warning.");
     }
 
     [Fact]
