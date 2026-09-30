@@ -19,6 +19,7 @@ public partial class ResourceGraphBuilder
     private readonly IJsonApiOptions _options;
     private readonly ILogger<ResourceGraphBuilder> _logger;
     private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
+    private readonly HashSet<Type> _nonIdentifiableTypes = [];
     private readonly TypeLocator _typeLocator = new();
 
     public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
@@ -35,6 +36,11 @@ public partial class ResourceGraphBuilder
     /// </summary>
     public IResourceGraph Build()
     {
+        foreach (Type nonIdentifiableType in _nonIdentifiableTypes)
+        {
+            LogResourceTypeDoesNotImplementIdentifiable(nonIdentifiableType, nameof(IIdentifiable), nameof(SuppressWarningNotIdentifiable));
+        }
+
         IReadOnlySet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet().AsReadOnly();
 
         if (resourceTypes.Count == 0)
@@ -254,10 +260,23 @@ public partial class ResourceGraphBuilder
         {
             if (resourceClrType.GetCustomAttribute<NoResourceAttribute>() == null)
             {
-                LogResourceTypeDoesNotImplementInterface(resourceClrType, nameof(IIdentifiable));
+                _nonIdentifiableTypes.Add(resourceClrType);
             }
         }
 
+        return this;
+    }
+
+    /// <summary>
+    /// Suppresses the warning that the specified type does not implement <see cref="IIdentifiable" />. Use this for types in an external assembly, such as
+    /// those from ASP.NET Core Identity, where <see cref="NoResourceAttribute" /> cannot be added.
+    /// </summary>
+    /// <typeparam name="TResource">
+    /// The CLR type to suppress the warning for.
+    /// </typeparam>
+    public ResourceGraphBuilder SuppressWarningNotIdentifiable<TResource>()
+    {
+        _nonIdentifiableTypes.Remove(typeof(TResource));
         return this;
     }
 
@@ -498,8 +517,9 @@ public partial class ResourceGraphBuilder
     private partial void LogResourceGraphIsEmpty();
 
     [LoggerMessage(Level = LogLevel.Warning,
-        Message = "Skipping: Type '{ResourceType}' does not implement '{InterfaceType}'. Add [NoResource] to suppress this warning.")]
-    private partial void LogResourceTypeDoesNotImplementInterface(Type resourceType, string interfaceType);
+        Message = "Skipping: Type '{ResourceType}' does not implement '{InterfaceType}'. " +
+            "Add [NoResource] or call {SuppressMemberName} to suppress this warning.")]
+    private partial void LogResourceTypeDoesNotImplementIdentifiable(Type resourceType, string interfaceType, string suppressMemberName);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{ResourceType}' does not contain any attributes.")]
     private partial void LogResourceTypeHasNoAttributes(Type resourceType);

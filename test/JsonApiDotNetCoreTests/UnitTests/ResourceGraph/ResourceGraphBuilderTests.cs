@@ -309,15 +309,18 @@ public sealed class ResourceGraphBuilderTests
         using var loggerFactory = new LoggerFactory([loggerProvider]);
         var builder = new ResourceGraphBuilder(options, loggerFactory);
 
-        // Act
+        builder.Add<ResourceWithAttribute, long>();
         builder.Add(typeof(NonResource));
+
+        // Act
+        builder.Build();
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
         logLines.Should().HaveCount(1);
 
-        logLines[0].Should().Be(
-            $"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
+        logLines[0].Should().Be($"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. " +
+            $"Add [NoResource] or call {nameof(ResourceGraphBuilder.SuppressWarningNotIdentifiable)} to suppress this warning.");
     }
 
     [Fact]
@@ -329,8 +332,32 @@ public sealed class ResourceGraphBuilderTests
         using var loggerFactory = new LoggerFactory([loggerProvider]);
         var builder = new ResourceGraphBuilder(options, loggerFactory);
 
-        // Act
+        builder.Add<ResourceWithAttribute, long>();
         builder.Add(typeof(NonResourceWithSuppression));
+
+        // Act
+        builder.Build();
+
+        // Assert
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
+        logLines.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Logs_no_warning_when_adding_non_resource_type_with_suppression_by_method()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        using var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+        using var loggerFactory = new LoggerFactory([loggerProvider]);
+        var builder = new ResourceGraphBuilder(options, loggerFactory);
+
+        builder.Add<ResourceWithAttribute, long>();
+        builder.Add(typeof(NonResource));
+        builder.SuppressWarningNotIdentifiable<NonResource>();
+
+        // Act
+        builder.Build();
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
