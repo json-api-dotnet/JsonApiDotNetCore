@@ -1364,6 +1364,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerWriteOptions
   nameWithType: IJsonApiOptions.SerializerWriteOptions
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.ThrowForProblematicEntityMappings
+  name: ThrowForProblematicEntityMappings
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ThrowForProblematicEntityMappings
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.ThrowForProblematicEntityMappings
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.ThrowForProblematicEntityMappings
+  nameWithType: IJsonApiOptions.ThrowForProblematicEntityMappings
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.ThrowForProblematicEntityMappings*
+  name: ThrowForProblematicEntityMappings
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ThrowForProblematicEntityMappings_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.ThrowForProblematicEntityMappings
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.ThrowForProblematicEntityMappings
+  nameWithType: IJsonApiOptions.ThrowForProblematicEntityMappings
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.TopLevelLinks
   name: TopLevelLinks
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_TopLevelLinks
@@ -1901,6 +1914,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.SerializerOptions
   nameWithType: JsonApiOptions.SerializerOptions
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.ThrowForProblematicEntityMappings
+  name: ThrowForProblematicEntityMappings
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ThrowForProblematicEntityMappings
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.ThrowForProblematicEntityMappings
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.ThrowForProblematicEntityMappings
+  nameWithType: JsonApiOptions.ThrowForProblematicEntityMappings
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.ThrowForProblematicEntityMappings*
+  name: ThrowForProblematicEntityMappings
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ThrowForProblematicEntityMappings_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.ThrowForProblematicEntityMappings
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.ThrowForProblematicEntityMappings
+  nameWithType: JsonApiOptions.ThrowForProblematicEntityMappings
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.TopLevelLinks
   name: TopLevelLinks
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_TopLevelLinks
@@ -14193,6 +14219,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).New(TDbContext)
   nameWithType: DbContextResolver<TDbContext>.DbContextResolver(TDbContext)
   nameWithType.vb: DbContextResolver(Of TDbContext).New(TDbContext)
+- uid: JsonApiDotNetCore.Repositories.DbContextResolver`1.#ctor(`0,JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache)
+  name: DbContextResolver(TDbContext, IReferencingForeignKeysCache)
+  href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html#JsonApiDotNetCore_Repositories_DbContextResolver_1__ctor__0_JsonApiDotNetCore_Repositories_IReferencingForeignKeysCache_
+  commentId: M:JsonApiDotNetCore.Repositories.DbContextResolver`1.#ctor(`0,JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache)
+  name.vb: New(TDbContext, IReferencingForeignKeysCache)
+  fullName: JsonApiDotNetCore.Repositories.DbContextResolver<TDbContext>.DbContextResolver(TDbContext, JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache)
+  fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).New(TDbContext, JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache)
+  nameWithType: DbContextResolver<TDbContext>.DbContextResolver(TDbContext, IReferencingForeignKeysCache)
+  nameWithType.vb: DbContextResolver(Of TDbContext).New(TDbContext, IReferencingForeignKeysCache)
 - uid: JsonApiDotNetCore.Repositories.DbContextResolver`1.#ctor*
   name: DbContextResolver
   href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html#JsonApiDotNetCore_Repositories_DbContextResolver_1__ctor_
@@ -14220,6 +14255,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).GetContext
   nameWithType: DbContextResolver<TDbContext>.GetContext
   nameWithType.vb: DbContextResolver(Of TDbContext).GetContext
+- uid: JsonApiDotNetCore.Repositories.DbContextResolver`1.GetForeignKeysRequiringClientSetNullOnDelete(System.Type)
+  name: GetForeignKeysRequiringClientSetNullOnDelete(Type)
+  href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html#JsonApiDotNetCore_Repositories_DbContextResolver_1_GetForeignKeysRequiringClientSetNullOnDelete_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.DbContextResolver`1.GetForeignKeysRequiringClientSetNullOnDelete(System.Type)
+  fullName: JsonApiDotNetCore.Repositories.DbContextResolver<TDbContext>.GetForeignKeysRequiringClientSetNullOnDelete(System.Type)
+  fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).GetForeignKeysRequiringClientSetNullOnDelete(System.Type)
+  nameWithType: DbContextResolver<TDbContext>.GetForeignKeysRequiringClientSetNullOnDelete(Type)
+  nameWithType.vb: DbContextResolver(Of TDbContext).GetForeignKeysRequiringClientSetNullOnDelete(Type)
+- uid: JsonApiDotNetCore.Repositories.DbContextResolver`1.GetForeignKeysRequiringClientSetNullOnDelete*
+  name: GetForeignKeysRequiringClientSetNullOnDelete
+  href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html#JsonApiDotNetCore_Repositories_DbContextResolver_1_GetForeignKeysRequiringClientSetNullOnDelete_
+  commentId: Overload:JsonApiDotNetCore.Repositories.DbContextResolver`1.GetForeignKeysRequiringClientSetNullOnDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.DbContextResolver<TDbContext>.GetForeignKeysRequiringClientSetNullOnDelete
+  fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).GetForeignKeysRequiringClientSetNullOnDelete
+  nameWithType: DbContextResolver<TDbContext>.GetForeignKeysRequiringClientSetNullOnDelete
+  nameWithType.vb: DbContextResolver(Of TDbContext).GetForeignKeysRequiringClientSetNullOnDelete
 - uid: JsonApiDotNetCore.Repositories.DbContextResolver`1.GetTypedContext
   name: GetTypedContext()
   href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html#JsonApiDotNetCore_Repositories_DbContextResolver_1_GetTypedContext
@@ -14580,6 +14632,38 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.IDbContextResolver.GetContext
   nameWithType: IDbContextResolver.GetContext
+- uid: JsonApiDotNetCore.Repositories.IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete(System.Type)
+  name: GetForeignKeysRequiringClientSetNullOnDelete(Type)
+  href: api/JsonApiDotNetCore.Repositories.IDbContextResolver.html#JsonApiDotNetCore_Repositories_IDbContextResolver_GetForeignKeysRequiringClientSetNullOnDelete_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete(System.Type)
+  fullName: JsonApiDotNetCore.Repositories.IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete(System.Type)
+  nameWithType: IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete(Type)
+- uid: JsonApiDotNetCore.Repositories.IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete*
+  name: GetForeignKeysRequiringClientSetNullOnDelete
+  href: api/JsonApiDotNetCore.Repositories.IDbContextResolver.html#JsonApiDotNetCore_Repositories_IDbContextResolver_GetForeignKeysRequiringClientSetNullOnDelete_
+  commentId: Overload:JsonApiDotNetCore.Repositories.IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete
+  nameWithType: IDbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete
+- uid: JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache
+  name: IReferencingForeignKeysCache
+  href: api/JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.html
+  commentId: T:JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache
+  fullName: JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache
+  nameWithType: IReferencingForeignKeysCache
+- uid: JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Type)
+  name: GetForeignKeysRequiringClientSetNullOnDelete(IReadOnlyModel, Type)
+  href: api/JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.html#JsonApiDotNetCore_Repositories_IReferencingForeignKeysCache_GetForeignKeysRequiringClientSetNullOnDelete_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Type)
+  fullName: JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, System.Type)
+  nameWithType: IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(IReadOnlyModel, Type)
+- uid: JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete*
+  name: GetForeignKeysRequiringClientSetNullOnDelete
+  href: api/JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.html#JsonApiDotNetCore_Repositories_IReferencingForeignKeysCache_GetForeignKeysRequiringClientSetNullOnDelete_
+  commentId: Overload:JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete
+  nameWithType: IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete
 - uid: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction
   name: IRepositorySupportsTransaction
   href: api/JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html
@@ -14986,6 +15070,25 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).UpdateAsync
   nameWithType: IResourceWriteRepository<TResource, TId>.UpdateAsync
   nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateAsync
+- uid: JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache
+  name: ReferencingForeignKeysCache
+  href: api/JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.html
+  commentId: T:JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache
+  fullName: JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache
+  nameWithType: ReferencingForeignKeysCache
+- uid: JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Type)
+  name: GetForeignKeysRequiringClientSetNullOnDelete(IReadOnlyModel, Type)
+  href: api/JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.html#JsonApiDotNetCore_Repositories_ReferencingForeignKeysCache_GetForeignKeysRequiringClientSetNullOnDelete_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Type)
+  fullName: JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, System.Type)
+  nameWithType: ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(IReadOnlyModel, Type)
+- uid: JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete*
+  name: GetForeignKeysRequiringClientSetNullOnDelete
+  href: api/JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.html#JsonApiDotNetCore_Repositories_ReferencingForeignKeysCache_GetForeignKeysRequiringClientSetNullOnDelete_
+  commentId: Overload:JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete
+  nameWithType: ReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor
   name: ResourceRepositoryAccessor
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html
@@ -15534,25 +15637,6 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   nameWithType: HasOneAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
-  name: HasOneAttribute()
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
-  name.vb: New()
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.HasOneAttribute()
-  fullName.vb: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.New()
-  nameWithType: HasOneAttribute.HasOneAttribute()
-  nameWithType.vb: HasOneAttribute.New()
-- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor*
-  name: HasOneAttribute
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
-  isSpec: "True"
-  name.vb: New
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.HasOneAttribute
-  fullName.vb: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.New
-  nameWithType: HasOneAttribute.HasOneAttribute
-  nameWithType.vb: HasOneAttribute.New
 - uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities
   name: Capabilities
   href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities

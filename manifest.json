@@ -453,7 +453,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Configuration.IInverseNavigationResolver",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Configuration.IInverseNavigationResolver.yml\" sourcestartlinenumber=\"1\">Responsible for populating <xref href=\"JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty\" data-throw-if-not-resolved=\"false\"></xref>. This service is instantiated in the configure phase of the\napplication. When using a data access layer different from Entity Framework Core, you will need to implement and register this service, or set\n<xref href=\"JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty\" data-throw-if-not-resolved=\"false\"></xref> explicitly.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Configuration.IInverseNavigationResolver.yml\" sourcestartlinenumber=\"1\">Responsible for populating <xref href=\"JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty\" data-throw-if-not-resolved=\"false\"></xref>. This service is instantiated at startup. When using a data\naccess layer other than Entity Framework Core, you should implement and register this service.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -495,7 +495,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Configuration.InverseNavigationResolver",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Configuration.InverseNavigationResolver.yml\" sourcestartlinenumber=\"1\">Responsible for populating <xref href=\"JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty\" data-throw-if-not-resolved=\"false\"></xref>. This service is instantiated in the configure phase of the\napplication. When using a data access layer different from Entity Framework Core, you will need to implement and register this service, or set\n<xref href=\"JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty\" data-throw-if-not-resolved=\"false\"></xref> explicitly.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Configuration.InverseNavigationResolver.yml\" sourcestartlinenumber=\"1\">Responsible for populating <xref href=\"JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty\" data-throw-if-not-resolved=\"false\"></xref>. This service is instantiated at startup. When using a data\naccess layer other than Entity Framework Core, you should implement and register this service.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -3557,6 +3557,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache",
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.yml\" sourcestartlinenumber=\"1\">Caches referencing Entity Framework Core foreign keys that have <xref href=\"Microsoft.EntityFrameworkCore.DeleteBehavior.ClientSetNull\" data-throw-if-not-resolved=\"false\"></xref> for a principal entity type.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.yml",
       "output": {
         ".html": {
@@ -3624,6 +3638,20 @@
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>",
       "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.yml\" sourcestartlinenumber=\"1\">Groups write operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache",
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Repositories.ReferencingForeignKeysCache.yml\" sourcestartlinenumber=\"1\">Caches referencing Entity Framework Core foreign keys that have <xref href=\"Microsoft.EntityFrameworkCore.DeleteBehavior.ClientSetNull\" data-throw-if-not-resolved=\"false\"></xref> for a principal entity type.</p>\n"
     },
     {
       "type": "ManagedReference",

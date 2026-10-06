@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Interface IInverseNavigationResolver </title>
+      <title>Interface IReferencingForeignKeysCache </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Interface IInverseNavigationResolver ">
+      <meta name="title" content="Interface IReferencingForeignKeysCache ">
       
-      <meta name="description" content="Responsible for populating . This service is instantiated at startup. When using a data access layer other than Entity Framework Core, you should implement and register this service.">
+      <meta name="description" content="Caches referencing Entity Framework Core foreign keys that have  for a principal entity type.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IInverseNavigationResolver.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IInverseNavigationResolver%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_IReferencingForeignKeysCache.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -87,27 +87,26 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="JsonApiDotNetCore.Configuration.IInverseNavigationResolver">
+        <article data-uid="JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache">
 
 
 
-  <h1 id="JsonApiDotNetCore_Configuration_IInverseNavigationResolver" data-uid="JsonApiDotNetCore.Configuration.IInverseNavigationResolver" class="text-break">
-Interface IInverseNavigationResolver  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IInverseNavigationResolver.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <h1 id="JsonApiDotNetCore_Repositories_IReferencingForeignKeysCache" data-uid="JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache" class="text-break">
+Interface IReferencingForeignKeysCache  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/IReferencingForeignKeysCache.cs/#L10"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Configuration.html">Configuration</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Repositories.html">Repositories</a></dd></dl>
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Responsible for populating <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>. This service is instantiated at startup. When using a data
-access layer other than Entity Framework Core, you should implement and register this service.</p>
+  <div class="markdown summary"><p>Caches referencing Entity Framework Core foreign keys that have <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.deletebehavior#microsoft-entityframeworkcore-deletebehavior-clientsetnull">ClientSetNull</a> for a principal entity type.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[PublicAPI]
-public interface IInverseNavigationResolver</code></pre>
+public interface IReferencingForeignKeysCache</code></pre>
   </div>
 
 
@@ -126,23 +125,34 @@ public interface IInverseNavigationResolver</code></pre>
 </h2>
 
 
-  <a id="JsonApiDotNetCore_Configuration_IInverseNavigationResolver_Resolve_" data-uid="JsonApiDotNetCore.Configuration.IInverseNavigationResolver.Resolve*"></a>
+  <a id="JsonApiDotNetCore_Repositories_IReferencingForeignKeysCache_GetForeignKeysRequiringClientSetNullOnDelete_" data-uid="JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete*"></a>
 
-  <h3 id="JsonApiDotNetCore_Configuration_IInverseNavigationResolver_Resolve" data-uid="JsonApiDotNetCore.Configuration.IInverseNavigationResolver.Resolve">
-  Resolve()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IInverseNavigationResolver.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <h3 id="JsonApiDotNetCore_Repositories_IReferencingForeignKeysCache_GetForeignKeysRequiringClientSetNullOnDelete_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_System_Type_" data-uid="JsonApiDotNetCore.Repositories.IReferencingForeignKeysCache.GetForeignKeysRequiringClientSetNullOnDelete(Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Type)">
+  GetForeignKeysRequiringClientSetNullOnDelete(IReadOnlyModel, Type)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/IReferencingForeignKeysCache.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Resolves the opposite direction of relationships in the resource graph and populates their
-<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>.</p>
+  <div class="markdown level1 summary"><p>Returns the referencing foreign keys that have <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.deletebehavior#microsoft-entityframeworkcore-deletebehavior-clientsetnull">ClientSetNull</a> for the specified principal entity type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void Resolve()</code></pre>
+    <pre><code class="lang-csharp hljs">IReadOnlyList&lt;IReadOnlyForeignKey&gt; GetForeignKeysRequiringClientSetNullOnDelete(IReadOnlyModel model, Type entityClrType)</code></pre>
   </div>
 
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>model</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.ireadonlymodel">IReadOnlyModel</a></dt>
+    <dd></dd>
+    <dt><code>entityClrType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd></dd>
+  </dl>
 
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.ireadonlyforeignkey">IReadOnlyForeignKey</a>&gt;</dt>
+    <dd></dd>
+  </dl>
 
 
 
@@ -158,7 +168,7 @@ public interface IInverseNavigationResolver</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IInverseNavigationResolver.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/IReferencingForeignKeysCache.cs/#L10" class="edit-link">Edit this page</a>
         </div>
 
 

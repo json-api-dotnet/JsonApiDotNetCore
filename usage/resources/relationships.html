@@ -177,11 +177,10 @@ CREATE UNIQUE INDEX &quot;IX_Cars_EngineId&quot; ON &quot;Cars&quot; (&quot;Engi
 </code></pre>
 <h4 id="optional-one-to-one-relationships-in-entity-framework-core">Optional one-to-one relationships in Entity Framework Core</h4>
 <p>For optional one-to-one relationships, Entity Framework Core uses <code>DeleteBehavior.ClientSetNull</code> by default, instead of <code>DeleteBehavior.SetNull</code>.
-This means that Entity Framework Core tries to handle the cascading effects (by sending multiple SQL statements), instead of leaving it up to the database.
-Of course that's only going to work when all the related resources are loaded in the change tracker upfront, which is expensive because it requires fetching more data than necessary.</p>
-<p>The reason for this odd default is poor support in SQL Server, as explained <a href="https://stackoverflow.com/questions/54326165/ef-core-why-clientsetnull-is-default-ondelete-behavior-for-optional-relations">here</a> and <a href="https://learn.microsoft.com/ef/core/saving/cascade-delete#database-cascade-limitations">here</a>.</p>
-<p><strong>Our <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1205">testing</a> shows that these limitations don't exist when using PostgreSQL.
-Therefore the general advice is to map the delete behavior of optional one-to-one relationships explicitly with <code>.OnDelete(DeleteBehavior.SetNull)</code>. This is simpler and more efficient.</strong></p>
+This means that Entity Framework Core handles cascading effects on the client (by sending multiple SQL statements to null referencing foreign keys before deleting the principal row), instead of relying on database-level <code>ON DELETE SET NULL</code>.</p>
+<p>Since v5.12.0, JsonApiDotNetCore fully supports EF Core's default <code>DeleteBehavior.ClientSetNull</code> out-of-the-box. When a resource is deleted, JsonApiDotNetCore automatically discovers all referencing foreign keys in the EF Core metadata model (including unidirectional relationships, self-referencing entities, and internal non-JSON:API entities) and loads any matching dependent records into the change tracker so that EF Core can null their foreign keys before deleting the resource.</p>
+<p>The reason for EF Core's <code>ClientSetNull</code> default is poor support for cyclic cascades and multiple cascade paths in SQL Server, as explained <a href="https://stackoverflow.com/questions/54326165/ef-core-why-clientsetnull-is-default-ondelete-behavior-for-optional-relations">here</a> and <a href="https://learn.microsoft.com/ef/core/saving/cascade-delete#database-cascade-limitations">here</a>.</p>
+<p>These limitations don't exist when using PostgreSQL and MySQL. Therefore, when using a database other than SQL Server, mapping the delete behavior of optional one-to-one relationships explicitly with <code>.OnDelete(DeleteBehavior.SetNull)</code> is strongly recommended to avoid querying dependent records into memory prior to deletion.</p>
 <p>The next example defines that each car optionally has an engine, while an engine is optionally linked to a car.</p>
 <pre><code class="lang-c#">#nullable enable
 

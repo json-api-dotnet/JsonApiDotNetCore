@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class InverseNavigationResolver ">
       
-      <meta name="description" content="Responsible for populating . This service is instantiated in the configure phase of the application. When using a data access layer different from Entity Framework Core, you will need to implement and register this service, or set  explicitly.">
+      <meta name="description" content="Responsible for populating . This service is instantiated at startup. When using a data access layer other than Entity Framework Core, you should implement and register this service.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -100,9 +100,8 @@ Class InverseNavigationResolver  <a class="header-action link-secondary" title="
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Responsible for populating <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>. This service is instantiated in the configure phase of the
-application. When using a data access layer different from Entity Framework Core, you will need to implement and register this service, or set
-<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a> explicitly.</p>
+  <div class="markdown summary"><p>Responsible for populating <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>. This service is instantiated at startup. When using a data
+access layer other than Entity Framework Core, you should implement and register this service.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -206,7 +205,8 @@ public sealed class InverseNavigationResolver : IInverseNavigationResolver</code
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/InverseNavigationResolver.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>This method is called upon startup by JsonApiDotNetCore. It resolves inverse navigations.</p>
+  <div class="markdown level1 summary"><p>Resolves the opposite direction of relationships in the resource graph and populates their
+<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

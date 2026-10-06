@@ -92,7 +92,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Repositories_DbContextExtensions" data-uid="JsonApiDotNetCore.Repositories.DbContextExtensions" class="text-break">
-Class DbContextExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L8"><i class="bi bi-code-slash"></i></a>
+Class DbContextExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L10"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -160,7 +160,7 @@ public static class DbContextExtensions</code></pre>
 
   <h3 id="JsonApiDotNetCore_Repositories_DbContextExtensions_GetTrackedIdentifiable_Microsoft_EntityFrameworkCore_DbContext_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Resources.IIdentifiable)">
   GetTrackedIdentifiable(DbContext, IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Searches the change tracker for an entity that matches the type and ID of <code class="paramref">identifiable</code>.</p>
@@ -199,7 +199,7 @@ public static class DbContextExtensions</code></pre>
 
   <h3 id="JsonApiDotNetCore_Repositories_DbContextExtensions_GetTrackedOrAttach_Microsoft_EntityFrameworkCore_DbContext_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Resources.IIdentifiable)">
   GetTrackedOrAttach(DbContext, IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>If not already tracked, attaches the specified resource to the change tracker in <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.entitystate#microsoft-entityframeworkcore-entitystate-unchanged">Unchanged</a> state.</p>
@@ -230,6 +230,11 @@ public static class DbContextExtensions</code></pre>
 
 
 
+  <h4 class="section" id="JsonApiDotNetCore_Repositories_DbContextExtensions_GetTrackedOrAttach_Microsoft_EntityFrameworkCore_DbContext_JsonApiDotNetCore_Resources_IIdentifiable__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Repeated calls to this method in repository operations may appear redundant at first glance, but are intentional safeguards. User-defined resource
+definition callbacks execute external code that may query or attach entities into the change tracker. Calling this method ensures the repository
+always transitions from detached placeholders to the actively tracked instances managed by EF Core.</p>
+</div>
 
 
 
@@ -238,7 +243,7 @@ public static class DbContextExtensions</code></pre>
 
   <h3 id="JsonApiDotNetCore_Repositories_DbContextExtensions_ResetChangeTracker_Microsoft_EntityFrameworkCore_DbContext_" data-uid="JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(Microsoft.EntityFrameworkCore.DbContext)">
   ResetChangeTracker(DbContext)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Detaches all entities from the change tracker.</p>
@@ -270,7 +275,7 @@ public static class DbContextExtensions</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L8" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/DbContextExtensions.cs/#L10" class="edit-link">Edit this page</a>
         </div>
 
 
