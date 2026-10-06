@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.AtomicOperations;
 public sealed class MissingTransactionFactory : IOperationsTransactionFactory
 {
     /// <inheritdoc />
-    public Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+    public Task<TResult> RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>> asyncAction, CancellationToken cancellationToken)
     {
         // When using a data store other than Entity Framework Core, replace this type with your custom implementation
         // by overwriting the IoC container registration.

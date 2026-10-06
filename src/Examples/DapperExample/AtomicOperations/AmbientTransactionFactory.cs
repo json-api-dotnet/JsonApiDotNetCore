@@ -24,15 +24,21 @@ public sealed class AmbientTransactionFactory : IOperationsTransactionFactory
         _dataModelService = dataModelService;
     }
 
-    internal async Task<AmbientTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+    /// <inheritdoc />
+    public async Task<TResult> RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>> asyncAction, CancellationToken cancellationToken)
     {
-        IOperationsTransactionFactory instance = this;
+        ArgumentNullException.ThrowIfNull(asyncAction);
 
-        IOperationsTransaction transaction = await instance.BeginTransactionAsync(cancellationToken);
-        return (AmbientTransaction)transaction;
+        await using AmbientTransaction transaction = await BeginTransactionAsync(cancellationToken);
+
+        TResult result = await asyncAction(transaction);
+
+        await transaction.CommitAsync(cancellationToken);
+
+        return result;
     }
 
-    async Task<IOperationsTransaction> IOperationsTransactionFactory.BeginTransactionAsync(CancellationToken cancellationToken)
+    private async Task<AmbientTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
     {
         if (AmbientTransaction != null)
         {

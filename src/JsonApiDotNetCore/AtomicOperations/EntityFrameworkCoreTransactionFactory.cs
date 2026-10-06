@@ -23,14 +23,26 @@ public sealed class EntityFrameworkCoreTransactionFactory : IOperationsTransacti
     }
 
     /// <inheritdoc />
-    public async Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+    public async Task<TResult> RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>> asyncAction, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(asyncAction);
+
         DbContext dbContext = _dbContextResolver.GetContext();
+        IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
 
-        IDbContextTransaction transaction = _options.TransactionIsolationLevel != null
-            ? await dbContext.Database.BeginTransactionAsync(_options.TransactionIsolationLevel.Value, cancellationToken)
-            : await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        return await strategy.ExecuteAsync(async _ =>
+        {
+            await using IDbContextTransaction transaction = _options.TransactionIsolationLevel != null
+                ? await dbContext.Database.BeginTransactionAsync(_options.TransactionIsolationLevel.Value, cancellationToken)
+                : await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-        return new EntityFrameworkCoreTransaction(transaction, dbContext);
+            await using var operationsTransaction = new EntityFrameworkCoreTransaction(transaction, dbContext);
+
+            TResult result = await asyncAction(operationsTransaction);
+
+            await operationsTransaction.CommitAsync(cancellationToken);
+
+            return result;
+        }, cancellationToken);
     }
 }

@@ -49,31 +49,36 @@ public class OperationsProcessor : IOperationsProcessor
         ArgumentNullException.ThrowIfNull(operations);
 
         _localIdValidator.Validate(operations);
-        _localIdTracker.Reset();
-
-        List<OperationContainer?> results = [];
-
-        await using IOperationsTransaction transaction = await _operationsTransactionFactory.BeginTransactionAsync(cancellationToken);
+        var indexTracker = new OperationIndexTracker();
 
         try
         {
-            using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
-
-            foreach (OperationContainer operation in operations)
+            return await _operationsTransactionFactory.RunInTransactionAsync(async transaction =>
             {
-                operation.SetTransactionId(transaction.TransactionId);
+                indexTracker.Reset();
+                _localIdTracker.Reset();
+                using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
-                await transaction.BeforeProcessOperationAsync(cancellationToken);
+                List<OperationContainer?> results = [];
 
-                OperationContainer? result = await ProcessOperationAsync(operation, cancellationToken);
-                results.Add(result);
+                foreach (OperationContainer operation in operations)
+                {
+                    indexTracker.Increment();
+                    operation.SetTransactionId(transaction.TransactionId);
 
-                await transaction.AfterProcessOperationAsync(cancellationToken);
+                    await transaction.BeforeProcessOperationAsync(cancellationToken);
 
-                _sparseFieldSetCache.Reset();
-            }
+                    OperationContainer? result = await ProcessOperationAsync(operation, cancellationToken);
+                    results.Add(result);
 
-            await transaction.CommitAsync(cancellationToken);
+                    await transaction.AfterProcessOperationAsync(cancellationToken);
+
+                    _sparseFieldSetCache.Reset();
+                }
+
+                indexTracker.Reset();
+                return results;
+            }, cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -81,20 +86,20 @@ public class OperationsProcessor : IOperationsProcessor
         }
         catch (JsonApiException exception)
         {
+            string operationPointer = indexTracker.OperationIndex != null ? $"/atomic:operations[{indexTracker.OperationIndex}]" : "/atomic:operations";
+
             foreach (ErrorObject error in exception.Errors)
             {
                 error.Source ??= new ErrorSource();
-                error.Source.Pointer = $"/atomic:operations[{results.Count}]{error.Source.Pointer}";
+                error.Source.Pointer = indexTracker.OperationIndex != null ? $"{operationPointer}{error.Source.Pointer}" : operationPointer;
             }
 
             throw;
         }
         catch (Exception exception)
         {
-            throw new FailedOperationException(results.Count, exception);
+            throw new FailedOperationException(indexTracker.OperationIndex, exception);
         }
-
-        return results;
     }
 
     protected virtual async Task<OperationContainer?> ProcessOperationAsync(OperationContainer operation, CancellationToken cancellationToken)
@@ -144,6 +149,28 @@ public class OperationsProcessor : IOperationsProcessor
         {
             ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetClrType());
             resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceType);
+        }
+    }
+
+    private sealed class OperationIndexTracker
+    {
+        public int? OperationIndex { get; private set; }
+
+        public void Reset()
+        {
+            OperationIndex = null;
+        }
+
+        public void Increment()
+        {
+            if (OperationIndex == null)
+            {
+                OperationIndex = 0;
+            }
+            else
+            {
+                OperationIndex++;
+            }
         }
     }
 }

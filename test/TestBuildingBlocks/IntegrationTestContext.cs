@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Xunit;
 
 namespace TestBuildingBlocks;
@@ -33,7 +34,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
 {
     private readonly Lazy<WebApplication> _lazyApp;
     private readonly TestControllerProvider _testControllerProvider = new();
-    private Action<ILoggingBuilder>? _loggingConfiguration;
+    private Action<ILoggingBuilder>? _configureLogging;
+    private Action<NpgsqlDbContextOptionsBuilder>? _configureDbContextOptions;
     private Action<IServiceCollection>? _configureServices;
     private Action<IServiceCollection>? _postConfigureServices;
     private bool _throttleAcquired;
@@ -86,17 +88,22 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
 
         builder.Services.AddDbContext<TDbContext>(options =>
         {
-            options.UseNpgsql(dbConnectionString, static optionsBuilder => optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+            options.UseNpgsql(dbConnectionString, optionsBuilder =>
+            {
+                optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                _configureDbContextOptions?.Invoke(optionsBuilder);
+            });
+
             SetDbContextDebugOptions(options);
         });
 
-        if (_loggingConfiguration == null)
+        if (_configureLogging == null)
         {
             ClearLoggingProvidersInReleaseBuild(builder.Logging);
         }
         else
         {
-            _loggingConfiguration.Invoke(builder.Logging);
+            _configureLogging.Invoke(builder.Logging);
         }
 
         builder.Host.UseDefaultServiceProvider(ConfigureServiceProvider);
@@ -126,14 +133,24 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         loggingBuilder.ClearProviders();
     }
 
+    public void ConfigureDbContextOptions(Action<NpgsqlDbContextOptionsBuilder> configureDbContextOptions)
+    {
+        if (_configureDbContextOptions != null && _configureDbContextOptions != configureDbContextOptions)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(ConfigureDbContextOptions)} multiple times.");
+        }
+
+        _configureDbContextOptions = configureDbContextOptions;
+    }
+
     public void ConfigureLogging(Action<ILoggingBuilder> configureLogging)
     {
-        if (_loggingConfiguration != null && _loggingConfiguration != configureLogging)
+        if (_configureLogging != null && _configureLogging != configureLogging)
         {
             throw new InvalidOperationException($"Do not call {nameof(ConfigureLogging)} multiple times.");
         }
 
-        _loggingConfiguration = configureLogging;
+        _configureLogging = configureLogging;
     }
 
     public void ConfigureServices(Action<IServiceCollection> configureServices)
