@@ -17,6 +17,7 @@ namespace DapperExample.TranslationToSql.DataModel;
 public abstract class BaseDataModelService : IDataModelService
 {
     private readonly Dictionary<ResourceType, ReadOnlyDictionary<string, ResourceFieldAttribute?>> _columnMappingsByType = [];
+    private readonly Dictionary<ResourceType, ReadOnlyCollection<RelationshipForeignKey>> _foreignKeysRequiringClientSetNullOnDeleteByType = [];
 
     protected IResourceGraph ResourceGraph { get; }
 
@@ -33,9 +34,19 @@ public abstract class BaseDataModelService : IDataModelService
 
     public abstract RelationshipForeignKey GetForeignKey(RelationshipAttribute relationship);
 
+    public IReadOnlyList<RelationshipForeignKey> GetReferencingForeignKeysRequiringClientSetNullOnDelete(ResourceType resourceType)
+    {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
+        return _foreignKeysRequiringClientSetNullOnDeleteByType.TryGetValue(resourceType, out ReadOnlyCollection<RelationshipForeignKey>? foreignKeys)
+            ? foreignKeys
+            : [];
+    }
+
     protected void Initialize()
     {
         ScanColumnMappings();
+        ScanForeignKeysRequiringClientSetNullOnDelete();
 
         if (DatabaseProvider == DatabaseProvider.MySql)
         {
@@ -99,6 +110,34 @@ public abstract class BaseDataModelService : IDataModelService
     private static bool IsMapped(PropertyInfo property)
     {
         return property.GetCustomAttribute<NotMappedAttribute>() == null;
+    }
+
+    private void ScanForeignKeysRequiringClientSetNullOnDelete()
+    {
+        foreach (ResourceType resourceType in ResourceGraph.GetResourceTypes())
+        {
+            _foreignKeysRequiringClientSetNullOnDeleteByType[resourceType] = ScanForeignKeysRequiringClientSetNullOnDelete(resourceType);
+        }
+    }
+
+    private ReadOnlyCollection<RelationshipForeignKey> ScanForeignKeysRequiringClientSetNullOnDelete(ResourceType resourceType)
+    {
+        List<RelationshipForeignKey> foreignKeys = [];
+
+        foreach (RelationshipAttribute relationship in ResourceGraph.GetResourceTypes().SelectMany(type => type.Relationships))
+        {
+            if (relationship.RightType.Equals(resourceType))
+            {
+                RelationshipForeignKey foreignKey = GetForeignKey(relationship);
+
+                if (foreignKey is { IsAtLeftSide: true, UseClientSetNullOnDelete: true })
+                {
+                    foreignKeys.Add(foreignKey);
+                }
+            }
+        }
+
+        return foreignKeys.AsReadOnly();
     }
 
     public IReadOnlyDictionary<string, ResourceFieldAttribute?> GetColumnMappings(ResourceType resourceType)

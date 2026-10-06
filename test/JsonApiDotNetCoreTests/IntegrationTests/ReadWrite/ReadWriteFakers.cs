@@ -34,9 +34,14 @@ internal sealed class ReadWriteFakers
         .RuleFor(color => color.Id, faker => faker.Random.Hexadecimal(6))
         .RuleFor(color => color.DisplayName, faker => faker.Commerce.Color()));
 
+    private readonly Lazy<Faker<UserProfile>> _lazyUserProfileFaker = new(() => new Faker<UserProfile>()
+        .MakeDeterministic()
+        .RuleFor(profile => profile.UseDarkMode, faker => faker.Random.Bool()));
+
     public Faker<WorkItem> WorkItem => _lazyWorkItemFaker.Value;
     public Faker<WorkTag> WorkTag => _lazyWorkTagFaker.Value;
     public Faker<UserAccount> UserAccount => _lazyUserAccountFaker.Value;
     public Faker<WorkItemGroup> WorkItemGroup => _lazyWorkItemGroupFaker.Value;
     public Faker<RgbColor> RgbColor => _lazyRgbColorFaker.Value;
+    public Faker<UserProfile> UserProfile => _lazyUserProfileFaker.Value;
 }

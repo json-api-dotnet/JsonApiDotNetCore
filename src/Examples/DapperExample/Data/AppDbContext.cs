@@ -53,22 +53,25 @@ public sealed class AppDbContext : DbContext
             .HasForeignKey<RgbColor>("TagId");
 
         var databaseProvider = _configuration.GetValue<DatabaseProvider>("DatabaseProvider");
-
-        if (databaseProvider != DatabaseProvider.SqlServer)
-        {
-            // In this example project, all cascades happen in the database, but SQL Server doesn't support that very well.
-            AdjustDeleteBehaviorForJsonApi(builder);
-        }
+        AdjustDeleteBehaviorForJsonApi(builder, databaseProvider);
     }
 
-    private static void AdjustDeleteBehaviorForJsonApi(ModelBuilder builder)
+    private void AdjustDeleteBehaviorForJsonApi(ModelBuilder builder, DatabaseProvider databaseProvider)
     {
         foreach (IMutableForeignKey foreignKey in builder.Model.GetEntityTypes()
             .SelectMany(entityType => entityType.GetForeignKeys()))
         {
-            if (foreignKey.DeleteBehavior == DeleteBehavior.ClientSetNull)
+            if (databaseProvider == DatabaseProvider.SqlServer)
             {
-                foreignKey.DeleteBehavior = DeleteBehavior.SetNull;
+                // SQL Server doesn't support server-side cascading deletes very well, so tolerate ClientSetNull.
+                // See https://learn.microsoft.com/en-us/ef/core/saving/cascade-delete
+            }
+            else
+            {
+                if (foreignKey.DeleteBehavior == DeleteBehavior.ClientSetNull)
+                {
+                    foreignKey.DeleteBehavior = DeleteBehavior.SetNull;
+                }
             }
 
             if (foreignKey.DeleteBehavior == DeleteBehavior.ClientCascade)

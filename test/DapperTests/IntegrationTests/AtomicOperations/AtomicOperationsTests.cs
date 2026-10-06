@@ -1,4 +1,5 @@
 using System.Net;
+using DapperExample;
 using DapperExample.Models;
 using DapperExample.Repositories;
 using FluentAssertions;
@@ -8,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace DapperTests.IntegrationTests.AtomicOperations;
 
@@ -34,16 +34,6 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
         Person newAssignee = _fakers.Person.GenerateOne();
         Tag newTag = _fakers.Tag.GenerateOne();
         TodoItem newTodoItem = _fakers.TodoItem.GenerateOne();
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await Task.Yield();
-
-            if (dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.SqlServer")
-            {
-                throw SkipException.ForSkip("Cascading deletes are not supported in SQL Server.");
-            }
-        });
 
         const string ownerLocalId = "new-owner";
         const string assigneeLocalId = "new-assignee";
@@ -221,9 +211,10 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.Tags.ElementAt(0).Id.Should().Be(newTagId);
         });
 
-        store.SqlCommands.Should().HaveCount(15);
+        store.SqlCommands.Should().HaveCount(_testContext.DatabaseProvider == DatabaseProvider.SqlServer ? 16 : 15);
+        int index = 0;
 
-        store.SqlCommands[0].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 INSERT INTO "People" ("FirstName", "LastName", "AccountId")
@@ -237,7 +228,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p3", null);
         });
 
-        store.SqlCommands[1].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName"
@@ -249,7 +240,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p1", newOwnerId);
         });
 
-        store.SqlCommands[2].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 INSERT INTO "People" ("FirstName", "LastName", "AccountId")
@@ -263,7 +254,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p3", null);
         });
 
-        store.SqlCommands[3].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."FirstName", t1."LastName"
@@ -275,7 +266,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p1", newAssigneeId);
         });
 
-        store.SqlCommands[4].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 INSERT INTO "Tags" ("Name", "TodoItemId")
@@ -288,7 +279,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p2", null);
         });
 
-        store.SqlCommands[5].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."Name"
@@ -300,7 +291,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p1", newTagId);
         });
 
-        store.SqlCommands[6].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 INSERT INTO "TodoItems" ("Description", "Priority", "DurationInHours", "CreatedAt", "LastModifiedAt", "OwnerId", "AssigneeId")
@@ -318,7 +309,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p7", null);
         });
 
-        store.SqlCommands[7].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -330,7 +321,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
-        store.SqlCommands[8].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."FirstName", t2."LastName"
@@ -343,7 +334,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
-        store.SqlCommands[9].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 UPDATE "TodoItems"
@@ -356,7 +347,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p2", newTodoItemId);
         });
 
-        store.SqlCommands[10].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."Name"
@@ -369,7 +360,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
-        store.SqlCommands[11].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 UPDATE "TodoItems"
@@ -382,7 +373,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p2", newTodoItemId);
         });
 
-        store.SqlCommands[12].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 UPDATE "Tags"
@@ -395,7 +386,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p2", newTagId);
         });
 
-        store.SqlCommands[13].With(command =>
+        store.SqlCommands[index++].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
@@ -407,7 +398,23 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
-        store.SqlCommands[14].With(command =>
+        if (_testContext.DatabaseProvider == DatabaseProvider.SqlServer)
+        {
+            store.SqlCommands[index++].With(command =>
+            {
+                command.Statement.Should().Be(_testContext.AdaptSql("""
+                    UPDATE "TodoItems"
+                    SET "AssigneeId" = @p1
+                    WHERE "AssigneeId" = @p2
+                    """));
+
+                command.Parameters.Should().HaveCount(2);
+                command.Parameters.Should().Contain("@p1", null);
+                command.Parameters.Should().Contain("@p2", newAssigneeId);
+            });
+        }
+
+        store.SqlCommands[index].With(command =>
         {
             command.Statement.Should().Be(_testContext.AdaptSql("""
                 DELETE FROM "People"
@@ -559,6 +566,117 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
 
             command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);
+        });
+    }
+
+    [Fact]
+    public async Task Can_delete_both_principal_and_dependent_resources_in_operations_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
+        store.Clear();
+
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
+        existingTodoItem.Tags = _fakers.Tag.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await _testContext.ClearAllTablesAsync(dbContext);
+            dbContext.TodoItems.Add(existingTodoItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        long existingTagId = existingTodoItem.Tags.Single().Id;
+
+        var requestBody = new
+        {
+            atomic__operations = new object[]
+            {
+                new
+                {
+                    op = "remove",
+                    @ref = new
+                    {
+                        type = "todoItems",
+                        id = existingTodoItem.Id.ToString()
+                    }
+                },
+                new
+                {
+                    op = "remove",
+                    @ref = new
+                    {
+                        type = "tags",
+                        id = existingTagId.ToString()
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            TodoItem? todoItemInDatabase = await dbContext.TodoItems.FirstWithIdOrDefaultAsync(existingTodoItem.Id);
+            todoItemInDatabase.Should().BeNull();
+
+            Tag? tagInDatabase = await dbContext.Tags.FirstWithIdOrDefaultAsync(existingTagId);
+            tagInDatabase.Should().BeNull();
+        });
+
+        int index = 0;
+
+        if (_testContext.DatabaseProvider == DatabaseProvider.SqlServer)
+        {
+            store.SqlCommands.Should().HaveCount(3);
+
+            store.SqlCommands[index++].With(command =>
+            {
+                command.Statement.Should().Be(_testContext.AdaptSql("""
+                    UPDATE "Tags"
+                    SET "TodoItemId" = @p1
+                    WHERE "TodoItemId" = @p2
+                    """));
+
+                command.Parameters.Should().HaveCount(2);
+                command.Parameters.Should().Contain("@p1", null);
+                command.Parameters.Should().Contain("@p2", existingTodoItem.Id);
+            });
+        }
+        else
+        {
+            store.SqlCommands.Should().HaveCount(2);
+        }
+
+        store.SqlCommands[index++].With(command =>
+        {
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                DELETE FROM "TodoItems"
+                WHERE "Id" = @p1
+                """));
+
+            command.Parameters.Should().HaveCount(1);
+            command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
+        });
+
+        store.SqlCommands[index].With(command =>
+        {
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                DELETE FROM "Tags"
+                WHERE "Id" = @p1
+                """));
+
+            command.Parameters.Should().HaveCount(1);
+            command.Parameters.Should().Contain("@p1", existingTagId);
         });
     }
 }

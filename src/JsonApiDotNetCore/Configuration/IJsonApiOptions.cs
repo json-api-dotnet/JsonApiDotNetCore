@@ -2,6 +2,7 @@ using System.Data;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -157,6 +158,12 @@ public interface IJsonApiOptions
     /// Determines whether legacy filter notation in query strings (such as =eq:, =like:, and =in:) is enabled. <c>false</c> by default.
     /// </summary>
     bool EnableLegacyFilterNotation { get; }
+
+    /// <summary>
+    /// Determines whether an <see cref="InvalidConfigurationException" /> is thrown at startup when problematic Entity Framework Core mappings are detected.
+    /// Set to <c>false</c> to logs warnings instead. <c>true</c> by default.
+    /// </summary>
+    bool ThrowForProblematicEntityMappings { get; }
 
     /// <summary>
     /// Controls how many levels deep includes are allowed to be nested. For example, MaximumIncludeDepth=1 would allow ?include=articles but not

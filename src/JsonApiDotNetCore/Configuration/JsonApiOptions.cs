@@ -91,6 +91,9 @@ public sealed class JsonApiOptions : IJsonApiOptions
     public bool EnableLegacyFilterNotation { get; set; }
 
     /// <inheritdoc />
+    public bool ThrowForProblematicEntityMappings { get; set; } = true;
+
+    /// <inheritdoc />
     public int? MaximumIncludeDepth { get; set; }
 
     /// <inheritdoc />

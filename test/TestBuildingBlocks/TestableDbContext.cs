@@ -23,10 +23,18 @@ public abstract class TestableDbContext(DbContextOptions options)
     {
         foreach (IMutableForeignKey foreignKey in builder.Model.GetEntityTypes().SelectMany(entityType => entityType.GetForeignKeys()))
         {
-            if (foreignKey.DeleteBehavior == DeleteBehavior.ClientSetNull)
+            if (ShouldOverrideDeleteBehavior(foreignKey))
             {
-                foreignKey.DeleteBehavior = DeleteBehavior.SetNull;
+                if (foreignKey.DeleteBehavior == DeleteBehavior.ClientSetNull)
+                {
+                    foreignKey.DeleteBehavior = DeleteBehavior.SetNull;
+                }
             }
         }
+    }
+
+    protected virtual bool ShouldOverrideDeleteBehavior(IMutableForeignKey foreignKey)
+    {
+        return true;
     }
 }

@@ -21,4 +21,6 @@ public interface IDataModelService
     object? GetColumnValue(ResourceType resourceType, IIdentifiable resource, string columnName);
 
     bool IsColumnNullable(AttrAttribute attribute);
+
+    IReadOnlyList<RelationshipForeignKey> GetReferencingForeignKeysRequiringClientSetNullOnDelete(ResourceType resourceType);
 }

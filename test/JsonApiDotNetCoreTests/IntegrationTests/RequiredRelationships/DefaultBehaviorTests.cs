@@ -364,7 +364,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
 
         var requestBody = new
         {
-            data = new object[]
+            data = new[]
             {
                 new
                 {

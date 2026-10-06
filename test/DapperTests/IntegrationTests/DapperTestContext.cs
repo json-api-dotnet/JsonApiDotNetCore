@@ -46,6 +46,15 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 
     public WebApplicationFactory<TodoItem> Factory => _lazyFactory.Value;
 
+    public DatabaseProvider DatabaseProvider
+    {
+        get
+        {
+            var dataModelService = Factory.Services.GetRequiredService<IDataModelService>();
+            return dataModelService.DatabaseProvider;
+        }
+    }
+
     public DapperTestContext()
     {
         _lazyFactory = new Lazy<WebApplicationFactory<TodoItem>>(CreateFactory);

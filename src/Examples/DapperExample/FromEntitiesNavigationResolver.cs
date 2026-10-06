@@ -21,11 +21,7 @@ internal sealed class FromEntitiesNavigationResolver : IInverseNavigationResolve
         ArgumentNullException.ThrowIfNull(dataModelService);
         ArgumentNullException.ThrowIfNull(appDbContext);
 
-        _defaultResolver = new InverseNavigationResolver(resourceGraph, new[]
-        {
-            new DbContextResolver<AppDbContext>(appDbContext)
-        });
-
+        _defaultResolver = new InverseNavigationResolver(resourceGraph, [new DbContextResolver<AppDbContext>(appDbContext)]);
         _dataModelService = dataModelService;
         _appDbContext = appDbContext;
     }

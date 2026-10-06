@@ -60,8 +60,8 @@ internal sealed class DapperFacade
 
             if (foreignKey.IsNullable)
             {
-                var updateBuilder = new UpdateClearOneToOneStatementBuilder(_dataModelService);
-                UpdateNode updateNode = updateBuilder.Build(resourceType, foreignKey.ColumnName, whereColumnName, whereValue);
+                var clearBuilder = new ClearForeignKeyStatementBuilder(_dataModelService);
+                UpdateNode updateNode = clearBuilder.Build(resourceType, foreignKey.ColumnName, whereColumnName, whereValue);
                 CommandDefinition sqlCommand = GetSqlCommand(updateNode, cancellationToken);
                 sqlCommands.Add(sqlCommand);
             }
@@ -72,6 +72,27 @@ internal sealed class DapperFacade
                 CommandDefinition sqlCommand = GetSqlCommand(deleteNode, cancellationToken);
                 sqlCommands.Add(sqlCommand);
             }
+        }
+
+        return sqlCommands.AsReadOnly();
+    }
+
+    public IReadOnlyCollection<CommandDefinition> BuildSqlCommandsForClientSetNullOnDelete(ResourceType resourceType, object id,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(id);
+
+        List<CommandDefinition> sqlCommands = [];
+
+        IReadOnlyList<RelationshipForeignKey> foreignKeys = _dataModelService.GetReferencingForeignKeysRequiringClientSetNullOnDelete(resourceType);
+
+        foreach (RelationshipForeignKey foreignKey in foreignKeys)
+        {
+            var clearBuilder = new ClearForeignKeyStatementBuilder(_dataModelService);
+            UpdateNode updateNode = clearBuilder.Build(foreignKey.Relationship.LeftType, foreignKey.ColumnName, foreignKey.ColumnName, id);
+            CommandDefinition sqlCommand = GetSqlCommand(updateNode, cancellationToken);
+            sqlCommands.Add(sqlCommand);
         }
 
         return sqlCommands.AsReadOnly();
