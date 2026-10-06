@@ -69,34 +69,52 @@ internal sealed class JsonApiApplicationBuilder
     {
         ArgumentNullException.ThrowIfNull(dbContextTypes);
 
-        _services.TryAddSingleton(serviceProvider =>
+        _services.TryAddSingleton(serviceProvider => CreateResourceGraph(serviceProvider, dbContextTypes, configureResourceGraph));
+    }
+
+    private IResourceGraph CreateResourceGraph(IServiceProvider serviceProvider, ICollection<Type> dbContextTypes,
+        Action<ResourceGraphBuilder>? configureResourceGraph)
+    {
+        var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        var events = serviceProvider.GetRequiredService<IJsonApiApplicationBuilderEvents>();
+
+        var resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
+
+        var scanner = new ResourcesAssemblyScanner(_assemblyCache, resourceGraphBuilder);
+        scanner.DiscoverResources();
+
+        using IServiceScope? scope = dbContextTypes.Count > 0 ? serviceProvider.CreateScope() : null;
+        List<DbContext> dbContextsToValidate = [];
+
+        if (scope != null)
         {
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            var events = serviceProvider.GetRequiredService<IJsonApiApplicationBuilderEvents>();
-
-            var resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
-
-            var scanner = new ResourcesAssemblyScanner(_assemblyCache, resourceGraphBuilder);
-            scanner.DiscoverResources();
-
-            if (dbContextTypes.Count > 0)
+            foreach (Type dbContextType in dbContextTypes)
             {
-                using IServiceScope scope = serviceProvider.CreateScope();
+                var dbContext = (DbContext)scope.ServiceProvider.GetRequiredService(dbContextType);
+                resourceGraphBuilder.Add(dbContext);
 
-                foreach (Type dbContextType in dbContextTypes)
-                {
-                    var dbContext = (DbContext)scope.ServiceProvider.GetRequiredService(dbContextType);
-                    resourceGraphBuilder.Add(dbContext);
-                }
+                dbContextsToValidate.Add(dbContext);
             }
+        }
 
-            configureResourceGraph?.Invoke(resourceGraphBuilder);
+        configureResourceGraph?.Invoke(resourceGraphBuilder);
 
-            IResourceGraph resourceGraph = resourceGraphBuilder.Build();
-            events.ResourceGraphBuilt(resourceGraph);
+        IResourceGraph resourceGraph = resourceGraphBuilder.Build();
+        events.ResourceGraphBuilt(resourceGraph);
 
-            return resourceGraph;
-        });
+        ValidateDbContextModels(resourceGraph, dbContextsToValidate, loggerFactory);
+
+        return resourceGraph;
+    }
+
+    private void ValidateDbContextModels(IResourceGraph resourceGraph, List<DbContext> dbContexts, ILoggerFactory loggerFactory)
+    {
+        if (dbContexts.Count > 0)
+        {
+            ILogger<EntityFrameworkCoreModelValidator> logger = loggerFactory.CreateLogger<EntityFrameworkCoreModelValidator>();
+            var validator = new EntityFrameworkCoreModelValidator(dbContexts, _options, resourceGraph, logger);
+            validator.Validate();
+        }
     }
 
     /// <summary>
@@ -196,6 +214,7 @@ internal sealed class JsonApiApplicationBuilder
         RegisterImplementationForInterfaces(InjectablesAssemblyScanner.RepositoryUnboundInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
         _services.TryAddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
+        _services.TryAddSingleton<IReferencingForeignKeysCache, ReferencingForeignKeysCache>();
 
         _services.TryAddTransient<IQueryableBuilder, QueryableBuilder>();
         _services.TryAddTransient<IIncludeClauseBuilder, IncludeClauseBuilder>();

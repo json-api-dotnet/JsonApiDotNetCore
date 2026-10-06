@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.Builders;
 
-internal sealed class UpdateClearOneToOneStatementBuilder(IDataModelService dataModelService)
+internal sealed class ClearForeignKeyStatementBuilder(IDataModelService dataModelService)
     : StatementBuilder(dataModelService)
 {
     public UpdateNode Build(ResourceType resourceType, string setColumnName, string whereColumnName, object? whereValue)

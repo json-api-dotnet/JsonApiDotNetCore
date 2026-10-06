@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
@@ -7,7 +8,7 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class CompositeDbContext(DbContextOptions<CompositeDbContext> options)
+public sealed class CompositeKeyDbContext(DbContextOptions<CompositeKeyDbContext> options)
     : TestableDbContext(options)
 {
     public DbSet<Car> Cars => Set<Car>();
@@ -26,7 +27,8 @@ public sealed class CompositeDbContext(DbContextOptions<CompositeDbContext> opti
         builder.Entity<Engine>()
             .HasOne(engine => engine.Car)
             .WithOne(car => car.Engine)
-            .HasForeignKey<Engine>();
+            .HasForeignKey<Engine>()
+            .OnDelete(DeleteBehavior.ClientSetNull);
 
         builder.Entity<Dealership>()
             .HasMany(dealership => dealership.Inventory)
@@ -37,5 +39,10 @@ public sealed class CompositeDbContext(DbContextOptions<CompositeDbContext> opti
             .WithMany(dealership => dealership.SoldCars);
 
         base.OnModelCreating(builder);
+    }
+
+    protected override bool ShouldOverrideDeleteBehavior(IMutableForeignKey foreignKey)
+    {
+        return foreignKey.DeclaringEntityType.ClrType != typeof(Engine);
     }
 }

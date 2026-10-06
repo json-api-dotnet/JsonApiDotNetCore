@@ -4,15 +4,15 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Configuration;
 
 /// <summary>
-/// Responsible for populating <see cref="RelationshipAttribute.InverseNavigationProperty" />. This service is instantiated in the configure phase of the
-/// application. When using a data access layer different from Entity Framework Core, you will need to implement and register this service, or set
-/// <see cref="RelationshipAttribute.InverseNavigationProperty" /> explicitly.
+/// Responsible for populating <see cref="RelationshipAttribute.InverseNavigationProperty" />. This service is instantiated at startup. When using a data
+/// access layer other than Entity Framework Core, you should implement and register this service.
 /// </summary>
 [PublicAPI]
 public interface IInverseNavigationResolver
 {
     /// <summary>
-    /// This method is called upon startup by JsonApiDotNetCore. It resolves inverse navigations.
+    /// Resolves the opposite direction of relationships in the resource graph and populates their
+    /// <see cref="RelationshipAttribute.InverseNavigationProperty" />.
     /// </summary>
     void Resolve();
 }

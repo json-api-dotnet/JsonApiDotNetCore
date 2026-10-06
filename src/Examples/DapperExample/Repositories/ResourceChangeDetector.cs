@@ -110,20 +110,25 @@ internal sealed class ResourceChangeDetector
 
         foreach ((RelationshipAttribute relationship, ISet<IIdentifiable> newRightResources) in _newRightResourcesByRelationship)
         {
-            if (relationship is HasOneAttribute { IsOneToOne: true } hasOneRelationship)
+            if (relationship is HasOneAttribute hasOneRelationship)
             {
-                object? newRightId = newRightResources.SingleOrDefault()?.GetTypedId();
+                RelationshipForeignKey foreignKey = _dataModelService.GetForeignKey(hasOneRelationship);
 
-                if (newRightId != null)
+                if (foreignKey.IsOneToOne)
                 {
-                    object? currentRightId =
-                        _currentRightResourcesByRelationship.TryGetValue(hasOneRelationship, out HashSet<IIdentifiable>? currentRightResources)
-                            ? currentRightResources.FirstOrDefault()?.GetTypedId()
-                            : null;
+                    object? newRightId = newRightResources.SingleOrDefault()?.GetTypedId();
 
-                    if (!Equals(currentRightId, newRightId))
+                    if (newRightId != null)
                     {
-                        changes[hasOneRelationship] = (currentRightId, newRightId);
+                        object? currentRightId =
+                            _currentRightResourcesByRelationship.TryGetValue(hasOneRelationship, out HashSet<IIdentifiable>? currentRightResources)
+                                ? currentRightResources.FirstOrDefault()?.GetTypedId()
+                                : null;
+
+                        if (!Equals(currentRightId, newRightId))
+                        {
+                            changes[hasOneRelationship] = (currentRightId, newRightId);
+                        }
                     }
                 }
             }

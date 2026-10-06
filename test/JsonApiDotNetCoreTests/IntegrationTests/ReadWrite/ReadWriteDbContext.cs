@@ -16,6 +16,7 @@ public sealed class ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> opti
     public DbSet<WorkItemGroup> Groups => Set<WorkItemGroup>();
     public DbSet<RgbColor> RgbColors => Set<RgbColor>();
     public DbSet<UserAccount> UserAccounts => Set<UserAccount>();
+    public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -31,6 +32,11 @@ public sealed class ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> opti
             .HasOne(workItemGroup => workItemGroup.Color)
             .WithOne(color => color.Group)
             .HasForeignKey<RgbColor>("GroupId");
+
+        builder.Entity<UserProfile>()
+            .HasOne(profile => profile.User)
+            .WithOne()
+            .HasForeignKey<UserProfile>("UserId");
 
         builder.Entity<WorkItem>()
             .HasOne(workItem => workItem.Parent)

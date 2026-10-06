@@ -8,12 +8,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
-public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
+public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<CompositeKeyStartup, CompositeKeyDbContext>>
 {
-    private readonly IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
+    private readonly IntegrationTestContext<CompositeKeyStartup, CompositeKeyDbContext> _testContext;
     private readonly CompositeKeyFakers _fakers = new();
 
-    public CompositeKeyTests(IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
+    public CompositeKeyTests(IntegrationTestContext<CompositeKeyStartup, CompositeKeyDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -36,7 +36,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Cars.Add(car);
             await dbContext.SaveChangesAsync();
         });
@@ -61,7 +61,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Cars.Add(car);
             await dbContext.SaveChangesAsync();
         });
@@ -86,7 +86,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Cars.Add(car);
             await dbContext.SaveChangesAsync();
         });
@@ -111,7 +111,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Cars.Add(car);
             await dbContext.SaveChangesAsync();
         });
@@ -138,7 +138,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Engines.Add(existingEngine);
             await dbContext.SaveChangesAsync();
         });
@@ -195,7 +195,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.AddInRange(existingCar, existingEngine);
             await dbContext.SaveChangesAsync();
         });
@@ -248,7 +248,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Engines.Add(existingEngine);
             await dbContext.SaveChangesAsync();
         });
@@ -296,7 +296,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Dealerships.Add(existingDealership);
             await dbContext.SaveChangesAsync();
         });
@@ -341,7 +341,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.AddInRange(existingDealership, existingCar);
             await dbContext.SaveChangesAsync();
         });
@@ -388,7 +388,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.AddInRange(existingDealership, existingCar);
             await dbContext.SaveChangesAsync();
         });
@@ -440,7 +440,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Dealerships.Add(existingDealership);
             await dbContext.SaveChangesAsync();
         });
@@ -478,11 +478,13 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     {
         // Arrange
         Car existingCar = _fakers.Car.GenerateOne();
+        Engine existingEngine = _fakers.Engine.GenerateOne();
+        existingEngine.Car = existingCar;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
-            dbContext.Cars.Add(existingCar);
+            await dbContext.ClearTablesAsync<Engine, Car>();
+            dbContext.Engines.Add(existingEngine);
             await dbContext.SaveChangesAsync();
         });
 
@@ -501,7 +503,11 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
             Car? carInDatabase =
                 await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == existingCar.RegionId && car.LicensePlate == existingCar.LicensePlate);
 
+            Engine engineInDatabase = await dbContext.Engines.Include(engine => engine.Car).FirstWithIdAsync(existingEngine.Id);
+
             carInDatabase.Should().BeNull();
+
+            engineInDatabase.Car.Should().BeNull();
         });
     }
 
@@ -514,7 +520,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Car>();
+            await dbContext.ClearTablesAsync<Engine, Car>();
             dbContext.Dealerships.Add(existingDealership);
             await dbContext.SaveChangesAsync();
         });

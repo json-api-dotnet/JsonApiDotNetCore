@@ -33,6 +33,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 {
     private readonly ITargetedFields _targetedFields;
     private readonly DbContext _dbContext;
+    private readonly IDbContextResolver _dbContextResolver;
     private readonly IResourceGraph _resourceGraph;
     private readonly IResourceFactory _resourceFactory;
     private readonly IQueryConstraintProvider[] _constraintProviders;
@@ -55,6 +56,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
 
         _targetedFields = targetedFields;
+        _dbContextResolver = dbContextResolver;
         _dbContext = dbContextResolver.GetContext();
         _resourceGraph = resourceGraph;
         _resourceFactory = resourceFactory;
@@ -264,6 +266,16 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         return rightValue;
     }
 
+    private async Task AssignRelationshipAsync(TResource leftResource, RelationshipAttribute relationship, object? rightValue,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        object? rightValueEvaluated = await VisitSetRelationshipAsync(leftResource, relationship, rightValue, writeOperation, cancellationToken);
+
+        AssertIsNotClearingRequiredToOneRelationship(relationship, rightValueEvaluated);
+
+        await UpdateRelationshipAsync(relationship, leftResource, rightValueEvaluated, cancellationToken);
+    }
+
     /// <inheritdoc />
     public virtual async Task<TResource?> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
     {
@@ -297,13 +309,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
         {
             object? rightValue = relationship.GetValue(resourceFromRequest);
-
-            object? rightValueEvaluated = await VisitSetRelationshipAsync(resourceFromDatabase, relationship, rightValue, WriteOperationKind.UpdateResource,
-                cancellationToken);
-
-            AssertIsNotClearingRequiredToOneRelationship(relationship, rightValueEvaluated);
-
-            await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightValueEvaluated, cancellationToken);
+            await AssignRelationshipAsync(resourceFromDatabase, relationship, rightValue, WriteOperationKind.UpdateResource, cancellationToken);
         }
 
         foreach (AttrAttribute attribute in _targetedFields.Attributes)
@@ -361,16 +367,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         var resourceTracked = (TResource)_dbContext.GetTrackedOrAttach(placeholderResource);
 
-        foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceType<TResource>().Relationships)
-        {
-            // Loads the data of the relationship, if in Entity Framework Core it is configured in such a way that loading
-            // the related entities into memory is required for successfully executing the selected deletion behavior.
-            if (RequiresLoadOfRelationshipForDeletion(relationship))
-            {
-                NavigationEntry navigation = GetNavigationEntry(resourceTracked, relationship);
-                await navigation.LoadAsync(cancellationToken);
-            }
-        }
+        // See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1118.
+        await LoadReferencingEntitiesAsync(resourceTracked, cancellationToken);
 
         _dbContext.Remove(resourceTracked);
 
@@ -379,37 +377,75 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceTracked, WriteOperationKind.DeleteResource, cancellationToken);
     }
 
-    private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
+    private async Task LoadReferencingEntitiesAsync(TResource resourceTracked, CancellationToken cancellationToken)
     {
-        EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);
+        ArgumentNullException.ThrowIfNull(resourceTracked);
 
-        return relationship switch
+        Type entityClrType = resourceTracked.GetType();
+        IReadOnlyList<IReadOnlyForeignKey> foreignKeys = _dbContextResolver.GetForeignKeysRequiringClientSetNullOnDelete(entityClrType);
+
+        if (foreignKeys.Count > 0)
         {
-            HasOneAttribute hasOneRelationship => entityEntry.Reference(hasOneRelationship.Property.Name),
-            HasManyAttribute hasManyRelationship => entityEntry.Collection(hasManyRelationship.Property.Name),
-            _ => throw new InvalidOperationException($"Unknown relationship type '{relationship.GetType().Name}'.")
-        };
+            EntityEntry<TResource> entityEntry = _dbContext.Entry(resourceTracked);
+
+            foreach (IGrouping<IReadOnlyEntityType, IReadOnlyForeignKey> foreignKeyGroup in foreignKeys.GroupBy(foreignKey => foreignKey.DeclaringEntityType))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await LoadDependentEntitiesAsync(entityEntry, foreignKeyGroup.Key, foreignKeyGroup, cancellationToken);
+            }
+        }
     }
 
-    private bool RequiresLoadOfRelationshipForDeletion(RelationshipAttribute relationship)
+    private async Task LoadDependentEntitiesAsync(EntityEntry principalEntry, IReadOnlyEntityType declaringEntityType,
+        IEnumerable<IReadOnlyForeignKey> foreignKeys, CancellationToken cancellationToken)
     {
-        INavigation? navigation = GetNavigation(relationship);
-        bool isClearOfForeignKeyRequired = navigation?.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull;
+        Type dependentClrType = declaringEntityType.ClrType;
+        ParameterExpression parameter = Expression.Parameter(dependentClrType, "entity");
+        Expression? combinedComparison = null;
 
-        bool hasForeignKeyAtLeftSide = HasForeignKeyAtLeftSide(relationship, navigation);
+        foreach (IReadOnlyForeignKey foreignKey in foreignKeys)
+        {
+            Expression? foreignKeyComparison = null;
 
-        return isClearOfForeignKeyRequired && !hasForeignKeyAtLeftSide;
+            for (int index = 0; index < foreignKey.Properties.Count; index++)
+            {
+                IReadOnlyProperty dependentProperty = foreignKey.Properties[index];
+                IReadOnlyProperty principalProperty = foreignKey.PrincipalKey.Properties[index];
+
+                object? principalValue = principalEntry.Property(principalProperty.Name).CurrentValue;
+
+                Expression propertyAccess = Expression.Call(typeof(EF), nameof(EF.Property), [dependentProperty.ClrType], parameter,
+                    Expression.Constant(dependentProperty.Name));
+
+                Expression principalParameter = principalValue != null
+                    ? SystemExpressionBuilder.CloseOver(principalValue)
+                    : Expression.Default(principalProperty.ClrType);
+
+                Expression valueAccess = Expression.Convert(principalParameter, dependentProperty.ClrType);
+
+                Expression comparison = Expression.Equal(propertyAccess, valueAccess);
+                foreignKeyComparison = foreignKeyComparison == null ? comparison : Expression.AndAlso(foreignKeyComparison, comparison);
+            }
+
+            if (foreignKeyComparison != null)
+            {
+                combinedComparison = combinedComparison == null ? foreignKeyComparison : Expression.OrElse(combinedComparison, foreignKeyComparison);
+            }
+        }
+
+        if (combinedComparison != null)
+        {
+            LambdaExpression predicate = Expression.Lambda(combinedComparison, parameter);
+            IQueryable query = _dbContext.Set(dependentClrType).Where(predicate);
+            await query.LoadAsync(cancellationToken);
+        }
     }
 
     private INavigation? GetNavigation(RelationshipAttribute relationship)
     {
-        IEntityType? entityType = _dbContext.Model.FindEntityType(typeof(TResource));
+        IEntityType? entityType = _dbContext.Model.FindEntityType(relationship.LeftType.ClrType);
         return entityType?.FindNavigation(relationship.Property.Name);
-    }
-
-    private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship, INavigation? navigation)
-    {
-        return relationship is HasOneAttribute && navigation is { IsOnDependent: true };
     }
 
     /// <inheritdoc />
@@ -427,12 +463,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         RelationshipAttribute relationship = _targetedFields.Relationships.Single();
 
-        object? rightValueEvaluated =
-            await VisitSetRelationshipAsync(leftResource, relationship, rightValue, WriteOperationKind.SetRelationship, cancellationToken);
-
-        AssertIsNotClearingRequiredToOneRelationship(relationship, rightValueEvaluated);
-
-        await UpdateRelationshipAsync(relationship, leftResource, rightValueEvaluated, cancellationToken);
+        await AssignRelationshipAsync(leftResource, relationship, rightValue, WriteOperationKind.SetRelationship, cancellationToken);
 
         await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.SetRelationship, cancellationToken);
 
@@ -612,15 +643,38 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         object? trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
 
-        if (RequireLoadOfInverseRelationship(relationship, trackedValueToAssign))
-        {
-            EntityEntry entityEntry = _dbContext.Entry(trackedValueToAssign);
-            string inversePropertyName = relationship.InverseNavigationProperty!.Name;
-
-            await entityEntry.Reference(inversePropertyName).LoadAsync(cancellationToken);
-        }
+        await LoadConflictingOneToOneDependentAsync(relationship, trackedValueToAssign, cancellationToken);
 
         relationship.SetValue(leftResource, trackedValueToAssign);
+    }
+
+    private async Task LoadConflictingOneToOneDependentAsync(RelationshipAttribute relationship, object? trackedValueToAssign,
+        CancellationToken cancellationToken)
+    {
+        // See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
+        if (trackedValueToAssign != null && relationship is HasOneAttribute)
+        {
+            INavigation? navigation = GetNavigation(relationship);
+
+            if (navigation is { IsOnDependent: true, ForeignKey.IsUnique: true })
+            {
+                EntityEntry principalEntry = _dbContext.Entry(trackedValueToAssign);
+
+                if (navigation.Inverse != null)
+                {
+                    ReferenceEntry referenceEntry = principalEntry.Reference(navigation.Inverse.Name);
+
+                    if (!referenceEntry.IsLoaded)
+                    {
+                        await referenceEntry.LoadAsync(cancellationToken);
+                    }
+                }
+                else
+                {
+                    await LoadDependentEntitiesAsync(principalEntry, navigation.ForeignKey.DeclaringEntityType, [navigation.ForeignKey], cancellationToken);
+                }
+            }
+        }
     }
 
     private object? EnsureRelationshipValueToAssignIsTracked(object? rightValue, Type relationshipPropertyType)
@@ -636,23 +690,6 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         return rightValue is IEnumerable
             ? CollectionConverter.Instance.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
             : rightResourcesTracked.Single();
-    }
-
-    private bool RequireLoadOfInverseRelationship(RelationshipAttribute relationship, [NotNullWhen(true)] object? trackedValueToAssign)
-    {
-        // See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
-        if (trackedValueToAssign != null && relationship is HasOneAttribute { IsOneToOne: true })
-        {
-            IEntityType? leftEntityType = _dbContext.Model.FindEntityType(relationship.LeftType.ClrType);
-            INavigation? navigation = leftEntityType?.FindNavigation(relationship.Property.Name);
-
-            if (HasForeignKeyAtLeftSide(relationship, navigation))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)

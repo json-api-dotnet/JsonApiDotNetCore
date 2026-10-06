@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace JsonApiDotNetCore.Repositories;
 
@@ -8,4 +9,9 @@ namespace JsonApiDotNetCore.Repositories;
 public interface IDbContextResolver
 {
     DbContext GetContext();
+
+    /// <summary>
+    /// Returns the referencing foreign keys that have <see cref="DeleteBehavior.ClientSetNull" /> for the specified principal entity type.
+    /// </summary>
+    IReadOnlyList<IReadOnlyForeignKey> GetForeignKeysRequiringClientSetNullOnDelete(Type entityClrType);
 }

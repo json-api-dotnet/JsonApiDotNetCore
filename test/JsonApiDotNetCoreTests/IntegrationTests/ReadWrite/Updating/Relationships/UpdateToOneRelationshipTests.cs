@@ -20,6 +20,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         testContext.UseController<WorkItemsController>();
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<RgbColorsController>();
+        testContext.UseController<UserProfilesController>();
     }
 
     [Fact]
@@ -854,5 +855,63 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().Be("The relationship 'group' on resource type 'workItems' cannot be assigned to.");
         error.Source.Should().BeNull();
         error.Meta.Should().HaveRequestBody();
+    }
+
+    [Fact]
+    public async Task Can_reassign_unidirectional_OneToOne_relationship_from_dependent_side()
+    {
+        // Arrange
+        UserProfile existingProfileA = _fakers.UserProfile.GenerateOne();
+        existingProfileA.User = _fakers.UserAccount.GenerateOne();
+
+        UserProfile existingProfileB = _fakers.UserProfile.GenerateOne();
+        existingProfileB.User = _fakers.UserAccount.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.UserProfiles.AddRange(existingProfileA, existingProfileB);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "userAccounts",
+                id = existingProfileA.User.StringId
+            }
+        };
+
+        string route = $"/userProfiles/{existingProfileB.StringId}/relationships/user";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:wrap_after_property_in_chained_method_calls true
+
+            UserProfile profileInDatabaseA = await dbContext.UserProfiles
+                .Include(profile => profile.User)
+                .FirstWithIdAsync(existingProfileA.Id);
+
+            UserProfile profileInDatabaseB = await dbContext.UserProfiles
+                .Include(profile => profile.User)
+                .FirstWithIdAsync(existingProfileB.Id);
+
+            // @formatter:wrap_after_property_in_chained_method_calls restore
+            // @formatter:wrap_chained_method_calls restore
+
+            profileInDatabaseA.User.Should().BeNull();
+
+            profileInDatabaseB.User.Should().NotBeNull();
+            profileInDatabaseB.User.Id.Should().Be(existingProfileA.User.Id);
+        });
     }
 }
