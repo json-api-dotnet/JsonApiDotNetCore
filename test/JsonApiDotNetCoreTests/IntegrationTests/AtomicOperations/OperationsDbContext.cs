@@ -7,9 +7,11 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> options)
+public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> options, OperationsTransientFailureSimulator? transientFailureSimulator = null)
     : TestableDbContext(options)
 {
+    private readonly OperationsTransientFailureSimulator? _transientFailureSimulator = transientFailureSimulator;
+
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<MusicTrack> MusicTracks => Set<MusicTrack>();
     public DbSet<Lyric> Lyrics => Set<Lyric>();
@@ -29,5 +31,12 @@ public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> op
             .WithMany(playlist => playlist.Tracks);
 
         base.OnModelCreating(builder);
+    }
+
+    public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        _transientFailureSimulator?.FailAsConfigured();
+
+        return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }

@@ -560,7 +560,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -594,7 +594,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {

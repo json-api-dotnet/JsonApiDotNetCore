@@ -580,10 +580,12 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
             }
             else
             {
-                await using AmbientTransaction transaction = await _transactionFactory.BeginTransactionAsync(cancellationToken);
-                await asyncAction(transaction.Current);
-
-                await transaction.CommitAsync(cancellationToken);
+                _ = await _transactionFactory.RunInTransactionAsync(async transaction =>
+                {
+                    var ambientTransaction = (AmbientTransaction)transaction;
+                    await asyncAction(ambientTransaction.Current);
+                    return 0;
+                }, cancellationToken);
             }
         }
         catch (DbException exception)

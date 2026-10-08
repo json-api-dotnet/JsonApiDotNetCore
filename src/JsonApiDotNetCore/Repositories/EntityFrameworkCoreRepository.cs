@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
@@ -702,11 +703,31 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+        catch (DbUpdateException exception) when (IsTransient(exception))
+        {
+            // Let transient DbUpdateException bubble up unwrapped so EF Core's execution strategy can retry.
+            throw;
+        }
         catch (Exception exception) when (exception is DbUpdateException or InvalidOperationException)
         {
             _dbContext.ResetChangeTracker();
 
             throw new DataStoreUpdateException(exception);
         }
+    }
+
+    private static bool IsTransient(Exception? exception)
+    {
+        while (exception != null)
+        {
+            if (exception is TimeoutException or DbException { IsTransient: true })
+            {
+                return true;
+            }
+
+            exception = exception.InnerException;
+        }
+
+        return false;
     }
 }

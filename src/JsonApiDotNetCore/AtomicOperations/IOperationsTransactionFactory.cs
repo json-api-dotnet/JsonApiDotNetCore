@@ -1,12 +1,21 @@
 namespace JsonApiDotNetCore.AtomicOperations;
 
 /// <summary>
-/// Provides a method to start the overarching transaction for an atomic:operations request.
+/// Provides a method to execute operations within an overarching transaction for an atomic:operations request.
 /// </summary>
 public interface IOperationsTransactionFactory
 {
     /// <summary>
-    /// Starts a new transaction.
+    /// Executes the specified asynchronous callback within an overarching transaction.
     /// </summary>
-    Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
+    /// <typeparam name="TResult">
+    /// The return type of the callback.
+    /// </typeparam>
+    /// <param name="asyncAction">
+    /// The callback to execute within the transaction.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Propagates notification that request handling should be canceled.
+    /// </param>
+    Task<TResult> RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>> asyncAction, CancellationToken cancellationToken);
 }
