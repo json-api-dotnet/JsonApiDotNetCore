@@ -40,7 +40,7 @@ public sealed class AtomicTransactionConsistencyTests
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -82,7 +82,7 @@ public sealed class AtomicTransactionConsistencyTests
 
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -125,7 +125,7 @@ public sealed class AtomicTransactionConsistencyTests
 
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {

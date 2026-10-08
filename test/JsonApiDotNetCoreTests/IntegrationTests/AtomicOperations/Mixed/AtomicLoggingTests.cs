@@ -87,7 +87,7 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
 
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -139,7 +139,7 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
 
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {

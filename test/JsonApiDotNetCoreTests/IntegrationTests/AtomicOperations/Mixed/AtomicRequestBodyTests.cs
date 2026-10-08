@@ -184,7 +184,7 @@ public sealed class AtomicRequestBodyTests : IClassFixture<IntegrationTestContex
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {

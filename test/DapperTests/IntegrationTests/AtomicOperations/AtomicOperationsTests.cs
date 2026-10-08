@@ -591,7 +591,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
 
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {

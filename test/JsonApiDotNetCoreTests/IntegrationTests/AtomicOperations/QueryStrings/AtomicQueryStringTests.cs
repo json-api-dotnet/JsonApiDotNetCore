@@ -29,7 +29,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -69,7 +69,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -109,7 +109,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -149,7 +149,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -189,7 +189,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -229,7 +229,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         // Arrange
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
@@ -302,7 +302,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
 
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {

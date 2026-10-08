@@ -1053,7 +1053,7 @@ public sealed class ClientSetNullOnDeleteTests : IClassFixture<IntegrationTestCo
 
         var requestBody = new
         {
-            atomic__operations = new object[]
+            atomic__operations = new[]
             {
                 new
                 {
