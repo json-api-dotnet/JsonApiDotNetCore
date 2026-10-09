@@ -154,19 +154,22 @@ references:
   fullName.vb: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.New
   nameWithType: EntityFrameworkCoreTransactionFactory.EntityFrameworkCoreTransactionFactory
   nameWithType.vb: EntityFrameworkCoreTransactionFactory.New
-- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  name: BeginTransactionAsync(CancellationToken)
-  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory_BeginTransactionAsync_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  nameWithType: EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(CancellationToken)
-- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync*
-  name: BeginTransactionAsync
-  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory_BeginTransactionAsync_
-  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.RunInTransactionAsync*
+  name: RunInTransactionAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory_RunInTransactionAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.RunInTransactionAsync
   isSpec: "True"
-  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync
-  nameWithType: EntityFrameworkCoreTransactionFactory.BeginTransactionAsync
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.RunInTransactionAsync
+  nameWithType: EntityFrameworkCoreTransactionFactory.RunInTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.RunInTransactionAsync``1(System.Func{JsonApiDotNetCore.AtomicOperations.IOperationsTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name: RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>>, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory_RunInTransactionAsync__1_System_Func_JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_System_Threading_Tasks_Task___0___System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.RunInTransactionAsync``1(System.Func{JsonApiDotNetCore.AtomicOperations.IOperationsTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name.vb: RunInTransactionAsync(Of TResult)(Func(Of IOperationsTransaction, Task(Of TResult)), CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.RunInTransactionAsync<TResult>(System.Func<JsonApiDotNetCore.AtomicOperations.IOperationsTransaction, System.Threading.Tasks.Task<TResult>>, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.RunInTransactionAsync(Of TResult)(System.Func(Of JsonApiDotNetCore.AtomicOperations.IOperationsTransaction, System.Threading.Tasks.Task(Of TResult)), System.Threading.CancellationToken)
+  nameWithType: EntityFrameworkCoreTransactionFactory.RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>>, CancellationToken)
+  nameWithType.vb: EntityFrameworkCoreTransactionFactory.RunInTransactionAsync(Of TResult)(Func(Of IOperationsTransaction, Task(Of TResult)), CancellationToken)
 - uid: JsonApiDotNetCore.AtomicOperations.IAtomicOperationFilter
   name: IAtomicOperationFilter
   href: api/JsonApiDotNetCore.AtomicOperations.IAtomicOperationFilter.html
@@ -371,19 +374,22 @@ references:
   commentId: T:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory
   fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory
   nameWithType: IOperationsTransactionFactory
-- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  name: BeginTransactionAsync(CancellationToken)
-  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_BeginTransactionAsync_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  nameWithType: IOperationsTransactionFactory.BeginTransactionAsync(CancellationToken)
-- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync*
-  name: BeginTransactionAsync
-  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_BeginTransactionAsync_
-  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync*
+  name: RunInTransactionAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_RunInTransactionAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync
   isSpec: "True"
-  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync
-  nameWithType: IOperationsTransactionFactory.BeginTransactionAsync
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync
+  nameWithType: IOperationsTransactionFactory.RunInTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync``1(System.Func{JsonApiDotNetCore.AtomicOperations.IOperationsTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name: RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>>, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_RunInTransactionAsync__1_System_Func_JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_System_Threading_Tasks_Task___0___System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync``1(System.Func{JsonApiDotNetCore.AtomicOperations.IOperationsTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name.vb: RunInTransactionAsync(Of TResult)(Func(Of IOperationsTransaction, Task(Of TResult)), CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync<TResult>(System.Func<JsonApiDotNetCore.AtomicOperations.IOperationsTransaction, System.Threading.Tasks.Task<TResult>>, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync(Of TResult)(System.Func(Of JsonApiDotNetCore.AtomicOperations.IOperationsTransaction, System.Threading.Tasks.Task(Of TResult)), System.Threading.CancellationToken)
+  nameWithType: IOperationsTransactionFactory.RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>>, CancellationToken)
+  nameWithType.vb: IOperationsTransactionFactory.RunInTransactionAsync(Of TResult)(Func(Of IOperationsTransaction, Task(Of TResult)), CancellationToken)
 - uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker
   name: LocalIdTracker
   href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html
@@ -498,19 +504,22 @@ references:
   commentId: T:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory
   fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory
   nameWithType: MissingTransactionFactory
-- uid: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  name: BeginTransactionAsync(CancellationToken)
-  href: api/JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_MissingTransactionFactory_BeginTransactionAsync_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
-  nameWithType: MissingTransactionFactory.BeginTransactionAsync(CancellationToken)
-- uid: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync*
-  name: BeginTransactionAsync
-  href: api/JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_MissingTransactionFactory_BeginTransactionAsync_
-  commentId: Overload:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.RunInTransactionAsync*
+  name: RunInTransactionAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_MissingTransactionFactory_RunInTransactionAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.RunInTransactionAsync
   isSpec: "True"
-  fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync
-  nameWithType: MissingTransactionFactory.BeginTransactionAsync
+  fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.RunInTransactionAsync
+  nameWithType: MissingTransactionFactory.RunInTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.RunInTransactionAsync``1(System.Func{JsonApiDotNetCore.AtomicOperations.IOperationsTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name: RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>>, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_MissingTransactionFactory_RunInTransactionAsync__1_System_Func_JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_System_Threading_Tasks_Task___0___System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.RunInTransactionAsync``1(System.Func{JsonApiDotNetCore.AtomicOperations.IOperationsTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name.vb: RunInTransactionAsync(Of TResult)(Func(Of IOperationsTransaction, Task(Of TResult)), CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.RunInTransactionAsync<TResult>(System.Func<JsonApiDotNetCore.AtomicOperations.IOperationsTransaction, System.Threading.Tasks.Task<TResult>>, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.RunInTransactionAsync(Of TResult)(System.Func(Of JsonApiDotNetCore.AtomicOperations.IOperationsTransaction, System.Threading.Tasks.Task(Of TResult)), System.Threading.CancellationToken)
+  nameWithType: MissingTransactionFactory.RunInTransactionAsync<TResult>(Func<IOperationsTransaction, Task<TResult>>, CancellationToken)
+  nameWithType.vb: MissingTransactionFactory.RunInTransactionAsync(Of TResult)(Func(Of IOperationsTransaction, Task(Of TResult)), CancellationToken)
 - uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor
   name: OperationProcessorAccessor
   href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html
@@ -4054,15 +4063,15 @@ references:
   commentId: T:JsonApiDotNetCore.Errors.FailedOperationException
   fullName: JsonApiDotNetCore.Errors.FailedOperationException
   nameWithType: FailedOperationException
-- uid: JsonApiDotNetCore.Errors.FailedOperationException.#ctor(System.Int32,System.Exception)
-  name: FailedOperationException(int, Exception)
-  href: api/JsonApiDotNetCore.Errors.FailedOperationException.html#JsonApiDotNetCore_Errors_FailedOperationException__ctor_System_Int32_System_Exception_
-  commentId: M:JsonApiDotNetCore.Errors.FailedOperationException.#ctor(System.Int32,System.Exception)
-  name.vb: New(Integer, Exception)
-  fullName: JsonApiDotNetCore.Errors.FailedOperationException.FailedOperationException(int, System.Exception)
-  fullName.vb: JsonApiDotNetCore.Errors.FailedOperationException.New(Integer, System.Exception)
-  nameWithType: FailedOperationException.FailedOperationException(int, Exception)
-  nameWithType.vb: FailedOperationException.New(Integer, Exception)
+- uid: JsonApiDotNetCore.Errors.FailedOperationException.#ctor(System.Nullable{System.Int32},System.Exception)
+  name: FailedOperationException(int?, Exception)
+  href: api/JsonApiDotNetCore.Errors.FailedOperationException.html#JsonApiDotNetCore_Errors_FailedOperationException__ctor_System_Nullable_System_Int32__System_Exception_
+  commentId: M:JsonApiDotNetCore.Errors.FailedOperationException.#ctor(System.Nullable{System.Int32},System.Exception)
+  name.vb: New(Integer?, Exception)
+  fullName: JsonApiDotNetCore.Errors.FailedOperationException.FailedOperationException(int?, System.Exception)
+  fullName.vb: JsonApiDotNetCore.Errors.FailedOperationException.New(Integer?, System.Exception)
+  nameWithType: FailedOperationException.FailedOperationException(int?, Exception)
+  nameWithType.vb: FailedOperationException.New(Integer?, Exception)
 - uid: JsonApiDotNetCore.Errors.FailedOperationException.#ctor*
   name: FailedOperationException
   href: api/JsonApiDotNetCore.Errors.FailedOperationException.html#JsonApiDotNetCore_Errors_FailedOperationException__ctor_

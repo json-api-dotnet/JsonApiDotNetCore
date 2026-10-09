@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IOperationsTransactionFactory ">
       
-      <meta name="description" content="Provides a method to start the overarching transaction for an atomic:operations request.">
+      <meta name="description" content="Provides a method to execute operations within an overarching transaction for an atomic:operations request.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -100,7 +100,7 @@ Interface IOperationsTransactionFactory  <a class="header-action link-secondary"
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides a method to start the overarching transaction for an atomic:operations request.</p>
+  <div class="markdown summary"><p>Provides a method to execute operations within an overarching transaction for an atomic:operations request.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -124,33 +124,43 @@ Interface IOperationsTransactionFactory  <a class="header-action link-secondary"
 </h2>
 
 
-  <a id="JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_BeginTransactionAsync_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync*"></a>
+  <a id="JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_RunInTransactionAsync_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync*"></a>
 
-  <h3 id="JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_BeginTransactionAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)">
-  BeginTransactionAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransactionFactory.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <h3 id="JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_RunInTransactionAsync__1_System_Func_JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_System_Threading_Tasks_Task___0___System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.RunInTransactionAsync``1(System.Func{JsonApiDotNetCore.AtomicOperations.IOperationsTransaction,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)">
+  RunInTransactionAsync&lt;TResult&gt;(Func&lt;IOperationsTransaction, Task&lt;TResult&gt;&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransactionFactory.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Starts a new transaction.</p>
+  <div class="markdown level1 summary"><p>Executes the specified asynchronous callback within an overarching transaction.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IOperationsTransaction&gt; BeginTransactionAsync(CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;TResult&gt; RunInTransactionAsync&lt;TResult&gt;(Func&lt;IOperationsTransaction, Task&lt;TResult&gt;&gt; asyncAction, CancellationToken cancellationToken)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
+    <dt><code>asyncAction</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html">IOperationsTransaction</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResult&gt;&gt;</dt>
+    <dd><p>The callback to execute within the transaction.</p>
+</dd>
     <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
-    <dd></dd>
+    <dd><p>Propagates notification that request handling should be canceled.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html">IOperationsTransaction</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TResult&gt;</dt>
     <dd></dd>
   </dl>
 
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TResult</code></dt>
+    <dd><p>The return type of the callback.</p>
+</dd>
+  </dl>
 
 
 

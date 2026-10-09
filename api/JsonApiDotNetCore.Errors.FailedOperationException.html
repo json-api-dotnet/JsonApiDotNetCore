@@ -197,8 +197,8 @@ public sealed class FailedOperationException : JsonApiException, ISerializable</
 
   <a id="JsonApiDotNetCore_Errors_FailedOperationException__ctor_" data-uid="JsonApiDotNetCore.Errors.FailedOperationException.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Errors_FailedOperationException__ctor_System_Int32_System_Exception_" data-uid="JsonApiDotNetCore.Errors.FailedOperationException.#ctor(System.Int32,System.Exception)">
-  FailedOperationException(int, Exception)
+  <h3 id="JsonApiDotNetCore_Errors_FailedOperationException__ctor_System_Nullable_System_Int32__System_Exception_" data-uid="JsonApiDotNetCore.Errors.FailedOperationException.#ctor(System.Nullable{System.Int32},System.Exception)">
+  FailedOperationException(int?, Exception)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/FailedOperationException.cs/#L10"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -207,12 +207,12 @@ public sealed class FailedOperationException : JsonApiException, ISerializable</
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FailedOperationException(int operationIndex, Exception innerException)</code></pre>
+    <pre><code class="lang-csharp hljs">public FailedOperationException(int? operationIndex, Exception innerException)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>operationIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dt><code>operationIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
     <dd></dd>
     <dt><code>innerException</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
     <dd></dd>

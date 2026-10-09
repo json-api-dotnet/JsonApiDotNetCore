@@ -131,7 +131,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.yml\" sourcestartlinenumber=\"1\">Provides a method to start the overarching transaction for an atomic:operations request.</p>\n"
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.yml\" sourcestartlinenumber=\"1\">Provides a method to execute operations within an overarching transaction for an atomic:operations request.</p>\n"
     },
     {
       "type": "ManagedReference",
