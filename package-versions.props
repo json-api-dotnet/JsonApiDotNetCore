@@ -9,7 +9,7 @@
     <BenchmarkDotNetVersion>0.15.*</BenchmarkDotNetVersion>
     <BogusVersion>35.6.*</BogusVersion>
     <CodeAnalysisVersion>5.9.*</CodeAnalysisVersion>
-    <CoverletVersion>8.0.*</CoverletVersion>
+    <CoverletVersion>10.1.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>3.0.*</GitHubActionsTestLoggerVersion>
