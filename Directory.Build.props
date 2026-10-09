@@ -9,7 +9,7 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <VersionPrefix>5.11.1</VersionPrefix>
+    <VersionPrefix>5.12.0</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
   </PropertyGroup>
 
