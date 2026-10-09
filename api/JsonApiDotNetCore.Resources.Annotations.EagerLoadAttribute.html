@@ -96,7 +96,7 @@ Class EagerLoadAttribute  <a class="header-action link-secondary" title="View so
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Resources.html">Resources</a>.<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.html">Annotations</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Resources.html">Resources</a>.<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.html">Annotations</a></dd></dl>
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.Annotations.dll</dd></dl>
   </div>
 
@@ -256,8 +256,8 @@ public sealed class EagerLoadAttribute : Attribute</code></pre>
 
 
   <h2 id="JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>This is intended for calculated properties that are exposed as JSON:API attributes, which depend on a related entity to always be loaded.
-<example></example></p>
+  <div class="markdown level0 remarks"><p>This is intended for calculated properties that are exposed as JSON:API attributes, which depend on a related entity to always be loaded.</p>
+<example>
 <pre><code class="lang-csharp">public class User : Identifiable&lt;long&gt;
 {
     [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
@@ -279,7 +279,7 @@ public class Blog : Identifiable&lt;long&gt;
     [HasOne]
     public User Author { get; set; }
 }</code></pre>
-
+</example>
 </div>
 
 
