@@ -22,6 +22,15 @@
     <XunitVisualStudioVersion>4.0.*</XunitVisualStudioVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>11.0.*-*</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>11.0.*-*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>11.0.*-*</EntityFrameworkCoreVersion>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <!-- Published dependencies (only update on major version change) -->
     <EntityFrameworkCoreFrozenVersion>10.0.0</EntityFrameworkCoreFrozenVersion>
