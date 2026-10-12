@@ -1,0 +1,106 @@
+name: Bug report
+description: Create a report about something that is not working
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We welcome bug reports! Please see our [contribution guidelines](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/.github/CONTRIBUTING.md#reporting-bugs) for more information on writing a good bug report. This template will help us gather the information we need to start the triage process.
+
+        > Tip: You may want to check the [FAQs](https://www.jsonapi.net/usage/faq.html) and [Common Pitfalls](https://www.jsonapi.net/usage/common-pitfalls.html) sections in our docs first.
+
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered ([JsonApiDotNetCore/issues](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues)).
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: textarea
+    id: background
+    attributes:
+      label: Description
+      description: Please share a clear and concise description of the problem.
+      placeholder: Description
+    validations:
+      required: true
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: Reproduction steps
+      description: |
+        Please include minimal steps to reproduce the problem if possible, such as a code snippet or a small project, with steps to run it.
+        Consider including:
+        - Resource classes with `[Attr]`, `[HasOne]` and `[HasMany]` annotations.
+        - The `DbContext` class that contains entity mappings.
+        - Startup logic, ie: `AddJsonApi<YourDbContext>(options => ...)`
+        - Any customizations, such as controllers, resource services, repositories, and/or resource definitions, if applicable.
+        - The HTTP request URL, including query string and request body, if applicable.
+
+        > Tip: Use [fenced code blocks](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks) with syntax highlighting for `c#`, `http`, `shell` or `text`.
+
+    validations:
+      required: false
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: |
+        A description of what you're experiencing. If applicable, please include any error messages or exception stack traces.
+
+        > Tip: Set `options.IncludeExceptionStackTraceInErrors` to `true` to include stack traces in HTTP error responses.
+
+        It may also be helpful to include the produced SQL, which can be made visible in logs by adding the following to `appsettings.json`:
+        ```json
+        {
+          "Logging": {
+            "LogLevel": {
+              "Microsoft.EntityFrameworkCore.Database.Command": "Information"
+            }
+          }
+        }
+        ```
+      placeholder: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: |
+        Provide a description of what you expected to happen.
+      placeholder: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: regression
+    attributes:
+      label: Regression?
+      description: |
+        Did this work in a previous release? If you can try a previous release or build to find out, that can help us narrow down the problem. If you don't know, that's OK.
+      placeholder: Regression?
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Please provide more information on your environment.
+      value: |
+        - JsonApiDotNetCore version: 
+        - Entity Framework Core version: 
+        - Database provider: 
+        - ASP.NET Core version: 
+        - OS: 
+    validations:
+      required: false
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else?
+      description: |
+        If you have an idea where the problem might lie, let us know that here. Please include any pointers to code, relevant changes, or related issues you know of.
+      placeholder: Other information
+    validations:
+      required: false
