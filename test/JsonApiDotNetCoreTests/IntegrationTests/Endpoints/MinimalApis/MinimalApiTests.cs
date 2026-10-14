@@ -21,6 +21,11 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
         {
             services.AddSingleton<InMemoryOutgoingEmailsProvider>();
             services.TryAddEnumerable(ServiceDescriptor.Transient<IStartupFilter, MinimalApiStartupFilter>());
+
+#if NET11_0_OR_GREATER
+            services.AddValidation();
+            services.AddProblemDetails();
+#endif
         });
 
         var emailsProvider = _testContext.App.Services.GetRequiredService<InMemoryOutgoingEmailsProvider>();

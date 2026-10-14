@@ -16,12 +16,15 @@
     <PackageReference Include="AgileObjects.ReadableExpressions" Version="$(ReadableExpressionsVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(EntityFrameworkCoreVersion)" />
-    <PackageReference Include="MiniValidation" Version="$(MiniValidationVersion)" />
     <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
     <PackageReference Include="xunit.v3.mtp-v2" Version="$(XunitVersion)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net11.0'">
+  <ItemGroup Condition="'$(TargetFramework)' != '' AND $([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 11.0">
+    <PackageReference Include="MiniValidation" Version="$(MiniValidationVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != '' AND $([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 11.0">
     <Using Include="System.Net.Http.Json" />
   </ItemGroup>
 </Project>
