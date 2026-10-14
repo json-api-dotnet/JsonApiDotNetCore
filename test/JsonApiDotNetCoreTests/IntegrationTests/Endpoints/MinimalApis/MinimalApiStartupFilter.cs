@@ -1,9 +1,12 @@
+#if NET11_0_OR_GREATER
+#else
+using MiniValidation;
+#endif
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using MiniValidation;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.MinimalApis;
 
@@ -37,10 +40,13 @@ public sealed class MinimalApiStartupFilter : IStartupFilter
 
     private async Task<Results<Ok, ValidationProblem>> HandleSendAsync([FromBody] Email email, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
+#if NET11_0_OR_GREATER
+#else
         if (!MiniValidator.TryValidate(email, out IDictionary<string, string[]> errors))
         {
             return TypedResults.ValidationProblem(errors);
         }
+#endif
 
         await Task.Yield();
         cancellationToken.ThrowIfCancellationRequested();
