@@ -13,7 +13,7 @@ internal sealed class CompilationBuilder
         new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithSpecificDiagnosticOptions(new Dictionary<string, ReportDiagnostic>
         {
             // Suppress warning for version conflict on Microsoft.AspNetCore.Mvc.Core:
-            // JsonApiDotNetCore indirectly depends on v8 (via FrameworkReference), whereas v9 is used when running tests on .NET 9.
+            // JsonApiDotNetCore indirectly depends on v10 (via FrameworkReference), whereas v11 is used when running tests on .NET 11.
             ["CS1701"] = ReportDiagnostic.Suppress
         });
 
