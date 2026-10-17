@@ -30,11 +30,7 @@ switch (databaseProvider)
     }
     case DatabaseProvider.MySql:
     {
-#if NET8_0
-        ServerVersion serverVersion = ServerVersion.AutoDetect(connectionString);
-#else
         ServerVersion serverVersion = await ServerVersion.AutoDetectAsync(connectionString);
-#endif
 
         builder.Services.AddMySql<AppDbContext>(connectionString, serverVersion, optionsAction: options => SetDbContextDebugOptions(options));
 
