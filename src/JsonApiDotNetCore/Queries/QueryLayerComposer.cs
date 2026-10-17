@@ -605,17 +605,48 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         foreach (ResourceType nextType in resourceTypes)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
+            SparseFieldSetExpression? fieldSetExpression = _sparseFieldSetCache.GetSparseFieldSetExpressionForQuery(nextType);
 
-            if (fieldSet.Count == 0)
+            if (fieldSetExpression == null || fieldSetExpression.FieldChains.Count == 0)
             {
                 continue;
             }
 
-            HashSet<AttrAttribute> attributeSet = fieldSet.OfType<AttrAttribute>().ToHashSet();
+            // In EF Core 10, MemberInit projection on entity with ComplexProperty fails in ShaperProcessingExpressionVisitor
+            // with InvalidCastException: Unable to cast RuntimeComplexType to IEntityType.
+            // If the resource type has any complex properties, do not project MemberInit; let full entity be fetched and pruned in serializer.
+            if (nextType.Attributes.Any(attr => attr.IsCompound))
+            {
+                continue;
+            }
 
             FieldSelectors selectors = selection.GetOrCreateSelectors(nextType);
-            selectors.IncludeAttributes(attributeSet);
+
+            foreach (ResourceFieldChainExpression chain in fieldSetExpression.FieldChains)
+            {
+                if (chain.Fields.Count == 1)
+                {
+                    if (chain.Fields[0] is AttrAttribute singleAttr)
+                    {
+                        selectors.IncludeAttribute(singleAttr);
+                    }
+                }
+                else
+                {
+                    FieldSelectors currentSelectors = selectors;
+                    for (int i = 0; i < chain.Fields.Count - 1; i++)
+                    {
+                        var parentAttr = (AttrAttribute)chain.Fields[i];
+                        currentSelectors.IncludeAttribute(parentAttr);
+                        currentSelectors = currentSelectors.GetOrCreateChildSelectors(parentAttr);
+                    }
+
+                    if (chain.Fields[^1] is AttrAttribute leafAttr)
+                    {
+                        currentSelectors.IncludeAttribute(leafAttr);
+                    }
+                }
+            }
 
             AttrAttribute idAttribute = GetIdAttribute(nextType);
             selectors.IncludeAttribute(idAttribute);
