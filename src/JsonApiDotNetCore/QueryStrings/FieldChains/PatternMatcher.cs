@@ -25,10 +25,15 @@ internal sealed class PatternMatcher
 
     public PatternMatchResult Match(string fieldChain, ResourceType resourceType)
     {
-        ArgumentNullException.ThrowIfNull(fieldChain);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        return Match(fieldChain, (IAttributeContainer)resourceType);
+    }
 
-        var startState = MatchState.Create(_pattern, fieldChain, resourceType);
+    public PatternMatchResult Match(string fieldChain, IAttributeContainer container)
+    {
+        ArgumentNullException.ThrowIfNull(fieldChain);
+        ArgumentNullException.ThrowIfNull(container);
+
+        var startState = MatchState.Create(_pattern, fieldChain, container);
 
         if (startState.Error != null)
         {
@@ -155,7 +160,7 @@ internal sealed class PatternMatcher
         {
             string publicName = state.FieldsRemaining.Value;
 
-            HashSet<ResourceFieldAttribute> fields = LookupFields(state.ResourceType, publicName);
+            HashSet<ResourceFieldAttribute> fields = LookupFields(state.Container, publicName);
 
             if (fields.Count == 0)
             {
@@ -184,11 +189,11 @@ internal sealed class PatternMatcher
     /// <summary>
     /// Lookup the specified field in the resource graph.
     /// </summary>
-    private HashSet<ResourceFieldAttribute> LookupFields(ResourceType? resourceType, string publicName)
+    private HashSet<ResourceFieldAttribute> LookupFields(IAttributeContainer? container, string publicName)
     {
         HashSet<ResourceFieldAttribute> fields = [];
 
-        if (resourceType != null)
+        if (container is ResourceType resourceType)
         {
             if (_allowDerivedTypes)
             {
@@ -215,6 +220,15 @@ internal sealed class PatternMatcher
                 }
             }
         }
+        else if (container != null)
+        {
+            AttrAttribute? attribute = container.FindAttributeByPublicName(publicName);
+
+            if (attribute != null)
+            {
+                fields.Add(attribute);
+            }
+        }
 
         return fields;
     }
@@ -233,7 +247,10 @@ internal sealed class PatternMatcher
             HasManyAttribute => FieldTypes.ToManyRelationship,
             HasOneAttribute => FieldTypes.ToOneRelationship,
             RelationshipAttribute => FieldTypes.Relationship,
-            AttrAttribute => FieldTypes.Attribute,
+            AttrAttribute { IsCompound: true, IsCollection: true } => FieldTypes.CompoundCollection,
+            AttrAttribute { IsCompound: true, IsCollection: false } => FieldTypes.CompoundAttribute,
+            AttrAttribute { IsCompound: false, IsCollection: true } => FieldTypes.PrimitiveCollection,
+            AttrAttribute => FieldTypes.ScalarAttribute,
             null => FieldTypes.None,
             _ => FieldTypes.Field
         };

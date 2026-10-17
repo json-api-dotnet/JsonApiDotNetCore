@@ -35,14 +35,14 @@ internal sealed class MatchError
         return new MatchError(exception.Message, exception.Position, true);
     }
 
-    public static MatchError CreateForUnknownField(int position, ResourceType? resourceType, string publicName, bool allowDerivedTypes)
+    public static MatchError CreateForUnknownField(int position, IAttributeContainer? container, string publicName, bool allowDerivedTypes)
     {
-        bool hasDerivedTypes = allowDerivedTypes && resourceType is { DirectlyDerivedTypes.Count: > 0 };
+        bool hasDerivedTypes = allowDerivedTypes && container is ResourceType { DirectlyDerivedTypes.Count: > 0 };
 
         var builder = new MessageBuilder();
 
         builder.WriteDoesNotExist(publicName);
-        builder.WriteResourceType(resourceType);
+        builder.WriteContainer(container);
         builder.WriteOrDerivedTypes(hasDerivedTypes);
         builder.WriteEnd();
 
@@ -56,12 +56,12 @@ internal sealed class MatchError
         return new MatchError(message, position, true);
     }
 
-    public static MatchError CreateForFieldTypeMismatch(int position, ResourceType? resourceType, FieldTypes choices)
+    public static MatchError CreateForFieldTypeMismatch(int position, IAttributeContainer? container, FieldTypes choices)
     {
         var builder = new MessageBuilder();
 
         builder.WriteChoices(choices);
-        builder.WriteResourceType(resourceType);
+        builder.WriteContainer(container);
         builder.WriteExpected();
         builder.WriteEnd();
 
@@ -69,7 +69,7 @@ internal sealed class MatchError
         return new MatchError(message, position, false);
     }
 
-    public static MatchError CreateForTooMuchInput(int position, ResourceType? resourceType, FieldTypes choices)
+    public static MatchError CreateForTooMuchInput(int position, IAttributeContainer? container, FieldTypes choices)
     {
         var builder = new MessageBuilder();
 
@@ -79,7 +79,7 @@ internal sealed class MatchError
         {
             builder.WriteOr();
             builder.WriteChoices(choices);
-            builder.WriteResourceType(resourceType);
+            builder.WriteContainer(container);
         }
 
         builder.WriteExpected();
@@ -132,11 +132,15 @@ internal sealed class MatchError
             }
         }
 
-        public void WriteResourceType(ResourceType? resourceType)
+        public void WriteContainer(IAttributeContainer? container)
         {
-            if (resourceType != null)
+            if (container is ResourceType resourceType)
             {
                 _builder.Append($" on resource type '{resourceType}'");
+            }
+            else if (container is CompoundType compoundType)
+            {
+                _builder.Append($" on compound type '{compoundType}'");
             }
         }
 
