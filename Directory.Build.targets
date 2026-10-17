@@ -14,4 +14,16 @@
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'xunit.analyzers'" />
     </ItemGroup>
   </Target>
+
+  <!--
+    Workaround for Coverlet 8.0.1: NetCoreSharedFrameworkResolver only searches for <ModuleName>.runtimeconfig.json
+    to resolve shared framework assemblies (Microsoft.AspNetCore.App) for Cecil during instrumentation.
+    For class libraries, no such file exists by default, causing Cecil to fail resolving Microsoft.Extensions.Logging.Abstractions.
+    Copying the test project's runtimeconfig.json as JsonApiDotNetCore.runtimeconfig.json provides the resolver with the needed framework paths.
+  -->
+  <Target Name="CopyRuntimeConfigForCoverlet"
+    Condition="($(MSBuildProjectName.EndsWith('Tests')) Or '$(MSBuildProjectName)' == 'TestBuildingBlocks') And '$(GenerateRuntimeConfigurationFiles)' == 'true' And Exists('$(ProjectRuntimeConfigFilePath)')"
+    AfterTargets="GenerateBuildRuntimeConfigurationFiles">
+    <Copy SourceFiles="$(ProjectRuntimeConfigFilePath)" DestinationFiles="$(TargetDir)JsonApiDotNetCore.runtimeconfig.json" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
