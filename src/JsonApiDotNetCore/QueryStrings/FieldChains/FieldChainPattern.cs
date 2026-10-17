@@ -11,6 +11,15 @@ namespace JsonApiDotNetCore.QueryStrings.FieldChains;
 [PublicAPI]
 public sealed class FieldChainPattern
 {
+    public const char ToManyRelationshipToken = 'M';
+    public const char ToOneRelationshipToken = 'O';
+    public const char RelationshipToken = 'R';
+    public const char AttributeToken = 'A';
+    public const char CompoundAttributeToken = 'C';
+    public const char PrimitiveCollectionToken = 'P';
+    public const char CompoundCollectionToken = 'Q';
+    public const char FieldToken = 'F';
+
     /// <summary>
     /// Gets the set of possible resource field types.
     /// </summary>
@@ -75,6 +84,24 @@ public sealed class FieldChainPattern
     /// <term>A</term>
     /// <description>
     /// Matches an attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>C</term>
+    /// <description>
+    /// Matches a compound attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>P</term>
+    /// <description>
+    /// Matches a primitive collection.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>Q</term>
+    /// <description>
+    /// Matches a compound collection.
     /// </description>
     /// </item>
     /// <item>
