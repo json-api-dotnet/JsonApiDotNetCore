@@ -29,7 +29,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         ArgumentNullException.ThrowIfNull(selection);
 
-        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, false, context);
+        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType!, false, context);
 
         LambdaExpression lambda = Expression.Lambda(bodyInitializer, context.LambdaScope.Parameter);
 
