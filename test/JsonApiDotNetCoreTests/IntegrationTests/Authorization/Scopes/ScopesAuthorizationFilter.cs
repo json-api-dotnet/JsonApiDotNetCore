@@ -1,5 +1,6 @@
 using System.Net;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -89,7 +90,7 @@ internal sealed class ScopesAuthorizationFilter : IActionFilter
                 }
                 else
                 {
-                    _authScopeSet.Include(field.Type, Permission.Read);
+                    _authScopeSet.Include((ResourceType)field.ContainingType, Permission.Read);
                 }
             }
 

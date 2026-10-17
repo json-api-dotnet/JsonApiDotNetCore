@@ -117,7 +117,7 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
         result.IsSuccess.Should().BeTrue();
 
         result.FieldChain[0].PublicName.Should().Be(fieldChainText);
-        result.FieldChain[0].Type.ClrType.Should().Be(expectedType);
+        result.FieldChain[0].ContainingType.ClrType.Should().Be(expectedType);
         result.FieldChain[0].Property.ReflectedType.Should().Be(expectedType);
     }
 
