@@ -21,6 +21,13 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     private const string A = "name";
     private const string O = "parent";
     private const string M = "children";
+    private const string C = "details";
+    private const string P = "tags";
+    private const string Q = "items";
+    private const string A2 = "title";
+    private const string C2 = "nested";
+    private const string A3 = "description";
+    private const string P2 = "numbers";
 
     private readonly LoggerFactory _loggerFactory;
     private readonly ResourceType _resourceType;
@@ -91,6 +98,43 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     // Field chains
     [InlineData("MA", $"{M}.{A}")]
     [InlineData("MOA", $"{M}.{O}.{A}")]
+    // Compound and collection field types
+    [InlineData("C", C)]
+    [InlineData("P", P)]
+    [InlineData("Q", Q)]
+    [InlineData("F", C)]
+    [InlineData("F", P)]
+    [InlineData("F", Q)]
+    [InlineData("CA", $"{C}.{A2}")]
+    [InlineData("CCA", $"{C}.{C2}.{A3}")]
+    [InlineData("OCA", $"{O}.{C}.{A2}")]
+    [InlineData("OCCA", $"{O}.{C}.{C2}.{A3}")]
+    [InlineData("CP", $"{C}.{P2}")]
+    [InlineData("CQ", $"{C}.{Q}")]
+    // Compound character classes and quantifiers
+    [InlineData("[OC]", O)]
+    [InlineData("[OC]", C)]
+    [InlineData("[OC]*A", A)]
+    [InlineData("[OC]*A", $"{O}.{A}")]
+    [InlineData("[OC]*A", $"{C}.{A2}")]
+    [InlineData("[OC]*A", $"{C}.{C2}.{A3}")]
+    [InlineData("[OC]*A", $"{O}.{C}.{C2}.{A3}")]
+    [InlineData("[MPQ]", M)]
+    [InlineData("[MPQ]", P)]
+    [InlineData("[MPQ]", Q)]
+    [InlineData("[OC]*[MPQ]", M)]
+    [InlineData("[OC]*[MPQ]", P)]
+    [InlineData("[OC]*[MPQ]", Q)]
+    [InlineData("[OC]*[MPQ]", $"{C}.{P2}")]
+    [InlineData("[OC]*[MPQ]", $"{C}.{Q}")]
+    [InlineData("[OC]*[MPQ]", $"{O}.{M}")]
+    [InlineData("[OC]*[MPQ]", $"{O}.{C}.{Q}")]
+    [InlineData("[OC]*[OAC]", O)]
+    [InlineData("[OC]*[OAC]", C)]
+    [InlineData("[OC]*[OAC]", A)]
+    [InlineData("[OC]*[OAC]", $"{C}.{A2}")]
+    [InlineData("[OC]*[OAC]", $"{C}.{C2}")]
+    [InlineData("[OC]*[OAC]", $"{O}.{C}.{C2}")]
     // Backtracking multiple times
     [InlineData("F*M+O+", $"{M}.{M}.{M}.{M}.{M}.{O}.{O}.{O}.{O}.{O}")]
     [InlineData("F+OF*A?", $"{M}.{M}.{M}.{O}.{M}.{M}.{M}.{A}")]
@@ -181,10 +225,10 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("A", $"^{M}", $"Attribute on resource type '{T}' expected.")]
     [InlineData("A", $"^{O}", $"Attribute on resource type '{T}' expected.")]
     // Field sets: insufficient input
-    [InlineData("[AR]", "^", $"Field on resource type '{T}' expected.")]
-    [InlineData("[MO][AR]", $"{M}^", $"Field on resource type '{T}' expected.")]
-    [InlineData("[AR][AR]", $"{A}^", "Field expected.")]
-    [InlineData("[MO][MO][AR]", $"{O}.{M}^", $"Field on resource type '{T}' expected.")]
+    [InlineData("[AR]", "^", $"Relationship or attribute on resource type '{T}' expected.")]
+    [InlineData("[MO][AR]", $"{M}^", $"Relationship or attribute on resource type '{T}' expected.")]
+    [InlineData("[AR][AR]", $"{A}^", "Relationship or attribute expected.")]
+    [InlineData("[MO][MO][AR]", $"{O}.{M}^", $"Relationship or attribute on resource type '{T}' expected.")]
     [InlineData("[MA]", "^", $"To-many relationship or attribute on resource type '{T}' expected.")]
     [InlineData("[MO][MO]", $"{M}^", $"Relationship on resource type '{T}' expected.")]
     [InlineData("[MO][MO][MA]", $"{M}.{O}^", $"To-many relationship or attribute on resource type '{T}' expected.")]
@@ -218,10 +262,10 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("F+", "^", $"Field on resource type '{T}' expected.")]
     [InlineData("FF+", $"{M}^", $"Field on resource type '{T}' expected.")]
     [InlineData("FFF+", $"{O}.{M}^", $"Field on resource type '{T}' expected.")]
-    [InlineData("M*O*A", "^", $"Field on resource type '{T}' expected.")]
+    [InlineData("M*O*A", "^", $"Relationship or attribute on resource type '{T}' expected.")]
     [InlineData("M*O*A", $"{M}.{O}^", $"To-one relationship or attribute on resource type '{T}' expected.")]
     [InlineData("M*O*A", $"{M}.{M}.{O}.{O}^", $"To-one relationship or attribute on resource type '{T}' expected.")]
-    [InlineData("M?O?A", "^", $"Field on resource type '{T}' expected.")]
+    [InlineData("M?O?A", "^", $"Relationship or attribute on resource type '{T}' expected.")]
     [InlineData("M?O?A", $"{M}.{O}^", $"Attribute on resource type '{T}' expected.")]
     [InlineData("M+O+A", "^", $"To-many relationship on resource type '{T}' expected.")]
     [InlineData("M+O+A", $"{M}.{O}^", $"To-one relationship or attribute on resource type '{T}' expected.")]
@@ -364,7 +408,7 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("M+O", $"{M}.^{A}", $"Relationship on resource type '{T}' expected.")]
     [InlineData("M+OA", $"{M}^", $"Relationship on resource type '{T}' expected.")]
     [InlineData("O+A", $"{O}.^{M}", $"To-one relationship or attribute on resource type '{T}' expected.")]
-    [InlineData("[MA]+O", $"{M}^", $"Field on resource type '{T}' expected.")]
+    [InlineData("[MA]+O", $"{M}^", $"Relationship or attribute on resource type '{T}' expected.")]
     // Quantifiers at start and at end
     [InlineData("M*OA*", "^", $"Relationship on resource type '{T}' expected.")]
     [InlineData("M*OA*", $"{O}.{A}.^{A}", $"Field '{A}' does not exist.")]
@@ -387,6 +431,23 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("M+O+", $"{M}.{M}.{O}.{O}.^{A}", $"End of field chain or to-one relationship on resource type '{T}' expected.")]
     [InlineData("F*M+O+", $"{M}.{M}.{O}.{O}.{A}^", "Field expected.")]
     [InlineData("F+R*A", $"{M}.{M}.{M}.{O}.{M}.{M}.{M}.{O}^", $"Field on resource type '{T}' expected.")]
+    // Compound & collection mismatch
+    [InlineData("A", $"^{C}", $"Attribute on resource type '{T}' expected.")]
+    [InlineData("A", $"^{P}", $"Attribute on resource type '{T}' expected.")]
+    [InlineData("A", $"^{Q}", $"Attribute on resource type '{T}' expected.")]
+    [InlineData("C", $"^{A}", $"Compound attribute on resource type '{T}' expected.")]
+    [InlineData("C", $"^{P}", $"Compound attribute on resource type '{T}' expected.")]
+    [InlineData("P", $"^{A}", $"Primitive collection on resource type '{T}' expected.")]
+    [InlineData("P", $"^{Q}", $"Primitive collection on resource type '{T}' expected.")]
+    [InlineData("Q", $"^{P}", $"Compound collection on resource type '{T}' expected.")]
+    // Navigation on compound type
+    [InlineData("CA", $"{C}.^{C2}", "Attribute on compound type 'CompoundRoot' expected.")]
+    [InlineData("CA", $"{C}.^{X}", "Field 'unknown' does not exist on compound type 'CompoundRoot'.")]
+    [InlineData("CCA", $"{C}.{C2}.^{X}", "Field 'unknown' does not exist on compound type 'CompoundNested'.")]
+    // Too much input on compound type
+    [InlineData("C", $"{C}.^{A2}", "End of field chain expected.")]
+    // Direct navigation into collection rejected
+    [InlineData("[OC]*A", $"{C}.^{Q}", "To-one relationship or attribute or compound attribute on compound type 'CompoundRoot' expected.")]
     public void MatchFails(string patternText, string fieldChainText, string failureMessage)
     {
         // Arrange
@@ -419,5 +480,44 @@ public sealed class FieldChainPatternMatchTests : IDisposable
 
         [HasMany]
         public ISet<Resource> Children { get; set; } = new HashSet<Resource>();
+
+        [Attr(IsCompound = true)]
+        public CompoundRoot? Details { get; set; }
+
+        [Attr]
+        public List<string> Tags { get; set; } = [];
+
+        [Attr(IsCompound = true)]
+        public List<CompoundItem> Items { get; set; } = [];
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class CompoundRoot
+    {
+        [Attr]
+        public string? Title { get; set; }
+
+        [Attr(IsCompound = true)]
+        public CompoundNested? Nested { get; set; }
+
+        [Attr]
+        public List<int> Numbers { get; set; } = [];
+
+        [Attr(IsCompound = true)]
+        public List<CompoundItem> Items { get; set; } = [];
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class CompoundNested
+    {
+        [Attr]
+        public string? Description { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class CompoundItem
+    {
+        [Attr]
+        public string? Label { get; set; }
     }
 }
