@@ -49,7 +49,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using var jsonDocument = JsonDocument.Parse(responseRaw);
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
         JsonElement contentElement = jsonDocument.RootElement
             .GetProperty("data")
             .GetProperty("attributes")
@@ -90,7 +90,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using var jsonDocument = JsonDocument.Parse(responseRaw);
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
         JsonElement contentElement = jsonDocument.RootElement
             .GetProperty("data")
             .GetProperty("attributes")
@@ -126,7 +126,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using var jsonDocument = JsonDocument.Parse(responseRaw);
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
         JsonElement contentElement = jsonDocument.RootElement
             .GetProperty("data")
             .GetProperty("attributes")
@@ -242,7 +242,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("favorites");
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using var jsonDocument = JsonDocument.Parse(responseRaw);
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
         JsonElement favoritesElement = jsonDocument.RootElement
             .GetProperty("data")
             .GetProperty("attributes")

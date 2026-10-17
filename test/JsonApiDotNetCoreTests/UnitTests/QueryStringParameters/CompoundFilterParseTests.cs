@@ -3,7 +3,6 @@ using System.Net;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -116,7 +115,7 @@ public sealed class CompoundFilterParseTests
         var expr2 = new ElementValueExpression(typeof(string));
         var expr3 = new ElementValueExpression(typeof(int));
 
-        expr1.ElementType.Should().Be(typeof(string));
+        expr1.ElementType.Should().Be<string>();
         expr1.ToString().Should().Be("_");
         expr1.ToFullString().Should().Be("_");
         expr1.Should().Be(expr2);
