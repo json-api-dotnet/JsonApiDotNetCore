@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Net;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
@@ -28,6 +29,34 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
             builder.Services.AddSingleton(loggerProvider);
         });
+    }
+
+    [Fact]
+    public async Task Compound_types_cause_no_non_identifiable_warning()
+    {
+        // Arrange
+        using var capturingProvider = new CapturingLoggerProvider(LogLevel.Trace);
+
+        var filterOptions = new LoggerFilterOptions
+        {
+            MinLevel = LogLevel.Trace
+        };
+
+        using ILoggerFactory loggerFactory = new LoggerFactory([capturingProvider], filterOptions);
+
+        await using AsyncServiceScope scope = _testContext.App.Services.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<LoggingDbContext>();
+        var options = scope.ServiceProvider.GetRequiredService<IJsonApiOptions>();
+
+        // Act
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, loggerFactory).Add(dbContext).Build();
+
+        // Assert
+        resourceGraph.FindResourceType<AuditEntry>().Should().NotBeNull();
+        resourceGraph.GetResourceTypes().Should().NotContain(resourceType => resourceType.ClrType == typeof(AuditOrigin));
+        resourceGraph.FindCompoundType<AuditOrigin>().Should().NotBeNull();
+
+        capturingProvider.GetLines().Should().NotContain(line => line.Contains("does not implement", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -401,6 +430,34 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         LogMessage expressionMessage = loggerProvider.GetMessages().Should().ContainSingle(message =>
             message.LogLevel == LogLevel.Debug && message.Text.StartsWith("Expression tree:", StringComparison.Ordinal)).Subject;
 
+#if NET11_0
+        // Workaround for EF Core 11 bug at https://github.com/dotnet/efcore/issues/39670.
+        expressionMessage.Text.Should().Be("""
+            Expression tree: [Microsoft.EntityFrameworkCore.Query.EntityQueryRootExpression]
+                .Include("Fruits")
+                .Where(fruitBowl => fruitBowl.Id == value)
+                .Select(
+                    fruitBowl => new FruitBowl
+                    {
+                        Id = fruitBowl.Id,
+                        Fruits = fruitBowl.Fruits
+                            .Where(fruit => fruit.WeightInKilograms > value)
+                            .OrderByDescending(fruit => fruit.Id)
+                            .Take(value)
+                            .Select(
+                                fruit => (fruit.GetType() == value)
+                                    ? (Fruit)new Peach
+                                    {
+                                        Id = fruit.Id,
+                                        WeightInKilograms = fruit.WeightInKilograms,
+                                        DiameterInCentimeters = ((Peach)fruit).DiameterInCentimeters,
+                                        Id = fruit.Id
+                                    }
+                                    : fruit)
+                            .ToHashSet()
+                    })
+            """);
+#else
         expressionMessage.Text.Should().Be("""
             Expression tree: [Microsoft.EntityFrameworkCore.Query.EntityQueryRootExpression]
                 .AsNoTrackingWithIdentityResolution()
@@ -427,5 +484,6 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
                             .ToHashSet()
                     })
             """);
+#endif
     }
 }

@@ -58,25 +58,48 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
             foreach (ResourceType type in GetResourceTypes())
             {
                 writer.WriteLine($"{nameof(FieldSelectors)}<{type.ClrType.Name}>");
-                WriterSelectors(writer, toFullString, type);
+                WriteSelectors(writer, toFullString, type);
             }
         }
     }
 
-    private void WriterSelectors(IndentingStringWriter writer, bool toFullString, ResourceType type)
+    private void WriteSelectors(IndentingStringWriter writer, bool toFullString, ResourceType type)
     {
+        FieldSelectors selectors = GetOrCreateSelectors(type);
+
         using (writer.Indent())
         {
-            foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in GetOrCreateSelectors(type))
+            foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in selectors)
             {
                 if (nextLayer == null)
                 {
                     writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
+
+                    if (field is AttrAttribute attr && selectors.GetChildSelectors(attr) is { } childSelectors)
+                    {
+                        WriteChildSelectors(writer, toFullString, childSelectors);
+                    }
                 }
                 else
                 {
                     string prefix = $"{(toFullString ? field.ToFullString() : field.ToString())}: ";
                     nextLayer.WriteLayer(writer, toFullString, prefix);
+                }
+            }
+        }
+    }
+
+    private static void WriteChildSelectors(IndentingStringWriter writer, bool toFullString, FieldSelectors childSelectors)
+    {
+        using (writer.Indent())
+        {
+            foreach (ResourceFieldAttribute field in childSelectors.Keys)
+            {
+                writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
+
+                if (field is AttrAttribute attr && childSelectors.GetChildSelectors(attr) is { } nextChildren)
+                {
+                    WriteChildSelectors(writer, toFullString, nextChildren);
                 }
             }
         }

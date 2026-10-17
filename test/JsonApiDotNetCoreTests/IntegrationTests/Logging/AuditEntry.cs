@@ -13,4 +13,7 @@ public sealed class AuditEntry : Identifiable<long>
 
     [Attr]
     public DateTimeOffset CreatedAt { get; set; }
+
+    [Attr(IsCompound = true)]
+    public AuditOrigin? Origin { get; set; }
 }

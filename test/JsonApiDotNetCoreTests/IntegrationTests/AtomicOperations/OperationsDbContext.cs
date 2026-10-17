@@ -21,6 +21,12 @@ public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> op
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.Entity<Playlist>()
+            .ComplexCollection(playlist => playlist.Credits, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Playlist>()
+            .ComplexProperty(playlist => playlist.Recording, complexBuilder => complexBuilder.ToJson());
+
         builder.Entity<MusicTrack>()
             .HasOne(musicTrack => musicTrack.Lyric)
             .WithOne(lyric => lyric.Track)

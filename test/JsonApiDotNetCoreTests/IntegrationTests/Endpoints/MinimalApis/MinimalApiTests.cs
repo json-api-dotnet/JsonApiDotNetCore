@@ -70,7 +70,8 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
-        response.Content.Headers.ContentType?.MediaType.Should().Be("application/problem+json");
+        response.Content.Headers.ContentType.Should().NotBeNull();
+        response.Content.Headers.ContentType.MediaType.Should().Be("application/problem+json");
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(TestContext.Current.CancellationToken);
         problemDetails.Should().NotBeNull();
@@ -136,7 +137,8 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
-        response.Content.Headers.ContentType?.MediaType.Should().Be("application/problem+json");
+        response.Content.Headers.ContentType.Should().NotBeNull();
+        response.Content.Headers.ContentType.MediaType.Should().Be("application/problem+json");
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(TestContext.Current.CancellationToken);
         problemDetails.Should().NotBeNull();

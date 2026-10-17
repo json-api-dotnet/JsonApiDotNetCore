@@ -18,12 +18,12 @@ public class OperationsProcessor : IOperationsProcessor
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
-    private readonly ISparseFieldSetCache _sparseFieldSetCache;
+    private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
     private readonly LocalIdValidator _localIdValidator;
 
     public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor, IOperationsTransactionFactory operationsTransactionFactory,
         ILocalIdTracker localIdTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields,
-        ISparseFieldSetCache sparseFieldSetCache)
+        ISparseFieldSetEvaluator sparseFieldSetEvaluator)
     {
         ArgumentNullException.ThrowIfNull(operationProcessorAccessor);
         ArgumentNullException.ThrowIfNull(operationsTransactionFactory);
@@ -31,7 +31,7 @@ public class OperationsProcessor : IOperationsProcessor
         ArgumentNullException.ThrowIfNull(resourceGraph);
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(targetedFields);
-        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
 
         _operationProcessorAccessor = operationProcessorAccessor;
         _operationsTransactionFactory = operationsTransactionFactory;
@@ -39,7 +39,7 @@ public class OperationsProcessor : IOperationsProcessor
         _resourceGraph = resourceGraph;
         _request = request;
         _targetedFields = targetedFields;
-        _sparseFieldSetCache = sparseFieldSetCache;
+        _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
         _localIdValidator = new LocalIdValidator(_localIdTracker, _resourceGraph);
     }
 
@@ -73,7 +73,7 @@ public class OperationsProcessor : IOperationsProcessor
 
                     await transaction.AfterProcessOperationAsync(cancellationToken);
 
-                    _sparseFieldSetCache.Reset();
+                    _sparseFieldSetEvaluator.Reset();
                 }
 
                 indexTracker.Reset();

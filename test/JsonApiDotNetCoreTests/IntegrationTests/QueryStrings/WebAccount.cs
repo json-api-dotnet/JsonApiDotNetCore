@@ -15,7 +15,7 @@ public sealed class WebAccount : Identifiable<long>
     public string Password { get; set; } = null!;
 
     [Attr]
-    public string DisplayName { get; set; } = null!;
+    public string? DisplayName { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
     public DateTime? DateOfBirth { get; set; }

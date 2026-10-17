@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Numerics;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
@@ -34,31 +35,47 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
 
     private SumExpression ParseSum()
     {
+        if (CurrentScope is not AttributeContainerFilterScope containerScope)
+        {
+            int elementPosition = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function 'sum' cannot be used on scalar collection elements.", elementPosition);
+        }
+
         EatText(SumExpression.Keyword);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetToManyRelationshipChain = ParseFieldChain(SingleToManyRelationshipChain, FieldChainPatternMatchOptions.None,
-            ResourceTypeInScope, "To-many relationship expected.");
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text && !IsNullConstantToken(nextToken))
+        {
+            ResourceFieldChainExpression targetToManyRelationshipChain = ParseFieldChain(SingleToManyRelationshipChain, containerScope.Container);
 
-        EatSingleCharacterToken(TokenKind.Comma);
+            EatSingleCharacterToken(TokenKind.Comma);
 
-        QueryExpression selector = ParseSumSelectorInScope(targetToManyRelationshipChain);
+            QueryExpression selector = ParseSumSelectorInScope(targetToManyRelationshipChain);
 
-        EatSingleCharacterToken(TokenKind.CloseParen);
+            EatSingleCharacterToken(TokenKind.CloseParen);
 
-        return new SumExpression(targetToManyRelationshipChain, selector);
+            return new SumExpression(targetToManyRelationshipChain, selector);
+        }
+
+        int position = GetNextTokenPositionOrEnd();
+        throw new QueryParseException(QueryParseChoices.ToManyRelationshipName, position);
     }
 
     private QueryExpression ParseSumSelectorInScope(ResourceFieldChainExpression targetChain)
     {
         var toManyRelationship = (HasManyAttribute)targetChain.Fields.Single();
 
-        using IDisposable scope = InScopeOfResourceType(toManyRelationship.RightType);
+        using IDisposable scope = InScopeOfContainer(toManyRelationship.RightType);
         return ParseSumSelector();
     }
 
     private QueryExpression ParseSumSelector()
     {
+        if (CurrentScope is not AttributeContainerFilterScope containerScope)
+        {
+            throw new UnreachableException();
+        }
+
         int position = GetNextTokenPositionOrEnd();
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
@@ -73,8 +90,7 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
             return function;
         }
 
-        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None,
-            ResourceTypeInScope, null);
+        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, containerScope.Container);
 
         var attrAttribute = (AttrAttribute)fieldChain.Fields[^1];
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -24,21 +25,53 @@ internal sealed class IsUpperCaseFilterParser(IResourceFactory resourceFactory)
         EatText(IsUpperCaseExpression.Keyword);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
+        QueryExpression target = CurrentScope switch
+        {
+            ScalarCollectionElementFilterScope collectionScope => ParseScalarCollectionElement(collectionScope),
+            AttributeContainerFilterScope containerScope => ParseTargetAttribute(containerScope),
+            _ => throw new UnreachableException()
+        };
+
+        EatSingleCharacterToken(TokenKind.CloseParen);
+
+        return new IsUpperCaseExpression(target);
+    }
+
+    private ScalarCollectionElementValueExpression ParseScalarCollectionElement(ScalarCollectionElementFilterScope collectionScope)
+    {
+        int position = GetNextTokenPositionOrEnd();
+        ScalarCollectionElementValueExpression? elementValue = TryParseScalarCollectionElement(collectionScope);
+
+        if (elementValue == null)
+        {
+            throw new QueryParseException(QueryParseChoices.Underscore, position);
+        }
+
+        if (collectionScope.ElementType != typeof(string))
+        {
+            string actualTypeName = RuntimeTypeConverter.GetFriendlyTypeName(collectionScope.ElementType);
+            throw new QueryParseException($"Element is of type '{actualTypeName}' while type 'String' was expected.", position);
+        }
+
+        return elementValue;
+    }
+
+    private ResourceFieldChainExpression ParseTargetAttribute(AttributeContainerFilterScope containerScope)
+    {
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
+            containerScope.Container);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];
 
         if (attribute.Property.PropertyType != typeof(string))
         {
             int position = chainStartPosition + GetRelativePositionOfLastFieldInChain(targetAttributeChain);
-            throw new QueryParseException("Attribute of type 'String' expected.", position);
+            string actualTypeName = RuntimeTypeConverter.GetFriendlyTypeName(attribute.Property.PropertyType);
+            throw new QueryParseException($"Attribute '{attribute.PublicName}' is of type '{actualTypeName}' while type 'String' was expected.", position);
         }
 
-        EatSingleCharacterToken(TokenKind.CloseParen);
-
-        return new IsUpperCaseExpression(targetAttributeChain);
+        return targetAttributeChain;
     }
 }

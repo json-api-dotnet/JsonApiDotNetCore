@@ -59,6 +59,56 @@ POST /articles HTTP/1.1
 }
 ```
 
+# Creating resources with compound and collection attributes
+
+_since v6.0_
+
+[Compound attributes](~/usage/resources/attributes.md#compound-attributes) and [collection attributes](~/usage/resources/attributes.md#collection-attributes) are sent as JSON objects and arrays:
+
+```http
+POST /contacts HTTP/1.1
+
+{
+  "data": {
+    "type": "contacts",
+    "attributes": {
+      "displayName": "Ada",
+      "name": { "firstName": "Ada", "lastName": "Lovelace" },
+      "phoneNumbers": [
+        { "number": "555-0100", "label": "mobile" },
+        { "number": "555-0101" }
+      ],
+      "tags": [ "friend" ]
+    }
+  }
+}
+```
+
+- Nested members that are omitted keep the value they get from the constructor of the compound type.
+- `null` is accepted for nullable compound and collection attributes. An empty array creates an empty collection.
+- Nested members are subject to the same rules as top-level attributes: a member that does not allow `AllowCreate` or is read-only is rejected with HTTP 422, and members that do not exist
+  are rejected too, unless `AllowUnknownFieldsInRequestBody` is turned on, in which case they are ignored.
+- Public properties of a compound type that do not have `[Attr]` cannot be sent, but can be assigned by your own code,
+  for example in a [resource definition](~/usage/extensibility/resource-definitions.md).
+- [Model validation](~/usage/advanced/model-state.md#compound-and-collection-attributes) is applied to nested members and collection elements.
+
+Errors point to the offending member using a JSON pointer, with array elements addressed by index. For example, when `number` is omitted from the second phone number:
+
+```json
+{
+  "errors": [
+    {
+      "status": "422",
+      "title": "Input validation failed.",
+      "detail": "The Number field is required.",
+      "source": {
+        "pointer": "/data/attributes/phoneNumbers/1/number"
+      }
+    }
+  ]
+}
+```
+
 # Response body
 
 POST requests can be combined with query string parameters that are normally used for reading data, such as `include` and `fields[]`. For example:

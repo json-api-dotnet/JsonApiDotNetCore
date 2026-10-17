@@ -9,6 +9,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response;
 
 internal sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccessor
 {
+    public Func<ResourceType, SparseFieldSetExpression?, SparseFieldSetExpression?>? SparseFieldSetCallback { get; set; }
+
     public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
     {
         return existingIncludes;
@@ -31,7 +33,7 @@ internal sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccess
 
     public SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet)
     {
-        return existingSparseFieldSet;
+        return SparseFieldSetCallback != null ? SparseFieldSetCallback(resourceType, existingSparseFieldSet) : existingSparseFieldSet;
     }
 
     public object? GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)

@@ -56,45 +56,40 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
             return new PaginationElementQueryStringValueExpression(null, number.Value, position);
         }
 
-        IncludeExpression scope = ParseRelationshipChainEndingInToMany(resourceType, "Number or relationship name expected.");
-
-        EatSingleCharacterToken(TokenKind.Colon);
-
-        position = GetNextTokenPositionOrEnd();
-        number = TryParseNumber();
-
-        if (number == null)
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text && !IsNullConstantToken(nextToken))
         {
-            throw new QueryParseException("Number expected.", position);
+            IncludeExpression scope = ParseRelationshipChainEndingInToMany(resourceType);
+
+            EatSingleCharacterToken(TokenKind.Colon);
+
+            position = GetNextTokenPositionOrEnd();
+            number = TryParseNumber();
+
+            if (number == null)
+            {
+                throw new QueryParseException(QueryParseChoices.Number, position);
+            }
+
+            return new PaginationElementQueryStringValueExpression(scope, number.Value, position);
         }
 
-        return new PaginationElementQueryStringValueExpression(scope, number.Value, position);
+        throw new QueryParseException(QueryParseChoices.Number | QueryParseChoices.ToManyRelationshipName, position);
     }
 
     private int? TryParseNumber()
     {
-        if (TokenStack.TryPeek(out Token? nextToken))
+        bool isNegative = TryEatSingleCharacterToken(TokenKind.Minus);
+
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text && int.TryParse(nextToken.Value, out int number))
         {
-            int number;
+            TokenStack.Pop();
+            return isNegative ? -number : number;
+        }
 
-            if (nextToken.Kind == TokenKind.Minus)
-            {
-                TokenStack.Pop();
-                int position = GetNextTokenPositionOrEnd();
-
-                if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text && int.TryParse(token.Value, out number))
-                {
-                    return -number;
-                }
-
-                throw new QueryParseException("Digits expected.", position);
-            }
-
-            if (nextToken.Kind == TokenKind.Text && int.TryParse(nextToken.Value, out number))
-            {
-                TokenStack.Pop();
-                return number;
-            }
+        if (isNegative)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException(QueryParseChoices.Number, position);
         }
 
         return null;
