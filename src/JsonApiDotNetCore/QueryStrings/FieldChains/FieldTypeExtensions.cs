@@ -8,6 +8,12 @@ internal static class FieldTypeExtensions
     {
         int startOffset = builder.Length;
 
+        if (choices.HasFlag(FieldTypes.Field))
+        {
+            WriteChoice("field", pluralize, prefix, false, builder, startOffset);
+            return;
+        }
+
         if (choices.HasFlag(FieldTypes.ToManyRelationship) && !choices.HasFlag(FieldTypes.Relationship))
         {
             WriteChoice("to-many relationship", pluralize, prefix, false, builder, startOffset);
@@ -18,19 +24,29 @@ internal static class FieldTypeExtensions
             WriteChoice("to-one relationship", pluralize, prefix, false, builder, startOffset);
         }
 
-        if (choices.HasFlag(FieldTypes.Attribute) && !choices.HasFlag(FieldTypes.Relationship))
-        {
-            WriteChoice("attribute", pluralize, prefix, true, builder, startOffset);
-        }
-
-        if (choices.HasFlag(FieldTypes.Relationship) && !choices.HasFlag(FieldTypes.Field))
+        if (choices.HasFlag(FieldTypes.Relationship))
         {
             WriteChoice("relationship", pluralize, prefix, false, builder, startOffset);
         }
 
-        if (choices.HasFlag(FieldTypes.Field))
+        if (choices.HasFlag(FieldTypes.ScalarAttribute))
         {
-            WriteChoice("field", pluralize, prefix, false, builder, startOffset);
+            WriteChoice("attribute", pluralize, prefix, true, builder, startOffset);
+        }
+
+        if (choices.HasFlag(FieldTypes.CompoundAttribute))
+        {
+            WriteChoice("compound attribute", pluralize, prefix, false, builder, startOffset);
+        }
+
+        if (choices.HasFlag(FieldTypes.PrimitiveCollection))
+        {
+            WriteChoice("primitive collection", pluralize, prefix, false, builder, startOffset);
+        }
+
+        if (choices.HasFlag(FieldTypes.CompoundCollection))
+        {
+            WriteChoice("compound collection", pluralize, prefix, false, builder, startOffset);
         }
     }
 

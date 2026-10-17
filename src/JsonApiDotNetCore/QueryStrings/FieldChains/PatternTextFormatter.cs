@@ -35,6 +35,12 @@ internal sealed class PatternTextFormatter
 
     private static void WriteChoices(FieldTypes types, StringBuilder builder)
     {
+        if (types.HasFlag(FieldTypes.Field))
+        {
+            builder.Append('F');
+            return;
+        }
+
         int startOffset = builder.Length;
 
         if (types.HasFlag(FieldTypes.ToManyRelationship) && !types.HasFlag(FieldTypes.Relationship))
@@ -47,19 +53,29 @@ internal sealed class PatternTextFormatter
             builder.Append('O');
         }
 
-        if (types.HasFlag(FieldTypes.Attribute) && !types.HasFlag(FieldTypes.Relationship))
-        {
-            builder.Append('A');
-        }
-
-        if (types.HasFlag(FieldTypes.Relationship) && !types.HasFlag(FieldTypes.Field))
+        if (types.HasFlag(FieldTypes.Relationship))
         {
             builder.Append('R');
         }
 
-        if (types.HasFlag(FieldTypes.Field))
+        if (types.HasFlag(FieldTypes.ScalarAttribute))
         {
-            builder.Append('F');
+            builder.Append('A');
+        }
+
+        if (types.HasFlag(FieldTypes.CompoundAttribute))
+        {
+            builder.Append('C');
+        }
+
+        if (types.HasFlag(FieldTypes.PrimitiveCollection))
+        {
+            builder.Append('P');
+        }
+
+        if (types.HasFlag(FieldTypes.CompoundCollection))
+        {
+            builder.Append('Q');
         }
 
         int charCount = builder.Length - startOffset;
