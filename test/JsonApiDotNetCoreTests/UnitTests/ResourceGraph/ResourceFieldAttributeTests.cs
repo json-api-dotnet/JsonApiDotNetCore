@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
@@ -228,6 +229,57 @@ public sealed class ResourceFieldAttributeTests
 
         // Assert
         action.Should().ThrowExactly<ArgumentException>().WithMessage("Object of type 'System.DateTime' cannot be converted to type 'System.Boolean'.");
+    }
+
+    [Fact]
+    public void Evaluates_IsCollection_correctly()
+    {
+        // Arrange
+        var scalarAttr = new AttrAttribute
+        {
+            Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.ScalarString))!
+        };
+        var listAttr = new AttrAttribute
+        {
+            Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.StringList))!
+        };
+        var setAttr = new AttrAttribute
+        {
+            Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.IntSet))!
+        };
+
+        // Assert
+        scalarAttr.IsCollection.Should().BeFalse();
+        listAttr.IsCollection.Should().BeTrue();
+        setAttr.IsCollection.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Can_set_and_get_IsCompound_and_CompoundType()
+    {
+        // Arrange
+        var compoundType = new CompoundType(typeof(TestResource));
+        var attribute = new AttrAttribute
+        {
+            IsCompound = true,
+            CompoundType = compoundType
+        };
+
+        // Assert
+        attribute.IsCompound.Should().BeTrue();
+        attribute.CompoundType.Should().Be(compoundType);
+    }
+
+    private sealed class TestResourceWithCollections : Identifiable<long>
+    {
+        [Attr]
+        public string? ScalarString { get; set; }
+
+        [Attr]
+        public List<string>? StringList { get; set; }
+
+        [Attr]
+        public ISet<int>? IntSet { get; set; }
     }
 
     private sealed class TestResource : Identifiable<long>
