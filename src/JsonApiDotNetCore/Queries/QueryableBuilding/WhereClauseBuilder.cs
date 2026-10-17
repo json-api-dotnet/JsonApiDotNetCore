@@ -50,12 +50,14 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         if (expression.Filter != null)
         {
-            ResourceType resourceType = ((HasManyAttribute)expression.TargetCollection.Fields[^1]).RightType;
+            ResourceType? nestedResourceType = expression.TargetCollection.Fields[^1] is HasManyAttribute hasMany
+                ? hasMany.RightType
+                : null;
 
             using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(elementType);
 
-            var nestedContext = new QueryClauseBuilderContext(property, resourceType, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
-                lambdaScope, context.QueryableBuilder, context.State);
+            var nestedContext = new QueryClauseBuilderContext(property, nestedResourceType, typeof(Enumerable), context.EntityModel,
+                context.LambdaScopeFactory, lambdaScope, context.QueryableBuilder, context.State);
 
             predicate = GetPredicateLambda(expression.Filter, nestedContext);
         }
@@ -216,6 +218,11 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
             return typeof(int);
         }
 
+        if (expression is ElementValueExpression elementValue)
+        {
+            return elementValue.ElementType;
+        }
+
         if (expression is ResourceFieldChainExpression chain)
         {
             Expression child = Visit(chain, context);
@@ -245,5 +252,10 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     public override Expression VisitLiteralConstant(LiteralConstantExpression expression, QueryClauseBuilderContext context)
     {
         return SystemExpressionBuilder.CloseOver(expression.TypedValue);
+    }
+
+    public override Expression VisitElementValue(ElementValueExpression expression, QueryClauseBuilderContext context)
+    {
+        return context.LambdaScope.Accessor;
     }
 }
