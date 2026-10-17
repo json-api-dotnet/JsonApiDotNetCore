@@ -34,7 +34,23 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     ];
 
     private readonly IResourceFactory _resourceFactory;
-    private readonly Stack<ResourceType> _resourceTypeStack = new();
+    private readonly Stack<IAttributeContainer> _containerStack = new();
+
+    /// <summary>
+    /// Gets the container currently in scope. Call <see cref="InScopeOfContainer" /> to temporarily change the current container.
+    /// </summary>
+    protected IAttributeContainer ContainerInScope
+    {
+        get
+        {
+            if (_containerStack.Count == 0)
+            {
+                throw new InvalidOperationException("No resource type is currently in scope. Call Parse() first.");
+            }
+
+            return _containerStack.Peek();
+        }
+    }
 
     /// <summary>
     /// Gets the resource type currently in scope. Call <see cref="InScopeOfResourceType" /> to temporarily change the current resource type.
@@ -43,12 +59,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     {
         get
         {
-            if (_resourceTypeStack.Count == 0)
+            if (ContainerInScope is ResourceType resourceType)
             {
-                throw new InvalidOperationException("No resource type is currently in scope. Call Parse() first.");
+                return resourceType;
             }
 
-            return _resourceTypeStack.Peek();
+            throw new InvalidOperationException($"The container currently in scope is not a resource type: '{ContainerInScope}'.");
         }
     }
 
@@ -66,7 +82,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         Tokenize(source);
 
-        _resourceTypeStack.Clear();
+        _containerStack.Clear();
         FilterExpression expression;
 
         using (InScopeOfResourceType(resourceType))
@@ -76,7 +92,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             AssertTokenStackIsEmpty();
         }
 
-        AssertResourceTypeStackIsEmpty();
+        AssertContainerStackIsEmpty();
 
         return expression;
     }
@@ -110,7 +126,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetCollection =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+            ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection, FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
@@ -235,12 +251,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             return ParseFunction();
         }
 
-        // Allow equality comparison of a to-one relationship with null.
+        // Allow equality comparison of a to-one relationship or compound attribute with null.
         FieldChainPattern pattern = comparisonOperator == ComparisonOperator.Equals
-            ? BuiltInPatterns.ToOneChainEndingInAttributeOrToOne
-            : BuiltInPatterns.ToOneChainEndingInAttribute;
+            ? BuiltInPatterns.ToOneOrCompoundChainEndingInAttributeOrToOneOrCompound
+            : BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute;
 
-        return ParseFieldChain(pattern, FieldChainPatternMatchOptions.None, ResourceTypeInScope, "Function or field name expected.");
+        return ParseFieldChain(pattern, FieldChainPatternMatchOptions.None, ContainerInScope, "Function or field name expected.");
     }
 
     private QueryExpression ParseComparisonRightTerm(QueryExpression leftTerm)
@@ -249,7 +265,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         {
             ResourceFieldAttribute leftLastField = leftFieldChain.Fields[^1];
 
-            if (leftLastField is HasOneAttribute)
+            if (leftLastField is HasOneAttribute or AttrAttribute { IsCompound: true, IsCollection: false })
             {
                 return ParseNull();
             }
@@ -305,7 +321,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                     return ParseFunction();
                 }
 
-                return ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, errorMessage);
+                return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, errorMessage);
             }
         }
 
@@ -349,8 +365,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None,
-            ResourceTypeInScope, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None,
+            ContainerInScope, null);
 
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
@@ -404,7 +420,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         }
 
         ResourceFieldChainExpression targetAttributeChain =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+            ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
@@ -418,7 +434,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetCollection =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+            ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection, FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         FilterExpression? filter = null;
 
@@ -426,11 +442,21 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         {
             EatSingleCharacterToken(TokenKind.Comma);
 
-            var hasManyRelationship = (HasManyAttribute)targetCollection.Fields[^1];
+            ResourceFieldAttribute lastField = targetCollection.Fields[^1];
 
-            using (InScopeOfResourceType(hasManyRelationship.RightType))
+            if (lastField is HasManyAttribute hasManyRelationship)
             {
-                filter = ParseFilter();
+                using (InScopeOfResourceType(hasManyRelationship.RightType))
+                {
+                    filter = ParseFilter();
+                }
+            }
+            else if (lastField is AttrAttribute { IsCompound: true, IsCollection: true } compoundCollectionAttr)
+            {
+                using (InScopeOfContainer(compoundCollectionAttr.CompoundType!))
+                {
+                    filter = ParseFilter();
+                }
             }
         }
 
@@ -575,13 +601,13 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private ConstantValueConverter GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
-        if (attribute is { Property.Name: nameof(Identifiable<>.Id) })
+        if (attribute is { Property.Name: nameof(Identifiable<>.Id), ContainingType: ResourceType resourceType })
         {
             return (stringValue, position) =>
             {
                 try
                 {
-                    return DeObfuscateStringId((ResourceType)attribute.ContainingType, stringValue);
+                    return DeObfuscateStringId(resourceType, stringValue);
                 }
                 catch (JsonApiException exception)
                 {
@@ -616,28 +642,36 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     /// </summary>
     protected IDisposable InScopeOfResourceType(ResourceType resourceType)
     {
-        ArgumentNullException.ThrowIfNull(resourceType);
-
-        _resourceTypeStack.Push(resourceType);
-        return new PopResourceTypeOnDispose(_resourceTypeStack);
+        return InScopeOfContainer(resourceType);
     }
 
-    private void AssertResourceTypeStackIsEmpty()
+    /// <summary>
+    /// Changes the container currently in scope and restores the original container when the return value is disposed.
+    /// </summary>
+    protected IDisposable InScopeOfContainer(IAttributeContainer container)
     {
-        if (_resourceTypeStack.Count > 0)
+        ArgumentNullException.ThrowIfNull(container);
+
+        _containerStack.Push(container);
+        return new PopContainerOnDispose(_containerStack);
+    }
+
+    private void AssertContainerStackIsEmpty()
+    {
+        if (_containerStack.Count > 0)
         {
             throw new InvalidOperationException("There is still a resource type in scope after parsing has completed. " +
                 $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfResourceType)}().");
         }
     }
 
-    private sealed class PopResourceTypeOnDispose(Stack<ResourceType> resourceTypeStack) : IDisposable
+    private sealed class PopContainerOnDispose(Stack<IAttributeContainer> containerStack) : IDisposable
     {
-        private readonly Stack<ResourceType> _resourceTypeStack = resourceTypeStack;
+        private readonly Stack<IAttributeContainer> _containerStack = containerStack;
 
         public void Dispose()
         {
-            _resourceTypeStack.Pop();
+            _containerStack.Pop();
         }
     }
 }
