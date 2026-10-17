@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Linq.Expressions;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -12,35 +11,39 @@ using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryableBuilding;
 
-public sealed class ClauseBuilderTests
+public sealed class ClauseBuilderTests : IDisposable
 {
-    private readonly IResourceGraph _resourceGraph;
     private readonly ResourceType _resourceType;
     private readonly IReadOnlyModel _entityModel;
+    private readonly System.ComponentModel.Design.ServiceContainer _serviceContainer;
     private readonly FilterParser _filterParser;
     private readonly SortParser _sortParser;
 
     public ClauseBuilderTests()
     {
         var options = new JsonApiOptions();
-        _resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
             .Add<CompoundModel, long>()
             .Build();
 
-        _resourceType = _resourceGraph.GetResourceType<CompoundModel>();
+        _resourceType = resourceGraph.GetResourceType<CompoundModel>();
 
         var modelBuilder = new ModelBuilder();
         _entityModel = modelBuilder.Model.FinalizeModel();
 
-        var serviceContainer = new System.ComponentModel.Design.ServiceContainer();
-        var resourceFactory = new ResourceFactory(serviceContainer);
+        _serviceContainer = new System.ComponentModel.Design.ServiceContainer();
+        var resourceFactory = new ResourceFactory(_serviceContainer);
         _filterParser = new FilterParser(resourceFactory);
         _sortParser = new SortParser();
+    }
+
+    public void Dispose()
+    {
+        _serviceContainer.Dispose();
     }
 
     [Fact]
@@ -192,7 +195,10 @@ public sealed class ClauseBuilderTests
 
     private sealed class DummyQueryableBuilder : IQueryableBuilder
     {
-        public Expression ApplyQuery(QueryLayer layer, QueryableBuilderContext context) => throw new NotImplementedException();
+        public Expression ApplyQuery(QueryLayer layer, QueryableBuilderContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

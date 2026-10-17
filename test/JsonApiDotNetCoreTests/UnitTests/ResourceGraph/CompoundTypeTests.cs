@@ -32,7 +32,7 @@ public sealed class CompoundTypeTests
         var compoundType = new CompoundType(typeof(TestAddress), [streetAttribute]);
 
         // Act & Assert
-        compoundType.ClrType.Should().Be(typeof(TestAddress));
+        compoundType.ClrType.Should().Be<TestAddress>();
         compoundType.Attributes.Should().ContainSingle().Which.Should().Be(streetAttribute);
         compoundType.ToString().Should().Be(nameof(TestAddress));
 

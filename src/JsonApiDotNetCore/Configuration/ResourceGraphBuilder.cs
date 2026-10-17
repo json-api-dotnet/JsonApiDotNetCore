@@ -430,6 +430,7 @@ public partial class ResourceGraphBuilder
         foreach (PropertyInfo property in compoundClrType.GetProperties())
         {
             var relationship = property.GetCustomAttribute<RelationshipAttribute>(true);
+
             if (relationship != null)
             {
                 throw new InvalidConfigurationException(
@@ -437,6 +438,7 @@ public partial class ResourceGraphBuilder
             }
 
             var eagerLoad = property.GetCustomAttribute<EagerLoadAttribute>(true);
+
             if (eagerLoad != null)
             {
                 throw new InvalidConfigurationException(
@@ -444,6 +446,7 @@ public partial class ResourceGraphBuilder
             }
 
             var attribute = property.GetCustomAttribute<AttrAttribute>(true);
+
             if (attribute != null)
             {
                 SetPublicName(attribute, property);
@@ -465,6 +468,7 @@ public partial class ResourceGraphBuilder
         }
 
         var newCompoundType = new CompoundType(compoundClrType, attributesByName.Values);
+
         foreach (AttrAttribute attribute in newCompoundType.Attributes)
         {
             attribute.ContainingType = newCompoundType;
@@ -501,9 +505,10 @@ public partial class ResourceGraphBuilder
         inPath.Add(currentType);
 
         CompoundType compoundType = _compoundTypesByClrType[currentType];
+
         foreach (AttrAttribute attribute in compoundType.Attributes)
         {
-            if (attribute.IsCompound && attribute.CompoundType != null)
+            if (attribute is { IsCompound: true, CompoundType: not null })
             {
                 AssertNoCyclesInCompoundTypes(attribute.CompoundType.ClrType, visited, inPath);
             }

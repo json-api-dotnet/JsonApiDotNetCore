@@ -2,7 +2,6 @@ using System.Net;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -56,7 +55,7 @@ public sealed class CompoundSortParseTests
         IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
         // Assert
-        SortExpression value = (SortExpression)constraints.Select(expressionInScope => expressionInScope.Expression).Single();
+        var value = (SortExpression)constraints.Select(expressionInScope => expressionInScope.Expression).Single();
         value.ToString().Should().Be(parameterValue);
     }
 

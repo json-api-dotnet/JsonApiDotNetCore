@@ -23,11 +23,6 @@ internal sealed class PatternMatcher
         _allowDerivedTypes = options.HasFlag(FieldChainPatternMatchOptions.AllowDerivedTypes);
     }
 
-    public PatternMatchResult Match(string fieldChain, ResourceType resourceType)
-    {
-        return Match(fieldChain, (IAttributeContainer)resourceType);
-    }
-
     public PatternMatchResult Match(string fieldChain, IAttributeContainer container)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
@@ -220,9 +215,9 @@ internal sealed class PatternMatcher
                 }
             }
         }
-        else if (container != null)
+        else
         {
-            AttrAttribute? attribute = container.FindAttributeByPublicName(publicName);
+            AttrAttribute? attribute = container?.FindAttributeByPublicName(publicName);
 
             if (attribute != null)
             {

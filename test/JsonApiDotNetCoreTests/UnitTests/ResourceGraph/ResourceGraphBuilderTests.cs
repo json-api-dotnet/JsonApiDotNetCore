@@ -582,7 +582,7 @@ public sealed class ResourceGraphBuilderTests
         contentAttr.ContainingType.Should().Be(resourceType);
 
         CompoundType rootCompoundType = contentAttr.CompoundType!;
-        rootCompoundType.ClrType.Should().Be(typeof(TestRootCompound));
+        rootCompoundType.ClrType.Should().Be<TestRootCompound>();
         rootCompoundType.Attributes.Should().HaveCount(2);
 
         AttrAttribute nameAttr = rootCompoundType.GetAttributeByPropertyName(nameof(TestRootCompound.Name));
@@ -591,7 +591,7 @@ public sealed class ResourceGraphBuilderTests
         nameAttr.ContainingType.Should().Be(rootCompoundType);
 
         CompoundType nameCompoundType = nameAttr.CompoundType!;
-        nameCompoundType.ClrType.Should().Be(typeof(TestChildCompound));
+        nameCompoundType.ClrType.Should().Be<TestChildCompound>();
         AttrAttribute firstAttr = nameCompoundType.GetAttributeByPropertyName(nameof(TestChildCompound.FirstName));
         firstAttr.IsCompound.Should().BeFalse();
         firstAttr.CompoundType.Should().BeNull();
@@ -601,7 +601,7 @@ public sealed class ResourceGraphBuilderTests
         phonesAttr.IsCompound.Should().BeTrue();
         phonesAttr.IsCollection.Should().BeTrue();
         phonesAttr.CompoundType.Should().NotBeNull();
-        phonesAttr.CompoundType!.ClrType.Should().Be(typeof(TestPhoneCompound));
+        phonesAttr.CompoundType!.ClrType.Should().Be<TestPhoneCompound>();
 
         resourceGraph.GetCompoundTypes().Should().HaveCount(3);
         resourceGraph.GetCompoundType(typeof(TestRootCompound)).Should().Be(rootCompoundType);
@@ -672,7 +672,7 @@ public sealed class ResourceGraphBuilderTests
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
-            $"Type '{typeof(CompoundWithResourceAttribute)}' is a compound type and cannot be annotated with [Resource].");
+            $"Type '{typeof(CompoundWithResourceAnnotation)}' is a compound type and cannot be annotated with [Resource].");
     }
 
     [Fact]
@@ -796,8 +796,9 @@ public sealed class ResourceGraphBuilderTests
         public SimpleResource? Child { get; set; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
-    public sealed class CompoundWithResourceAttribute
+    public sealed class CompoundWithResourceAnnotation
     {
         [Attr]
         public string? Text { get; set; }
@@ -807,7 +808,7 @@ public sealed class ResourceGraphBuilderTests
     public sealed class ResourceWithAnnotatedCompound : Identifiable<long>
     {
         [Attr(IsCompound = true)]
-        public CompoundWithResourceAttribute? Child { get; set; }
+        public CompoundWithResourceAnnotation? Child { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

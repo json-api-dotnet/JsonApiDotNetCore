@@ -15,17 +15,29 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
 
     public bool IsEmpty => Count == 0;
 
+    /// <summary>
+    /// Indicates whether any child selectors have been configured for compound attributes.
+    /// </summary>
     public bool HasChildSelectors => _childSelectors is { Count: > 0 };
 
+    /// <summary>
+    /// The configured child selectors keyed by their parent compound attribute.
+    /// </summary>
     public IReadOnlyDictionary<AttrAttribute, FieldSelectors> ChildSelectors =>
         _childSelectors ?? (IReadOnlyDictionary<AttrAttribute, FieldSelectors>)ImmutableDictionary<AttrAttribute, FieldSelectors>.Empty;
 
+    /// <summary>
+    /// Gets child selectors for the specified compound attribute, or <c>null</c> if not present.
+    /// </summary>
     public FieldSelectors? GetChildSelectors(AttrAttribute compoundAttribute)
     {
         ArgumentNullException.ThrowIfNull(compoundAttribute);
         return _childSelectors?.GetValueOrDefault(compoundAttribute);
     }
 
+    /// <summary>
+    /// Gets or creates child selectors for the specified compound attribute.
+    /// </summary>
     public FieldSelectors GetOrCreateChildSelectors(AttrAttribute compoundAttribute)
     {
         ArgumentNullException.ThrowIfNull(compoundAttribute);
@@ -70,6 +82,9 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
         this[attribute] = null;
     }
 
+    /// <summary>
+    /// Includes the compound attribute along with its nested child field selectors.
+    /// </summary>
     public void IncludeCompoundAttribute(AttrAttribute compoundAttribute, FieldSelectors childSelectors)
     {
         ArgumentNullException.ThrowIfNull(compoundAttribute);

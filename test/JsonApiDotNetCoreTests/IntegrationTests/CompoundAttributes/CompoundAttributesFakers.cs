@@ -7,7 +7,6 @@ internal sealed class CompoundAttributesFakers
 {
     private readonly Lazy<Faker<AddressBook>> _lazyAddressBookFaker;
     private readonly Lazy<Faker<Contact>> _lazyContactFaker;
-    private readonly Lazy<Faker<ContactNote>> _lazyContactNoteFaker;
     private readonly Lazy<Faker<ContactRoot>> _lazyContactRootFaker;
     private readonly Lazy<Faker<ContactName>> _lazyContactNameFaker;
     private readonly Lazy<Faker<ContactCompany>> _lazyContactCompanyFaker;
@@ -15,15 +14,15 @@ internal sealed class CompoundAttributesFakers
     private readonly Lazy<Faker<ContactPhoneNumber>> _lazyContactPhoneNumberFaker;
     private readonly Lazy<Faker<ContactDate>> _lazyContactDateFaker;
 
+    private Faker<ContactName> ContactName => _lazyContactNameFaker.Value;
+    private Faker<ContactAddress> ContactAddress => _lazyContactAddressFaker.Value;
+    private Faker<ContactPhoneNumber> ContactPhoneNumber => _lazyContactPhoneNumberFaker.Value;
+    private Faker<ContactDate> ContactDate => _lazyContactDateFaker.Value;
+
     public Faker<AddressBook> AddressBook => _lazyAddressBookFaker.Value;
     public Faker<Contact> Contact => _lazyContactFaker.Value;
-    public Faker<ContactNote> ContactNote => _lazyContactNoteFaker.Value;
     public Faker<ContactRoot> ContactRoot => _lazyContactRootFaker.Value;
-    public Faker<ContactName> ContactName => _lazyContactNameFaker.Value;
     public Faker<ContactCompany> ContactCompany => _lazyContactCompanyFaker.Value;
-    public Faker<ContactAddress> ContactAddress => _lazyContactAddressFaker.Value;
-    public Faker<ContactPhoneNumber> ContactPhoneNumber => _lazyContactPhoneNumberFaker.Value;
-    public Faker<ContactDate> ContactDate => _lazyContactDateFaker.Value;
 
     public CompoundAttributesFakers()
     {
@@ -31,7 +30,7 @@ internal sealed class CompoundAttributesFakers
             .MakeDeterministic()
             .RuleFor(name => name.FirstName, faker => faker.Name.FirstName())
             .RuleFor(name => name.LastName, faker => faker.Name.LastName())
-            .RuleFor(name => name.DisplayName, (faker, name) => $"{name.FirstName} {name.LastName}"));
+            .RuleFor(name => name.DisplayName, (_, name) => $"{name.FirstName} {name.LastName}"));
 
         _lazyContactCompanyFaker = new Lazy<Faker<ContactCompany>>(() => new Faker<ContactCompany>()
             .MakeDeterministic()
@@ -73,11 +72,6 @@ internal sealed class CompoundAttributesFakers
             [
                 new LabeledValue<string> { Value = faker.Name.FullName(), Label = "friend" }
             ]));
-
-        _lazyContactNoteFaker = new Lazy<Faker<ContactNote>>(() => new Faker<ContactNote>()
-            .MakeDeterministic()
-            .RuleFor(note => note.Text, faker => faker.Lorem.Sentence())
-            .RuleFor(note => note.Priority, faker => faker.Random.Number(1, 5)));
 
         _lazyContactFaker = new Lazy<Faker<Contact>>(() => new Faker<Contact>()
             .MakeDeterministic()

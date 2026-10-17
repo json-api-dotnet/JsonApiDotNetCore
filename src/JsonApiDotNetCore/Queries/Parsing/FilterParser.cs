@@ -331,8 +331,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         bool allowNull = RuntimeTypeConverter.CanContainNull(leftType);
 
         string errorMessage = PrimitiveElementInScope != null
-            ? (allowNull ? "Function, value between quotes, null or '_' expected." : "Function, value between quotes or '_' expected.")
-            : (allowNull ? "Function, field name, value between quotes or null expected." : "Function, field name or value between quotes expected.");
+            ? allowNull ? "Function, value between quotes, null or '_' expected." : "Function, value between quotes or '_' expected."
+            : allowNull ? "Function, field name, value between quotes or null expected." : "Function, field name or value between quotes expected.";
 
         if (TokenStack.TryPeek(out Token? nextToken))
         {
@@ -516,8 +516,6 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             int position = GetNextTokenPositionOrEnd();
             throw new QueryParseException("Function or '_' expected.", position);
         }
-
-        int chainStartPosition = GetNextTokenPositionOrEnd();
 
         ResourceFieldChainExpression targetAttributeChain =
             ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, null);

@@ -12,7 +12,5 @@ internal enum FieldTypes
     CompoundCollection = 1 << 5,
 
     Relationship = ToOneRelationship | ToManyRelationship,
-    Field = ScalarAttribute | Relationship | CompoundAttribute | PrimitiveCollection | CompoundCollection,
-
-    Attribute = ScalarAttribute
+    Field = ScalarAttribute | Relationship | CompoundAttribute | PrimitiveCollection | CompoundCollection
 }

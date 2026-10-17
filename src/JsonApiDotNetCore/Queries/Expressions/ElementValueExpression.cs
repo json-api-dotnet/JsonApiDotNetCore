@@ -24,12 +24,23 @@ public sealed class ElementValueExpression : IdentifierExpression
         return visitor.VisitElementValue(this, argument);
     }
 
-    public override string ToString() => "_";
+    public override string ToString()
+    {
+        return "_";
+    }
 
-    public override string ToFullString() => "_";
+    public override string ToFullString()
+    {
+        return "_";
+    }
 
-    public override bool Equals(object? obj) =>
-        ReferenceEquals(this, obj) || (obj is ElementValueExpression other && ElementType == other.ElementType);
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj) || (obj is ElementValueExpression other && ElementType == other.ElementType);
+    }
 
-    public override int GetHashCode() => ElementType.GetHashCode();
+    public override int GetHashCode()
+    {
+        return ElementType.GetHashCode();
+    }
 }
