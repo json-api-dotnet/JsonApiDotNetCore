@@ -1,3 +1,4 @@
+using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -49,13 +50,19 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
-    private Dictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
+    private static Dictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
     {
         var result = new Dictionary<string, object?>();
 
         foreach (AttrAttribute attribute in attributes)
         {
             object? value = attribute.GetValue(resource);
+
+            if (value != null && (attribute.IsCompound || attribute.IsCollection))
+            {
+                value = JsonSerializer.SerializeToElement(value);
+            }
+
             result.Add(attribute.PublicName, value);
         }
 
@@ -73,7 +80,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
                 {
                     object? actualValue = _finallyStoredAttributeValues[key];
 
-                    if (!Equals(requestValue, actualValue))
+                    if (!AreValuesEqual(requestValue, actualValue))
                     {
                         return true;
                     }
@@ -83,7 +90,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
                     object? initiallyStoredValue = _initiallyStoredAttributeValues[key];
                     object? finallyStoredValue = _finallyStoredAttributeValues[key];
 
-                    if (!Equals(initiallyStoredValue, finallyStoredValue))
+                    if (!AreValuesEqual(initiallyStoredValue, finallyStoredValue))
                     {
                         return true;
                     }
@@ -92,5 +99,15 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         }
 
         return false;
+    }
+
+    private static bool AreValuesEqual(object? left, object? right)
+    {
+        if (left is JsonElement leftElement && right is JsonElement rightElement)
+        {
+            return JsonElement.DeepEquals(leftElement, rightElement);
+        }
+
+        return Equals(left, right);
     }
 }
