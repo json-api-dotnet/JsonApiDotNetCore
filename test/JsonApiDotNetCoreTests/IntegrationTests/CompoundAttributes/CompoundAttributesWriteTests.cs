@@ -1,8 +1,6 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -125,7 +123,7 @@ public sealed class CompoundAttributesWriteTests
 
             addressBookInDatabase.Name.Should().Be("Work Address Book");
             addressBookInDatabase.SyncUrls.Should().NotBeNull();
-            addressBookInDatabase.SyncUrls.Should().BeEquivalentTo(["https://example.com/sync", "https://backup.example.com"]);
+            addressBookInDatabase.SyncUrls.Should().BeEquivalentTo("https://example.com/sync", "https://backup.example.com");
         });
     }
 
@@ -275,7 +273,7 @@ public sealed class CompoundAttributesWriteTests
         {
             AddressBook addressBookInDatabase = await dbContext.AddressBooks.FirstWithIdAsync(existingAddressBook.Id);
 
-            addressBookInDatabase.SyncUrls.Should().BeEquivalentTo(["https://new1.com"]);
+            addressBookInDatabase.SyncUrls.Should().BeEquivalentTo("https://new1.com");
         });
     }
 

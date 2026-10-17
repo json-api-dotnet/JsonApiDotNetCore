@@ -218,11 +218,11 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             assignmentRightHandSide = CreateCompoundMemberInit(propertySelector.ChildSelectors, propertyAccess, context);
         }
 
-        var assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
+        MemberAssignment assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
         return assignment;
     }
 
-    private Expression CreateCompoundMemberInit(FieldSelectors childSelectors, MemberExpression propertyAccess, QueryClauseBuilderContext context)
+    private ConditionalExpression CreateCompoundMemberInit(FieldSelectors childSelectors, MemberExpression propertyAccess, QueryClauseBuilderContext context)
     {
         Type compoundClrType = propertyAccess.Type;
         var assignments = new List<MemberBinding>();
@@ -235,6 +235,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
                 FieldSelectors? grandchildSelectors = childSelectors.GetChildSelectors(childAttr);
 
                 Expression childRightHandSide;
+
                 if (grandchildSelectors is { IsEmpty: false })
                 {
                     childRightHandSide = CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, context);

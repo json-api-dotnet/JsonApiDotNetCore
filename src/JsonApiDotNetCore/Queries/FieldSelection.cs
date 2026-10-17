@@ -72,6 +72,7 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
                 if (nextLayer == null)
                 {
                     writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
+
                     if (field is AttrAttribute attr && GetOrCreateSelectors(type).GetChildSelectors(attr) is { } childSelectors)
                     {
                         WriteChildSelectors(writer, toFullString, childSelectors);
@@ -90,9 +91,10 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
     {
         using (writer.Indent())
         {
-            foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in childSelectors)
+            foreach (ResourceFieldAttribute field in childSelectors.Keys)
             {
                 writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
+
                 if (field is AttrAttribute attr && childSelectors.GetChildSelectors(attr) is { } nextChildren)
                 {
                     WriteChildSelectors(writer, toFullString, nextChildren);

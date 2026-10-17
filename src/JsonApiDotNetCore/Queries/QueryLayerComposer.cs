@@ -634,6 +634,7 @@ public class QueryLayerComposer : IQueryLayerComposer
                 else
                 {
                     FieldSelectors currentSelectors = selectors;
+
                     for (int i = 0; i < chain.Fields.Count - 1; i++)
                     {
                         var parentAttr = (AttrAttribute)chain.Fields[i];
