@@ -35,6 +35,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private readonly IResourceFactory _resourceFactory;
     private readonly Stack<IAttributeContainer> _containerStack = new();
+    private readonly Stack<Type> _primitiveElementStack = new();
+
+    /// <summary>
+    /// Gets the CLR type of the primitive collection element currently in scope, or <c>null</c> if not in scope of a primitive collection.
+    /// </summary>
+    protected Type? PrimitiveElementInScope => _primitiveElementStack.Count > 0 ? _primitiveElementStack.Peek() : null;
 
     /// <summary>
     /// Gets the container currently in scope. Call <see cref="InScopeOfContainer" /> to temporarily change the current container.
@@ -83,6 +89,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         Tokenize(source);
 
         _containerStack.Clear();
+        _primitiveElementStack.Clear();
         FilterExpression expression;
 
         using (InScopeOfResourceType(resourceType))
@@ -93,6 +100,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         }
 
         AssertContainerStackIsEmpty();
+        AssertPrimitiveElementStackIsEmpty();
 
         return expression;
     }
@@ -122,6 +130,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private CountExpression ParseCount()
     {
+        if (PrimitiveElementInScope != null)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function 'count' cannot be used on primitive collection elements.", position);
+        }
+
         EatText(Keywords.Count);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
@@ -246,9 +260,29 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private QueryExpression ParseComparisonLeftTerm(ComparisonOperator comparisonOperator)
     {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text })
         {
-            return ParseFunction();
+            if (IsFunction(nextToken.Value!))
+            {
+                return ParseFunction();
+            }
+
+            if (PrimitiveElementInScope != null)
+            {
+                if (nextToken.Value == Keywords.Element)
+                {
+                    EatText(Keywords.Element);
+                    return new ElementValueExpression(PrimitiveElementInScope);
+                }
+
+                throw new QueryParseException("Function or '_' expected.", nextToken.Position);
+            }
+        }
+
+        if (PrimitiveElementInScope != null)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function or '_' expected.", position);
         }
 
         // Allow equality comparison of a to-one relationship or compound attribute with null.
@@ -261,6 +295,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private QueryExpression ParseComparisonRightTerm(QueryExpression leftTerm)
     {
+        if (leftTerm is ElementValueExpression elementValue)
+        {
+            ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(elementValue.ElementType);
+            return ParseTypedComparisonRightTerm(elementValue.ElementType, constantValueConverter);
+        }
+
         if (leftTerm is ResourceFieldChainExpression leftFieldChain)
         {
             ResourceFieldAttribute leftLastField = leftFieldChain.Fields[^1];
@@ -283,15 +323,16 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         }
 
         throw new InvalidOperationException(
-            $"Internal error: Expected left term to be a function or field chain, instead of '{leftTerm.GetType().Name}': '{leftTerm}'.");
+            $"Internal error: Expected left term to be a function, field chain or element value, instead of '{leftTerm.GetType().Name}': '{leftTerm}'.");
     }
 
     private QueryExpression ParseTypedComparisonRightTerm(Type leftType, ConstantValueConverter constantValueConverter)
     {
         bool allowNull = RuntimeTypeConverter.CanContainNull(leftType);
 
-        string errorMessage =
-            allowNull ? "Function, field name, value between quotes or null expected." : "Function, field name or value between quotes expected.";
+        string errorMessage = PrimitiveElementInScope != null
+            ? (allowNull ? "Function, value between quotes, null or '_' expected." : "Function, value between quotes or '_' expected.")
+            : (allowNull ? "Function, field name, value between quotes or null expected." : "Function, field name or value between quotes expected.");
 
         if (TokenStack.TryPeek(out Token? nextToken))
         {
@@ -319,6 +360,17 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                 if (IsFunction(nextToken.Value!))
                 {
                     return ParseFunction();
+                }
+
+                if (PrimitiveElementInScope != null)
+                {
+                    if (nextToken.Value == Keywords.Element)
+                    {
+                        EatText(Keywords.Element);
+                        return new ElementValueExpression(PrimitiveElementInScope);
+                    }
+
+                    throw new QueryParseException(errorMessage, nextToken.Position);
                 }
 
                 return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, errorMessage);
@@ -351,16 +403,42 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private QueryExpression ParseTextMatchLeftTerm()
     {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text })
         {
-            FunctionExpression targetFunction = ParseFunction();
-
-            if (targetFunction.ReturnType != typeof(string))
+            if (IsFunction(nextToken.Value!))
             {
-                throw new QueryParseException("Function that returns type 'String' expected.", nextToken.Position);
+                FunctionExpression targetFunction = ParseFunction();
+
+                if (targetFunction.ReturnType != typeof(string))
+                {
+                    throw new QueryParseException("Function that returns type 'String' expected.", nextToken.Position);
+                }
+
+                return targetFunction;
             }
 
-            return targetFunction;
+            if (PrimitiveElementInScope != null)
+            {
+                if (nextToken.Value == Keywords.Element)
+                {
+                    EatText(Keywords.Element);
+
+                    if (PrimitiveElementInScope != typeof(string))
+                    {
+                        throw new QueryParseException("Element of type 'String' expected.", nextToken.Position);
+                    }
+
+                    return new ElementValueExpression(PrimitiveElementInScope);
+                }
+
+                throw new QueryParseException("Function or '_' expected.", nextToken.Position);
+            }
+        }
+
+        if (PrimitiveElementInScope != null)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function or '_' expected.", position);
         }
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
@@ -411,13 +489,35 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private (QueryExpression matchTarget, Func<ConstantValueConverter> constantValueConverterFactory) ParseAnyLeftTerm()
     {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text })
         {
-            FunctionExpression targetFunction = ParseFunction();
+            if (IsFunction(nextToken.Value!))
+            {
+                FunctionExpression targetFunction = ParseFunction();
 
-            Func<ConstantValueConverter> functionConverterFactory = () => GetConstantValueConverterForType(targetFunction.ReturnType);
-            return (targetFunction, functionConverterFactory);
+                Func<ConstantValueConverter> functionConverterFactory = () => GetConstantValueConverterForType(targetFunction.ReturnType);
+                return (targetFunction, functionConverterFactory);
+            }
+
+            if (PrimitiveElementInScope != null)
+            {
+                if (nextToken.Value == Keywords.Element)
+                {
+                    EatText(Keywords.Element);
+                    return (new ElementValueExpression(PrimitiveElementInScope), () => GetConstantValueConverterForType(PrimitiveElementInScope));
+                }
+
+                throw new QueryParseException("Function or '_' expected.", nextToken.Position);
+            }
         }
+
+        if (PrimitiveElementInScope != null)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function or '_' expected.", position);
+        }
+
+        int chainStartPosition = GetNextTokenPositionOrEnd();
 
         ResourceFieldChainExpression targetAttributeChain =
             ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, null);
@@ -430,6 +530,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual HasExpression ParseHas()
     {
+        if (PrimitiveElementInScope != null)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function 'has' cannot be used on primitive collection elements.", position);
+        }
+
         EatText(Keywords.Has);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
@@ -458,6 +564,16 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                     filter = ParseFilter();
                 }
             }
+            else if (lastField is AttrAttribute { IsCompound: false, IsCollection: true } primitiveCollectionAttr)
+            {
+                Type elementType = CollectionConverter.Instance.FindCollectionElementType(primitiveCollectionAttr.Property.PropertyType)
+                    ?? throw new InvalidOperationException($"Cannot determine element type for primitive collection attribute '{primitiveCollectionAttr.Property.Name}'.");
+
+                using (InScopeOfPrimitiveElement(elementType))
+                {
+                    filter = ParseFilter();
+                }
+            }
         }
 
         EatSingleCharacterToken(TokenKind.CloseParen);
@@ -467,6 +583,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual IsTypeExpression ParseIsType()
     {
+        if (PrimitiveElementInScope != null)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function 'isType' cannot be used on primitive collection elements.", position);
+        }
+
         EatText(Keywords.IsType);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
@@ -656,12 +778,32 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         return new PopContainerOnDispose(_containerStack);
     }
 
+    /// <summary>
+    /// Changes the primitive element type currently in scope and restores the original type when the return value is disposed.
+    /// </summary>
+    protected IDisposable InScopeOfPrimitiveElement(Type elementType)
+    {
+        ArgumentNullException.ThrowIfNull(elementType);
+
+        _primitiveElementStack.Push(elementType);
+        return new PopPrimitiveElementOnDispose(_primitiveElementStack);
+    }
+
     private void AssertContainerStackIsEmpty()
     {
         if (_containerStack.Count > 0)
         {
             throw new InvalidOperationException("There is still a resource type in scope after parsing has completed. " +
                 $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfResourceType)}().");
+        }
+    }
+
+    private void AssertPrimitiveElementStackIsEmpty()
+    {
+        if (_primitiveElementStack.Count > 0)
+        {
+            throw new InvalidOperationException("There is still a primitive element type in scope after parsing has completed. " +
+                $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfPrimitiveElement)}().");
         }
     }
 
@@ -672,6 +814,16 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         public void Dispose()
         {
             _containerStack.Pop();
+        }
+    }
+
+    private sealed class PopPrimitiveElementOnDispose(Stack<Type> primitiveElementStack) : IDisposable
+    {
+        private readonly Stack<Type> _primitiveElementStack = primitiveElementStack;
+
+        public void Dispose()
+        {
+            _primitiveElementStack.Pop();
         }
     }
 }
