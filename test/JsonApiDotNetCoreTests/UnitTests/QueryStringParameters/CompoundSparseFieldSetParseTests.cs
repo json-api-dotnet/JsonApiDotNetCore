@@ -25,9 +25,7 @@ public sealed class CompoundSparseFieldSetParseTests
     {
         var options = new JsonApiOptions();
 
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-            .Add<CompoundModel, long>()
-            .Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<CompoundModel, long>().Build();
 
         var request = new JsonApiRequest
         {

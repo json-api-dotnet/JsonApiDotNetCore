@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Linq.Expressions;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -19,31 +20,24 @@ public sealed class ClauseBuilderTests : IDisposable
 {
     private readonly ResourceType _resourceType;
     private readonly IReadOnlyModel _entityModel;
-    private readonly System.ComponentModel.Design.ServiceContainer _serviceContainer;
+    private readonly ServiceContainer _serviceContainer;
     private readonly FilterParser _filterParser;
     private readonly SortParser _sortParser;
 
     public ClauseBuilderTests()
     {
         var options = new JsonApiOptions();
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-            .Add<CompoundModel, long>()
-            .Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<CompoundModel, long>().Build();
 
         _resourceType = resourceGraph.GetResourceType<CompoundModel>();
 
         var modelBuilder = new ModelBuilder();
         _entityModel = modelBuilder.Model.FinalizeModel();
 
-        _serviceContainer = new System.ComponentModel.Design.ServiceContainer();
+        _serviceContainer = new ServiceContainer();
         var resourceFactory = new ResourceFactory(_serviceContainer);
         _filterParser = new FilterParser(resourceFactory);
         _sortParser = new SortParser();
-    }
-
-    public void Dispose()
-    {
-        _serviceContainer.Dispose();
     }
 
     [Fact]
@@ -57,8 +51,9 @@ public sealed class ClauseBuilderTests : IDisposable
         using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
 
         IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
-        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel,
-            lambdaScopeFactory, lambdaScope, new DummyQueryableBuilder(), null);
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
 
         // Act
         Expression result = whereClauseBuilder.ApplyWhere(filter, context);
@@ -78,8 +73,9 @@ public sealed class ClauseBuilderTests : IDisposable
         using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
 
         IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
-        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel,
-            lambdaScopeFactory, lambdaScope, new DummyQueryableBuilder(), null);
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
 
         // Act
         Expression result = whereClauseBuilder.ApplyWhere(filter, context);
@@ -99,8 +95,9 @@ public sealed class ClauseBuilderTests : IDisposable
         using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
 
         IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
-        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel,
-            lambdaScopeFactory, lambdaScope, new DummyQueryableBuilder(), null);
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
 
         // Act
         Expression result = whereClauseBuilder.ApplyWhere(filter, context);
@@ -120,8 +117,9 @@ public sealed class ClauseBuilderTests : IDisposable
         using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
 
         IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
-        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel,
-            lambdaScopeFactory, lambdaScope, new DummyQueryableBuilder(), null);
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
 
         // Act
         Expression result = whereClauseBuilder.ApplyWhere(filter, context);
@@ -141,8 +139,9 @@ public sealed class ClauseBuilderTests : IDisposable
         using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
 
         IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
-        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel,
-            lambdaScopeFactory, lambdaScope, new DummyQueryableBuilder(), null);
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
 
         // Act
         Expression result = whereClauseBuilder.ApplyWhere(filter, context);
@@ -162,8 +161,9 @@ public sealed class ClauseBuilderTests : IDisposable
         using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
 
         IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
-        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel,
-            lambdaScopeFactory, lambdaScope, new DummyQueryableBuilder(), null);
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
 
         // Act
         Expression result = whereClauseBuilder.ApplyWhere(filter, context);
@@ -183,14 +183,21 @@ public sealed class ClauseBuilderTests : IDisposable
         using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
 
         IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
-        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel,
-            lambdaScopeFactory, lambdaScope, new DummyQueryableBuilder(), null);
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
 
         // Act
         Expression result = orderClauseBuilder.ApplyOrderBy(sort, context);
 
         // Assert
-        result.ToString().Should().Contain(".OrderByDescending(compoundModel => compoundModel.Details.Nested.Description).ThenBy(compoundModel => compoundModel.Details.Title)");
+        result.ToString().Should().Contain(
+            ".OrderByDescending(compoundModel => compoundModel.Details.Nested.Description).ThenBy(compoundModel => compoundModel.Details.Title)");
+    }
+
+    public void Dispose()
+    {
+        _serviceContainer.Dispose();
     }
 
     private sealed class DummyQueryableBuilder : IQueryableBuilder

@@ -16,6 +16,11 @@ internal sealed class MatchState
     private readonly MatchState? _parentMatch;
 
     /// <summary>
+    /// The resource type to find the next field on.
+    /// </summary>
+    private ResourceType? ResourceType => Container as ResourceType;
+
+    /// <summary>
     /// The remaining chain of pattern segments. The first segment is being matched against.
     /// </summary>
     public FieldChainPattern? Pattern { get; }
@@ -24,11 +29,6 @@ internal sealed class MatchState
     /// The container to find the next field on.
     /// </summary>
     public IAttributeContainer? Container { get; }
-
-    /// <summary>
-    /// The resource type to find the next field on.
-    /// </summary>
-    private ResourceType? ResourceType => Container as ResourceType;
 
     /// <summary>
     /// The fields matched against this pattern segment.

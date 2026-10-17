@@ -192,8 +192,8 @@ public sealed class FieldChainPattern
     /// <returns>
     /// The match result.
     /// </returns>
-    public PatternMatchResult Match(string fieldChain, IAttributeContainer container, FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None,
-        ILoggerFactory? loggerFactory = null)
+    public PatternMatchResult Match(string fieldChain, IAttributeContainer container,
+        FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None, ILoggerFactory? loggerFactory = null)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
         ArgumentNullException.ThrowIfNull(container);
