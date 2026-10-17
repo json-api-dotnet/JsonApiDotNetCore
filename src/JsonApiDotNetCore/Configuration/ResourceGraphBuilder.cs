@@ -38,6 +38,7 @@ public partial class ResourceGraphBuilder
     public IResourceGraph Build()
     {
         DiscoverCompoundTypes();
+        AssertNoCyclesInCompoundTypes();
 
         foreach (Type nonIdentifiableType in _nonIdentifiableTypes)
         {
@@ -255,6 +256,11 @@ public partial class ResourceGraphBuilder
             return this;
         }
 
+        if (_compoundTypesByClrType.ContainsKey(resourceClrType))
+        {
+            throw new InvalidConfigurationException($"Type '{resourceClrType}' cannot be both a resource type and a compound type.");
+        }
+
         if (resourceClrType.IsOrImplementsInterface<IIdentifiable>())
         {
             string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
@@ -351,6 +357,11 @@ public partial class ResourceGraphBuilder
                 attribute.Capabilities = _options.DefaultAttrCapabilities;
             }
 
+            if (attribute.IsCompound)
+            {
+                attribute.Capabilities &= ~AttrCapabilities.AllowSort;
+            }
+
             IncludeField(attributesByName, attribute);
         }
 
@@ -388,6 +399,20 @@ public partial class ResourceGraphBuilder
     private CompoundType GetOrCreateCompoundType(AttrAttribute compoundAttribute, Queue<AttrAttribute> pendingAttributes)
     {
         Type compoundClrType = GetCompoundClrType(compoundAttribute.Property, compoundAttribute.IsCollection);
+
+        if (compoundClrType.IsOrImplementsInterface<IIdentifiable>())
+        {
+            throw new InvalidConfigurationException(
+                $"Property '{compoundAttribute.Property.DeclaringType!.Name}.{compoundAttribute.Property.Name}' implements IIdentifiable and must be exposed as a JSON:API relationship using [HasOne] or [HasMany], not as a compound attribute.");
+        }
+
+        compoundAttribute.Capabilities &= ~AttrCapabilities.AllowSort;
+
+        if (_resourceTypesByClrType.ContainsKey(compoundClrType))
+        {
+            throw new InvalidConfigurationException($"Type '{compoundClrType}' cannot be both a resource type and a compound type.");
+        }
+
         _nonIdentifiableTypes.Remove(compoundClrType);
 
         if (_compoundTypesByClrType.TryGetValue(compoundClrType, out CompoundType? existingCompoundType))
@@ -395,10 +420,29 @@ public partial class ResourceGraphBuilder
             return existingCompoundType;
         }
 
+        if (compoundClrType.GetCustomAttribute<ResourceAttribute>(true) != null)
+        {
+            throw new InvalidConfigurationException($"Type '{compoundClrType}' is a compound type and cannot be annotated with [Resource].");
+        }
+
         var attributesByName = new Dictionary<string, AttrAttribute>();
 
         foreach (PropertyInfo property in compoundClrType.GetProperties())
         {
+            var relationship = property.GetCustomAttribute<RelationshipAttribute>(true);
+            if (relationship != null)
+            {
+                throw new InvalidConfigurationException(
+                    $"Property '{compoundClrType.Name}.{property.Name}' in compound type '{compoundClrType.Name}' cannot be annotated with [{relationship.GetType().Name}]. Compound types cannot contain relationships.");
+            }
+
+            var eagerLoad = property.GetCustomAttribute<EagerLoadAttribute>(true);
+            if (eagerLoad != null)
+            {
+                throw new InvalidConfigurationException(
+                    $"Property '{compoundClrType.Name}.{property.Name}' in compound type '{compoundClrType.Name}' cannot be annotated with [EagerLoad].");
+            }
+
             var attribute = property.GetCustomAttribute<AttrAttribute>(true);
             if (attribute != null)
             {
@@ -412,6 +456,7 @@ public partial class ResourceGraphBuilder
 
                 if (attribute.IsCompound)
                 {
+                    attribute.Capabilities &= ~AttrCapabilities.AllowSort;
                     pendingAttributes.Enqueue(attribute);
                 }
 
@@ -427,6 +472,44 @@ public partial class ResourceGraphBuilder
 
         _compoundTypesByClrType.Add(compoundClrType, newCompoundType);
         return newCompoundType;
+    }
+
+    private void AssertNoCyclesInCompoundTypes()
+    {
+        HashSet<Type> visited = [];
+        HashSet<Type> inPath = [];
+
+        foreach (Type compoundType in _compoundTypesByClrType.Keys)
+        {
+            AssertNoCyclesInCompoundTypes(compoundType, visited, inPath);
+        }
+    }
+
+    private void AssertNoCyclesInCompoundTypes(Type currentType, HashSet<Type> visited, HashSet<Type> inPath)
+    {
+        if (inPath.Contains(currentType))
+        {
+            throw new InvalidConfigurationException(
+                $"Circular reference detected: compound type '{currentType}' references itself directly or indirectly.");
+        }
+
+        if (!visited.Add(currentType))
+        {
+            return;
+        }
+
+        inPath.Add(currentType);
+
+        CompoundType compoundType = _compoundTypesByClrType[currentType];
+        foreach (AttrAttribute attribute in compoundType.Attributes)
+        {
+            if (attribute.IsCompound && attribute.CompoundType != null)
+            {
+                AssertNoCyclesInCompoundTypes(attribute.CompoundType.ClrType, visited, inPath);
+            }
+        }
+
+        inPath.Remove(currentType);
     }
 
     private static Type GetCompoundClrType(PropertyInfo property, bool isCollection)
