@@ -581,7 +581,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             {
                 try
                 {
-                    return DeObfuscateStringId(attribute.Type, stringValue);
+                    return DeObfuscateStringId((ResourceType)attribute.ContainingType, stringValue);
                 }
                 catch (JsonApiException exception)
                 {
