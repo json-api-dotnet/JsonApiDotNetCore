@@ -1,9 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using FluentAssertions;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -53,7 +51,7 @@ public sealed class CompoundAttributesReadTests
         object? contentValue = responseDocument.Data.SingleValue.Attributes!["content"];
         contentValue.Should().BeOfType<ContactRoot>();
 
-        var content = (ContactRoot)contentValue!;
+        var content = (ContactRoot)contentValue;
         content.Name.LastName.Should().Be(contact.Content.Name.LastName);
         content.Name.DisplayName.Should().Be(contact.Content.Name.DisplayName);
 
@@ -67,7 +65,7 @@ public sealed class CompoundAttributesReadTests
 
         // Verify JSON representation
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using var jsonDocument = JsonDocument.Parse(responseRaw);
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
         JsonElement contentElement = jsonDocument.RootElement
             .GetProperty("data")
             .GetProperty("attributes")
@@ -101,7 +99,7 @@ public sealed class CompoundAttributesReadTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
         responseDocument.Data.ManyValue.Should().HaveCount(2);
-        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo([contacts[0].StringId, contacts[2].StringId]);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(contacts[0].StringId, contacts[2].StringId);
     }
 
     [Fact]

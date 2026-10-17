@@ -23,7 +23,7 @@ public sealed class CompoundType : IAttributeContainer
         ArgumentNullException.ThrowIfNull(clrType);
 
         ClrType = clrType;
-        Attributes = attributes ?? Array.Empty<AttrAttribute>();
+        Attributes = attributes ?? [];
 
         foreach (AttrAttribute attribute in Attributes)
         {

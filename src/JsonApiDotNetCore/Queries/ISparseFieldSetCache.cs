@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -15,6 +16,7 @@ namespace JsonApiDotNetCore.Queries;
 /// first invocation is used to obtain the fields to retrieve from the underlying data store, while the second invocation is used to determine which
 /// fields to write to the response body.
 /// </remarks>
+[PublicAPI]
 public interface ISparseFieldSetCache
 {
     /// <summary>

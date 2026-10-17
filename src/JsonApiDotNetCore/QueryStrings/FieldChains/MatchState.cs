@@ -28,7 +28,7 @@ internal sealed class MatchState
     /// <summary>
     /// The resource type to find the next field on.
     /// </summary>
-    public ResourceType? ResourceType => Container as ResourceType;
+    private ResourceType? ResourceType => Container as ResourceType;
 
     /// <summary>
     /// The fields matched against this pattern segment.
