@@ -589,6 +589,12 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             throw new QueryParseException("Function 'isType' cannot be used on primitive collection elements.", position);
         }
 
+        if (ContainerInScope is not ResourceType)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function 'isType' cannot be used on compound types.", position);
+        }
+
         EatText(Keywords.IsType);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
