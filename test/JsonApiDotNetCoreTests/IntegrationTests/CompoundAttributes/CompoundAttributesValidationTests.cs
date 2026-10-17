@@ -93,7 +93,9 @@ public sealed class CompoundAttributesValidationTests
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Contain("zero or more to-one relationships or compound attributes, followed by a to-one relationship or an attribute or a compound attribute");
+
+        error.Detail.Should().Contain(
+            "zero or more to-one relationships or compound attributes, followed by a to-one relationship or an attribute or a compound attribute");
     }
 
     [Fact]
@@ -112,7 +114,9 @@ public sealed class CompoundAttributesValidationTests
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Contain("zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection");
+
+        error.Detail.Should().Contain(
+            "zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection");
     }
 
     [Fact]
@@ -131,7 +135,9 @@ public sealed class CompoundAttributesValidationTests
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Contain("zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection");
+
+        error.Detail.Should().Contain(
+            "zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection");
     }
 
     [Fact]

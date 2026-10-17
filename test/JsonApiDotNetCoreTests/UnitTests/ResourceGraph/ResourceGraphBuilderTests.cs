@@ -445,124 +445,6 @@ public sealed class ResourceGraphBuilderTests
         idAttribute.Capabilities.Should().Be(AttrCapabilities.AllowFilter);
     }
 
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithHasOneRelationship : Identifiable<long>
-    {
-        [HasOne]
-        public ResourceWithAttribute? PrimaryChild { get; set; }
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithHasManyRelationship : Identifiable<long>
-    {
-        [HasMany]
-        public ISet<ResourceWithAttribute> Children { get; set; } = new HashSet<ResourceWithAttribute>();
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithAttribute : Identifiable<long>
-    {
-        [Attr]
-        public string? PrimaryValue { get; set; }
-
-        [HasOne]
-        public ResourceWithAttribute? PrimaryChild { get; set; }
-
-        [HasMany]
-        public ISet<ResourceWithAttribute> TopLevelChildren { get; set; } = new HashSet<ResourceWithAttribute>();
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithDuplicateAttrPublicName : Identifiable<long>
-    {
-        [Attr(PublicName = "duplicate")]
-        public string? Value1 { get; set; }
-
-        [Attr(PublicName = "duplicate")]
-        public string? Value2 { get; set; }
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithDuplicateRelationshipPublicName : Identifiable<long>
-    {
-        [HasOne(PublicName = "duplicate")]
-        public ResourceWithHasOneRelationship? PrimaryChild { get; set; }
-
-        [HasMany(PublicName = "duplicate")]
-        public ISet<ResourceWithAttribute> Children { get; set; } = new HashSet<ResourceWithAttribute>();
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ResourceWithDuplicateAttrRelationshipPublicName : Identifiable<long>
-    {
-        [Attr(PublicName = "duplicate")]
-        public string? Value { get; set; }
-
-        [HasMany(PublicName = "duplicate")]
-        public ISet<ResourceWithAttribute> Children { get; set; } = new HashSet<ResourceWithAttribute>();
-    }
-
-    private sealed class ResourceWithoutId : IIdentifiable
-    {
-        public string? StringId { get; set; }
-        public string? LocalId { get; set; }
-    }
-
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class NonResource;
-
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    [NoResource]
-    private sealed class NonResourceWithSuppression;
-
-    // ReSharper disable once ClassCanBeSealed.Global
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public class ResourceOfInt32 : Identifiable<int>
-    {
-        [Attr]
-        public string? StringValue { get; set; }
-
-        [HasOne]
-        public ResourceOfInt32? PrimaryChild { get; set; }
-
-        [HasMany]
-        public IList<ResourceOfInt32> Children { get; set; } = new List<ResourceOfInt32>();
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ResourceWithIdOverride : Identifiable<long>
-    {
-        [Attr(Capabilities = AttrCapabilities.AllowFilter)]
-        public override long Id { get; set; }
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public abstract class AbstractBaseResource : Identifiable<long>
-    {
-        [Attr(PublicName = "baseValue")]
-        public virtual int Value { get; set; }
-
-        [HasOne(PublicName = "baseToOne")]
-        public virtual AbstractBaseResource? BaseToOne { get; set; }
-
-        [HasMany(PublicName = "baseToMany")]
-        public virtual ISet<AbstractBaseResource> BaseToMany { get; set; } = new HashSet<AbstractBaseResource>();
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class DerivedAlternateAttributeName : AbstractBaseResource
-    {
-        [Attr(PublicName = "derivedValue")]
-        public override int Value { get; set; }
-    }
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class DerivedAlternateToOneRelationshipName : AbstractBaseResource
-    {
-        [HasOne(PublicName = "derivedToOne")]
-        public override AbstractBaseResource? BaseToOne { get; set; }
-    }
-
     [Fact]
     public void Discovers_compound_types_recursively()
     {
@@ -770,6 +652,124 @@ public sealed class ResourceGraphBuilderTests
         resourceGraph.FindCompoundType(typeof(DerivedCompound)).Should().NotBeNull();
         CompoundType compoundType = resourceGraph.GetCompoundType(typeof(DerivedCompound));
         compoundType.Attributes.Should().ContainSingle(attr => attr.Property.Name == nameof(DerivedCompound.Value));
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithHasOneRelationship : Identifiable<long>
+    {
+        [HasOne]
+        public ResourceWithAttribute? PrimaryChild { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithHasManyRelationship : Identifiable<long>
+    {
+        [HasMany]
+        public ISet<ResourceWithAttribute> Children { get; set; } = new HashSet<ResourceWithAttribute>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithAttribute : Identifiable<long>
+    {
+        [Attr]
+        public string? PrimaryValue { get; set; }
+
+        [HasOne]
+        public ResourceWithAttribute? PrimaryChild { get; set; }
+
+        [HasMany]
+        public ISet<ResourceWithAttribute> TopLevelChildren { get; set; } = new HashSet<ResourceWithAttribute>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithDuplicateAttrPublicName : Identifiable<long>
+    {
+        [Attr(PublicName = "duplicate")]
+        public string? Value1 { get; set; }
+
+        [Attr(PublicName = "duplicate")]
+        public string? Value2 { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithDuplicateRelationshipPublicName : Identifiable<long>
+    {
+        [HasOne(PublicName = "duplicate")]
+        public ResourceWithHasOneRelationship? PrimaryChild { get; set; }
+
+        [HasMany(PublicName = "duplicate")]
+        public ISet<ResourceWithAttribute> Children { get; set; } = new HashSet<ResourceWithAttribute>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithDuplicateAttrRelationshipPublicName : Identifiable<long>
+    {
+        [Attr(PublicName = "duplicate")]
+        public string? Value { get; set; }
+
+        [HasMany(PublicName = "duplicate")]
+        public ISet<ResourceWithAttribute> Children { get; set; } = new HashSet<ResourceWithAttribute>();
+    }
+
+    private sealed class ResourceWithoutId : IIdentifiable
+    {
+        public string? StringId { get; set; }
+        public string? LocalId { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+    private sealed class NonResource;
+
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+    [NoResource]
+    private sealed class NonResourceWithSuppression;
+
+    // ReSharper disable once ClassCanBeSealed.Global
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public class ResourceOfInt32 : Identifiable<int>
+    {
+        [Attr]
+        public string? StringValue { get; set; }
+
+        [HasOne]
+        public ResourceOfInt32? PrimaryChild { get; set; }
+
+        [HasMany]
+        public IList<ResourceOfInt32> Children { get; set; } = new List<ResourceOfInt32>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithIdOverride : Identifiable<long>
+    {
+        [Attr(Capabilities = AttrCapabilities.AllowFilter)]
+        public override long Id { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public abstract class AbstractBaseResource : Identifiable<long>
+    {
+        [Attr(PublicName = "baseValue")]
+        public virtual int Value { get; set; }
+
+        [HasOne(PublicName = "baseToOne")]
+        public virtual AbstractBaseResource? BaseToOne { get; set; }
+
+        [HasMany(PublicName = "baseToMany")]
+        public virtual ISet<AbstractBaseResource> BaseToMany { get; set; } = new HashSet<AbstractBaseResource>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class DerivedAlternateAttributeName : AbstractBaseResource
+    {
+        [Attr(PublicName = "derivedValue")]
+        public override int Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class DerivedAlternateToOneRelationshipName : AbstractBaseResource
+    {
+        [HasOne(PublicName = "derivedToOne")]
+        public override AbstractBaseResource? BaseToOne { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

@@ -24,8 +24,10 @@ public sealed class FieldChainPatternParseTests
     [InlineData("[OC]", "a to-one relationship or a compound attribute")]
     [InlineData("[MPQ]", "a to-many relationship or a primitive collection or a compound collection")]
     [InlineData("[OC]*A", "zero or more to-one relationships or compound attributes, followed by an attribute")]
-    [InlineData("[OC]*[MPQ]", "zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection")]
-    [InlineData("[OC]*[OAC]", "zero or more to-one relationships or compound attributes, followed by a to-one relationship or an attribute or a compound attribute")]
+    [InlineData("[OC]*[MPQ]",
+        "zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection")]
+    [InlineData("[OC]*[OAC]",
+        "zero or more to-one relationships or compound attributes, followed by a to-one relationship or an attribute or a compound attribute")]
     [InlineData("C*A", "zero or more compound attributes, followed by an attribute")]
     [InlineData("C+A", "one or more compound attributes, followed by an attribute")]
     [InlineData("[OC]?", "an optional to-one relationship or compound attribute")]

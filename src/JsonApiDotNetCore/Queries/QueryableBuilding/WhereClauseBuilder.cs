@@ -50,14 +50,12 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         if (expression.Filter != null)
         {
-            ResourceType? nestedResourceType = expression.TargetCollection.Fields[^1] is HasManyAttribute hasMany
-                ? hasMany.RightType
-                : null;
+            ResourceType? nestedResourceType = expression.TargetCollection.Fields[^1] is HasManyAttribute hasMany ? hasMany.RightType : null;
 
             using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(elementType);
 
-            var nestedContext = new QueryClauseBuilderContext(property, nestedResourceType, typeof(Enumerable), context.EntityModel,
-                context.LambdaScopeFactory, lambdaScope, context.QueryableBuilder, context.State);
+            var nestedContext = new QueryClauseBuilderContext(property, nestedResourceType, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
+                lambdaScope, context.QueryableBuilder, context.State);
 
             predicate = GetPredicateLambda(expression.Filter, nestedContext);
         }

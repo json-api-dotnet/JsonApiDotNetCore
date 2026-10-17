@@ -23,6 +23,7 @@ public sealed class CompoundTypeTests
     {
         // Arrange
         PropertyInfo streetProperty = typeof(TestAddress).GetProperty(nameof(TestAddress.Street))!;
+
         var streetAttribute = new AttrAttribute
         {
             PublicName = "street",
@@ -40,13 +41,13 @@ public sealed class CompoundTypeTests
         compoundType.FindAttributeByPublicName("unknown").Should().BeNull();
         compoundType.GetAttributeByPublicName("street").Should().Be(streetAttribute);
         Action getUnknownPublic = () => compoundType.GetAttributeByPublicName("unknown");
-        getUnknownPublic.Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage("Attribute 'unknown' does not exist on compound type 'TestAddress'.");
+        getUnknownPublic.Should().ThrowExactly<InvalidOperationException>().WithMessage("Attribute 'unknown' does not exist on compound type 'TestAddress'.");
 
         compoundType.FindAttributeByPropertyName(nameof(TestAddress.Street)).Should().Be(streetAttribute);
         compoundType.FindAttributeByPropertyName("Unknown").Should().BeNull();
         compoundType.GetAttributeByPropertyName(nameof(TestAddress.Street)).Should().Be(streetAttribute);
         Action getUnknownProp = () => compoundType.GetAttributeByPropertyName("Unknown");
+
         getUnknownProp.Should().ThrowExactly<InvalidOperationException>()
             .WithMessage("Attribute for property 'Unknown' does not exist on compound type 'TestAddress'.");
     }
@@ -56,9 +57,11 @@ public sealed class CompoundTypeTests
     {
         // Arrange
         var compoundType = new CompoundType(typeof(TestAddress));
-        var resourceGraph = new JsonApiDotNetCore.Configuration.ResourceGraph(
-            new HashSet<ResourceType>().AsReadOnly(),
-            new HashSet<CompoundType> { compoundType }.AsReadOnly());
+
+        var resourceGraph = new JsonApiDotNetCore.Configuration.ResourceGraph(new HashSet<ResourceType>().AsReadOnly(), new HashSet<CompoundType>
+        {
+            compoundType
+        }.AsReadOnly());
 
         // Act & Assert
         resourceGraph.GetCompoundTypes().Should().ContainSingle().Which.Should().Be(compoundType);
@@ -67,8 +70,7 @@ public sealed class CompoundTypeTests
 
         resourceGraph.GetCompoundType(typeof(TestAddress)).Should().Be(compoundType);
         Action getUnknown = () => resourceGraph.GetCompoundType(typeof(string));
-        getUnknown.Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage("Compound type 'System.String' does not exist in the resource graph.");
+        getUnknown.Should().ThrowExactly<InvalidOperationException>().WithMessage("Compound type 'System.String' does not exist in the resource graph.");
     }
 
     private sealed class TestAddress
