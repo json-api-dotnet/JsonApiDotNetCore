@@ -99,7 +99,7 @@ internal sealed class MatchState
             return relationship.RightType;
         }
 
-        if (matchedValue is AttrAttribute { IsCompound: true, IsCollection: false } attr)
+        if (matchedValue is AttrAttribute { IsCompound: true } attr)
         {
             return attr.CompoundType;
         }
