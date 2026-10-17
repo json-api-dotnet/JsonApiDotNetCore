@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,7 +11,34 @@ namespace JsonApiDotNetCore.Queries;
 [PublicAPI]
 public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLayer?>
 {
+    private Dictionary<AttrAttribute, FieldSelectors>? _childSelectors;
+
     public bool IsEmpty => Count == 0;
+
+    public bool HasChildSelectors => _childSelectors is { Count: > 0 };
+
+    public IReadOnlyDictionary<AttrAttribute, FieldSelectors> ChildSelectors =>
+        _childSelectors ?? (IReadOnlyDictionary<AttrAttribute, FieldSelectors>)ImmutableDictionary<AttrAttribute, FieldSelectors>.Empty;
+
+    public FieldSelectors? GetChildSelectors(AttrAttribute compoundAttribute)
+    {
+        ArgumentNullException.ThrowIfNull(compoundAttribute);
+        return _childSelectors?.GetValueOrDefault(compoundAttribute);
+    }
+
+    public FieldSelectors GetOrCreateChildSelectors(AttrAttribute compoundAttribute)
+    {
+        ArgumentNullException.ThrowIfNull(compoundAttribute);
+        _childSelectors ??= new Dictionary<AttrAttribute, FieldSelectors>();
+
+        if (!_childSelectors.TryGetValue(compoundAttribute, out FieldSelectors? childSelectors))
+        {
+            childSelectors = new FieldSelectors();
+            _childSelectors[compoundAttribute] = childSelectors;
+        }
+
+        return childSelectors;
+    }
 
     public bool ContainsReadOnlyAttribute
     {
@@ -40,6 +68,16 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
         ArgumentNullException.ThrowIfNull(attribute);
 
         this[attribute] = null;
+    }
+
+    public void IncludeCompoundAttribute(AttrAttribute compoundAttribute, FieldSelectors childSelectors)
+    {
+        ArgumentNullException.ThrowIfNull(compoundAttribute);
+        ArgumentNullException.ThrowIfNull(childSelectors);
+
+        this[compoundAttribute] = null;
+        _childSelectors ??= new Dictionary<AttrAttribute, FieldSelectors>();
+        _childSelectors[compoundAttribute] = childSelectors;
     }
 
     public void IncludeAttributes(IEnumerable<AttrAttribute> attributes)
