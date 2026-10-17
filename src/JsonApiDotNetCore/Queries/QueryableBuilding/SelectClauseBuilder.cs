@@ -166,7 +166,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         foreach ((ResourceFieldAttribute resourceField, QueryLayer? nextLayer) in fieldSelectors)
         {
-            var propertySelector = new PropertySelector(resourceField.Property, nextLayer);
+            FieldSelectors? childSelectors = resourceField is AttrAttribute attr ? fieldSelectors.GetChildSelectors(attr) : null;
+            var propertySelector = new PropertySelector(resourceField.Property, nextLayer, childSelectors);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }
@@ -212,8 +213,44 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             assignmentRightHandSide = CreateAssignmentRightHandSideForLayer(propertySelector.NextLayer, propertyAccess,
                 propertySelector.Property, rightHandSideContext);
         }
+        else if (propertySelector.ChildSelectors is { IsEmpty: false })
+        {
+            assignmentRightHandSide = CreateCompoundMemberInit(propertySelector.ChildSelectors, propertyAccess, context);
+        }
 
-        return Expression.Bind(propertySelector.Property, assignmentRightHandSide);
+        var assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
+        return assignment;
+    }
+
+    private Expression CreateCompoundMemberInit(FieldSelectors childSelectors, MemberExpression propertyAccess, QueryClauseBuilderContext context)
+    {
+        Type compoundClrType = propertyAccess.Type;
+        var assignments = new List<MemberBinding>();
+
+        foreach ((ResourceFieldAttribute resourceField, _) in childSelectors)
+        {
+            if (resourceField is AttrAttribute childAttr && childAttr.Property.SetMethod != null)
+            {
+                MemberExpression childPropertyAccess = Expression.Property(propertyAccess, childAttr.Property);
+                FieldSelectors? grandchildSelectors = childSelectors.GetChildSelectors(childAttr);
+
+                Expression childRightHandSide;
+                if (grandchildSelectors is { IsEmpty: false })
+                {
+                    childRightHandSide = CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, context);
+                }
+                else
+                {
+                    childRightHandSide = childPropertyAccess;
+                }
+
+                assignments.Add(Expression.Bind(childAttr.Property, childRightHandSide));
+            }
+        }
+
+        NewExpression createInstance = _resourceFactory.CreateNewExpression(compoundClrType);
+        MemberInitExpression memberInit = Expression.MemberInit(createInstance, assignments);
+        return TestForNull(propertyAccess, memberInit);
     }
 
     private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, MemberExpression propertyAccess, PropertyInfo selectorPropertyInfo,
@@ -277,13 +314,15 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         public PropertyInfo Property { get; }
         public QueryLayer? NextLayer { get; }
+        public FieldSelectors? ChildSelectors { get; }
 
-        public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null)
+        public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null, FieldSelectors? childSelectors = null)
         {
             ArgumentNullException.ThrowIfNull(property);
 
             Property = property;
             NextLayer = nextLayer;
+            ChildSelectors = childSelectors;
         }
 
         public override string ToString()
