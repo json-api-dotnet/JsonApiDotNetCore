@@ -90,7 +90,8 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     [InlineData("fields[blogPosts]", "id^(", ", expected.")]
     [InlineData("fields[blogPosts]", "id,^", "Field name expected.")]
     [InlineData("fields[blogPosts]", "author.^id,",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: a field. End of field chain expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more compound attributes or compound collections, followed by a field. " +
+        "End of field chain expected.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
