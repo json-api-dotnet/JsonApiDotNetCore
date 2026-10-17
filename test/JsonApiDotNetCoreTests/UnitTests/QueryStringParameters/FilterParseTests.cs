@@ -100,8 +100,8 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter[posts]", "equals(author,^'some')", "null expected.")]
     [InlineData("filter[posts]", "lessThan(^some,null)", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[posts]", "lessThan(author^,null)",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
-        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
+        "To-one relationship or attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "^ ", "Unexpected whitespace.")]
     [InlineData("filter", "contains(owner.displayName^ ,)", "Unexpected whitespace.")]
     [InlineData("filter", "contains(owner.displayName,^ )", "Unexpected whitespace.")]
@@ -124,16 +124,16 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "contains(^equals(title,'x'),'a')", "Function that returns type 'String' expected.")]
     [InlineData("filter", "contains(title,^null)", "Value between quotes expected.")]
     [InlineData("filter[posts]", "contains(author^,null)",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
-        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
+        "To-one relationship or attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "any(^null,'a','b')", "Field name expected.")]
     [InlineData("filter", "any(^'a','b','c')", "Field name expected.")]
     [InlineData("filter", "any(title,'b','c',^)", "Value between quotes expected.")]
     [InlineData("filter", "any(equals(title,'x'),^'b')", "Failed to convert 'b' of type 'String' to type 'Boolean'.")]
     [InlineData("filter", "any(title^)", ", expected.")]
     [InlineData("filter[posts]", "any(author^,'a','b')",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
-        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
+        "To-one relationship or attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "and(^", "Filter function expected.")]
     [InlineData("filter", "or(equals(title,'some'),equals(title,'other')^", ") expected.")]
     [InlineData("filter", "or(equals(title,'some'),equals(title,'other'))^)", "End of expression expected.")]
