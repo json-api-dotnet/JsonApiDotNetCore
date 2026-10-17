@@ -50,10 +50,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
         using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement
-            .GetProperty("data")
-            .GetProperty("attributes")
-            .GetProperty("content");
+        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
 
         contentElement.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
@@ -91,10 +88,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
         using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement
-            .GetProperty("data")
-            .GetProperty("attributes")
-            .GetProperty("content");
+        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
 
         contentElement.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
@@ -127,10 +121,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
         using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement
-            .GetProperty("data")
-            .GetProperty("attributes")
-            .GetProperty("content");
+        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
 
         contentElement.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
@@ -243,12 +234,10 @@ public sealed class CompoundAttributesSparseFieldSetTests
 
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
         using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement favoritesElement = jsonDocument.RootElement
-            .GetProperty("data")
-            .GetProperty("attributes")
-            .GetProperty("favorites");
+        JsonElement favoritesElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("favorites");
 
         favoritesElement.GetArrayLength().Should().Be(2);
+
         for (int i = 0; i < 2; i++)
         {
             JsonElement favorite = favoritesElement[i];

@@ -47,8 +47,16 @@ public sealed class CompoundAttributesWriteTests
                         },
                         phoneNumbers = new[]
                         {
-                            new { number = "555-1234", label = "work" },
-                            new { number = "555-5678", label = "mobile" }
+                            new
+                            {
+                                number = "555-1234",
+                                label = "work"
+                            },
+                            new
+                            {
+                                number = "555-5678",
+                                label = "mobile"
+                            }
                         }
                     },
                     remarks = "New contact note"
@@ -158,7 +166,11 @@ public sealed class CompoundAttributesWriteTests
                         },
                         phoneNumbers = new[]
                         {
-                            new { number = "999-0000", label = "direct" }
+                            new
+                            {
+                                number = "999-0000",
+                                label = "direct"
+                            }
                         }
                     }
                 }
@@ -235,7 +247,12 @@ public sealed class CompoundAttributesWriteTests
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
-        existingAddressBook.SyncUrls = ["https://old1.com", "https://old2.com"];
+
+        existingAddressBook.SyncUrls =
+        [
+            "https://old1.com",
+            "https://old2.com"
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -282,9 +299,13 @@ public sealed class CompoundAttributesWriteTests
     {
         // Arrange
         Contact existingContact = _fakers.Contact.Generate();
+
         existingContact.Content.PhoneNumbers =
         [
-            new ContactPhoneNumber { Number = "111-222" }
+            new ContactPhoneNumber
+            {
+                Number = "111-222"
+            }
         ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

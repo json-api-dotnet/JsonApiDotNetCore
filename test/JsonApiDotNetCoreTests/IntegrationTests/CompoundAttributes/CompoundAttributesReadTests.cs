@@ -66,10 +66,7 @@ public sealed class CompoundAttributesReadTests
         // Verify JSON representation
         string responseRaw = await httpResponse.Content.ReadAsStringAsync();
         using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement
-            .GetProperty("data")
-            .GetProperty("attributes")
-            .GetProperty("content");
+        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
 
         contentElement.GetProperty("name").GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         contentElement.GetProperty("name").GetProperty("displayName").GetString().Should().Be(contact.Content.Name.DisplayName);
@@ -159,14 +156,28 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
+
         contacts[0].Content.PhoneNumbers =
         [
-            new ContactPhoneNumber { Number = "111-111", Label = "work" },
-            new ContactPhoneNumber { Number = "222-222", Label = "mobile" }
+            new ContactPhoneNumber
+            {
+                Number = "111-111",
+                Label = "work"
+            },
+            new ContactPhoneNumber
+            {
+                Number = "222-222",
+                Label = "mobile"
+            }
         ];
+
         contacts[1].Content.PhoneNumbers =
         [
-            new ContactPhoneNumber { Number = "333-333", Label = "home" }
+            new ContactPhoneNumber
+            {
+                Number = "333-333",
+                Label = "home"
+            }
         ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -192,7 +203,13 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        addressBooks[0].SyncUrls = ["https://example.com/sync", "https://backup.org"];
+
+        addressBooks[0].SyncUrls =
+        [
+            "https://example.com/sync",
+            "https://backup.org"
+        ];
+
         addressBooks[1].SyncUrls = ["https://other.com/api"];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -244,15 +261,29 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
+
         contacts[0].Content.PhoneNumbers =
         [
-            new ContactPhoneNumber { Number = "111-111" },
-            new ContactPhoneNumber { Number = "222-222" },
-            new ContactPhoneNumber { Number = "333-333" }
+            new ContactPhoneNumber
+            {
+                Number = "111-111"
+            },
+            new ContactPhoneNumber
+            {
+                Number = "222-222"
+            },
+            new ContactPhoneNumber
+            {
+                Number = "333-333"
+            }
         ];
+
         contacts[1].Content.PhoneNumbers =
         [
-            new ContactPhoneNumber { Number = "444-444" }
+            new ContactPhoneNumber
+            {
+                Number = "444-444"
+            }
         ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -278,7 +309,14 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        addressBooks[0].SyncUrls = ["url1", "url2", "url3"];
+
+        addressBooks[0].SyncUrls =
+        [
+            "url1",
+            "url2",
+            "url3"
+        ];
+
         addressBooks[1].SyncUrls = ["url1"];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -396,12 +434,30 @@ public sealed class CompoundAttributesReadTests
         // Arrange
         AddressBook addressBook1 = _fakers.AddressBook.Generate();
         Contact contact1 = _fakers.Contact.Generate();
-        contact1.Content.PhoneNumbers = [new ContactPhoneNumber { Number = "999", Label = "hotline" }];
+
+        contact1.Content.PhoneNumbers =
+        [
+            new ContactPhoneNumber
+            {
+                Number = "999",
+                Label = "hotline"
+            }
+        ];
+
         addressBook1.Contacts.Add(contact1);
 
         AddressBook addressBook2 = _fakers.AddressBook.Generate();
         Contact contact2 = _fakers.Contact.Generate();
-        contact2.Content.PhoneNumbers = [new ContactPhoneNumber { Number = "111", Label = "home" }];
+
+        contact2.Content.PhoneNumbers =
+        [
+            new ContactPhoneNumber
+            {
+                Number = "111",
+                Label = "home"
+            }
+        ];
+
         addressBook2.Contacts.Add(contact2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

@@ -87,8 +87,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
                 string typeName = RuntimeTypeConverter.GetFriendlyTypeName(attr.Property.PropertyType);
 
                 throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
-                    $"Failed to convert attribute '{attributeName}' with value '{attributeValue}' to type '{typeName}'.",
-                    innerException: exception);
+                    $"Failed to convert attribute '{attributeName}' with value '{attributeValue}' to type '{typeName}'.", innerException: exception);
             }
         }
 

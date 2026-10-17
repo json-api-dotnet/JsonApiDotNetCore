@@ -24,11 +24,12 @@ public sealed class CompoundFilterParseTests
 
     public CompoundFilterParseTests()
     {
-        var options = new JsonApiOptions { EnableLegacyFilterNotation = false };
+        var options = new JsonApiOptions
+        {
+            EnableLegacyFilterNotation = false
+        };
 
-        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-            .Add<CompoundModel, long>()
-            .Build();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<CompoundModel, long>().Build();
 
         var request = new JsonApiRequest
         {

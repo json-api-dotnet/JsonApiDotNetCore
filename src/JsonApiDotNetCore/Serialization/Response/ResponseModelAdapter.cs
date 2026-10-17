@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -274,12 +275,11 @@ public class ResponseModelAdapter : IResponseModelAdapter
                 // Check if any field chains exist for this compound attribute with deeper paths
                 List<ResourceFieldChainExpression> subChains = fieldSetExpression.FieldChains
                     .Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(attr))
-                    .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0)))
-                    .ToList();
+                    .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0))).ToList();
 
                 if (subChains.Count > 0)
                 {
-                    if (attr.IsCollection && value is System.Collections.IEnumerable collection)
+                    if (attr.IsCollection && value is IEnumerable collection)
                     {
                         var prunedList = new List<object?>();
 
@@ -303,7 +303,8 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return attrMap.Count > 0 ? attrMap : null;
     }
 
-    private Dictionary<string, object?> PruneCompoundObject(object compoundInstance, CompoundType compoundType, IReadOnlyList<ResourceFieldChainExpression> fieldChains)
+    private Dictionary<string, object?> PruneCompoundObject(object compoundInstance, CompoundType compoundType,
+        IReadOnlyList<ResourceFieldChainExpression> fieldChains)
     {
         var prunedMap = new Dictionary<string, object?>();
         HashSet<ResourceFieldAttribute> directFields = fieldChains.Select(c => c.Fields[0]).ToHashSet();
@@ -330,14 +331,12 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
             if (childValue != null && childAttr.IsCompound)
             {
-                List<ResourceFieldChainExpression> deeperChains = fieldChains
-                    .Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(childAttr))
-                    .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0)))
-                    .ToList();
+                List<ResourceFieldChainExpression> deeperChains = fieldChains.Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(childAttr))
+                    .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0))).ToList();
 
                 if (deeperChains.Count > 0)
                 {
-                    if (childAttr.IsCollection && childValue is System.Collections.IEnumerable collection)
+                    if (childAttr.IsCollection && childValue is IEnumerable collection)
                     {
                         var prunedList = new List<object?>();
 

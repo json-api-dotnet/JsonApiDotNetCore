@@ -26,8 +26,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
         _lazySourceTable = new Lazy<Dictionary<ResourceType, SparseFieldSetExpression>>(() => BuildSourceTable(constraintProviders));
     }
 
-    private static Dictionary<ResourceType, SparseFieldSetExpression> BuildSourceTable(
-        IEnumerable<IQueryConstraintProvider> constraintProviders)
+    private static Dictionary<ResourceType, SparseFieldSetExpression> BuildSourceTable(IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
@@ -86,16 +85,13 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
 
         if (!_visitedSerializerTable.TryGetValue(resourceType, out SparseFieldSetExpression? outputExpression))
         {
-            SparseFieldSetExpression inputExpression =
-                _lazySourceTable.Value.TryGetValue(resourceType, out SparseFieldSetExpression? inputFields)
-                    ? inputFields
-                    : GetCachedViewableFieldSet(resourceType);
+            SparseFieldSetExpression inputExpression = _lazySourceTable.Value.TryGetValue(resourceType, out SparseFieldSetExpression? inputFields)
+                ? inputFields
+                : GetCachedViewableFieldSet(resourceType);
 
             SparseFieldSetExpression? callbackExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
-            outputExpression = callbackExpression == null
-                ? GetCachedViewableFieldSet(resourceType)
-                : IntersectExpressions(inputExpression, callbackExpression);
+            outputExpression = callbackExpression == null ? GetCachedViewableFieldSet(resourceType) : IntersectExpressions(inputExpression, callbackExpression);
 
             _visitedSerializerTable[resourceType] = outputExpression;
         }
