@@ -15,15 +15,29 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 public class SparseFieldSetExpression : QueryExpression
 {
     /// <summary>
-    /// The set of JSON:API fields to include. Chain format: a single field.
+    /// The set of JSON:API fields to include.
     /// </summary>
     public IImmutableSet<ResourceFieldAttribute> Fields { get; }
+
+    /// <summary>
+    /// The set of JSON:API field chains to include.
+    /// </summary>
+    public IImmutableSet<ResourceFieldChainExpression> FieldChains { get; }
 
     public SparseFieldSetExpression(IImmutableSet<ResourceFieldAttribute> fields)
     {
         ArgumentGuard.NotNullNorEmpty(fields);
 
         Fields = fields;
+        FieldChains = fields.Select(field => new ResourceFieldChainExpression(ImmutableArray.Create(field))).ToImmutableHashSet();
+    }
+
+    public SparseFieldSetExpression(IImmutableSet<ResourceFieldChainExpression> fieldChains)
+    {
+        ArgumentGuard.NotNullNorEmpty(fieldChains);
+
+        FieldChains = fieldChains;
+        Fields = fieldChains.Select(chain => chain.Fields[0]).ToImmutableHashSet();
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -33,12 +47,12 @@ public class SparseFieldSetExpression : QueryExpression
 
     public override string ToString()
     {
-        return string.Join(',', Fields.Select(field => field.ToString()).Order());
+        return string.Join(',', FieldChains.Select(chain => chain.ToString()).Order());
     }
 
     public override string ToFullString()
     {
-        return string.Join(',', Fields.Select(field => $"{field.ToFullString()}").Order());
+        return string.Join(',', FieldChains.Select(chain => $"{chain.ToFullString()}").Order());
     }
 
     public override bool Equals(object? obj)
@@ -55,16 +69,16 @@ public class SparseFieldSetExpression : QueryExpression
 
         var other = (SparseFieldSetExpression)obj;
 
-        return Fields.SetEquals(other.Fields);
+        return FieldChains.SetEquals(other.FieldChains);
     }
 
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
 
-        foreach (ResourceFieldAttribute field in Fields)
+        foreach (ResourceFieldChainExpression chain in FieldChains)
         {
-            hashCode.Add(field);
+            hashCode.Add(chain);
         }
 
         return hashCode.ToHashCode();
