@@ -13,20 +13,36 @@ public sealed class ResourceGraph : IResourceGraph
 {
     private static readonly Type? ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
+    private static readonly IReadOnlySet<CompoundType> EmptyCompoundTypeSet = new HashSet<CompoundType>().AsReadOnly();
+
     private readonly IReadOnlySet<ResourceType> _resourceTypeSet;
     private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
     private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = [];
+    private readonly IReadOnlySet<CompoundType> _compoundTypeSet;
+    private readonly Dictionary<Type, CompoundType> _compoundTypesByClrType = [];
 
     public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
+        : this(resourceTypeSet, EmptyCompoundTypeSet)
+    {
+    }
+
+    public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet, IReadOnlySet<CompoundType> compoundTypeSet)
     {
         ArgumentNullException.ThrowIfNull(resourceTypeSet);
+        ArgumentNullException.ThrowIfNull(compoundTypeSet);
 
         _resourceTypeSet = resourceTypeSet;
+        _compoundTypeSet = compoundTypeSet;
 
         foreach (ResourceType resourceType in resourceTypeSet)
         {
             _resourceTypesByClrType.Add(resourceType.ClrType, resourceType);
             _resourceTypesByPublicName.Add(resourceType.PublicName, resourceType);
+        }
+
+        foreach (CompoundType compoundType in compoundTypeSet)
+        {
+            _compoundTypesByClrType.Add(compoundType.ClrType, compoundType);
         }
     }
 
@@ -77,6 +93,33 @@ public sealed class ResourceGraph : IResourceGraph
 
         Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType! : resourceClrType;
         return _resourceTypesByClrType.GetValueOrDefault(typeToFind);
+    }
+
+    /// <inheritdoc />
+    public IReadOnlySet<CompoundType> GetCompoundTypes()
+    {
+        return _compoundTypeSet;
+    }
+
+    /// <inheritdoc />
+    public CompoundType GetCompoundType(Type clrType)
+    {
+        CompoundType? compoundType = FindCompoundType(clrType);
+
+        if (compoundType == null)
+        {
+            throw new InvalidOperationException($"Compound type '{clrType}' does not exist in the resource graph.");
+        }
+
+        return compoundType;
+    }
+
+    /// <inheritdoc />
+    public CompoundType? FindCompoundType(Type clrType)
+    {
+        ArgumentNullException.ThrowIfNull(clrType);
+
+        return _compoundTypesByClrType.GetValueOrDefault(clrType);
     }
 
     private bool IsLazyLoadingProxyForResourceType(Type resourceClrType)
