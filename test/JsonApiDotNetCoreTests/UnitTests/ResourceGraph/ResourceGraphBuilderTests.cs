@@ -562,6 +562,83 @@ public sealed class ResourceGraphBuilderTests
         public override AbstractBaseResource? BaseToOne { get; set; }
     }
 
+    [Fact]
+    public void Discovers_compound_types_recursively()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithCompoundAttributes, long>();
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Assert
+        ResourceType resourceType = resourceGraph.GetResourceType<ResourceWithCompoundAttributes>();
+        AttrAttribute contentAttr = resourceType.GetAttributeByPropertyName(nameof(ResourceWithCompoundAttributes.Content));
+        contentAttr.IsCompound.Should().BeTrue();
+        contentAttr.CompoundType.Should().NotBeNull();
+        contentAttr.ContainingType.Should().Be(resourceType);
+
+        CompoundType rootCompoundType = contentAttr.CompoundType!;
+        rootCompoundType.ClrType.Should().Be(typeof(TestRootCompound));
+        rootCompoundType.Attributes.Should().HaveCount(2);
+
+        AttrAttribute nameAttr = rootCompoundType.GetAttributeByPropertyName(nameof(TestRootCompound.Name));
+        nameAttr.IsCompound.Should().BeTrue();
+        nameAttr.CompoundType.Should().NotBeNull();
+        nameAttr.ContainingType.Should().Be(rootCompoundType);
+
+        CompoundType nameCompoundType = nameAttr.CompoundType!;
+        nameCompoundType.ClrType.Should().Be(typeof(TestChildCompound));
+        AttrAttribute firstAttr = nameCompoundType.GetAttributeByPropertyName(nameof(TestChildCompound.FirstName));
+        firstAttr.IsCompound.Should().BeFalse();
+        firstAttr.CompoundType.Should().BeNull();
+        firstAttr.ContainingType.Should().Be(nameCompoundType);
+
+        AttrAttribute phonesAttr = rootCompoundType.GetAttributeByPropertyName(nameof(TestRootCompound.PhoneNumbers));
+        phonesAttr.IsCompound.Should().BeTrue();
+        phonesAttr.IsCollection.Should().BeTrue();
+        phonesAttr.CompoundType.Should().NotBeNull();
+        phonesAttr.CompoundType!.ClrType.Should().Be(typeof(TestPhoneCompound));
+
+        resourceGraph.GetCompoundTypes().Should().HaveCount(3);
+        resourceGraph.GetCompoundType(typeof(TestRootCompound)).Should().Be(rootCompoundType);
+        resourceGraph.GetCompoundType(typeof(TestChildCompound)).Should().Be(nameCompoundType);
+        resourceGraph.GetCompoundType(typeof(TestPhoneCompound)).Should().Be(phonesAttr.CompoundType);
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithCompoundAttributes : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public TestRootCompound? Content { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class TestRootCompound
+    {
+        [Attr(IsCompound = true)]
+        public TestChildCompound? Name { get; set; }
+
+        [Attr(IsCompound = true)]
+        public List<TestPhoneCompound> PhoneNumbers { get; set; } = [];
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class TestChildCompound
+    {
+        [Attr]
+        public string? FirstName { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class TestPhoneCompound
+    {
+        [Attr]
+        public string? Number { get; set; }
+    }
+
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class DerivedAlternateToManyRelationshipName : AbstractBaseResource
     {
