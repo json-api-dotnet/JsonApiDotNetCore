@@ -30,6 +30,10 @@ public sealed class QueryExpressionTests
                 TestExpressionFactory.Instance.Count()
             ],
             [
+                TestExpressionFactory.Instance.ElementValue(),
+                TestExpressionFactory.Instance.ElementValue()
+            ],
+            [
                 TestExpressionFactory.Instance.Has(),
                 TestExpressionFactory.Instance.Has()
             ],
@@ -333,6 +337,11 @@ public sealed class QueryExpressionTests
         public CountExpression Count()
         {
             return new CountExpression(ResourceFieldChainForChildren());
+        }
+
+        public ElementValueExpression ElementValue()
+        {
+            return new ElementValueExpression(typeof(string));
         }
 
         public HasExpression Has()
