@@ -19,6 +19,7 @@ public partial class ResourceGraphBuilder
     private readonly IJsonApiOptions _options;
     private readonly ILogger<ResourceGraphBuilder> _logger;
     private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
+    private readonly Dictionary<Type, CompoundType> _compoundTypesByClrType = [];
     private readonly HashSet<Type> _nonIdentifiableTypes = [];
     private readonly TypeLocator _typeLocator = new();
 
@@ -36,19 +37,22 @@ public partial class ResourceGraphBuilder
     /// </summary>
     public IResourceGraph Build()
     {
+        DiscoverCompoundTypes();
+
         foreach (Type nonIdentifiableType in _nonIdentifiableTypes)
         {
             LogResourceTypeDoesNotImplementIdentifiable(nonIdentifiableType, nameof(IIdentifiable), nameof(SuppressWarningNotIdentifiable));
         }
 
         IReadOnlySet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet().AsReadOnly();
+        IReadOnlySet<CompoundType> compoundTypes = _compoundTypesByClrType.Values.ToHashSet().AsReadOnly();
 
         if (resourceTypes.Count == 0)
         {
             LogResourceGraphIsEmpty();
         }
 
-        var resourceGraph = new ResourceGraph(resourceTypes);
+        var resourceGraph = new ResourceGraph(resourceTypes, compoundTypes);
 
         SetFieldContainingTypes(resourceGraph);
         SetRelationshipTypes(resourceGraph);
@@ -65,6 +69,14 @@ public partial class ResourceGraphBuilder
             foreach (ResourceFieldAttribute field in resourceType.Fields)
             {
                 field.ContainingType = resourceType;
+            }
+        }
+
+        foreach (CompoundType compoundType in resourceGraph.GetCompoundTypes())
+        {
+            foreach (AttrAttribute attribute in compoundType.Attributes)
+            {
+                attribute.ContainingType = compoundType;
             }
         }
     }
@@ -348,6 +360,81 @@ public partial class ResourceGraphBuilder
         }
 
         return attributesByName.Values;
+    }
+
+    private void DiscoverCompoundTypes()
+    {
+        var pendingAttributes = new Queue<AttrAttribute>();
+
+        foreach (ResourceType resourceType in _resourceTypesByClrType.Values)
+        {
+            foreach (AttrAttribute attribute in resourceType.Attributes)
+            {
+                if (attribute.IsCompound)
+                {
+                    pendingAttributes.Enqueue(attribute);
+                }
+            }
+        }
+
+        while (pendingAttributes.Count > 0)
+        {
+            AttrAttribute compoundAttribute = pendingAttributes.Dequeue();
+            CompoundType compoundType = GetOrCreateCompoundType(compoundAttribute, pendingAttributes);
+            compoundAttribute.CompoundType = compoundType;
+        }
+    }
+
+    private CompoundType GetOrCreateCompoundType(AttrAttribute compoundAttribute, Queue<AttrAttribute> pendingAttributes)
+    {
+        Type compoundClrType = GetCompoundClrType(compoundAttribute.Property, compoundAttribute.IsCollection);
+        _nonIdentifiableTypes.Remove(compoundClrType);
+
+        if (_compoundTypesByClrType.TryGetValue(compoundClrType, out CompoundType? existingCompoundType))
+        {
+            return existingCompoundType;
+        }
+
+        var attributesByName = new Dictionary<string, AttrAttribute>();
+
+        foreach (PropertyInfo property in compoundClrType.GetProperties())
+        {
+            var attribute = property.GetCustomAttribute<AttrAttribute>(true);
+            if (attribute != null)
+            {
+                SetPublicName(attribute, property);
+                attribute.Property = property;
+
+                if (!attribute.HasExplicitCapabilities)
+                {
+                    attribute.Capabilities = _options.DefaultAttrCapabilities;
+                }
+
+                if (attribute.IsCompound)
+                {
+                    pendingAttributes.Enqueue(attribute);
+                }
+
+                IncludeField(attributesByName, attribute);
+            }
+        }
+
+        var newCompoundType = new CompoundType(compoundClrType, attributesByName.Values);
+        foreach (AttrAttribute attribute in newCompoundType.Attributes)
+        {
+            attribute.ContainingType = newCompoundType;
+        }
+
+        _compoundTypesByClrType.Add(compoundClrType, newCompoundType);
+        return newCompoundType;
+    }
+
+    private static Type GetCompoundClrType(PropertyInfo property, bool isCollection)
+    {
+        Type propertyType = property.PropertyType;
+        Type? elementType = isCollection ? CollectionConverter.Instance.FindCollectionElementType(propertyType) : null;
+        Type targetType = elementType ?? Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+        return targetType;
     }
 
     private Dictionary<string, RelationshipAttribute>.ValueCollection GetRelationships(Type resourceClrType)
