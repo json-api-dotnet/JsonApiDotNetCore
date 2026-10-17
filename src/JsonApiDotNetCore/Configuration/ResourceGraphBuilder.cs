@@ -50,7 +50,7 @@ public partial class ResourceGraphBuilder
 
         var resourceGraph = new ResourceGraph(resourceTypes);
 
-        SetFieldTypes(resourceGraph);
+        SetFieldContainingTypes(resourceGraph);
         SetRelationshipTypes(resourceGraph);
         SetDirectlyDerivedTypes(resourceGraph);
         ValidateFieldsInDerivedTypes(resourceGraph);
@@ -58,11 +58,14 @@ public partial class ResourceGraphBuilder
         return resourceGraph;
     }
 
-    private static void SetFieldTypes(ResourceGraph resourceGraph)
+    private static void SetFieldContainingTypes(ResourceGraph resourceGraph)
     {
-        foreach (ResourceFieldAttribute field in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Fields))
+        foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
         {
-            field.Type = resourceGraph.GetResourceType(field.Property.ReflectedType!);
+            foreach (ResourceFieldAttribute field in resourceType.Fields)
+            {
+                field.ContainingType = resourceType;
+            }
         }
     }
 

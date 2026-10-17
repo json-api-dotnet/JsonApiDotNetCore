@@ -16,7 +16,7 @@ public abstract class ResourceFieldAttribute : Attribute
     // These are definitely assigned after building the resource graph, which is why their public equivalents are declared as non-nullable.
     private string? _publicName;
     private PropertyInfo? _property;
-    private ResourceType? _type;
+    private IAttributeContainer? _containingType;
 
     /// <summary>
     /// The publicly exposed name of this JSON:API field. When not explicitly set, the configured naming convention is applied on the property name.
@@ -49,15 +49,15 @@ public abstract class ResourceFieldAttribute : Attribute
     }
 
     /// <summary>
-    /// The containing resource type in which this field is declared.
+    /// The container (resource type or compound type) in which this field is contained.
     /// </summary>
-    public ResourceType Type
+    public IAttributeContainer ContainingType
     {
-        get => _type!;
+        get => _containingType!;
         internal set
         {
             ArgumentNullException.ThrowIfNull(value);
-            _type = value;
+            _containingType = value;
         }
     }
 
@@ -115,7 +115,7 @@ public abstract class ResourceFieldAttribute : Attribute
 
     protected void AssertIsIdentifiable(object? resource)
     {
-        if (resource is not null and not IIdentifiable)
+        if (_containingType is not CompoundType && resource is not null and not IIdentifiable)
         {
 #pragma warning disable CA1062 // Validate arguments of public methods
             throw new InvalidOperationException($"Resource of type '{resource.GetType()}' does not implement {nameof(IIdentifiable)}.");
@@ -131,7 +131,14 @@ public abstract class ResourceFieldAttribute : Attribute
 
     public string ToFullString()
     {
-        return $"{_type?.PublicName}:{ToString()}";
+        string prefix = _containingType switch
+        {
+            ResourceType resourceType => resourceType.PublicName,
+            CompoundType compoundType => compoundType.ClrType.Name,
+            _ => string.Empty
+        };
+
+        return $"{prefix}:{ToString()}";
     }
 
     /// <inheritdoc />
