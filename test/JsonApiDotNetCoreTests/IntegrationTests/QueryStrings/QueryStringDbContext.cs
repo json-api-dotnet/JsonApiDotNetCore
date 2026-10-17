@@ -32,6 +32,33 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
 
     internal static void ConfigureModel(ModelBuilder builder)
     {
+        builder.Entity<Calendar>()
+            .ComplexProperty(calendar => calendar.Workweek, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Calendar>()
+            .ComplexCollection(calendar => calendar.Holidays, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Calendar>()
+            .ComplexProperty(calendar => calendar.Audit, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexProperty(appointment => appointment.Location, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexCollection(appointment => appointment.Attendees, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexProperty(appointment => appointment.Cost, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexProperty<AppointmentCoordinates>(appointment => appointment.MeetingPoint, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexProperty(appointment => appointment.Timing, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexCollection(appointment => appointment.WaitingList, complexBuilder => complexBuilder.ToJson());
+
         builder.Entity<WebAccount>()
             .HasMany(webAccount => webAccount.Posts)
             .WithOne(blogPost => blogPost.Author);
@@ -44,5 +71,17 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
         builder.Entity<Calendar>()
             .HasMany(calendar => calendar.Appointments)
             .WithOne(appointment => appointment.Calendar);
+
+        builder.Entity<Calendar>()
+            .HasOne(calendar => calendar.MostRecentAppointment)
+            .WithMany();
+
+        builder.Entity<Calendar>()
+            .HasOne(calendar => calendar.FirstAppointment)
+            .WithMany();
+
+        builder.Entity<Calendar>()
+            .HasMany(calendar => calendar.PinnedAppointments)
+            .WithMany(appointment => appointment.PinnedInCalendars);
     }
 }

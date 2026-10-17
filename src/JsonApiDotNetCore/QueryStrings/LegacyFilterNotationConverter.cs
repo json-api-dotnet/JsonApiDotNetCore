@@ -132,7 +132,7 @@ public sealed class LegacyFilterNotationConverter
         return text.Replace("'", "''");
     }
 
-    private sealed class ParameterValuePrefix
+    internal static class ParameterValuePrefix
     {
         public const string Equal = "eq:";
         public const string NotEqual = "ne:";

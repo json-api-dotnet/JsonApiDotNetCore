@@ -7,9 +7,17 @@ internal sealed class TestClientSettingsProvider : IClientSettingsProvider
     public bool IsIncludePlanetMoonsBlocked { get; private set; }
     public bool ArePlanetsWithPrivateNameHidden { get; private set; }
     public bool IsStarGivingLightToMoonAutoIncluded { get; private set; }
+    public PlanetFieldSetBehavior PlanetFieldSetBehavior { get; private set; }
+    public bool IsPlanetPageSizeLimited { get; private set; }
+    public bool AreSmallMoonsHidden { get; private set; }
+    public bool IsConstellationStarsIncludeRewritten { get; private set; }
 
     public void ResetToDefaults()
     {
+        PlanetFieldSetBehavior = PlanetFieldSetBehavior.Unchanged;
+        IsPlanetPageSizeLimited = false;
+        AreSmallMoonsHidden = false;
+        IsConstellationStarsIncludeRewritten = false;
         AreVeryLargeStarsHidden = false;
         AreConstellationsVisibleDuringWinterHidden = false;
         IsIncludePlanetMoonsBlocked = false;
@@ -40,5 +48,25 @@ internal sealed class TestClientSettingsProvider : IClientSettingsProvider
     public void AutoIncludeStarGivingLightToMoon()
     {
         IsStarGivingLightToMoonAutoIncluded = true;
+    }
+
+    public void SetPlanetFieldSetBehavior(PlanetFieldSetBehavior behavior)
+    {
+        PlanetFieldSetBehavior = behavior;
+    }
+
+    public void LimitPlanetPageSize()
+    {
+        IsPlanetPageSizeLimited = true;
+    }
+
+    public void HideSmallMoons()
+    {
+        AreSmallMoonsHidden = true;
+    }
+
+    public void RewriteConstellationStarsInclude()
+    {
+        IsConstellationStarsIncludeRewritten = true;
     }
 }

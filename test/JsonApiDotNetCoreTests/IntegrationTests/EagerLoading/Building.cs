@@ -12,6 +12,9 @@ public sealed class Building : Identifiable<long>
     [Attr]
     public string Number { get; set; } = null!;
 
+    [Attr(IsCompound = true)]
+    public BuildingDimensions? Dimensions { get; set; }
+
     [Attr]
     [NotMapped]
     public int WindowCount => Windows.Count;

@@ -24,12 +24,16 @@ Expressions are composed using the following functions:
 | Ends with text                | `endsWith`         | `?filter=endsWith(description,'End')`                 |
 | Equals one value from set     | `any`              | `?filter=any(chapter,'Intro','Summary','Conclusion')` |
 | Collection contains items     | `has`              | `?filter=has(articles)`                               |
+| Number of items in collection | `count`            | `?filter=greaterThan(count(articles),'1')`            |
 | Type-check derived type (v5)  | `isType`           | `?filter=isType(,men)`                                |
 | Negation                      | `not`              | `?filter=not(equals(lastName,null))`                  |
 | Conditional logical OR        | `or`               | `?filter=or(has(orders),has(invoices))`               |
 | Conditional logical AND       | `and`              | `?filter=and(has(orders),has(invoices))`              |
 
-Comparison operators compare an attribute against a constant value (between quotes), null or another attribute:
+Comparison operators compare an attribute against a constant value (between quotes), null or another attribute.
+The ordered comparisons (`lessThan`, `lessOrEqual`, `greaterThan`, `greaterOrEqual`) also work on text and enum attributes,
+for example `?filter=greaterThan(lastName,'Smith')` and `?filter=lessThan(dayOfWeek,'Tuesday')`.
+The ordering is determined by the database (its collation for text, the stored value for enums).
 
 ```http
 GET /users?filter=equals(displayName,'Brian O''Connor') HTTP/1.1
@@ -43,7 +47,8 @@ GET /users?filter=equals(displayName,null) HTTP/1.1
 GET /users?filter=equals(displayName,lastName) HTTP/1.1
 ```
 
-Comparison operators can be combined with the `count` function, which acts on to-many relationships:
+Comparison operators can be combined with the `count` function, which acts on to-many relationships and (since v6.0) on
+[collection attributes](#compound-attributes-and-collections):
 
 ```http
 GET /blogs?filter=lessThan(count(owner.articles),'10') HTTP/1.1
@@ -87,6 +92,111 @@ GET /customers?filter=has(orders,not(equals(status,'Paid'))) HTTP/1.1
 ```
 
 Which returns only customers that have at least one unpaid order.
+
+## Compound attributes and collections
+
+_since v6.0_
+
+Field chains can go through compound attributes (using dots) and through to-one relationships, in any combination.
+The examples below use this resource:
+
+```c#
+#nullable enable
+
+public sealed class Contact : Identifiable<long>
+{
+    [Attr(IsCompound = true)]
+    public PersonName? Name { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<PhoneNumber> PhoneNumbers { get; set; } = [];
+
+    [Attr]
+    public List<string> Tags { get; set; } = [];
+
+    [HasOne]
+    public Company? Employer { get; set; }
+}
+```
+
+See [attributes](~/usage/resources/attributes.md#compound-attributes) for how to define compound attributes.
+
+```http
+GET /contacts?filter=equals(name.lastName,'Smith') HTTP/1.1
+```
+
+```http
+GET /contacts?filter=startsWith(employer.address.city,'San') HTTP/1.1
+```
+
+Text matching and (ordered) comparisons work on nested attributes the same way as on top-level attributes.
+A compound attribute or collection itself can only be compared with `null`, using `equals`:
+
+```http
+GET /contacts?filter=equals(name,null) HTTP/1.1
+```
+
+```http
+GET /contacts?filter=not(equals(name.middleName,null)) HTTP/1.1
+```
+
+### Collections
+
+The `has` function works on to-many relationships, scalar collections (such as `Tags`) and compound collections (such as `PhoneNumbers`).
+Without a condition, it matches resources whose collection contains at least one element:
+
+```http
+GET /contacts?filter=has(phoneNumbers) HTTP/1.1
+```
+
+The `count` function works on to-many relationships and on both kinds of collections, also when nested in a compound attribute:
+
+```http
+GET /contacts?filter=greaterThan(count(tags),'2') HTTP/1.1
+```
+
+```http
+GET /contacts?filter=equals(count(name.nicknames),'0') HTTP/1.1
+```
+
+> [!NOTE]
+> A collection that is `null` counts as empty: `has` does not match it and `count` returns zero.
+
+To match on the elements of a scalar collection, pass a condition to `has` and use the underscore (`_`) as the symbol for the current element.
+It can be used in the comparison functions, `contains`, `startsWith`, `endsWith` and `any`, which can be combined with `not`, `and` and `or`:
+
+```http
+GET /contacts?filter=has(tags,equals(_,'vip')) HTTP/1.1
+```
+
+```http
+GET /contacts?filter=has(tags,and(startsWith(_,'a'),not(contains(_,'z')))) HTTP/1.1
+```
+
+```http
+GET /contacts?filter=has(tags,any(_,'vip','partner')) HTTP/1.1
+```
+
+The underscore can only be used as left operand (comparing an element with itself makes no sense) and only inside the condition of `has`.
+An element of a scalar collection has no members, so `count`, `has` and `isType` cannot be used inside that condition.
+Elements can be null when the element type allows it, so `has(tags,equals(_,null))` matches resources that contain a null element.
+
+Inside the condition of `has` on a compound collection, the members of the element are in scope: names are resolved on the element instead
+of on the resource being filtered, just like with `has` on a to-many relationship. Conditions can be nested.
+
+```http
+GET /contacts?filter=has(phoneNumbers,and(equals(kind,'Mobile'),startsWith(number,'+31'))) HTTP/1.1
+```
+
+`isType` cannot be used inside such a condition, because compound types do not support inheritance.
+
+> [!NOTE]
+> The `AllowFilter` capability is checked on every attribute and relationship in a chain, including compound attributes and the collection
+> that is passed to `has` or `count`. Attributes (also those of compound types) are filterable by default.
+
+> [!NOTE]
+> Whether a particular filter on a compound attribute can be executed depends on the JSON support of the EF Core provider and the way the
+> compound attribute is mapped.
 
 _since v5.0_
 
@@ -142,13 +252,16 @@ Examples can be found in the table below.
 
 Filters can be combined and will be applied using an OR operator. This used to be AND in versions prior to v4.0.
 
-Attributes to filter on can optionally be prefixed with to-one relationships, for example:
+Attributes to filter on can optionally be prefixed with to-one relationships and (since v6.0) compound attributes, for example:
 
 ```http
 GET /api/articles?include=author&filter[caption]=like:marketing&filter[author.lastName]=Smith HTTP/1.1
 ```
 
-Legacy filter notation can still be used in v4.0 by setting `options.EnableLegacyFilterNotation` to `true`.
+The `isnull:` and `isnotnull:` prefixes can also be used on to-one relationships and compound attributes, for example `?filter[calendar.workweek]=isnull:`.
+Functions such as `has`, `count` and the element symbol `_` are only available in expression notation.
+
+Legacy filter notation can still be used since v4.0 by setting `options.EnableLegacyFilterNotation` to `true`.
 If you want to use the new filter notation in that case, prefix the parameter value with `expr:`, for example:
 
 ```http
@@ -178,7 +291,8 @@ filterExpression:
     | comparisonExpression
     | matchTextExpression
     | anyExpression
-    | hasExpression;
+    | hasExpression
+    | isTypeExpression;
 
 notExpression:
     'not' LPAREN filterExpression RPAREN;
@@ -186,24 +300,36 @@ notExpression:
 logicalExpression:
     ( 'and' | 'or' ) LPAREN filterExpression ( COMMA filterExpression )* RPAREN;
 
+// Only 'equals' accepts compound attributes, collections and to-one relationships (with 'null').
+// The element symbol is only valid as left operand, inside the condition of 'has' on a scalar collection.
 comparisonExpression:
     ( 'equals' | 'greaterThan' | 'greaterOrEqual' | 'lessThan' | 'lessOrEqual' ) LPAREN (
-        countExpression | fieldChain
+        countExpression | fieldChain | elementExpression
     ) COMMA (
         countExpression | literalConstant | 'null' | fieldChain
     ) RPAREN;
 
 matchTextExpression:
-    ( 'contains' | 'startsWith' | 'endsWith' ) LPAREN fieldChain COMMA literalConstant RPAREN;
+    ( 'contains' | 'startsWith' | 'endsWith' ) LPAREN ( fieldChain | elementExpression ) COMMA literalConstant RPAREN;
 
 anyExpression:
-    'any' LPAREN fieldChain ( COMMA literalConstant )+ RPAREN;
+    'any' LPAREN ( fieldChain | elementExpression ) ( COMMA literalConstant )+ RPAREN;
 
+// The condition is evaluated in the scope of the collection element: the related resource of a to-many relationship,
+// the compound element of a compound collection, or the element symbol for a scalar collection.
 hasExpression:
     'has' LPAREN fieldChain ( COMMA filterExpression )? RPAREN;
 
+// Only available in the scope of a resource type.
+isTypeExpression:
+    'isType' LPAREN fieldChain? COMMA FIELD ( COMMA filterExpression )? RPAREN;
+
+// Not available in the scope of a scalar collection element.
 countExpression:
     'count' LPAREN fieldChain RPAREN;
+
+elementExpression:
+    '_';
 
 fieldChain:
     FIELD ( '.' FIELD )*;

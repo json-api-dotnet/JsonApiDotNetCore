@@ -95,6 +95,54 @@ public sealed class FilterableResource : Identifiable<long>
     [Attr]
     public DayOfWeek? SomeNullableEnum { get; set; }
 
+    [Attr(IsCompound = true)]
+    public FilterableNested? SomeCompound { get; set; }
+
+    [Attr(IsCompound = true)]
+    public FilterableNested SomeRequiredCompound { get; set; } = new();
+
+    [Attr(IsCompound = true)]
+    public List<FilterableNested> SomeCompounds { get; set; } = [];
+
+    [Attr(IsCompound = true)]
+    public List<FilterableLabeled<DateOnly>> SomeLabeledDates { get; set; } = [];
+
+    [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public FilterableLeaf? SomeUnsortableCompound { get; set; }
+
+    [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public List<FilterableLeaf> SomeUnsortableCompounds { get; set; } = [];
+
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public List<string> SomeUnsortableStrings { get; set; } = [];
+
+    [Attr]
+    public List<string>? SomeStrings { get; set; }
+
+    [Attr]
+    public List<int?>? SomeNullableInt32Elements { get; set; }
+
+    [Attr]
+    public List<Guid>? SomeGuids { get; set; }
+
+    [Attr]
+    public List<decimal>? SomeDecimals { get; set; }
+
+    [Attr]
+    public List<DateTime>? SomeDateTimes { get; set; }
+
+    [Attr]
+    public List<TimeSpan>? SomeTimeSpans { get; set; }
+
+    [Attr]
+    public List<DateOnly>? SomeDateOnlys { get; set; }
+
+    [Attr]
+    public List<bool>? SomeBooleans { get; set; }
+
+    [Attr]
+    public List<DayOfWeek>? SomeEnums { get; set; }
+
     [HasOne]
     public FilterableResource? Parent { get; set; }
 

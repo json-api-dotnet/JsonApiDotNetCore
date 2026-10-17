@@ -298,6 +298,31 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     }
 
     [Fact]
+    public async Task Can_sort_in_scope_of_relationship_with_blocked_inclusion()
+    {
+        // Arrange
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<BlogPost>();
+            dbContext.Blogs.Add(blog);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogPosts?sort[parent.posts]=-caption";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+    }
+
+    [Fact]
     public async Task Can_sort_on_multiple_fields_in_multiple_scopes()
     {
         // Arrange

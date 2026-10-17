@@ -213,4 +213,9 @@ public sealed class TypeContainer : Identifiable<long>
 
     [Attr]
     public Version? TestNullableVersion { get; set; }
+
+    // Compound attribute stored in a JSON column
+
+    [Attr(IsCompound = true)]
+    public TypeContainerNested? Nested { get; set; }
 }

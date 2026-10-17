@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net11.0;net10.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
@@ -22,5 +22,15 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <Using Include="System.Net.Http.Json" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net11.0'">
+    <Compile Remove="**/*.net11.cs" />
+    <None Include="**/*.net11.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <Compile Remove="**/*.net10.cs" />
+    <None Include="**/*.net10.cs" />
   </ItemGroup>
 </Project>

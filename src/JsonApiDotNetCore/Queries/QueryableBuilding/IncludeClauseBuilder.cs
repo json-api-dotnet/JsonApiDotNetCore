@@ -22,7 +22,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
         // De-duplicate chains coming from derived relationships.
         HashSet<string> propertyPaths = [];
 
-        ApplyEagerLoads(context.ResourceType.EagerLoads, null, propertyPaths);
+        ApplyEagerLoads(context.ResourceType!.EagerLoads, null, propertyPaths);
 
         foreach (ResourceFieldChainExpression chain in IncludeChainConverter.Instance.GetRelationshipChains(expression))
         {

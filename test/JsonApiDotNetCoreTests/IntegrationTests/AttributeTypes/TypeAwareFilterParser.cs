@@ -71,7 +71,7 @@ public sealed class TypeAwareFilterParser(IResourceFactory resourceFactory)
             catch (Exception exception) when (exception is FormatException or OverflowException or InvalidCastException or ArgumentException)
             {
                 string destinationTypeName = RuntimeTypeConverter.GetFriendlyTypeName(destinationType);
-                throw new QueryParseException($"Failed to convert '{stringValue}' of type 'String' to type '{destinationTypeName}'.", position, exception);
+                throw new QueryParseException($"Failed to convert '{stringValue}' to type '{destinationTypeName}'.", position, exception);
             }
         };
     }

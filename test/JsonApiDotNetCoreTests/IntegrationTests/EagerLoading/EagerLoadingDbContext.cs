@@ -18,6 +18,9 @@ public sealed class EagerLoadingDbContext(DbContextOptions<EagerLoadingDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Building>()
+            .ComplexProperty(building => building.Dimensions, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Building>()
             .HasOne(building => building.PrimaryDoor)
             .WithOne()
             .HasForeignKey<Building>("PrimaryDoorId")

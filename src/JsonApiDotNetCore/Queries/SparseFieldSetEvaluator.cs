@@ -13,8 +13,9 @@ public sealed class SparseFieldSetEvaluator : ISparseFieldSetEvaluator
     private static readonly ConcurrentDictionary<ResourceType, SparseFieldSetExpression> ViewableFieldSetCache = new();
 
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
-    private readonly Lazy<Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>>> _lazySourceTable;
-    private readonly Dictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> _visitedTable = [];
+    private readonly Lazy<Dictionary<ResourceType, SparseFieldSetExpression>> _lazySourceTable;
+    private readonly Dictionary<ResourceType, SparseFieldSetExpression?> _visitedQueryTable = [];
+    private readonly Dictionary<ResourceType, SparseFieldSetExpression> _visitedSerializerTable = [];
 
     public SparseFieldSetEvaluator(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
@@ -22,116 +23,167 @@ public sealed class SparseFieldSetEvaluator : ISparseFieldSetEvaluator
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
 
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
-        _lazySourceTable = new Lazy<Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>>>(() => BuildSourceTable(constraintProviders));
+        _lazySourceTable = new Lazy<Dictionary<ResourceType, SparseFieldSetExpression>>(() => BuildSourceTable(constraintProviders));
     }
 
-    private static Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>> BuildSourceTable(
-        IEnumerable<IQueryConstraintProvider> constraintProviders)
+    private static Dictionary<ResourceType, SparseFieldSetExpression> BuildSourceTable(IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
-        // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:wrap_before_first_method_call true
+        var mergedTable = new Dictionary<ResourceType, SparseFieldSetExpression>();
 
-        KeyValuePair<ResourceType, SparseFieldSetExpression>[] sparseFieldTables = constraintProviders
-            .SelectMany(provider => provider.GetConstraints())
-            .Where(constraint => constraint.Scope == null)
-            .Select(constraint => constraint.Expression)
-            .OfType<SparseFieldTableExpression>()
-            .Select(expression => expression.Table)
-            .SelectMany(table => table)
-            .ToArray();
-
-        // @formatter:wrap_before_first_method_call restore
-        // @formatter:wrap_chained_method_calls restore
-
-        var mergedTable = new Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>.Builder>();
-
-        foreach ((ResourceType resourceType, SparseFieldSetExpression sparseFieldSet) in sparseFieldTables)
+        foreach (ExpressionInResourceTypeScope constraint in constraintProviders.SelectMany(provider => provider.GetConstraints())
+            .OfType<ExpressionInResourceTypeScope>())
         {
-            if (!mergedTable.TryGetValue(resourceType, out ImmutableHashSet<ResourceFieldAttribute>.Builder? builder))
+            if (constraint.Expression is SparseFieldSetExpression sparseFieldSet)
             {
-                builder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
-                mergedTable[resourceType] = builder;
+                if (mergedTable.TryGetValue(constraint.ResourceType, out SparseFieldSetExpression? existingSet))
+                {
+                    mergedTable[constraint.ResourceType] = UnionExpressions(existingSet, sparseFieldSet);
+                }
+                else
+                {
+                    mergedTable[constraint.ResourceType] = sparseFieldSet;
+                }
             }
-
-            AddSparseFieldsToSet(sparseFieldSet.Fields, builder);
         }
 
-        return mergedTable.ToDictionary(pair => pair.Key, pair => pair.Value.ToImmutable());
+        return mergedTable;
     }
 
-    private static void AddSparseFieldsToSet(IImmutableSet<ResourceFieldAttribute> sparseFieldsToAdd,
-        ImmutableHashSet<ResourceFieldAttribute>.Builder sparseFieldSetBuilder)
+    private static SparseFieldSetExpression UnionExpressions(SparseFieldSetExpression first, SparseFieldSetExpression second)
     {
-        foreach (ResourceFieldAttribute field in sparseFieldsToAdd)
+        ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> mergedElements = UnionElements(first.Elements, second.Elements);
+
+        return SparseFieldSetExpression.Create(mergedElements);
+    }
+
+    private static ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> UnionElements(
+        IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> first,
+        IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> second)
+    {
+        var merged = new Dictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>(first);
+
+        foreach ((ResourceFieldAttribute field, SparseFieldSetElementExpression element) in second)
         {
-            sparseFieldSetBuilder.Add(field);
+            if (merged.TryGetValue(field, out SparseFieldSetElementExpression? existingElement))
+            {
+                if (existingElement.Children.Count == 0 || element.Children.Count == 0)
+                {
+                    // One selects all children of this field, so the union selects all children.
+                    merged[field] = new SparseFieldSetElementExpression(field);
+                }
+                else
+                {
+                    merged[field] = new SparseFieldSetElementExpression(field, UnionElements(existingElement.Children, element.Children));
+                }
+            }
+            else
+            {
+                merged[field] = element;
+            }
         }
+
+        return merged.ToImmutableDictionary();
     }
 
     /// <inheritdoc />
-    public IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceType resourceType)
+    public SparseFieldSetExpression? GetSparseFieldSetForQuery(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        if (!_visitedTable.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? outputFields))
+        if (!_visitedQueryTable.TryGetValue(resourceType, out SparseFieldSetExpression? outputExpression))
         {
-            SparseFieldSetExpression? inputExpression =
-                _lazySourceTable.Value.TryGetValue(resourceType, out ImmutableHashSet<ResourceFieldAttribute>? inputFields)
-                    ? new SparseFieldSetExpression(inputFields)
-                    : null;
+            SparseFieldSetExpression? inputExpression = _lazySourceTable.Value.GetValueOrDefault(resourceType);
 
-            SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
-            outputFields = outputExpression == null ? ImmutableHashSet<ResourceFieldAttribute>.Empty : outputExpression.Fields;
-
-            _visitedTable[resourceType] = outputFields;
+            outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+            _visitedQueryTable[resourceType] = outputExpression;
         }
 
-        return outputFields;
+        return outputExpression;
     }
 
     /// <inheritdoc />
-    public IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceType resourceType)
+    public SparseFieldSetExpression GetSparseFieldSetForSerializer(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        if (!_visitedTable.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? outputFields))
+        if (!_visitedSerializerTable.TryGetValue(resourceType, out SparseFieldSetExpression? outputExpression))
         {
-            SparseFieldSetExpression inputExpression =
-                _lazySourceTable.Value.TryGetValue(resourceType, out ImmutableHashSet<ResourceFieldAttribute>? inputFields)
-                    ? new SparseFieldSetExpression(inputFields)
-                    : GetCachedViewableFieldSet(resourceType);
+            SparseFieldSetExpression inputExpression = _lazySourceTable.Value.TryGetValue(resourceType, out SparseFieldSetExpression? inputFields)
+                ? inputFields
+                : GetCachedViewableFieldSet(resourceType);
 
-            SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+            SparseFieldSetExpression? callbackExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
-            outputFields = outputExpression == null
-                ? GetCachedViewableFieldSet(resourceType).Fields
-                : inputExpression.Fields.Intersect(outputExpression.Fields);
+            outputExpression = callbackExpression == null ? GetCachedViewableFieldSet(resourceType) : IntersectExpressions(inputExpression, callbackExpression);
 
-            _visitedTable[resourceType] = outputFields;
+            _visitedSerializerTable[resourceType] = outputExpression;
         }
 
-        return outputFields;
+        return outputExpression;
+    }
+
+    private static SparseFieldSetExpression IntersectExpressions(SparseFieldSetExpression first, SparseFieldSetExpression second)
+    {
+        ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> intersectedElements = IntersectElements(first.Elements, second.Elements);
+
+        return SparseFieldSetExpression.Create(intersectedElements);
+    }
+
+    private static ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> IntersectElements(
+        IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> first,
+        IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> second)
+    {
+        ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Builder builder =
+            ImmutableDictionary.CreateBuilder<ResourceFieldAttribute, SparseFieldSetElementExpression>();
+
+        foreach ((ResourceFieldAttribute field, SparseFieldSetElementExpression secondElement) in second)
+        {
+            if (first.TryGetValue(field, out SparseFieldSetElementExpression? firstElement))
+            {
+                if (firstElement.Children.Count == 0)
+                {
+                    // first wanted all children -> restricted to second's children
+                    builder.Add(field, secondElement);
+                }
+                else if (secondElement.Children.Count == 0)
+                {
+                    // second allows all children -> restricted to first's children
+                    builder.Add(field, firstElement);
+                }
+                else
+                {
+                    ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> childIntersection =
+                        IntersectElements(firstElement.Children, secondElement.Children);
+
+                    if (childIntersection.Count > 0)
+                    {
+                        builder.Add(field, new SparseFieldSetElementExpression(field, childIntersection));
+                    }
+                }
+            }
+        }
+
+        return builder.ToImmutable();
     }
 
     private static SparseFieldSetExpression GetCachedViewableFieldSet(ResourceType resourceType)
     {
-        if (!ViewableFieldSetCache.TryGetValue(resourceType, out SparseFieldSetExpression? fieldSet))
+        return ViewableFieldSetCache.GetOrAdd(resourceType, static type =>
         {
-            ImmutableHashSet<ResourceFieldAttribute> viewableFields = GetViewableFields(resourceType);
-            fieldSet = new SparseFieldSetExpression(viewableFields);
-            ViewableFieldSetCache[resourceType] = fieldSet;
-        }
-
-        return fieldSet;
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> viewableFields = GetViewableFields(type);
+            return new SparseFieldSetExpression(viewableFields);
+        });
     }
 
-    private static ImmutableHashSet<ResourceFieldAttribute> GetViewableFields(ResourceType resourceType)
+    private static ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> GetViewableFields(ResourceType resourceType)
     {
-        return resourceType.Fields.Where(nextField => !nextField.IsViewBlocked()).ToImmutableHashSet();
+        return resourceType.Fields.Where(nextField => !nextField.IsViewBlocked())
+            .ToImmutableDictionary(field => field, field => new SparseFieldSetElementExpression(field));
     }
 
     public void Reset()
     {
-        _visitedTable.Clear();
+        _visitedQueryTable.Clear();
+        _visitedSerializerTable.Clear();
     }
 }

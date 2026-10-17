@@ -21,6 +21,12 @@ public sealed class ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> opti
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<WorkItem>()
+            .ComplexProperty(workItem => workItem.Estimate, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<WorkItem>()
+            .ComplexCollection(workItem => workItem.Checklist, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<WorkItem>()
             .HasOne(workItem => workItem.Assignee)
             .WithMany(userAccount => userAccount.AssignedItems);
 
