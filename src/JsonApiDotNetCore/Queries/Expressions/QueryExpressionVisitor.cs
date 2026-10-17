@@ -44,6 +44,11 @@ public abstract class QueryExpressionVisitor<TArgument, TResult>
         return DefaultVisit(expression, argument);
     }
 
+    public virtual TResult VisitElementValue(ElementValueExpression expression, TArgument argument)
+    {
+        return DefaultVisit(expression, argument);
+    }
+
     public virtual TResult VisitLogical(LogicalExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);
