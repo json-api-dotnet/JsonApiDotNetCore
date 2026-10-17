@@ -17,9 +17,9 @@ public sealed class QueryClauseBuilderContext
     public Expression Source { get; }
 
     /// <summary>
-    /// The resource type for <see cref="Source" />.
+    /// The resource type for <see cref="Source" />, or <c>null</c> if not scoped to a resource type (e.g. for primitive or compound collections).
     /// </summary>
-    public ResourceType ResourceType { get; }
+    public ResourceType? ResourceType { get; }
 
     /// <summary>
     /// The extension type to generate calls on, typically <see cref="Queryable" /> or <see cref="Enumerable" />.
@@ -51,11 +51,10 @@ public sealed class QueryClauseBuilderContext
     /// </summary>
     public object? State { get; }
 
-    public QueryClauseBuilderContext(Expression source, ResourceType resourceType, Type extensionType, IReadOnlyModel entityModel,
+    public QueryClauseBuilderContext(Expression source, ResourceType? resourceType, Type extensionType, IReadOnlyModel entityModel,
         LambdaScopeFactory lambdaScopeFactory, LambdaScope lambdaScope, IQueryableBuilder queryableBuilder, object? state)
     {
         ArgumentNullException.ThrowIfNull(source);
-        ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(extensionType);
         ArgumentNullException.ThrowIfNull(entityModel);
         ArgumentNullException.ThrowIfNull(lambdaScopeFactory);
@@ -73,8 +72,13 @@ public sealed class QueryClauseBuilderContext
         State = state;
     }
 
-    private static void AssertSameType(Type sourceType, ResourceType resourceType)
+    private static void AssertSameType(Type sourceType, ResourceType? resourceType)
     {
+        if (resourceType == null)
+        {
+            return;
+        }
+
         Type? sourceElementType = CollectionConverter.Instance.FindCollectionElementType(sourceType);
 
         if (sourceElementType != resourceType.ClrType)
@@ -89,6 +93,13 @@ public sealed class QueryClauseBuilderContext
         ArgumentNullException.ThrowIfNull(source);
 
         return new QueryClauseBuilderContext(source, ResourceType, ExtensionType, EntityModel, LambdaScopeFactory, LambdaScope, QueryableBuilder, State);
+    }
+
+    public QueryClauseBuilderContext WithExtensionType(Type extensionType)
+    {
+        ArgumentNullException.ThrowIfNull(extensionType);
+
+        return new QueryClauseBuilderContext(Source, ResourceType, extensionType, EntityModel, LambdaScopeFactory, LambdaScope, QueryableBuilder, State);
     }
 
     public QueryClauseBuilderContext WithLambdaScope(LambdaScope lambdaScope)
