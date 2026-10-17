@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -66,6 +67,29 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         AssertSetAttributeInCreateResourceNotBlocked(attr, resourceType, state);
         AssertSetAttributeInUpdateResourceNotBlocked(attr, resourceType, state);
         AssertNotReadOnly(attr, resourceType, state);
+
+        if (attributeValue != null && !attr.Property.PropertyType.IsInstanceOfType(attributeValue))
+        {
+            try
+            {
+                if (attributeValue is JsonElement jsonElement)
+                {
+                    attributeValue = jsonElement.Deserialize(attr.Property.PropertyType, _options.SerializerReadOptions);
+                }
+                else if (attr.IsCompound || attr.IsCollection)
+                {
+                    JsonElement serializedElement = JsonSerializer.SerializeToElement(attributeValue, _options.SerializerReadOptions);
+                    attributeValue = serializedElement.Deserialize(attr.Property.PropertyType, _options.SerializerReadOptions);
+                }
+            }
+            catch (JsonException exception)
+            {
+                string typeName = RuntimeTypeConverter.GetFriendlyTypeName(attr.Property.PropertyType);
+
+                throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
+                    $"Failed to convert attribute '{attributeName}' with value '{attributeValue}' to type '{typeName}'.", innerException: exception);
+            }
+        }
 
         attr.SetValue(resource, attributeValue);
         state.WritableTargetedFields!.Attributes.Add(attr);

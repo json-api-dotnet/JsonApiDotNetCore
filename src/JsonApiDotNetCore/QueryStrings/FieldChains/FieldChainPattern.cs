@@ -11,6 +11,15 @@ namespace JsonApiDotNetCore.QueryStrings.FieldChains;
 [PublicAPI]
 public sealed class FieldChainPattern
 {
+    public const char ToManyRelationshipToken = 'M';
+    public const char ToOneRelationshipToken = 'O';
+    public const char RelationshipToken = 'R';
+    public const char AttributeToken = 'A';
+    public const char CompoundAttributeToken = 'C';
+    public const char PrimitiveCollectionToken = 'P';
+    public const char CompoundCollectionToken = 'Q';
+    public const char FieldToken = 'F';
+
     /// <summary>
     /// Gets the set of possible resource field types.
     /// </summary>
@@ -75,6 +84,24 @@ public sealed class FieldChainPattern
     /// <term>A</term>
     /// <description>
     /// Matches an attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>C</term>
+    /// <description>
+    /// Matches a compound attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>P</term>
+    /// <description>
+    /// Matches a primitive collection.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>Q</term>
+    /// <description>
+    /// Matches a compound collection.
     /// </description>
     /// </item>
     /// <item>
@@ -144,12 +171,36 @@ public sealed class FieldChainPattern
     public PatternMatchResult Match(string fieldChain, ResourceType resourceType, FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None,
         ILoggerFactory? loggerFactory = null)
     {
+        return Match(fieldChain, (IAttributeContainer)resourceType, options, loggerFactory);
+    }
+
+    /// <summary>
+    /// Matches the specified resource field chain against this pattern, starting from the specified container.
+    /// </summary>
+    /// <param name="fieldChain">
+    /// The dot-separated chain of resource field names.
+    /// </param>
+    /// <param name="container">
+    /// The parent attribute container to start matching from.
+    /// </param>
+    /// <param name="options">
+    /// Match options, defaults to <see cref="FieldChainPatternMatchOptions.None" />.
+    /// </param>
+    /// <param name="loggerFactory">
+    /// When provided, logs the matching steps at <see cref="LogLevel.Trace" /> level.
+    /// </param>
+    /// <returns>
+    /// The match result.
+    /// </returns>
+    public PatternMatchResult Match(string fieldChain, IAttributeContainer container,
+        FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None, ILoggerFactory? loggerFactory = null)
+    {
         ArgumentNullException.ThrowIfNull(fieldChain);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(container);
 
         ILogger<PatternMatcher> logger = loggerFactory == null ? NullLogger<PatternMatcher>.Instance : loggerFactory.CreateLogger<PatternMatcher>();
         var matcher = new PatternMatcher(this, options, logger);
-        return matcher.Match(fieldChain, resourceType);
+        return matcher.Match(fieldChain, container);
     }
 
     /// <summary>

@@ -2,6 +2,7 @@ using Castle.DynamicProxy;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -444,6 +445,215 @@ public sealed class ResourceGraphBuilderTests
         idAttribute.Capabilities.Should().Be(AttrCapabilities.AllowFilter);
     }
 
+    [Fact]
+    public void Discovers_compound_types_recursively()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithCompoundAttributes, long>();
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Assert
+        ResourceType resourceType = resourceGraph.GetResourceType<ResourceWithCompoundAttributes>();
+        AttrAttribute contentAttr = resourceType.GetAttributeByPropertyName(nameof(ResourceWithCompoundAttributes.Content));
+        contentAttr.IsCompound.Should().BeTrue();
+        contentAttr.CompoundType.Should().NotBeNull();
+        contentAttr.ContainingType.Should().Be(resourceType);
+
+        CompoundType rootCompoundType = contentAttr.CompoundType!;
+        rootCompoundType.ClrType.Should().Be<TestRootCompound>();
+        rootCompoundType.Attributes.Should().HaveCount(2);
+
+        AttrAttribute nameAttr = rootCompoundType.GetAttributeByPropertyName(nameof(TestRootCompound.Name));
+        nameAttr.IsCompound.Should().BeTrue();
+        nameAttr.CompoundType.Should().NotBeNull();
+        nameAttr.ContainingType.Should().Be(rootCompoundType);
+
+        CompoundType nameCompoundType = nameAttr.CompoundType!;
+        nameCompoundType.ClrType.Should().Be<TestChildCompound>();
+        AttrAttribute firstAttr = nameCompoundType.GetAttributeByPropertyName(nameof(TestChildCompound.FirstName));
+        firstAttr.IsCompound.Should().BeFalse();
+        firstAttr.CompoundType.Should().BeNull();
+        firstAttr.ContainingType.Should().Be(nameCompoundType);
+
+        AttrAttribute phonesAttr = rootCompoundType.GetAttributeByPropertyName(nameof(TestRootCompound.PhoneNumbers));
+        phonesAttr.IsCompound.Should().BeTrue();
+        phonesAttr.IsCollection.Should().BeTrue();
+        phonesAttr.CompoundType.Should().NotBeNull();
+        phonesAttr.CompoundType!.ClrType.Should().Be<TestPhoneCompound>();
+
+        resourceGraph.GetCompoundTypes().Should().HaveCount(3);
+        resourceGraph.GetCompoundType(typeof(TestRootCompound)).Should().Be(rootCompoundType);
+        resourceGraph.GetCompoundType(typeof(TestChildCompound)).Should().Be(nameCompoundType);
+        resourceGraph.GetCompoundType(typeof(TestPhoneCompound)).Should().Be(phonesAttr.CompoundType);
+    }
+
+    [Fact]
+    public void Automatically_strips_AllowSort_from_compound_attributes()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithSortableCompound, long>();
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Assert
+        ResourceType resourceType = resourceGraph.GetResourceType<ResourceWithSortableCompound>();
+        AttrAttribute attr = resourceType.GetAttributeByPropertyName(nameof(ResourceWithSortableCompound.Compound));
+        attr.Capabilities.HasFlag(AttrCapabilities.AllowSort).Should().BeFalse();
+    }
+
+    [Fact]
+    public void Cannot_use_identifiable_type_as_compound_attribute()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithIdentifiableAsCompound, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{nameof(ResourceWithIdentifiableAsCompound)}.{nameof(ResourceWithIdentifiableAsCompound.Child)}' implements IIdentifiable and must be exposed as a JSON:API relationship using [HasOne] or [HasMany], not as a compound attribute.");
+    }
+
+    [Fact]
+    public void Cannot_use_resource_type_as_compound_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithRegisteredResourceAsCompound, long>();
+        builder.Add<SimpleResource, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{nameof(ResourceWithRegisteredResourceAsCompound)}.{nameof(ResourceWithRegisteredResourceAsCompound.Child)}' implements IIdentifiable and must be exposed as a JSON:API relationship using [HasOne] or [HasMany], not as a compound attribute.");
+    }
+
+    [Fact]
+    public void Cannot_annotate_compound_type_with_ResourceAttribute()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithAnnotatedCompound, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Type '{typeof(CompoundWithResourceAnnotation)}' is a compound type and cannot be annotated with [Resource].");
+    }
+
+    [Fact]
+    public void Cannot_use_HasOne_inside_compound_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithHasOneInCompound, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{nameof(CompoundWithHasOne)}.{nameof(CompoundWithHasOne.Related)}' in compound type '{nameof(CompoundWithHasOne)}' cannot be annotated with [HasOneAttribute]. Compound types cannot contain relationships.");
+    }
+
+    [Fact]
+    public void Cannot_use_HasMany_inside_compound_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithHasManyInCompound, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{nameof(CompoundWithHasMany)}.{nameof(CompoundWithHasMany.Related)}' in compound type '{nameof(CompoundWithHasMany)}' cannot be annotated with [HasManyAttribute]. Compound types cannot contain relationships.");
+    }
+
+    [Fact]
+    public void Cannot_use_EagerLoad_inside_compound_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithEagerLoadInCompound, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{nameof(CompoundWithEagerLoad)}.{nameof(CompoundWithEagerLoad.SubObject)}' in compound type '{nameof(CompoundWithEagerLoad)}' cannot be annotated with [EagerLoad].");
+    }
+
+    [Fact]
+    public void Detects_direct_circular_reference_in_compound_types()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithDirectCycle, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Circular reference detected: compound type '{typeof(DirectCycleCompound)}' references itself directly or indirectly.");
+    }
+
+    [Fact]
+    public void Detects_indirect_circular_reference_in_compound_types()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithIndirectCycle, long>();
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Circular reference detected: compound type '{typeof(IndirectCycleCompoundA)}' references itself directly or indirectly.");
+    }
+
+    [Fact]
+    public void Supports_empty_base_class_in_compound_type_hierarchy()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithDerivedCompound, long>();
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Assert
+        resourceGraph.FindCompoundType(typeof(DerivedCompound)).Should().NotBeNull();
+        CompoundType compoundType = resourceGraph.GetCompoundType(typeof(DerivedCompound));
+        compoundType.Attributes.Should().ContainSingle(attr => attr.Property.Name == nameof(DerivedCompound.Value));
+    }
+
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class ResourceWithHasOneRelationship : Identifiable<long>
     {
@@ -560,6 +770,169 @@ public sealed class ResourceGraphBuilderTests
     {
         [HasOne(PublicName = "derivedToOne")]
         public override AbstractBaseResource? BaseToOne { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithSortableCompound : Identifiable<long>
+    {
+        [Attr(Capabilities = AttrCapabilities.All, IsCompound = true)]
+        public TestChildCompound? Compound { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class SimpleResource : Identifiable<long>;
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithIdentifiableAsCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public SimpleResource? Child { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithRegisteredResourceAsCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public SimpleResource? Child { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
+    public sealed class CompoundWithResourceAnnotation
+    {
+        [Attr]
+        public string? Text { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithAnnotatedCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public CompoundWithResourceAnnotation? Child { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class CompoundWithHasOne
+    {
+        [HasOne]
+        public SimpleResource? Related { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithHasOneInCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public CompoundWithHasOne? Child { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class CompoundWithHasMany
+    {
+        [HasMany]
+        public ISet<SimpleResource> Related { get; set; } = new HashSet<SimpleResource>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithHasManyInCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public CompoundWithHasMany? Child { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class CompoundWithEagerLoad
+    {
+        [EagerLoad]
+        public TestChildCompound? SubObject { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithEagerLoadInCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public CompoundWithEagerLoad? Child { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class DirectCycleCompound
+    {
+        [Attr(IsCompound = true)]
+        public DirectCycleCompound? Next { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithDirectCycle : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public DirectCycleCompound? Cycle { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class IndirectCycleCompoundA
+    {
+        [Attr(IsCompound = true)]
+        public IndirectCycleCompoundB? Next { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class IndirectCycleCompoundB
+    {
+        [Attr(IsCompound = true)]
+        public IndirectCycleCompoundA? Next { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithIndirectCycle : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public IndirectCycleCompoundA? Cycle { get; set; }
+    }
+
+    public abstract class EmptyCompoundBase;
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class DerivedCompound : EmptyCompoundBase
+    {
+        [Attr]
+        public string? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithDerivedCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public DerivedCompound? Compound { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithCompoundAttributes : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public TestRootCompound? Content { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class TestRootCompound
+    {
+        [Attr(IsCompound = true)]
+        public TestChildCompound? Name { get; set; }
+
+        [Attr(IsCompound = true)]
+        public List<TestPhoneCompound> PhoneNumbers { get; set; } = [];
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class TestChildCompound
+    {
+        [Attr]
+        public string? FirstName { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class TestPhoneCompound
+    {
+        [Attr]
+        public string? Number { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

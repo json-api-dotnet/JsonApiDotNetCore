@@ -20,7 +20,9 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 public class ResourceFieldChainExpression : IdentifierExpression
 {
     /// <summary>
-    /// A list of one or more JSON:API fields. Use <see cref="FieldChainPattern.Match" /> to convert from text.
+    /// A list of one or more JSON:API fields. Use
+    /// <see cref="FieldChainPattern.Match(string, Configuration.ResourceType, FieldChainPatternMatchOptions, Microsoft.Extensions.Logging.ILoggerFactory?)" />
+    /// to convert from text.
     /// </summary>
     public IImmutableList<ResourceFieldAttribute> Fields { get; }
 

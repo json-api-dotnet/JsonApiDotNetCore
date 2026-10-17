@@ -72,11 +72,32 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
                 if (nextLayer == null)
                 {
                     writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
+
+                    if (field is AttrAttribute attr && GetOrCreateSelectors(type).GetChildSelectors(attr) is { } childSelectors)
+                    {
+                        WriteChildSelectors(writer, toFullString, childSelectors);
+                    }
                 }
                 else
                 {
                     string prefix = $"{(toFullString ? field.ToFullString() : field.ToString())}: ";
                     nextLayer.WriteLayer(writer, toFullString, prefix);
+                }
+            }
+        }
+    }
+
+    private static void WriteChildSelectors(IndentingStringWriter writer, bool toFullString, FieldSelectors childSelectors)
+    {
+        using (writer.Indent())
+        {
+            foreach (ResourceFieldAttribute field in childSelectors.Keys)
+            {
+                writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
+
+                if (field is AttrAttribute attr && childSelectors.GetChildSelectors(attr) is { } nextChildren)
+                {
+                    WriteChildSelectors(writer, toFullString, nextChildren);
                 }
             }
         }

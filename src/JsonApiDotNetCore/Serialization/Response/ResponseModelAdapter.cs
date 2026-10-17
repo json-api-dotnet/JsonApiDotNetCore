@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -224,9 +225,9 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         if (!isRelationship)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
+            SparseFieldSetExpression fieldSetExpression = _sparseFieldSetCache.GetSparseFieldSetExpressionForSerializer(resourceType);
 
-            resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSet);
+            resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSetExpression);
             resourceObject.Links = _linkBuilder.GetResourceLinks(resourceType, resource);
             resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resourceType, resource);
         }
@@ -237,15 +238,21 @@ public class ResponseModelAdapter : IResponseModelAdapter
     protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
         IImmutableSet<ResourceFieldAttribute> fieldSet)
     {
+        return ConvertAttributes(resource, resourceType, new SparseFieldSetExpression(fieldSet));
+    }
+
+    protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
+        SparseFieldSetExpression fieldSetExpression)
+    {
         ArgumentNullException.ThrowIfNull(resource);
         ArgumentNullException.ThrowIfNull(resourceType);
-        ArgumentNullException.ThrowIfNull(fieldSet);
+        ArgumentNullException.ThrowIfNull(fieldSetExpression);
 
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 
         foreach (AttrAttribute attr in resourceType.Attributes)
         {
-            if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<>.Id))
+            if (!fieldSetExpression.Fields.Contains(attr) || attr.Property.Name == nameof(Identifiable<>.Id))
             {
                 continue;
             }
@@ -263,10 +270,94 @@ public class ResponseModelAdapter : IResponseModelAdapter
                 continue;
             }
 
+            if (value != null && attr.IsCompound)
+            {
+                // Check if any field chains exist for this compound attribute with deeper paths
+                List<ResourceFieldChainExpression> subChains = fieldSetExpression.FieldChains
+                    .Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(attr))
+                    .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0))).ToList();
+
+                if (subChains.Count > 0)
+                {
+                    if (attr.IsCollection && value is IEnumerable collection)
+                    {
+                        var prunedList = new List<object?>();
+
+                        foreach (object item in collection)
+                        {
+                            prunedList.Add(PruneCompoundObject(item, attr.CompoundType!, subChains));
+                        }
+
+                        value = prunedList;
+                    }
+                    else
+                    {
+                        value = PruneCompoundObject(value, attr.CompoundType!, subChains);
+                    }
+                }
+            }
+
             attrMap.Add(attr.PublicName, value);
         }
 
         return attrMap.Count > 0 ? attrMap : null;
+    }
+
+    private Dictionary<string, object?> PruneCompoundObject(object compoundInstance, CompoundType compoundType,
+        IReadOnlyList<ResourceFieldChainExpression> fieldChains)
+    {
+        var prunedMap = new Dictionary<string, object?>();
+        HashSet<ResourceFieldAttribute> directFields = fieldChains.Select(c => c.Fields[0]).ToHashSet();
+
+        foreach (AttrAttribute childAttr in compoundType.Attributes)
+        {
+            if (!directFields.Contains(childAttr))
+            {
+                continue;
+            }
+
+            object? childValue = childAttr.GetValue(compoundInstance);
+
+            if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingNull && childValue == null)
+            {
+                continue;
+            }
+
+            if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault &&
+                Equals(childValue, RuntimeTypeConverter.GetDefaultValue(childAttr.Property.PropertyType)))
+            {
+                continue;
+            }
+
+            if (childValue != null && childAttr.IsCompound)
+            {
+                List<ResourceFieldChainExpression> deeperChains = fieldChains.Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(childAttr))
+                    .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0))).ToList();
+
+                if (deeperChains.Count > 0)
+                {
+                    if (childAttr.IsCollection && childValue is IEnumerable collection)
+                    {
+                        var prunedList = new List<object?>();
+
+                        foreach (object item in collection)
+                        {
+                            prunedList.Add(PruneCompoundObject(item, childAttr.CompoundType!, deeperChains));
+                        }
+
+                        childValue = prunedList;
+                    }
+                    else
+                    {
+                        childValue = PruneCompoundObject(childValue, childAttr.CompoundType!, deeperChains);
+                    }
+                }
+            }
+
+            prunedMap[childAttr.PublicName] = childValue;
+        }
+
+        return prunedMap;
     }
 
     private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,

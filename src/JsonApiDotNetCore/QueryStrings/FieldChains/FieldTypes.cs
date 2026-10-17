@@ -4,9 +4,13 @@ namespace JsonApiDotNetCore.QueryStrings.FieldChains;
 internal enum FieldTypes
 {
     None = 0,
-    Attribute = 1,
+    ScalarAttribute = 1,
     ToOneRelationship = 1 << 1,
     ToManyRelationship = 1 << 2,
+    CompoundAttribute = 1 << 3,
+    PrimitiveCollection = 1 << 4,
+    CompoundCollection = 1 << 5,
+
     Relationship = ToOneRelationship | ToManyRelationship,
-    Field = Attribute | Relationship
+    Field = ScalarAttribute | Relationship | CompoundAttribute | PrimitiveCollection | CompoundCollection
 }

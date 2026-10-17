@@ -1,4 +1,7 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
+
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace JsonApiDotNetCore.Resources.Annotations;
 
@@ -9,6 +12,7 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class AttrAttribute : ResourceFieldAttribute
 {
+    private readonly Lazy<bool> _isCollectionLazy;
     private AttrCapabilities? _capabilities;
 
     internal bool HasExplicitCapabilities => _capabilities != null;
@@ -31,6 +35,31 @@ public sealed class AttrAttribute : ResourceFieldAttribute
         set => _capabilities = value;
     }
 
+    /// <summary>
+    /// Indicates whether this attribute is a complex/compound object. Defaults to <c>false</c>.
+    /// </summary>
+    public bool IsCompound { get; set; }
+
+    /// <summary>
+    /// Evaluates whether the underlying property is a collection. Non-settable; evaluated on demand from <see cref="ResourceFieldAttribute.Property" />.
+    /// </summary>
+    public bool IsCollection => _isCollectionLazy.Value;
+
+    /// <summary>
+    /// The schema of the nested compound type when <see cref="IsCompound" /> is true; otherwise <c>null</c>.
+    /// </summary>
+    public CompoundType? CompoundType { get; internal set; }
+
+    public AttrAttribute()
+    {
+        _isCollectionLazy = new Lazy<bool>(EvaluateIsCollection, LazyThreadSafetyMode.PublicationOnly);
+    }
+
+    private bool EvaluateIsCollection()
+    {
+        return Property.PropertyType != typeof(string) && CollectionConverter.Instance.FindCollectionElementType(Property.PropertyType) != null;
+    }
+
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
@@ -46,12 +75,12 @@ public sealed class AttrAttribute : ResourceFieldAttribute
 
         var other = (AttrAttribute)obj;
 
-        return Capabilities == other.Capabilities && base.Equals(other);
+        return Capabilities == other.Capabilities && IsCompound == other.IsCompound && CompoundType == other.CompoundType && base.Equals(other);
     }
 
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        return HashCode.Combine(Capabilities, base.GetHashCode());
+        return HashCode.Combine(Capabilities, IsCompound, CompoundType, base.GetHashCode());
     }
 }
