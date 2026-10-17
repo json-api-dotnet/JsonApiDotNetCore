@@ -94,9 +94,7 @@ public abstract class QueryExpressionParser
 
         if (!result.IsSuccess)
         {
-            string containerDescription = container is ResourceType resourceType
-                ? $"resource type '{resourceType}'"
-                : $"compound type '{container}'";
+            string containerDescription = container is ResourceType resourceType ? $"resource type '{resourceType}'" : $"compound type '{container}'";
 
             string message = result.IsFieldChainError
                 ? result.FailureMessage

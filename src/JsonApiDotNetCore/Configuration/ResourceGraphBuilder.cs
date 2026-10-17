@@ -493,8 +493,7 @@ public partial class ResourceGraphBuilder
     {
         if (inPath.Contains(currentType))
         {
-            throw new InvalidConfigurationException(
-                $"Circular reference detected: compound type '{currentType}' references itself directly or indirectly.");
+            throw new InvalidConfigurationException($"Circular reference detected: compound type '{currentType}' references itself directly or indirectly.");
         }
 
         if (!visited.Add(currentType))

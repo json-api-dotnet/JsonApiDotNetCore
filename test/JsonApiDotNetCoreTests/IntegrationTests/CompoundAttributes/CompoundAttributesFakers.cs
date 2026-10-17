@@ -1,6 +1,9 @@
 using Bogus;
 using TestBuildingBlocks;
 
+// @formatter:wrap_chained_method_calls chop_if_long
+// @formatter:wrap_before_first_method_call true
+
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
 
 internal sealed class CompoundAttributesFakers
@@ -66,11 +69,19 @@ internal sealed class CompoundAttributesFakers
             .RuleFor(root => root.Addresses, _ => ContactAddress.GenerateList(1))
             .RuleFor(root => root.EmailAddresses, faker =>
             [
-                new LabeledValue<string> { Value = faker.Internet.Email(), Label = "primary" }
+                new LabeledValue<string>
+                {
+                    Value = faker.Internet.Email(),
+                    Label = "primary"
+                }
             ])
             .RuleFor(root => root.Relations, faker =>
             [
-                new LabeledValue<string> { Value = faker.Name.FullName(), Label = "friend" }
+                new LabeledValue<string>
+                {
+                    Value = faker.Name.FullName(),
+                    Label = "friend"
+                }
             ]));
 
         _lazyContactFaker = new Lazy<Faker<Contact>>(() => new Faker<Contact>()

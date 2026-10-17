@@ -11,6 +11,8 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 [PublicAPI]
 public class SortParser : QueryExpressionParser, ISortParser
 {
+    private bool _isInsideCount;
+
     /// <inheritdoc />
     public SortExpression Parse(string source, ResourceType resourceType)
     {
@@ -91,7 +93,9 @@ public class SortParser : QueryExpressionParser, ISortParser
         else
         {
             string errorMessage = !isAscending ? "Count function or field name expected." : "-, count function or field name expected.";
-            target = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, errorMessage);
+
+            target = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType,
+                errorMessage);
         }
 
         return new SortElementExpression(target, isAscending);
@@ -123,8 +127,6 @@ public class SortParser : QueryExpressionParser, ISortParser
         throw new QueryParseException("Count function expected.", position);
     }
 
-    private bool _isInsideCount;
-
     private CountExpression ParseCount(ResourceType resourceType)
     {
         EatText(Keywords.Count);
@@ -136,8 +138,8 @@ public class SortParser : QueryExpressionParser, ISortParser
 
         try
         {
-            targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection,
-                FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, null);
+            targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection, FieldChainPatternMatchOptions.AllowDerivedTypes,
+                resourceType, null);
         }
         finally
         {

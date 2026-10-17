@@ -239,10 +239,12 @@ public sealed class ResourceFieldAttributeTests
         {
             Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.ScalarString))!
         };
+
         var listAttr = new AttrAttribute
         {
             Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.StringList))!
         };
+
         var setAttr = new AttrAttribute
         {
             Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.IntSet))!
@@ -259,6 +261,7 @@ public sealed class ResourceFieldAttributeTests
     {
         // Arrange
         var compoundType = new CompoundType(typeof(TestResource));
+
         var attribute = new AttrAttribute
         {
             IsCompound = true,

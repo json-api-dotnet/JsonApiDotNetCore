@@ -41,13 +41,12 @@ public sealed class AttrAttribute : ResourceFieldAttribute
     public bool IsCompound { get; set; }
 
     /// <summary>
-    /// Evaluates whether the underlying property is a collection.
-    /// Non-settable; evaluated on demand from <see cref="ResourceFieldAttribute.Property"/>.
+    /// Evaluates whether the underlying property is a collection. Non-settable; evaluated on demand from <see cref="ResourceFieldAttribute.Property" />.
     /// </summary>
     public bool IsCollection => _isCollectionLazy.Value;
 
     /// <summary>
-    /// The schema of the nested compound type when <see cref="IsCompound"/> is true; otherwise <c>null</c>.
+    /// The schema of the nested compound type when <see cref="IsCompound" /> is true; otherwise <c>null</c>.
     /// </summary>
     public CompoundType? CompoundType { get; internal set; }
 

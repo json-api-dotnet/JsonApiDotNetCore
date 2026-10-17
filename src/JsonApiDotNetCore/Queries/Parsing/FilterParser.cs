@@ -139,8 +139,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatText(Keywords.Count);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetCollection =
-            ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection, FieldChainPatternMatchOptions.None, ContainerInScope, null);
+        ResourceFieldChainExpression targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection,
+            FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
@@ -330,9 +330,15 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     {
         bool allowNull = RuntimeTypeConverter.CanContainNull(leftType);
 
-        string errorMessage = PrimitiveElementInScope != null
-            ? allowNull ? "Function, value between quotes, null or '_' expected." : "Function, value between quotes or '_' expected."
-            : allowNull ? "Function, field name, value between quotes or null expected." : "Function, field name or value between quotes expected.";
+        // @formatter:nested_ternary_style expanded
+        string errorMessage = allowNull
+            ? PrimitiveElementInScope != null
+                ? "Function, value between quotes, '_' or null expected."
+                : "Function, field name, value between quotes or null expected."
+            : PrimitiveElementInScope != null
+                ? "Function, value between quotes or '_' expected."
+                : "Function, field name or value between quotes expected.";
+        // @formatter:nested_ternary_style restore
 
         if (TokenStack.TryPeek(out Token? nextToken))
         {
@@ -373,7 +379,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                     throw new QueryParseException(errorMessage, nextToken.Position);
                 }
 
-                return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, errorMessage);
+                return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope,
+                    errorMessage);
             }
         }
 
@@ -443,8 +450,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None,
-            ContainerInScope, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute,
+            FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
@@ -517,8 +524,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             throw new QueryParseException("Function or '_' expected.", position);
         }
 
-        ResourceFieldChainExpression targetAttributeChain =
-            ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute,
+            FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
@@ -537,8 +544,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatText(Keywords.Has);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetCollection =
-            ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection, FieldChainPatternMatchOptions.None, ContainerInScope, null);
+        ResourceFieldChainExpression targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection,
+            FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         FilterExpression? filter = null;
 
@@ -564,8 +571,9 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             }
             else if (lastField is AttrAttribute { IsCompound: false, IsCollection: true } primitiveCollectionAttr)
             {
-                Type elementType = CollectionConverter.Instance.FindCollectionElementType(primitiveCollectionAttr.Property.PropertyType)
-                    ?? throw new InvalidOperationException($"Cannot determine element type for primitive collection attribute '{primitiveCollectionAttr.Property.Name}'.");
+                Type elementType = CollectionConverter.Instance.FindCollectionElementType(primitiveCollectionAttr.Property.PropertyType) ??
+                    throw new InvalidOperationException(
+                        $"Cannot determine element type for primitive collection attribute '{primitiveCollectionAttr.Property.Name}'.");
 
                 using (InScopeOfPrimitiveElement(elementType))
                 {

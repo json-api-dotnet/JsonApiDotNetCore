@@ -26,6 +26,22 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
     public IReadOnlyDictionary<AttrAttribute, FieldSelectors> ChildSelectors =>
         _childSelectors ?? (IReadOnlyDictionary<AttrAttribute, FieldSelectors>)ImmutableDictionary<AttrAttribute, FieldSelectors>.Empty;
 
+    public bool ContainsReadOnlyAttribute
+    {
+        get
+        {
+            return this.Any(selector => selector.Key is AttrAttribute attribute && attribute.Property.SetMethod == null);
+        }
+    }
+
+    public bool ContainsOnlyRelationships
+    {
+        get
+        {
+            return Count > 0 && this.All(selector => selector.Key is RelationshipAttribute);
+        }
+    }
+
     /// <summary>
     /// Gets child selectors for the specified compound attribute, or <c>null</c> if not present.
     /// </summary>
@@ -50,22 +66,6 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
         }
 
         return childSelectors;
-    }
-
-    public bool ContainsReadOnlyAttribute
-    {
-        get
-        {
-            return this.Any(selector => selector.Key is AttrAttribute attribute && attribute.Property.SetMethod == null);
-        }
-    }
-
-    public bool ContainsOnlyRelationships
-    {
-        get
-        {
-            return Count > 0 && this.All(selector => selector.Key is RelationshipAttribute);
-        }
     }
 
     public bool ContainsField(ResourceFieldAttribute field)

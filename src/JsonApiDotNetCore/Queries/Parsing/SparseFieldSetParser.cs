@@ -38,8 +38,8 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
                 EatSingleCharacterToken(TokenKind.Comma);
             }
 
-            ResourceFieldChainExpression nextChain =
-                ParseFieldChain(BuiltInPatterns.SparseFieldSetChain, FieldChainPatternMatchOptions.None, resourceType, "Field name expected.");
+            ResourceFieldChainExpression nextChain = ParseFieldChain(BuiltInPatterns.SparseFieldSetChain, FieldChainPatternMatchOptions.None, resourceType,
+                "Field name expected.");
 
             fieldSetBuilder.Add(nextChain);
         }
