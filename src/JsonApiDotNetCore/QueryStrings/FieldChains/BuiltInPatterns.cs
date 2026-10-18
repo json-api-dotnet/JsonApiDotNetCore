@@ -13,7 +13,7 @@ public static class BuiltInPatterns
 
     public static FieldChainPattern ToOneOrCompoundChainEndingInAttribute { get; } = FieldChainPattern.Parse("[OC]*A");
     public static FieldChainPattern ToOneOrCompoundChainEndingInAttributeOrToOneOrCompound { get; } = FieldChainPattern.Parse("[OC]*[AOC]");
-    public static FieldChainPattern ToOneOrCompoundChainEndingInCollection { get; } = FieldChainPattern.Parse("[OC]*[MPQ]");
+    public static FieldChainPattern ToOneOrCompoundChainEndingInCollection { get; } = FieldChainPattern.Parse("[OC]*[MLQ]");
     public static FieldChainPattern SparseFieldSetChain { get; } = FieldChainPattern.Parse("[CQ]*F");
 
     [Obsolete("""This is no longer used and will be removed in a future version. Instead, use: FieldChainPattern.Parse("R*M")""")]

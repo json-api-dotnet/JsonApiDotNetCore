@@ -244,7 +244,7 @@ internal sealed class PatternMatcher
             RelationshipAttribute => FieldTypes.Relationship,
             AttrAttribute { IsCompound: true, IsCollection: true } => FieldTypes.CompoundCollection,
             AttrAttribute { IsCompound: true, IsCollection: false } => FieldTypes.CompoundAttribute,
-            AttrAttribute { IsCompound: false, IsCollection: true } => FieldTypes.PrimitiveCollection,
+            AttrAttribute { IsCompound: false, IsCollection: true } => FieldTypes.ScalarCollection,
             AttrAttribute => FieldTypes.ScalarAttribute,
             null => FieldTypes.None,
             _ => FieldTypes.Field

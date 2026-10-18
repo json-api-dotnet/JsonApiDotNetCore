@@ -63,11 +63,11 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter", "expr:equals(author,'Joe')", "null expected.")]
     [InlineData("filter", "expr:has(author)",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection. " +
-        "Relationship or compound attribute or primitive collection or compound collection on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection. " +
+        "Relationship or compound attribute or scalar collection or compound collection on resource type 'webAccounts' expected.")]
     [InlineData("filter", "expr:equals(count(author),'1')",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a primitive collection or a compound collection. " +
-        "Relationship or compound attribute or primitive collection or compound collection on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection. " +
+        "Relationship or compound attribute or scalar collection or compound collection on resource type 'webAccounts' expected.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Act
