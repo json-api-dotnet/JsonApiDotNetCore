@@ -216,7 +216,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
             return typeof(int);
         }
 
-        if (expression is ElementValueExpression elementValue)
+        if (expression is CollectionElementValueExpression elementValue)
         {
             return elementValue.ElementType;
         }
@@ -252,7 +252,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
         return SystemExpressionBuilder.CloseOver(expression.TypedValue);
     }
 
-    public override Expression VisitElementValue(ElementValueExpression expression, QueryClauseBuilderContext context)
+    public override Expression VisitCollectionElementValue(CollectionElementValueExpression expression, QueryClauseBuilderContext context)
     {
         return context.LambdaScope.Accessor;
     }

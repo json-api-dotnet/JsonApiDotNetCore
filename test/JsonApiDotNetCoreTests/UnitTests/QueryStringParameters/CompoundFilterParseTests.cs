@@ -85,9 +85,9 @@ public sealed class CompoundFilterParseTests
     [InlineData("filter", "equals(details.^unknown,'x')", "Field 'unknown' does not exist on compound type 'CompoundRoot'.")]
     [InlineData("filter", "has(details.numbers,equals(_,^null))", "Function, value between quotes or '_' expected.")]
     [InlineData("filter", "has(tags,equals(^unknown,'work'))", "Function or '_' expected.")]
-    [InlineData("filter", "has(tags,^has(tags,equals(_,'w')))", "Function 'has' cannot be used on primitive collection elements.")]
-    [InlineData("filter", "has(tags,equals(^count(tags),'1'))", "Function 'count' cannot be used on primitive collection elements.")]
-    [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' cannot be used on primitive collection elements.")]
+    [InlineData("filter", "has(tags,^has(tags,equals(_,'w')))", "Function 'has' cannot be used on scalar collection elements.")]
+    [InlineData("filter", "has(tags,equals(^count(tags),'1'))", "Function 'count' cannot be used on scalar collection elements.")]
+    [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' cannot be used on scalar collection elements.")]
     public void Reader_Read_Compound_Filter_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -110,11 +110,11 @@ public sealed class CompoundFilterParseTests
     }
 
     [Fact]
-    public void ElementValueExpression_Properties_And_Equality()
+    public void CollectionElementValueExpression_Properties_And_Equality()
     {
-        var expr1 = new ElementValueExpression(typeof(string));
-        var expr2 = new ElementValueExpression(typeof(string));
-        var expr3 = new ElementValueExpression(typeof(int));
+        var expr1 = new CollectionElementValueExpression(typeof(string));
+        var expr2 = new CollectionElementValueExpression(typeof(string));
+        var expr3 = new CollectionElementValueExpression(typeof(int));
 
         expr1.ElementType.Should().Be<string>();
         expr1.ToString().Should().Be("_");
@@ -123,7 +123,7 @@ public sealed class CompoundFilterParseTests
         expr1.GetHashCode().Should().Be(expr2.GetHashCode());
         expr1.Should().NotBe(expr3);
 
-        Action createWithNull = () => _ = new ElementValueExpression(null!);
+        Action createWithNull = () => _ = new CollectionElementValueExpression(null!);
         createWithNull.Should().ThrowExactly<ArgumentNullException>();
     }
 
