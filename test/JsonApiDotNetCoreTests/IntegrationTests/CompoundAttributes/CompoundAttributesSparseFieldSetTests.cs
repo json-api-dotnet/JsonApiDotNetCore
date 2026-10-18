@@ -247,4 +247,152 @@ public sealed class CompoundAttributesSparseFieldSetTests
             favorite.TryGetProperty("company", out _).Should().BeFalse();
         }
     }
+
+    [Fact]
+    public async Task Can_select_multiple_sibling_properties_in_sparse_fieldsets()
+    {
+        // Arrange
+        Contact contact = _fakers.Contact.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/contacts/{contact.StringId}?fields[contacts]=content.name.firstName,content.name.lastName";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+
+        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
+        JsonElement content = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
+
+        content.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
+        nameElement.GetProperty("firstName").GetString().Should().Be(contact.Content.Name.FirstName);
+        nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
+        nameElement.TryGetProperty("middleName", out _).Should().BeFalse();
+        content.TryGetProperty("company", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Can_select_properties_across_different_compound_branches()
+    {
+        // Arrange
+        Contact contact = _fakers.Contact.Generate();
+        contact.Content.Company = new ContactCompany
+        {
+            Name = "Acme Corp",
+            Department = "Engineering"
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/contacts/{contact.StringId}?fields[contacts]=content.name.lastName,content.company.name";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+
+        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
+        JsonElement content = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
+
+        content.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
+        nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
+        nameElement.TryGetProperty("firstName", out _).Should().BeFalse();
+
+        content.TryGetProperty("company", out JsonElement companyElement).Should().BeTrue();
+        companyElement.GetProperty("name").GetString().Should().Be(contact.Content.Company!.Name);
+        companyElement.TryGetProperty("department", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Can_combine_sparse_fieldsets_with_relationship_includes()
+    {
+        // Arrange
+        AddressBook addressBook = _fakers.AddressBook.Generate();
+        Contact contact = _fakers.Contact.Generate();
+        contact.AddressBook = addressBook;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            await dbContext.ClearTableAsync<AddressBook>();
+            dbContext.AddressBooks.Add(addressBook);
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/contacts/{contact.StringId}?include=addressBook&fields[contacts]=content.name.lastName,addressBook&fields[addressBooks]=name";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Attributes.Should().ContainKey("name");
+        responseDocument.Included[0].Attributes.Should().NotContainKey("categories");
+
+        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
+        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
+        JsonElement content = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
+
+        content.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
+        nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
+        nameElement.TryGetProperty("firstName", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Selecting_only_relationships_implicitly_materializes_compound_properties()
+    {
+        // Arrange
+        AddressBook addressBook = _fakers.AddressBook.Generate();
+        Contact contact = _fakers.Contact.Generate();
+        contact.AddressBook = addressBook;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            await dbContext.ClearTableAsync<AddressBook>();
+            dbContext.AddressBooks.Add(addressBook);
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/contacts/{contact.StringId}?fields[contacts]=addressBook";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("addressBook");
+        responseDocument.Data.SingleValue.Attributes.Should().BeNull();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Contact contactInDatabase = await dbContext.Contacts.FirstWithIdAsync(contact.Id);
+            contactInDatabase.Content.Should().NotBeNull();
+            contactInDatabase.Content.Name.Should().NotBeNull();
+            contactInDatabase.Content.Name.LastName.Should().Be(contact.Content.Name.LastName);
+        });
+    }
 }
