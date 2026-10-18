@@ -286,6 +286,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
     {
         // Arrange
         Contact contact = _fakers.Contact.Generate();
+
         contact.Content.Company = new ContactCompany
         {
             Name = "Acme Corp",

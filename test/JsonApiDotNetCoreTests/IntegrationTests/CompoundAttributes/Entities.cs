@@ -110,7 +110,13 @@ public sealed class ContactName
 
     // Calculated read-only property (get-only; no setter)
     [Attr]
-    public string DisplayName => string.Join(' ', new[] { FirstName, MiddleName, LastName }.Where(s => !string.IsNullOrEmpty(s)));
+    public string DisplayName =>
+        string.Join(' ', new[]
+        {
+            FirstName,
+            MiddleName,
+            LastName
+        }.Where(s => !string.IsNullOrEmpty(s)));
 
     // Restricted capability: AllowCreate blocked (POST returns 422, PATCH allowed)
     [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
