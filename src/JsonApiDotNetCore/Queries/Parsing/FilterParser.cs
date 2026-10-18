@@ -287,8 +287,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         // Allow equality comparison of a to-one relationship or compound attribute with null.
         FieldChainPattern pattern = comparisonOperator == ComparisonOperator.Equals
-            ? BuiltInPatterns.ToOneOrCompoundChainEndingInAttributeOrToOneOrCompound
-            : BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute;
+            ? BuiltInPatterns.ToOneOrCompoundChainEndingInScalarOrCompoundAttributeOrToOne
+            : BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute;
 
         return ParseFieldChain(pattern, FieldChainPatternMatchOptions.None, ContainerInScope, "Function or field name expected.");
     }
@@ -379,7 +379,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                     throw new QueryParseException(errorMessage, nextToken.Position);
                 }
 
-                return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope,
+                return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, FieldChainPatternMatchOptions.None, ContainerInScope,
                     errorMessage);
             }
         }
@@ -450,7 +450,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute,
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
             FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
@@ -526,7 +526,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             throw new QueryParseException("Function or '_' expected.", position);
         }
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute,
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
             FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
