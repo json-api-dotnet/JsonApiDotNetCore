@@ -157,12 +157,14 @@ public sealed class ResourceType : IAttributeContainer
         }
     }
 
+    /// <inheritdoc />
     public AttrAttribute GetAttributeByPublicName(string publicName)
     {
         AttrAttribute? attribute = FindAttributeByPublicName(publicName);
         return attribute ?? throw new InvalidOperationException($"Attribute '{publicName}' does not exist on resource type '{PublicName}'.");
     }
 
+    /// <inheritdoc />
     public AttrAttribute? FindAttributeByPublicName(string publicName)
     {
         ArgumentNullException.ThrowIfNull(publicName);
@@ -170,12 +172,14 @@ public sealed class ResourceType : IAttributeContainer
         return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute? field) && field is AttrAttribute attribute ? attribute : null;
     }
 
+    /// <inheritdoc />
     public AttrAttribute GetAttributeByPropertyName(string propertyName)
     {
         AttrAttribute? attribute = FindAttributeByPropertyName(propertyName);
         return attribute ?? throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
     }
 
+    /// <inheritdoc />
     public AttrAttribute? FindAttributeByPropertyName(string propertyName)
     {
         ArgumentNullException.ThrowIfNull(propertyName);

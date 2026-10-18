@@ -32,9 +32,7 @@ public sealed class CompoundType : IAttributeContainer
         }
     }
 
-    /// <summary>
-    /// Gets the attribute for the specified publicly exposed name. Throws an <see cref="InvalidOperationException" /> when not found.
-    /// </summary>
+    /// <inheritdoc />
     public AttrAttribute GetAttributeByPublicName(string publicName)
     {
         AttrAttribute? attribute = FindAttributeByPublicName(publicName);
@@ -49,9 +47,7 @@ public sealed class CompoundType : IAttributeContainer
         return _attributesByPublicName.GetValueOrDefault(publicName);
     }
 
-    /// <summary>
-    /// Gets the attribute for the specified property name. Throws an <see cref="InvalidOperationException" /> when not found.
-    /// </summary>
+    /// <inheritdoc />
     public AttrAttribute GetAttributeByPropertyName(string propertyName)
     {
         AttrAttribute? attribute = FindAttributeByPropertyName(propertyName);
