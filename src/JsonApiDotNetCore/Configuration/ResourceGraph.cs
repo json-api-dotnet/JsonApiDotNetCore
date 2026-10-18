@@ -115,11 +115,23 @@ public sealed class ResourceGraph : IResourceGraph
     }
 
     /// <inheritdoc />
+    public CompoundType GetCompoundType<TCompound>()
+    {
+        return GetCompoundType(typeof(TCompound));
+    }
+
+    /// <inheritdoc />
     public CompoundType? FindCompoundType(Type clrType)
     {
         ArgumentNullException.ThrowIfNull(clrType);
 
         return _compoundTypesByClrType.GetValueOrDefault(clrType);
+    }
+
+    /// <inheritdoc />
+    public CompoundType? FindCompoundType<TCompound>()
+    {
+        return FindCompoundType(typeof(TCompound));
     }
 
     private bool IsLazyLoadingProxyForResourceType(Type resourceClrType)
@@ -132,6 +144,13 @@ public sealed class ResourceGraph : IResourceGraph
         where TResource : class, IIdentifiable
     {
         return GetResourceType(typeof(TResource));
+    }
+
+    /// <inheritdoc />
+    public ResourceType? FindResourceType<TResource>()
+        where TResource : class, IIdentifiable
+    {
+        return FindResourceType(typeof(TResource));
     }
 
     /// <inheritdoc />
