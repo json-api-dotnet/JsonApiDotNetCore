@@ -154,6 +154,12 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
 
+        foreach (IReadOnlyComplexProperty complexProperty in entityType.GetComplexProperties())
+        {
+            var propertySelector = new PropertySelector(complexProperty.PropertyInfo!);
+            IncludeWritableProperty(propertySelector, propertySelectors);
+        }
+
         foreach (IReadOnlyNavigation navigation in entityType.GetNavigations()
             .Where(navigation => navigation.ForeignKey.IsOwnership && !navigation.IsShadowProperty()))
         {
