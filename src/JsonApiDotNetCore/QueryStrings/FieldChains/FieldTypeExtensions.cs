@@ -39,12 +39,12 @@ internal static class FieldTypeExtensions
             WriteChoice("compound attribute", pluralize, prefix, false, builder, startOffset);
         }
 
-        if (choices.HasFlag(FieldTypes.ScalarCollection))
+        if (choices.HasFlag(FieldTypes.ScalarCollectionAttribute))
         {
             WriteChoice("scalar collection", pluralize, prefix, false, builder, startOffset);
         }
 
-        if (choices.HasFlag(FieldTypes.CompoundCollection))
+        if (choices.HasFlag(FieldTypes.CompoundCollectionAttribute))
         {
             WriteChoice("compound collection", pluralize, prefix, false, builder, startOffset);
         }
