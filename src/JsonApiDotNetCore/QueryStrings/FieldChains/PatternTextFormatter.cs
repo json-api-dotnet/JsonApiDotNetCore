@@ -68,12 +68,12 @@ internal sealed class PatternTextFormatter
             builder.Append('C');
         }
 
-        if (types.HasFlag(FieldTypes.ScalarCollection))
+        if (types.HasFlag(FieldTypes.ScalarCollectionAttribute))
         {
             builder.Append('L');
         }
 
-        if (types.HasFlag(FieldTypes.CompoundCollection))
+        if (types.HasFlag(FieldTypes.CompoundCollectionAttribute))
         {
             builder.Append('Q');
         }
