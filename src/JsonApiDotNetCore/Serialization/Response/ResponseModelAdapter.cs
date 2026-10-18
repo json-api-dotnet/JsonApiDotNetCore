@@ -277,23 +277,22 @@ public class ResponseModelAdapter : IResponseModelAdapter
                     .Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(attr))
                     .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0))).ToList();
 
-                if (subChains.Count > 0)
+                var context = new CompoundSelectionContext(subChains.Count > 0 ? subChains : null);
+
+                if (attr.IsCollection && value is IEnumerable collection)
                 {
-                    if (attr.IsCollection && value is IEnumerable collection)
-                    {
-                        var prunedList = new List<object?>();
+                    var prunedList = new List<object?>();
 
-                        foreach (object item in collection)
-                        {
-                            prunedList.Add(PruneCompoundObject(item, attr.CompoundType!, subChains));
-                        }
-
-                        value = prunedList;
-                    }
-                    else
+                    foreach (object? item in collection)
                     {
-                        value = PruneCompoundObject(value, attr.CompoundType!, subChains);
+                        prunedList.Add(item == null ? null : ConvertCompoundObject(item, attr.CompoundType!, context));
                     }
+
+                    value = prunedList;
+                }
+                else
+                {
+                    value = ConvertCompoundObject(value, attr.CompoundType!, context);
                 }
             }
 
@@ -303,15 +302,19 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return attrMap.Count > 0 ? attrMap : null;
     }
 
-    private Dictionary<string, object?> PruneCompoundObject(object compoundInstance, CompoundType compoundType,
-        IReadOnlyList<ResourceFieldChainExpression> fieldChains)
+    private Dictionary<string, object?> ConvertCompoundObject(object compoundInstance, CompoundType compoundType,
+        CompoundSelectionContext context)
     {
         var prunedMap = new Dictionary<string, object?>();
-        HashSet<ResourceFieldAttribute> directFields = fieldChains.Select(c => c.Fields[0]).ToHashSet();
 
         foreach (AttrAttribute childAttr in compoundType.Attributes)
         {
-            if (!directFields.Contains(childAttr))
+            if (childAttr.IsViewBlocked())
+            {
+                continue;
+            }
+
+            if (context.DirectFields != null && !context.DirectFields.Contains(childAttr))
             {
                 continue;
             }
@@ -331,26 +334,23 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
             if (childValue != null && childAttr.IsCompound)
             {
-                List<ResourceFieldChainExpression> deeperChains = fieldChains.Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(childAttr))
-                    .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0))).ToList();
+                List<ResourceFieldChainExpression>? deeperChains = context.DeeperChainsByAttribute?.GetValueOrDefault(childAttr);
+                var childContext = new CompoundSelectionContext(deeperChains);
 
-                if (deeperChains.Count > 0)
+                if (childAttr.IsCollection && childValue is IEnumerable collection)
                 {
-                    if (childAttr.IsCollection && childValue is IEnumerable collection)
-                    {
-                        var prunedList = new List<object?>();
+                    var prunedList = new List<object?>();
 
-                        foreach (object item in collection)
-                        {
-                            prunedList.Add(PruneCompoundObject(item, childAttr.CompoundType!, deeperChains));
-                        }
-
-                        childValue = prunedList;
-                    }
-                    else
+                    foreach (object? item in collection)
                     {
-                        childValue = PruneCompoundObject(childValue, childAttr.CompoundType!, deeperChains);
+                        prunedList.Add(item == null ? null : ConvertCompoundObject(item, childAttr.CompoundType!, childContext));
                     }
+
+                    childValue = prunedList;
+                }
+                else
+                {
+                    childValue = ConvertCompoundObject(childValue, childAttr.CompoundType!, childContext);
                 }
             }
 
@@ -358,6 +358,24 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
 
         return prunedMap;
+    }
+
+    private readonly struct CompoundSelectionContext
+    {
+        public HashSet<ResourceFieldAttribute>? DirectFields { get; }
+        public Dictionary<ResourceFieldAttribute, List<ResourceFieldChainExpression>>? DeeperChainsByAttribute { get; }
+
+        public CompoundSelectionContext(IReadOnlyList<ResourceFieldChainExpression>? fieldChains)
+        {
+            if (fieldChains is { Count: > 0 })
+            {
+                DirectFields = fieldChains.Select(c => c.Fields[0]).ToHashSet();
+                DeeperChainsByAttribute = fieldChains
+                    .Where(c => c.Fields.Count > 1)
+                    .GroupBy(c => c.Fields[0])
+                    .ToDictionary(g => g.Key, g => g.Select(c => new ResourceFieldChainExpression(c.Fields.RemoveAt(0))).ToList());
+            }
+        }
     }
 
     private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,
