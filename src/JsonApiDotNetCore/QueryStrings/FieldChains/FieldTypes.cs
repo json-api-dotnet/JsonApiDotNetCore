@@ -8,9 +8,9 @@ internal enum FieldTypes
     ToOneRelationship = 1 << 1,
     ToManyRelationship = 1 << 2,
     CompoundAttribute = 1 << 3,
-    PrimitiveCollection = 1 << 4,
+    ScalarCollection = 1 << 4,
     CompoundCollection = 1 << 5,
 
     Relationship = ToOneRelationship | ToManyRelationship,
-    Field = ScalarAttribute | Relationship | CompoundAttribute | PrimitiveCollection | CompoundCollection
+    Field = ScalarAttribute | Relationship | CompoundAttribute | ScalarCollection | CompoundCollection
 }

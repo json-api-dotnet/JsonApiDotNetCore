@@ -16,7 +16,7 @@ public sealed class FieldChainPattern
     public const char RelationshipToken = 'R';
     public const char AttributeToken = 'A';
     public const char CompoundAttributeToken = 'C';
-    public const char PrimitiveCollectionToken = 'P';
+    public const char ScalarCollectionToken = 'L';
     public const char CompoundCollectionToken = 'Q';
     public const char FieldToken = 'F';
 
@@ -93,9 +93,9 @@ public sealed class FieldChainPattern
     /// </description>
     /// </item>
     /// <item>
-    /// <term>P</term>
+    /// <term>L</term>
     /// <description>
-    /// Matches a primitive collection.
+    /// Matches a scalar collection.
     /// </description>
     /// </item>
     /// <item>

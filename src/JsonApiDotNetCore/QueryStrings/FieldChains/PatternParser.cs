@@ -17,7 +17,7 @@ internal sealed class PatternParser
         ['R'] = Token.Relationship,
         ['A'] = Token.ScalarAttribute,
         ['C'] = Token.CompoundAttribute,
-        ['P'] = Token.PrimitiveCollection,
+        ['L'] = Token.ScalarCollection,
         ['Q'] = Token.CompoundCollection,
         ['F'] = Token.Field
     };
@@ -29,7 +29,7 @@ internal sealed class PatternParser
         [Token.Relationship] = FieldTypes.Relationship,
         [Token.ScalarAttribute] = FieldTypes.ScalarAttribute,
         [Token.CompoundAttribute] = FieldTypes.CompoundAttribute,
-        [Token.PrimitiveCollection] = FieldTypes.PrimitiveCollection,
+        [Token.ScalarCollection] = FieldTypes.ScalarCollection,
         [Token.CompoundCollection] = FieldTypes.CompoundCollection,
         [Token.Field] = FieldTypes.Field
     };
@@ -188,7 +188,7 @@ internal sealed class PatternParser
         Relationship,
         ScalarAttribute,
         CompoundAttribute,
-        PrimitiveCollection,
+        ScalarCollection,
         CompoundCollection,
         Field
     }
