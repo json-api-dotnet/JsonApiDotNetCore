@@ -339,9 +339,9 @@ public sealed class QueryExpressionTests
             return new CountExpression(ResourceFieldChainForChildren());
         }
 
-        public ElementValueExpression ElementValue()
+        public CollectionElementValueExpression ElementValue()
         {
-            return new ElementValueExpression(typeof(string));
+            return new CollectionElementValueExpression(typeof(string));
         }
 
         public HasExpression Has()
