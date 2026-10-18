@@ -72,15 +72,6 @@ public abstract class QueryExpressionParser
     /// <summary>
     /// Parses a dot-separated path of field names into a chain of resource fields, while matching it against the specified pattern.
     /// </summary>
-    protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ResourceType resourceType,
-        string? alternativeErrorMessage)
-    {
-        return ParseFieldChain(pattern, options, (IAttributeContainer)resourceType, alternativeErrorMessage);
-    }
-
-    /// <summary>
-    /// Parses a dot-separated path of field names into a chain of resource fields, while matching it against the specified pattern.
-    /// </summary>
     protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, IAttributeContainer container,
         string? alternativeErrorMessage)
     {
