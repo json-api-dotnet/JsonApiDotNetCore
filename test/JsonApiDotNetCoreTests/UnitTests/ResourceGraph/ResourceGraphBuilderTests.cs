@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging;
@@ -512,6 +513,35 @@ public sealed class ResourceGraphBuilderTests
 
         Action action = () => resourceGraph.GetCompoundType<string>();
         action.Should().ThrowExactly<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void GetFieldChain_and_GetFieldChains_resolve_nested_compound_chains_and_fail_on_invalid_expressions()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<ResourceWithCompoundAttributes, long>();
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Act
+        ResourceFieldChainExpression singleChain = resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => x.Content!.Name!.FirstName);
+        IReadOnlyCollection<ResourceFieldChainExpression> multiChains = resourceGraph.GetFieldChains<ResourceWithCompoundAttributes>(
+            x => new { x.Content!.Name!.FirstName, x.Content.PhoneNumbers });
+
+        // Assert
+        singleChain.ToString().Should().Be("content.name.firstName");
+        singleChain.Fields.Should().HaveCount(3);
+
+        multiChains.Should().HaveCount(2);
+        multiChains.Select(c => c.ToString()).Should().BeEquivalentTo(["content.name.firstName", "content.phoneNumbers"]);
+
+        Action multipleInSingleAction = () => resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(
+            x => new { x.Content!.Name!.FirstName, x.Content.PhoneNumbers });
+        multipleInSingleAction.Should().ThrowExactly<ArgumentException>();
+
+        Action invalidPropertyAction = () => resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => x.Id.ToString());
+        invalidPropertyAction.Should().ThrowExactly<ArgumentException>();
     }
 
     [Fact]

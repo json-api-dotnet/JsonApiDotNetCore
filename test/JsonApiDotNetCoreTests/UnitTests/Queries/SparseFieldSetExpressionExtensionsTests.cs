@@ -101,6 +101,58 @@ public sealed class SparseFieldSetExpressionExtensionsTests
     }
 
     [Fact]
+    public void Including_accepts_nested_lambda_chain_and_preserves_it()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
+        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet!.FieldChains.Should().HaveCount(2);
+        updatedSet.ToString().Should().Be("content.name.lastName,remarks");
+    }
+
+    [Fact]
+    public void Excluding_accepts_nested_lambda_chain()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
+        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)))
+            .Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Excluding<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet!.FieldChains.Should().HaveCount(1);
+        updatedSet.ToString().Should().Be("remarks");
+    }
+
+    [Fact]
+    public void Including_accepts_anonymous_type_with_nested_and_top_level_lambdas()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
+        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => new { c.Remarks, c.Content!.Name!.LastName }, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet!.FieldChains.Should().HaveCount(2);
+        updatedSet.ToString().Should().Be("content.name.lastName,remarks");
+    }
+
+    [Fact]
     public void Including_or_Excluding_when_null_returns_null()
     {
         SparseFieldSetExpression? nullSet = null;
