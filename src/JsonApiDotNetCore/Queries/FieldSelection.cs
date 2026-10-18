@@ -58,22 +58,24 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
             foreach (ResourceType type in GetResourceTypes())
             {
                 writer.WriteLine($"{nameof(FieldSelectors)}<{type.ClrType.Name}>");
-                WriterSelectors(writer, toFullString, type);
+                WriteSelectors(writer, toFullString, type);
             }
         }
     }
 
-    private void WriterSelectors(IndentingStringWriter writer, bool toFullString, ResourceType type)
+    private void WriteSelectors(IndentingStringWriter writer, bool toFullString, ResourceType type)
     {
+        FieldSelectors selectors = GetOrCreateSelectors(type);
+
         using (writer.Indent())
         {
-            foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in GetOrCreateSelectors(type))
+            foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in selectors)
             {
                 if (nextLayer == null)
                 {
                     writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
 
-                    if (field is AttrAttribute attr && GetOrCreateSelectors(type).GetChildSelectors(attr) is { } childSelectors)
+                    if (field is AttrAttribute attr && selectors.GetChildSelectors(attr) is { } childSelectors)
                     {
                         WriteChildSelectors(writer, toFullString, childSelectors);
                     }
