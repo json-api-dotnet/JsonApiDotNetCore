@@ -1,6 +1,5 @@
 using System.Net;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -94,17 +93,33 @@ public sealed class InvalidModelStateException(
 
     private static string? ResolveSourcePointerInComplexType(PropertySegment segment, IResourceGraph resourceGraph)
     {
-        PropertyInfo? property = segment.ModelType.GetProperty(segment.PropertyName);
+        CompoundType? compoundType = resourceGraph.FindCompoundType(segment.ModelType);
+        AttrAttribute? attribute = compoundType?.FindAttributeByPropertyName(segment.PropertyName);
 
-        if (property == null)
+        string publicName;
+        Type propertyType;
+
+        if (attribute != null)
         {
-            return null;
+            publicName = attribute.PublicName;
+            propertyType = attribute.Property.PropertyType;
+        }
+        else
+        {
+            PropertyInfo? property = segment.ModelType.GetProperty(segment.PropertyName);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            publicName = property.Name;
+            propertyType = property.PropertyType;
         }
 
-        string publicName = PropertySegment.GetPublicNameForProperty(property);
         string? sourcePointer = segment.SourcePointer != null ? $"{segment.SourcePointer}/{publicName}" : null;
 
-        ModelStateKeySegment? nextSegment = segment.GetNextSegment(property.PropertyType, true, sourcePointer);
+        ModelStateKeySegment? nextSegment = segment.GetNextSegment(propertyType, true, sourcePointer);
         return nextSegment != null ? ResolveSourcePointer(nextSegment, resourceGraph) : sourcePointer;
     }
 
@@ -353,14 +368,6 @@ public sealed class InvalidModelStateException(
             ArgumentNullException.ThrowIfNull(propertyName);
 
             PropertyName = propertyName;
-        }
-
-        public static string GetPublicNameForProperty(PropertyInfo property)
-        {
-            ArgumentNullException.ThrowIfNull(property);
-
-            var jsonNameAttribute = property.GetCustomAttribute<JsonPropertyNameAttribute>(true);
-            return jsonNameAttribute?.Name ?? property.Name;
         }
     }
 }
