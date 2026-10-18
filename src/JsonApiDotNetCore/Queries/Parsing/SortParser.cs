@@ -94,7 +94,7 @@ public class SortParser : QueryExpressionParser, ISortParser
         {
             string errorMessage = !isAscending ? "Count function or field name expected." : "-, count function or field name expected.";
 
-            target = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType,
+            target = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType,
                 errorMessage);
         }
 

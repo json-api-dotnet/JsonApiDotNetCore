@@ -73,7 +73,7 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
             return function;
         }
 
-        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None,
+        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInScalarAttribute, FieldChainPatternMatchOptions.None,
             ResourceTypeInScope, null);
 
         var attrAttribute = (AttrAttribute)fieldChain.Fields[^1];
