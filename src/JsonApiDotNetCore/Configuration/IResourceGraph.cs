@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -114,5 +115,36 @@ public interface IResourceGraph
     /// ]]>
     /// </param>
     IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, object?>> selector)
+        where TResource : class, IIdentifiable;
+
+    /// <summary>
+    /// Resolves the specified property chain selector into a <see cref="ResourceFieldChainExpression" />.
+    /// </summary>
+    /// <typeparam name="TResource">
+    /// The resource CLR type for which to resolve the field chain.
+    /// </typeparam>
+    /// <param name="selector">
+    /// Should be of the form: <![CDATA[
+    /// (TResource resource) => resource.Field1.ChildField2
+    /// ]]>
+    /// </param>
+    ResourceFieldChainExpression GetFieldChain<TResource>(Expression<Func<TResource, object?>> selector)
+        where TResource : class, IIdentifiable;
+
+    /// <summary>
+    /// Resolves the specified property chain selector into a collection of <see cref="ResourceFieldChainExpression" />s.
+    /// </summary>
+    /// <typeparam name="TResource">
+    /// The resource CLR type for which to resolve field chains.
+    /// </typeparam>
+    /// <param name="selector">
+    /// Should be of the form: <![CDATA[
+    /// (TResource resource) => resource.Field1.ChildField2
+    /// ]]>
+    /// or: <![CDATA[
+    /// (TResource resource) => new { resource.Field1, resource.Field2.ChildField3 }
+    /// ]]>
+    /// </param>
+    IReadOnlyCollection<ResourceFieldChainExpression> GetFieldChains<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable;
 }
