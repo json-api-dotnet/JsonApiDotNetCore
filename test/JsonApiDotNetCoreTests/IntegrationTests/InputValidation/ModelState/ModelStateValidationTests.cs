@@ -581,7 +581,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
         error2.Source.Should().NotBeNull();
-        error2.Source.Pointer.Should().Be("/data/relationships/subdirectories/data[0]/id");
+        error2.Source.Pointer.Should().Be("/data/relationships/subdirectories/data/0/id");
     }
 
     [Fact]

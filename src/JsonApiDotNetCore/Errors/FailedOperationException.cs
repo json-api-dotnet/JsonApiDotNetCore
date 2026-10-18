@@ -17,6 +17,6 @@ public sealed class FailedOperationException(int? operationIndex, Exception inne
         Detail = innerException.Message,
         Source = new ErrorSource
         {
-            Pointer = operationIndex != null ? $"/atomic:operations[{operationIndex}]" : "/atomic:operations"
+            Pointer = operationIndex != null ? $"/atomic:operations/{operationIndex}" : "/atomic:operations"
         }
     }, innerException);

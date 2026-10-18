@@ -309,7 +309,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/data[0]");
+        error.Source.Pointer.Should().Be("/data/0");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -352,7 +352,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/data[0]/type");
+        error.Source.Pointer.Should().Be("/data/0/type");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -394,7 +394,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/data[0]");
+        error.Source.Pointer.Should().Be("/data/0");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -709,7 +709,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'userAccounts' is not convertible to type 'workTags' of relationship 'tags'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/data[0]/type");
+        error.Source.Pointer.Should().Be("/data/0/type");
         error.Meta.Should().HaveRequestBody();
     }
 

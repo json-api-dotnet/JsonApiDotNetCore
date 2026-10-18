@@ -62,7 +62,7 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'remove' resource operation is not accessible for resource type 'textLanguages'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
     }
 
     [Fact]
@@ -154,20 +154,20 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
         error1.Title.Should().Be("The requested operation is not accessible.");
         error1.Detail.Should().Be("The 'update' relationship operation is not accessible for relationship 'lyrics' on resource type 'textLanguages'.");
         error1.Source.Should().NotBeNull();
-        error1.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error1.Source.Pointer.Should().Be("/atomic:operations/0");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error2.Title.Should().Be("The requested operation is not accessible.");
         error2.Detail.Should().Be("The 'add' relationship operation is not accessible for relationship 'lyrics' on resource type 'textLanguages'.");
         error2.Source.Should().NotBeNull();
-        error2.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error2.Source.Pointer.Should().Be("/atomic:operations/1");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error3.Title.Should().Be("The requested operation is not accessible.");
         error3.Detail.Should().Be("The 'remove' relationship operation is not accessible for relationship 'lyrics' on resource type 'textLanguages'.");
         error3.Source.Should().NotBeNull();
-        error3.Source.Pointer.Should().Be("/atomic:operations[2]");
+        error3.Source.Pointer.Should().Be("/atomic:operations/2");
     }
 }

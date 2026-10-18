@@ -29,7 +29,7 @@ public sealed class RequestAdapterPosition
 
     public IDisposable PushArrayIndex(int index)
     {
-        _stack.Push($"[{index}]");
+        _stack.Push($"/{index}");
         return _disposable;
     }
 

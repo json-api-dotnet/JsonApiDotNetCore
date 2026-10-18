@@ -142,7 +142,7 @@ public sealed class AtomicRetryTests : IClassFixture<IntegrationTestContext<Test
         error.Title.Should().Be("An unhandled error occurred while processing an operation in this request.");
         error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

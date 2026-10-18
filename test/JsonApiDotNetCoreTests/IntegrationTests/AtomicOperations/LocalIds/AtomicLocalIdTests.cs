@@ -367,7 +367,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Local ID cannot be both defined and used within the same operation.");
         error.Detail.Should().Be("Local ID 'company-1' cannot be both defined and used within the same operation.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
     }
 
     [Fact]
@@ -434,7 +434,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Another local ID with the same name is already defined at this point.");
         error.Detail.Should().Be("Another local ID with name 'playlist-1' is already defined at this point.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[2]");
+        error.Source.Pointer.Should().Be("/atomic:operations/2");
     }
 
     [Fact]
@@ -1877,7 +1877,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
         error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
     }
 
     [Fact]
@@ -1927,7 +1927,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
         error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
     }
 
     [Fact]
@@ -1991,7 +1991,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
         error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
     }
 
     [Fact]
@@ -2054,7 +2054,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
         error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
     }
 
     [Fact]
@@ -2120,7 +2120,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
         error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
     }
 
     [Fact]
@@ -2185,7 +2185,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Incompatible type in Local ID usage.");
         error.Detail.Should().Be("Local ID 'track-1' belongs to resource type 'musicTracks' instead of 'recordCompanies'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
     }
 
     [Fact]
@@ -2249,7 +2249,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Incompatible type in Local ID usage.");
         error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'musicTracks'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[2]");
+        error.Source.Pointer.Should().Be("/atomic:operations/2");
     }
 
     [Fact]
@@ -2310,7 +2310,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Incompatible type in Local ID usage.");
         error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'playlists'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[2]");
+        error.Source.Pointer.Should().Be("/atomic:operations/2");
     }
 
     [Fact]
@@ -2391,7 +2391,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Incompatible type in Local ID usage.");
         error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'performers'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[2]");
+        error.Source.Pointer.Should().Be("/atomic:operations/2");
     }
 
     [Fact]
@@ -2470,7 +2470,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Incompatible type in Local ID usage.");
         error.Detail.Should().Be("Local ID 'playlist-1' belongs to resource type 'playlists' instead of 'recordCompanies'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[2]");
+        error.Source.Pointer.Should().Be("/atomic:operations/2");
     }
 
     [Fact]
@@ -2546,6 +2546,6 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("Incompatible type in Local ID usage.");
         error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'musicTracks'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[2]");
+        error.Source.Pointer.Should().Be("/atomic:operations/2");
     }
 }

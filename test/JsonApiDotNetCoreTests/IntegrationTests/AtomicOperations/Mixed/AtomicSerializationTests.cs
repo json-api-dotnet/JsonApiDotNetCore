@@ -177,7 +177,7 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
                   "title": "The requested resource does not exist.",
                   "detail": "Resource of type 'musicTracks' with ID '{{musicTrackId}}' does not exist.",
                   "source": {
-                    "pointer": "/atomic:operations[0]"
+                    "pointer": "/atomic:operations/0"
                   }
                 }
               ]
