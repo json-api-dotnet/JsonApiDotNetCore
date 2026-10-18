@@ -19,9 +19,9 @@ public static class SparseFieldSetExpressionExtensions
 
         SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
 
-        foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
+        foreach (ResourceFieldChainExpression chain in resourceGraph.GetFieldChains(fieldSelector))
         {
-            newSparseFieldSet = IncludeField(newSparseFieldSet, field);
+            newSparseFieldSet = IncludeFieldChain(newSparseFieldSet, chain);
         }
 
         return newSparseFieldSet;
@@ -60,9 +60,9 @@ public static class SparseFieldSetExpressionExtensions
 
         SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
 
-        foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
+        foreach (ResourceFieldChainExpression chain in resourceGraph.GetFieldChains(fieldSelector))
         {
-            newSparseFieldSet = ExcludeField(newSparseFieldSet, field);
+            newSparseFieldSet = ExcludeFieldChain(newSparseFieldSet, chain);
         }
 
         return newSparseFieldSet;
