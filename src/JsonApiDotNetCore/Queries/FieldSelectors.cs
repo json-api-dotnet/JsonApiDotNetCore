@@ -82,19 +82,6 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
         this[attribute] = null;
     }
 
-    /// <summary>
-    /// Includes the compound attribute along with its nested child field selectors.
-    /// </summary>
-    public void IncludeCompoundAttribute(AttrAttribute compoundAttribute, FieldSelectors childSelectors)
-    {
-        ArgumentNullException.ThrowIfNull(compoundAttribute);
-        ArgumentNullException.ThrowIfNull(childSelectors);
-
-        this[compoundAttribute] = null;
-        _childSelectors ??= new Dictionary<AttrAttribute, FieldSelectors>();
-        _childSelectors[compoundAttribute] = childSelectors;
-    }
-
     public void IncludeAttributes(IEnumerable<AttrAttribute> attributes)
     {
         ArgumentNullException.ThrowIfNull(attributes);
@@ -115,10 +102,11 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
 
     public void RemoveAttributes()
     {
-        while (this.Any(pair => pair.Key is AttrAttribute))
+        foreach (ResourceFieldAttribute field in Keys.Where(key => key is AttrAttribute).ToArray())
         {
-            ResourceFieldAttribute field = this.First(pair => pair.Key is AttrAttribute).Key;
             Remove(field);
         }
+
+        _childSelectors?.Clear();
     }
 }
