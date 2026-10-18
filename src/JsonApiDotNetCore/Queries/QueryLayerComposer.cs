@@ -612,14 +612,6 @@ public class QueryLayerComposer : IQueryLayerComposer
                 continue;
             }
 
-            // In EF Core 10, MemberInit projection on entity with ComplexProperty fails in ShaperProcessingExpressionVisitor
-            // with InvalidCastException: Unable to cast RuntimeComplexType to IEntityType.
-            // If the resource type has any complex properties, do not project MemberInit; let full entity be fetched and pruned in serializer.
-            if (nextType.Attributes.Any(attr => attr.IsCompound))
-            {
-                continue;
-            }
-
             FieldSelectors selectors = selection.GetOrCreateSelectors(nextType);
 
             foreach (ResourceFieldChainExpression chain in fieldSetExpression.FieldChains)

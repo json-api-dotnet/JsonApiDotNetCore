@@ -135,9 +135,25 @@ public class QueryableBuilder : IQueryableBuilder
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(context);
 
+        if (HasUnsupportedComplexTypeProjection(selection, resourceType))
+        {
+            // Workaround for EF Core 10 bug (dotnet/efcore#39322):
+            // RelationalShapedQueryCompilingExpressionVisitor fails with an InvalidCastException
+            // when compiling a MemberInit projection on an entity that contains a ComplexProperty.
+            // Bypassing database-level projection allows EF Core to materialize the entity normally;
+            // ResponseModelAdapter performs the necessary sparse fieldset pruning in memory.
+            return source;
+        }
+
         using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(context.ElementType);
         QueryClauseBuilderContext clauseContext = context.CreateClauseContext(this, source, resourceType, lambdaScope);
 
         return _selectClauseBuilder.ApplySelect(selection, clauseContext);
+    }
+
+    private static bool HasUnsupportedComplexTypeProjection(FieldSelection selection, ResourceType resourceType)
+    {
+        return resourceType.Attributes.Any(attr => attr.IsCompound) ||
+            selection.GetResourceTypes().Any(type => type.Attributes.Any(attr => attr.IsCompound));
     }
 }
