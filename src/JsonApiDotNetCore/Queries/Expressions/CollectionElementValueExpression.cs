@@ -8,6 +8,8 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public sealed class CollectionElementValueExpression : IdentifierExpression
 {
+    internal const string Symbol = "_";
+
     /// <summary>
     /// The CLR type of the collection element (e.g. <see cref="string" />, <see cref="int" />).
     /// </summary>
@@ -26,12 +28,12 @@ public sealed class CollectionElementValueExpression : IdentifierExpression
 
     public override string ToString()
     {
-        return "_";
+        return Symbol;
     }
 
     public override string ToFullString()
     {
-        return "_";
+        return ToString();
     }
 
     public override bool Equals(object? obj)

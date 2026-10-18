@@ -83,8 +83,8 @@ public sealed class CompoundFilterParseTests
         "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
         "To-one relationship or attribute or compound attribute on compound type 'CompoundRoot' expected.")]
     [InlineData("filter", "equals(details.^unknown,'x')", "Field 'unknown' does not exist on compound type 'CompoundRoot'.")]
-    [InlineData("filter", "has(details.numbers,equals(_,^null))", "Function, value between quotes or '_' expected.")]
-    [InlineData("filter", "has(tags,equals(^unknown,'work'))", "Function or '_' expected.")]
+    [InlineData("filter", "has(details.numbers,equals(_,^null))", "Function, value between quotes or _ expected.")]
+    [InlineData("filter", "has(tags,equals(^unknown,'work'))", "Function or _ expected.")]
     [InlineData("filter", "has(tags,^has(tags,equals(_,'w')))", "Function 'has' cannot be used on scalar collection elements.")]
     [InlineData("filter", "has(tags,equals(^count(tags),'1'))", "Function 'count' cannot be used on scalar collection elements.")]
     [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' cannot be used on scalar collection elements.")]

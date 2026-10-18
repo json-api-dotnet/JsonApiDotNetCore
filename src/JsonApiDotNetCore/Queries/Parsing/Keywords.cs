@@ -21,5 +21,4 @@ public static class Keywords
     public const string Count = "count";
     public const string Has = "has";
     public const string IsType = "isType";
-    public const string Element = "_";
 }
