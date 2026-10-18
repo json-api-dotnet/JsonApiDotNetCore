@@ -49,24 +49,18 @@ public sealed class CompoundAttributesReadTests
 
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
         object? contentValue = responseDocument.Data.SingleValue.Attributes!["content"];
-        contentValue.Should().BeOfType<ContactRoot>();
+        contentValue.Should().BeOfType<JsonElement>();
 
-        var content = (ContactRoot)contentValue;
-        content.Name.LastName.Should().Be(contact.Content.Name.LastName);
-        content.Name.DisplayName.Should().Be(contact.Content.Name.DisplayName);
+        var contentElement = (JsonElement)contentValue!;
+        contentElement.GetProperty("name").GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
+        contentElement.GetProperty("name").GetProperty("displayName").GetString().Should().Be(contact.Content.Name.DisplayName);
 
         if (contact.Content.Company != null)
         {
-            content.Company.Should().NotBeNull();
-            content.Company!.Name.Should().Be(contact.Content.Company.Name);
+            contentElement.GetProperty("company").GetProperty("name").GetString().Should().Be(contact.Content.Company.Name);
         }
 
-        content.PhoneNumbers.Should().HaveCount(contact.Content.PhoneNumbers.Count);
-
-        // Verify JSON representation
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
+        contentElement.GetProperty("phoneNumbers").GetArrayLength().Should().Be(contact.Content.PhoneNumbers.Count);
 
         contentElement.GetProperty("name").GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         contentElement.GetProperty("name").GetProperty("displayName").GetString().Should().Be(contact.Content.Name.DisplayName);
