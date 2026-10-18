@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -113,11 +112,11 @@ public sealed class ModelStateValidationTests
         [Attr(PublicName = "publicNameOfOne")]
         public string? One { get; set; }
 
-        [Attr(PublicName = "publicNameOfComplexObject")]
-        public ComplexObject? ComplexObject { get; set; }
+        [Attr(PublicName = "publicNameOfComplexObject", IsCompound = true)]
+        public ComplexRootObject? ComplexObject { get; set; }
 
-        [Attr(PublicName = "publicNameOfComplexList")]
-        public IList<ComplexObject> ComplexList { get; set; } = null!;
+        [Attr(PublicName = "publicNameOfComplexList", IsCompound = true)]
+        public IList<ComplexElementObject> ComplexList { get; set; } = null!;
 
         [HasOne(PublicName = "publicNameOfPrimaryChild")]
         public Child? PrimaryChild { get; set; }
@@ -139,15 +138,29 @@ public sealed class ModelStateValidationTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class ComplexObject
+    private sealed class ComplexRootObject
     {
-        [JsonPropertyName("jsonFirst")]
+        [Attr(PublicName = "jsonFirst")]
         public string? First { get; set; }
 
-        [JsonPropertyName("jsonParentObject")]
-        public ComplexObject? ParentObject { get; set; }
+        [Attr(PublicName = "jsonParentObject", IsCompound = true)]
+        public ComplexParentObject? ParentObject { get; set; }
 
-        [JsonPropertyName("jsonElements")]
-        public IList<ComplexObject> Elements { get; set; } = null!;
+        [Attr(PublicName = "jsonElements", IsCompound = true)]
+        public IList<ComplexElementObject> Elements { get; set; } = null!;
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ComplexParentObject
+    {
+        [Attr(PublicName = "jsonFirst")]
+        public string? First { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ComplexElementObject
+    {
+        [Attr(PublicName = "jsonFirst")]
+        public string? First { get; set; }
     }
 }
