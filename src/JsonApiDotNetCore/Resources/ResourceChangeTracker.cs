@@ -1,5 +1,6 @@
 using System.Text.Json;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,6 +11,7 @@ namespace JsonApiDotNetCore.Resources;
 public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
     where TResource : class, IIdentifiable
 {
+    private readonly IJsonApiOptions _options;
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
 
@@ -17,11 +19,13 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     private Dictionary<string, object?>? _requestAttributeValues;
     private Dictionary<string, object?>? _finallyStoredAttributeValues;
 
-    public ResourceChangeTracker(IJsonApiRequest request, ITargetedFields targetedFields)
+    public ResourceChangeTracker(IJsonApiOptions options, IJsonApiRequest request, ITargetedFields targetedFields)
     {
+        ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(targetedFields);
 
+        _options = options;
         _request = request;
         _targetedFields = targetedFields;
     }
@@ -50,7 +54,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
-    private static Dictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
+    private Dictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
     {
         var result = new Dictionary<string, object?>();
 
@@ -60,7 +64,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
 
             if (value != null && (attribute.IsCompound || attribute.IsCollection))
             {
-                value = JsonSerializer.SerializeToElement(value);
+                value = JsonSerializer.SerializeToElement(value, _options.SerializerOptions);
             }
 
             result.Add(attribute.PublicName, value);
