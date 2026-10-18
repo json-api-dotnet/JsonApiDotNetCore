@@ -213,7 +213,9 @@ public sealed class InvalidModelStateException(
         // In case of a property, its declaring type. In case of an indexer, the collection type or collection element type (in case the parent is a relationship).
         public Type ModelType { get; }
 
-        // Indicates we're in a complex object, so to determine public name, inspect [JsonPropertyName] instead of [Attr], [HasOne] etc.
+        // Note: System.Text.Json attributes (such as [JsonPropertyName] and [JsonIgnore]) are not supported on JSON:API
+        // resource and compound models and are never taken into account when reading request bodies, rendering responses,
+        // or generating error source pointers. Schema names and capabilities are governed exclusively by [Attr(PublicName)] and [Attr(Capabilities)].
         public bool IsInComplexType { get; }
 
         // The source pointer we've built up, so far. This is null whenever input is not recognized.
