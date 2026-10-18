@@ -233,6 +233,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
     private ConditionalExpression CreateCompoundMemberInit(FieldSelectors childSelectors, MemberExpression propertyAccess, QueryClauseBuilderContext context)
     {
+        // Direct projection of compound types via MemberInitExpression is constructed here for compound sparse fieldsets,
+        // but bypassed at the root entity level due to EF Core complex type limitations (https://github.com/dotnet/efcore/issues/39322).
         Type compoundClrType = propertyAccess.Type;
         var assignments = new List<MemberBinding>();
 
@@ -274,6 +276,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             return CreateCollectionInitializer(selectorPropertyInfo, bodyElementType, layer, context);
         }
 
+        // Direct projection of entities containing compound attributes or collections is bypassed by EF Core queryable building
+        // due to an EF Core 10 complex type projection limitation (see https://github.com/dotnet/efcore/issues/39322).
         if (layer.Selection == null || layer.Selection.IsEmpty ||
             layer.ResourceType.Attributes.Any(attr => attr.IsCompound) ||
             layer.Selection.GetResourceTypes().Any(type => type.Attributes.Any(attr => attr.IsCompound)))
