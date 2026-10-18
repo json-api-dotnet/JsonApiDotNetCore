@@ -23,11 +23,6 @@ public sealed class ResourceGraph : IResourceGraph
     private readonly IReadOnlySet<CompoundType> _compoundTypeSet;
     private readonly Dictionary<Type, CompoundType> _compoundTypesByClrType = [];
 
-    public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
-        : this(resourceTypeSet, EmptyCompoundTypeSet)
-    {
-    }
-
     public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet, IReadOnlySet<CompoundType> compoundTypeSet)
     {
         ArgumentNullException.ThrowIfNull(resourceTypeSet);
