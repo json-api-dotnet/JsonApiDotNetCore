@@ -8,11 +8,16 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// <summary>
 /// Used to expose a property on a resource class as a JSON:API attribute (https://jsonapi.org/format/#document-resource-object-attributes).
 /// </summary>
+/// <remarks>
+/// Note: System.Text.Json attributes (such as [JsonPropertyName] and [JsonIgnore]) are not supported on JSON:API
+/// resource and compound models and are never taken into account when reading request bodies, rendering responses,
+/// or generating error source pointers. Schema names and capabilities are governed exclusively by
+/// [Attr(PublicName)] and [Attr(Capabilities)].
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class AttrAttribute : ResourceFieldAttribute
 {
-    private readonly Lazy<bool> _isCollectionLazy;
     private AttrCapabilities? _capabilities;
 
     internal bool HasExplicitCapabilities => _capabilities != null;
@@ -41,24 +46,14 @@ public sealed class AttrAttribute : ResourceFieldAttribute
     public bool IsCompound { get; set; }
 
     /// <summary>
-    /// Evaluates whether the underlying property is a collection. Non-settable; evaluated on demand from <see cref="ResourceFieldAttribute.Property" />.
+    /// Indicates whether the underlying property is a collection.
     /// </summary>
-    public bool IsCollection => _isCollectionLazy.Value;
+    public bool IsCollection { get; internal set; }
 
     /// <summary>
     /// The schema of the nested compound type when <see cref="IsCompound" /> is true; otherwise <c>null</c>.
     /// </summary>
     public CompoundType? CompoundType { get; internal set; }
-
-    public AttrAttribute()
-    {
-        _isCollectionLazy = new Lazy<bool>(EvaluateIsCollection, LazyThreadSafetyMode.PublicationOnly);
-    }
-
-    private bool EvaluateIsCollection()
-    {
-        return Property.PropertyType != typeof(string) && CollectionConverter.Instance.FindCollectionElementType(Property.PropertyType) != null;
-    }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

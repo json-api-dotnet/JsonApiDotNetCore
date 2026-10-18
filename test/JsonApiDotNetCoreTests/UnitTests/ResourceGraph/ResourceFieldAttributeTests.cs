@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
@@ -235,25 +236,23 @@ public sealed class ResourceFieldAttributeTests
     public void Evaluates_IsCollection_correctly()
     {
         // Arrange
-        var scalarAttr = new AttrAttribute
-        {
-            Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.ScalarString))!
-        };
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<TestResourceWithCollections, long>();
+        IResourceGraph resourceGraph = builder.Build();
 
-        var listAttr = new AttrAttribute
-        {
-            Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.StringList))!
-        };
-
-        var setAttr = new AttrAttribute
-        {
-            Property = typeof(TestResourceWithCollections).GetProperty(nameof(TestResourceWithCollections.IntSet))!
-        };
+        ResourceType resourceType = resourceGraph.GetResourceType<TestResourceWithCollections>();
+        AttrAttribute scalarAttr = resourceType.GetAttributeByPropertyName(nameof(TestResourceWithCollections.ScalarString));
+        AttrAttribute listAttr = resourceType.GetAttributeByPropertyName(nameof(TestResourceWithCollections.StringList));
+        AttrAttribute setAttr = resourceType.GetAttributeByPropertyName(nameof(TestResourceWithCollections.IntSet));
 
         // Assert
         scalarAttr.IsCollection.Should().BeFalse();
         listAttr.IsCollection.Should().BeTrue();
         setAttr.IsCollection.Should().BeTrue();
+
+        var customAttr = new AttrAttribute { IsCollection = true };
+        customAttr.IsCollection.Should().BeTrue();
     }
 
     [Fact]

@@ -256,11 +256,6 @@ public partial class ResourceGraphBuilder
             return this;
         }
 
-        if (_compoundTypesByClrType.ContainsKey(resourceClrType))
-        {
-            throw new InvalidConfigurationException($"Type '{resourceClrType}' cannot be both a resource type and a compound type.");
-        }
-
         if (resourceClrType.IsOrImplementsInterface<IIdentifiable>())
         {
             string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
@@ -351,6 +346,8 @@ public partial class ResourceGraphBuilder
 
             SetPublicName(attribute, property);
             attribute.Property = property;
+            attribute.IsCollection = property.PropertyType != typeof(string) &&
+                CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) != null;
 
             if (!attribute.HasExplicitCapabilities)
             {
@@ -451,6 +448,8 @@ public partial class ResourceGraphBuilder
             {
                 SetPublicName(attribute, property);
                 attribute.Property = property;
+                attribute.IsCollection = property.PropertyType != typeof(string) &&
+                    CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) != null;
 
                 if (!attribute.HasExplicitCapabilities)
                 {
