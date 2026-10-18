@@ -68,9 +68,9 @@ internal sealed class PatternTextFormatter
             builder.Append('C');
         }
 
-        if (types.HasFlag(FieldTypes.PrimitiveCollection))
+        if (types.HasFlag(FieldTypes.ScalarCollection))
         {
-            builder.Append('P');
+            builder.Append('L');
         }
 
         if (types.HasFlag(FieldTypes.CompoundCollection))

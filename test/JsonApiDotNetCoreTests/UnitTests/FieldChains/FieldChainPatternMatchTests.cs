@@ -22,12 +22,12 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     private const string O = "parent";
     private const string M = "children";
     private const string C = "details";
-    private const string P = "tags";
+    private const string L = "tags";
     private const string Q = "items";
     private const string A2 = "title";
     private const string C2 = "nested";
     private const string A3 = "description";
-    private const string P2 = "numbers";
+    private const string L2 = "numbers";
 
     private readonly LoggerFactory _loggerFactory;
     private readonly ResourceType _resourceType;
@@ -100,16 +100,16 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("MOA", $"{M}.{O}.{A}")]
     // Compound and collection field types
     [InlineData("C", C)]
-    [InlineData("P", P)]
+    [InlineData("L", L)]
     [InlineData("Q", Q)]
     [InlineData("F", C)]
-    [InlineData("F", P)]
+    [InlineData("F", L)]
     [InlineData("F", Q)]
     [InlineData("CA", $"{C}.{A2}")]
     [InlineData("CCA", $"{C}.{C2}.{A3}")]
     [InlineData("OCA", $"{O}.{C}.{A2}")]
     [InlineData("OCCA", $"{O}.{C}.{C2}.{A3}")]
-    [InlineData("CP", $"{C}.{P2}")]
+    [InlineData("CL", $"{C}.{L2}")]
     [InlineData("CQ", $"{C}.{Q}")]
     // Compound character classes and quantifiers
     [InlineData("[OC]", O)]
@@ -119,16 +119,16 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("[OC]*A", $"{C}.{A2}")]
     [InlineData("[OC]*A", $"{C}.{C2}.{A3}")]
     [InlineData("[OC]*A", $"{O}.{C}.{C2}.{A3}")]
-    [InlineData("[MPQ]", M)]
-    [InlineData("[MPQ]", P)]
-    [InlineData("[MPQ]", Q)]
-    [InlineData("[OC]*[MPQ]", M)]
-    [InlineData("[OC]*[MPQ]", P)]
-    [InlineData("[OC]*[MPQ]", Q)]
-    [InlineData("[OC]*[MPQ]", $"{C}.{P2}")]
-    [InlineData("[OC]*[MPQ]", $"{C}.{Q}")]
-    [InlineData("[OC]*[MPQ]", $"{O}.{M}")]
-    [InlineData("[OC]*[MPQ]", $"{O}.{C}.{Q}")]
+    [InlineData("[MLQ]", M)]
+    [InlineData("[MLQ]", L)]
+    [InlineData("[MLQ]", Q)]
+    [InlineData("[OC]*[MLQ]", M)]
+    [InlineData("[OC]*[MLQ]", L)]
+    [InlineData("[OC]*[MLQ]", Q)]
+    [InlineData("[OC]*[MLQ]", $"{C}.{L2}")]
+    [InlineData("[OC]*[MLQ]", $"{C}.{Q}")]
+    [InlineData("[OC]*[MLQ]", $"{O}.{M}")]
+    [InlineData("[OC]*[MLQ]", $"{O}.{C}.{Q}")]
     [InlineData("[OC]*[OAC]", O)]
     [InlineData("[OC]*[OAC]", C)]
     [InlineData("[OC]*[OAC]", A)]
@@ -433,13 +433,13 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("F+R*A", $"{M}.{M}.{M}.{O}.{M}.{M}.{M}.{O}^", $"Field on resource type '{T}' expected.")]
     // Compound & collection mismatch
     [InlineData("A", $"^{C}", $"Attribute on resource type '{T}' expected.")]
-    [InlineData("A", $"^{P}", $"Attribute on resource type '{T}' expected.")]
+    [InlineData("A", $"^{L}", $"Attribute on resource type '{T}' expected.")]
     [InlineData("A", $"^{Q}", $"Attribute on resource type '{T}' expected.")]
     [InlineData("C", $"^{A}", $"Compound attribute on resource type '{T}' expected.")]
-    [InlineData("C", $"^{P}", $"Compound attribute on resource type '{T}' expected.")]
-    [InlineData("P", $"^{A}", $"Primitive collection on resource type '{T}' expected.")]
-    [InlineData("P", $"^{Q}", $"Primitive collection on resource type '{T}' expected.")]
-    [InlineData("Q", $"^{P}", $"Compound collection on resource type '{T}' expected.")]
+    [InlineData("C", $"^{L}", $"Compound attribute on resource type '{T}' expected.")]
+    [InlineData("L", $"^{A}", $"Scalar collection on resource type '{T}' expected.")]
+    [InlineData("L", $"^{Q}", $"Scalar collection on resource type '{T}' expected.")]
+    [InlineData("Q", $"^{L}", $"Compound collection on resource type '{T}' expected.")]
     // Navigation on compound type
     [InlineData("CA", $"{C}.^{C2}", "Attribute on compound type 'CompoundRoot' expected.")]
     [InlineData("CA", $"{C}.^{X}", "Field 'unknown' does not exist on compound type 'CompoundRoot'.")]
