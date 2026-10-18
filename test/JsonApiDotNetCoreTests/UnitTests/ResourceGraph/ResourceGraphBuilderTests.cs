@@ -487,9 +487,9 @@ public sealed class ResourceGraphBuilderTests
         phonesAttr.CompoundType!.ClrType.Should().Be<TestPhoneCompound>();
 
         resourceGraph.GetCompoundTypes().Should().HaveCount(3);
-        resourceGraph.GetCompoundType(typeof(TestRootCompound)).Should().Be(rootCompoundType);
-        resourceGraph.GetCompoundType(typeof(TestChildCompound)).Should().Be(nameCompoundType);
-        resourceGraph.GetCompoundType(typeof(TestPhoneCompound)).Should().Be(phonesAttr.CompoundType);
+        resourceGraph.GetCompoundType<TestRootCompound>().Should().Be(rootCompoundType);
+        resourceGraph.GetCompoundType<TestChildCompound>().Should().Be(nameCompoundType);
+        resourceGraph.GetCompoundType<TestPhoneCompound>().Should().Be(phonesAttr.CompoundType);
     }
 
     [Fact]
@@ -526,18 +526,26 @@ public sealed class ResourceGraphBuilderTests
 
         // Act
         ResourceFieldChainExpression singleChain = resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => x.Content!.Name!.FirstName);
-        IReadOnlyCollection<ResourceFieldChainExpression> multiChains = resourceGraph.GetFieldChains<ResourceWithCompoundAttributes>(
-            x => new { x.Content!.Name!.FirstName, x.Content.PhoneNumbers });
+
+        IReadOnlyCollection<ResourceFieldChainExpression> multiChains = resourceGraph.GetFieldChains<ResourceWithCompoundAttributes>(x => new
+        {
+            x.Content!.Name!.FirstName,
+            x.Content.PhoneNumbers
+        });
 
         // Assert
         singleChain.ToString().Should().Be("content.name.firstName");
         singleChain.Fields.Should().HaveCount(3);
 
         multiChains.Should().HaveCount(2);
-        multiChains.Select(c => c.ToString()).Should().BeEquivalentTo(["content.name.firstName", "content.phoneNumbers"]);
+        multiChains.Select(c => c.ToString()).Should().BeEquivalentTo("content.name.firstName", "content.phoneNumbers");
 
-        Action multipleInSingleAction = () => resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(
-            x => new { x.Content!.Name!.FirstName, x.Content.PhoneNumbers });
+        Action multipleInSingleAction = () => resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => new
+        {
+            x.Content!.Name!.FirstName,
+            x.Content.PhoneNumbers
+        });
+
         multipleInSingleAction.Should().ThrowExactly<ArgumentException>();
 
         Action invalidPropertyAction = () => resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => x.Id.ToString());
@@ -702,8 +710,8 @@ public sealed class ResourceGraphBuilderTests
         IResourceGraph resourceGraph = builder.Build();
 
         // Assert
-        resourceGraph.FindCompoundType(typeof(DerivedCompound)).Should().NotBeNull();
-        CompoundType compoundType = resourceGraph.GetCompoundType(typeof(DerivedCompound));
+        resourceGraph.FindCompoundType<DerivedCompound>().Should().NotBeNull();
+        CompoundType compoundType = resourceGraph.GetCompoundType<DerivedCompound>();
         compoundType.Attributes.Should().ContainSingle(attr => attr.Property.Name == nameof(DerivedCompound.Value));
     }
 

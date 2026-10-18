@@ -8,14 +8,13 @@ namespace JsonApiDotNetCore.Configuration;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Compound types used with sparse fieldsets or request deserialization must provide an accessible parameterless constructor
-/// (can be non-public) to support member initialization expressions and object instantiation.
+/// Compound types used with sparse fieldsets or request deserialization must provide an accessible parameterless constructor (can be non-public) to
+/// support member initialization expressions and object instantiation.
 /// </para>
 /// <para>
-/// Note: System.Text.Json attributes (such as [JsonPropertyName] and [JsonIgnore]) are not supported on JSON:API
-/// resource and compound models and are never taken into account when reading request bodies, rendering responses,
-/// or generating error source pointers. Schema names and capabilities are governed exclusively by
-/// [Attr(PublicName)] and [Attr(Capabilities)].
+/// Note: System.Text.Json attributes (such as [JsonPropertyName] and [JsonIgnore]) are not supported on JSON:API resource and compound models and are
+/// never taken into account when reading request bodies, rendering responses, or generating error source pointers. Schema names and capabilities are
+/// governed exclusively by [Attr(PublicName)] and [Attr(Capabilities)].
 /// </para>
 /// </remarks>
 [PublicAPI]

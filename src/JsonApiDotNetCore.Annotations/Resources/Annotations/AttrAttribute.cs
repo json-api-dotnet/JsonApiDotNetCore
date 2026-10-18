@@ -9,10 +9,9 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// Used to expose a property on a resource class as a JSON:API attribute (https://jsonapi.org/format/#document-resource-object-attributes).
 /// </summary>
 /// <remarks>
-/// Note: System.Text.Json attributes (such as [JsonPropertyName] and [JsonIgnore]) are not supported on JSON:API
-/// resource and compound models and are never taken into account when reading request bodies, rendering responses,
-/// or generating error source pointers. Schema names and capabilities are governed exclusively by
-/// [Attr(PublicName)] and [Attr(Capabilities)].
+/// Note: System.Text.Json attributes (such as [JsonPropertyName] and [JsonIgnore]) are not supported on JSON:API resource and compound models and are
+/// never taken into account when reading request bodies, rendering responses, or generating error source pointers. Schema names and capabilities are
+/// governed exclusively by [Attr(PublicName)] and [Attr(Capabilities)].
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Property)]

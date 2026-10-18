@@ -511,7 +511,9 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                 if (nextToken.Value == Keywords.Element)
                 {
                     EatText(Keywords.Element);
-                    return (new CollectionElementValueExpression(ScalarCollectionElementInScope), () => GetConstantValueConverterForType(ScalarCollectionElementInScope));
+
+                    return (new CollectionElementValueExpression(ScalarCollectionElementInScope),
+                        () => GetConstantValueConverterForType(ScalarCollectionElementInScope));
                 }
 
                 throw new QueryParseException("Function or '_' expected.", nextToken.Position);

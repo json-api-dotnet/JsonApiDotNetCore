@@ -65,11 +65,11 @@ public sealed class CompoundTypeTests
 
         // Act & Assert
         resourceGraph.GetCompoundTypes().Should().ContainSingle().Which.Should().Be(compoundType);
-        resourceGraph.FindCompoundType(typeof(TestAddress)).Should().Be(compoundType);
-        resourceGraph.FindCompoundType(typeof(string)).Should().BeNull();
+        resourceGraph.FindCompoundType<TestAddress>().Should().Be(compoundType);
+        resourceGraph.FindCompoundType<string>().Should().BeNull();
 
-        resourceGraph.GetCompoundType(typeof(TestAddress)).Should().Be(compoundType);
-        Action getUnknown = () => resourceGraph.GetCompoundType(typeof(string));
+        resourceGraph.GetCompoundType<TestAddress>().Should().Be(compoundType);
+        Action getUnknown = () => resourceGraph.GetCompoundType<string>();
         getUnknown.Should().ThrowExactly<InvalidOperationException>().WithMessage("Compound type 'System.String' does not exist in the resource graph.");
     }
 

@@ -619,18 +619,22 @@ public sealed class CompoundAttributesWriteTests
                             lastName = contact.Content.Name.LastName,
                             nickName = contact.Content.Name.NickName
                         },
-                        company = contact.Content.Company == null ? null : new
-                        {
-                            name = contact.Content.Company.Name,
-                            department = contact.Content.Company.Department,
-                            businessHours = contact.Content.Company.BusinessHours.Select(b => b.ToString()).ToArray()
-                        },
-                        birthDate = contact.Content.BirthDate == null ? null : new
-                        {
-                            year = contact.Content.BirthDate.Year,
-                            month = contact.Content.BirthDate.Month,
-                            day = contact.Content.BirthDate.Day
-                        },
+                        company = contact.Content.Company == null
+                            ? null
+                            : new
+                            {
+                                name = contact.Content.Company.Name,
+                                department = contact.Content.Company.Department,
+                                businessHours = contact.Content.Company.BusinessHours.Select(b => b.ToString()).ToArray()
+                            },
+                        birthDate = contact.Content.BirthDate == null
+                            ? null
+                            : new
+                            {
+                                year = contact.Content.BirthDate.Year,
+                                month = contact.Content.BirthDate.Month,
+                                day = contact.Content.BirthDate.Day
+                            },
                         phoneNumbers = contact.Content.PhoneNumbers.Select(p => new
                         {
                             countryPrefix = p.CountryPrefix,

@@ -36,10 +36,10 @@ public sealed class ServiceDiscoveryFacadeTests
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
         var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
 
-        ResourceType? personType = resourceGraph.FindResourceType(typeof(Person));
+        ResourceType? personType = resourceGraph.FindResourceType<Person>();
         personType.Should().NotBeNull();
 
-        ResourceType? todoItemType = resourceGraph.FindResourceType(typeof(TodoItem));
+        ResourceType? todoItemType = resourceGraph.FindResourceType<TodoItem>();
         todoItemType.Should().NotBeNull();
     }
 
@@ -56,7 +56,7 @@ public sealed class ServiceDiscoveryFacadeTests
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
         var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
 
-        ResourceType? resourceType = resourceGraph.FindResourceType(typeof(PrivateResource));
+        ResourceType? resourceType = resourceGraph.FindResourceType<PrivateResource>();
         resourceType.Should().NotBeNull();
     }
 

@@ -153,7 +153,6 @@ public class QueryableBuilder : IQueryableBuilder
 
     private static bool HasUnsupportedComplexTypeProjection(FieldSelection selection, ResourceType resourceType)
     {
-        return resourceType.Attributes.Any(attr => attr.IsCompound) ||
-            selection.GetResourceTypes().Any(type => type.Attributes.Any(attr => attr.IsCompound));
+        return resourceType.Attributes.Any(attr => attr.IsCompound) || selection.GetResourceTypes().Any(type => type.Attributes.Any(attr => attr.IsCompound));
     }
 }

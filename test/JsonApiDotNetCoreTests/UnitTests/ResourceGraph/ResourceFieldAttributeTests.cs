@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -251,7 +252,11 @@ public sealed class ResourceFieldAttributeTests
         listAttr.IsCollection.Should().BeTrue();
         setAttr.IsCollection.Should().BeTrue();
 
-        var customAttr = new AttrAttribute { IsCollection = true };
+        var customAttr = new AttrAttribute
+        {
+            IsCollection = true
+        };
+
         customAttr.IsCollection.Should().BeTrue();
     }
 
@@ -272,6 +277,7 @@ public sealed class ResourceFieldAttributeTests
         attribute.CompoundType.Should().Be(compoundType);
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class TestResourceWithCollections : Identifiable<long>
     {
         [Attr]

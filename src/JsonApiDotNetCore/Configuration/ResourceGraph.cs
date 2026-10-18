@@ -204,12 +204,12 @@ public sealed class ResourceGraph : IResourceGraph
     {
         ArgumentNullException.ThrowIfNull(selector);
 
-        ResourceType resourceType = GetResourceType(typeof(TResource));
+        ResourceType resourceType = GetResourceType<TResource>();
         return ResolveFieldChains(selector, resourceType);
     }
 
-    private IReadOnlyCollection<ResourceFieldChainExpression> ResolveFieldChains<TResource>(
-        Expression<Func<TResource, object?>> selector, ResourceType resourceType)
+    private ReadOnlyCollection<ResourceFieldChainExpression> ResolveFieldChains<TResource>(Expression<Func<TResource, object?>> selector,
+        ResourceType resourceType)
     {
         Expression selectorBody = RemoveConvert(selector.Body);
         ParameterExpression parameter = selector.Parameters[0];
@@ -228,8 +228,8 @@ public sealed class ResourceGraph : IResourceGraph
 
                 if (argumentBody is not MemberExpression argMemberExpr)
                 {
-                    throw new ArgumentException(
-                        $"The expression '{selector}' contains an invalid member selection. Expected member access expression.", nameof(selector));
+                    throw new ArgumentException($"The expression '{selector}' contains an invalid member selection. Expected member access expression.",
+                        nameof(selector));
                 }
 
                 memberChains.Add(ExtractMemberChain(argMemberExpr, parameter, selector));
@@ -281,12 +281,10 @@ public sealed class ResourceGraph : IResourceGraph
             }
         }
 
-        throw new ArgumentException(
-            $"The expression '{selector}' does not originate from parameter '{parameter.Name}'.", nameof(selector));
+        throw new ArgumentException($"The expression '{selector}' does not originate from parameter '{parameter.Name}'.", nameof(selector));
     }
 
-    private static ResourceFieldChainExpression ResolveSingleFieldChain(
-        List<MemberInfo> members, ResourceType resourceType, Expression selector)
+    private static ResourceFieldChainExpression ResolveSingleFieldChain(List<MemberInfo> members, ResourceType resourceType, Expression selector)
     {
         List<ResourceFieldAttribute> fields = [];
         IAttributeContainer currentContainer = resourceType;
@@ -309,8 +307,10 @@ public sealed class ResourceGraph : IResourceGraph
             if (field == null)
             {
                 string containerName = currentContainer is ResourceType resType ? resType.PublicName : currentContainer.ClrType.Name;
+
                 throw new ArgumentException(
-                    $"Member '{member.Name}' is not exposed as a JSON:API field on '{containerName}'.", nameof(selector));
+                    $"The expression '{selector}' contains member '{member.Name}', which is not exposed as a JSON:API field on '{containerName}'.",
+                    nameof(selector));
             }
 
             fields.Add(field);
@@ -328,7 +328,7 @@ public sealed class ResourceGraph : IResourceGraph
                 else
                 {
                     throw new ArgumentException(
-                        $"Member '{field.Property.Name}' cannot have nested fields because it is neither a compound attribute nor a relationship.",
+                        $"The expression '{selector}' contains member '{field.Property.Name}', which cannot have nested fields because it is neither a compound attribute nor a relationship.",
                         nameof(selector));
                 }
             }

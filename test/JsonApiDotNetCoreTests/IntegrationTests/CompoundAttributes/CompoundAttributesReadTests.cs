@@ -48,10 +48,10 @@ public sealed class CompoundAttributesReadTests
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("remarks").WhoseValue.Should().Be(contact.Remarks);
 
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
-        object? contentValue = responseDocument.Data.SingleValue.Attributes!["content"];
+        object? contentValue = responseDocument.Data.SingleValue.Attributes["content"];
         contentValue.Should().BeOfType<JsonElement>();
 
-        var contentElement = (JsonElement)contentValue!;
+        var contentElement = (JsonElement)contentValue;
         contentElement.GetProperty("name").GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         contentElement.GetProperty("name").GetProperty("displayName").GetString().Should().Be(contact.Content.Name.DisplayName);
 
@@ -478,8 +478,18 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        addressBooks[0].Categories = ["Personal", "Work"];
-        addressBooks[1].Categories = ["Business", "Archive"];
+
+        addressBooks[0].Categories =
+        [
+            "Personal",
+            "Work"
+        ];
+
+        addressBooks[1].Categories =
+        [
+            "Business",
+            "Archive"
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -504,7 +514,13 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        addressBooks[0].Categories = ["Personal", "Networking"];
+
+        addressBooks[0].Categories =
+        [
+            "Personal",
+            "Networking"
+        ];
+
         addressBooks[1].Categories = ["Family"];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -530,8 +546,14 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        Guid targetGuid = Guid.NewGuid();
-        addressBooks[0].SyncDeviceIds = [targetGuid, Guid.NewGuid()];
+        var targetGuid = Guid.NewGuid();
+
+        addressBooks[0].SyncDeviceIds =
+        [
+            targetGuid,
+            Guid.NewGuid()
+        ];
+
         addressBooks[1].SyncDeviceIds = [Guid.NewGuid()];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -557,7 +579,13 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        addressBooks[0].SyncDeviceIds = [Guid.NewGuid(), Guid.NewGuid()];
+
+        addressBooks[0].SyncDeviceIds =
+        [
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        ];
+
         addressBooks[1].SyncDeviceIds = [];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -584,8 +612,19 @@ public sealed class CompoundAttributesReadTests
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(3);
         addressBooks[0].SyncDeviceIds = [Guid.NewGuid()];
-        addressBooks[1].SyncDeviceIds = [Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()];
-        addressBooks[2].SyncDeviceIds = [Guid.NewGuid(), Guid.NewGuid()];
+
+        addressBooks[1].SyncDeviceIds =
+        [
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        ];
+
+        addressBooks[2].SyncDeviceIds =
+        [
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -613,8 +652,19 @@ public sealed class CompoundAttributesReadTests
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(3);
         addressBooks[0].SyncDeviceIds = [Guid.NewGuid()];
-        addressBooks[1].SyncDeviceIds = [Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()];
-        addressBooks[2].SyncDeviceIds = [Guid.NewGuid(), Guid.NewGuid()];
+
+        addressBooks[1].SyncDeviceIds =
+        [
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        ];
+
+        addressBooks[2].SyncDeviceIds =
+        [
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -641,15 +691,25 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
+
         contacts[0].Content.Company = new ContactCompany
         {
             Name = "Company A",
-            BusinessHours = [TimeSpan.FromHours(9), TimeSpan.FromHours(17)]
+            BusinessHours =
+            [
+                TimeSpan.FromHours(9),
+                TimeSpan.FromHours(17)
+            ]
         };
+
         contacts[1].Content.Company = new ContactCompany
         {
             Name = "Company B",
-            BusinessHours = [TimeSpan.FromHours(8), TimeSpan.FromHours(16)]
+            BusinessHours =
+            [
+                TimeSpan.FromHours(8),
+                TimeSpan.FromHours(16)
+            ]
         };
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -675,8 +735,20 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
-        contacts[0].Content.Ratings = [5, null, 4];
-        contacts[1].Content.Ratings = [1, 2, 3];
+
+        contacts[0].Content.Ratings =
+        [
+            5,
+            null,
+            4
+        ];
+
+        contacts[1].Content.Ratings =
+        [
+            1,
+            2,
+            3
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -701,6 +773,7 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
+
         contacts[0].Content.ImportantDates =
         [
             new LabeledValue<DateOnly>
@@ -709,6 +782,7 @@ public sealed class CompoundAttributesReadTests
                 Label = "anniversary"
             }
         ];
+
         contacts[1].Content.ImportantDates =
         [
             new LabeledValue<DateOnly>
@@ -741,6 +815,7 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
+
         contacts[0].Content.ImportantDates =
         [
             new LabeledValue<DateOnly>
@@ -749,6 +824,7 @@ public sealed class CompoundAttributesReadTests
                 Label = "anniversary"
             }
         ];
+
         contacts[1].Content.ImportantDates =
         [
             new LabeledValue<DateOnly>

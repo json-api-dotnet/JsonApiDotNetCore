@@ -27,8 +27,7 @@ public static class SparseFieldSetExpressionExtensions
         return newSparseFieldSet;
     }
 
-    public static SparseFieldSetExpression? Including(this SparseFieldSetExpression? sparseFieldSet,
-        ResourceFieldChainExpression fieldChain)
+    public static SparseFieldSetExpression? Including(this SparseFieldSetExpression? sparseFieldSet, ResourceFieldChainExpression fieldChain)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
 
@@ -68,8 +67,7 @@ public static class SparseFieldSetExpressionExtensions
         return newSparseFieldSet;
     }
 
-    public static SparseFieldSetExpression? Excluding(this SparseFieldSetExpression? sparseFieldSet,
-        ResourceFieldChainExpression fieldChain)
+    public static SparseFieldSetExpression? Excluding(this SparseFieldSetExpression? sparseFieldSet, ResourceFieldChainExpression fieldChain)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
 
@@ -94,8 +92,7 @@ public static class SparseFieldSetExpressionExtensions
         }
 
         ImmutableHashSet<ResourceFieldChainExpression> newFieldChains = sparseFieldSet.FieldChains
-            .Where(chain => !IsPrefixOrEqual(chainToExclude, chain))
-            .ToImmutableHashSet();
+            .Where(chain => !IsPrefixOrEqual(chainToExclude, chain)).ToImmutableHashSet();
 
         if (newFieldChains.Count == sparseFieldSet.FieldChains.Count)
         {

@@ -269,7 +269,7 @@ public sealed class CompoundAttributesValidationTests
                         {
                             new
                             {
-                                number = "",
+                                number = string.Empty,
                                 label = "work"
                             }
                         }
