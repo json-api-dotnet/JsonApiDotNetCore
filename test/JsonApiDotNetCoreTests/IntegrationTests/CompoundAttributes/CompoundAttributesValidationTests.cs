@@ -10,6 +10,7 @@ public sealed class CompoundAttributesValidationTests
     : IClassFixture<IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext>>
 {
     private readonly IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> _testContext;
+    private readonly CompoundAttributesFakers _fakers = new();
 
     public CompoundAttributesValidationTests(IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> testContext)
     {
@@ -157,5 +158,359 @@ public sealed class CompoundAttributesValidationTests
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Contain("Function 'isType' cannot be used on compound types");
+    }
+
+    [Fact]
+    public async Task Cannot_create_contact_with_missing_required_compound_property()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            firstName = "John",
+                            lastName = "Doe"
+                        },
+                        birthDate = new
+                        {
+                            year = 1990,
+                            day = 15
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/birthDate/month");
+    }
+
+    [Fact]
+    public async Task Cannot_create_contact_with_out_of_range_compound_property()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            firstName = "John",
+                            lastName = "Doe"
+                        },
+                        birthDate = new
+                        {
+                            year = 1990,
+                            month = 15,
+                            day = 15
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/birthDate/month");
+    }
+
+    [Fact]
+    public async Task Cannot_create_contact_with_empty_required_collection_element_property()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            firstName = "John",
+                            lastName = "Doe"
+                        },
+                        phoneNumbers = new[]
+                        {
+                            new
+                            {
+                                number = "",
+                                label = "work"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/phoneNumbers/0/number");
+    }
+
+    [Fact]
+    public async Task Cannot_create_contact_with_blocked_AllowCreate_compound_property()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            firstName = "John",
+                            lastName = "Doe",
+                            nickName = "Johnny"
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
+        error.Detail.Should().Be("The attribute 'nickName' on compound type 'ContactName' cannot be assigned to.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/name/nickName");
+    }
+
+    [Fact]
+    public async Task Cannot_update_contact_with_blocked_AllowChange_compound_property()
+    {
+        // Arrange
+        Contact contact = _fakers.Contact.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                id = contact.StringId,
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            lastName = contact.Content.Name.LastName,
+                            maidenName = "NewMaidenName"
+                        }
+                    }
+                }
+            }
+        };
+
+        string route = $"/contacts/{contact.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when updating resource.");
+        error.Detail.Should().Be("The attribute 'maidenName' on compound type 'ContactName' cannot be assigned to.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/name/maidenName");
+    }
+
+    [Fact]
+    public async Task Cannot_set_read_only_compound_property_on_create()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            lastName = "Doe",
+                            displayName = "John Doe"
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
+        error.Detail.Should().Be("Attribute 'displayName' on compound type 'ContactName' is read-only.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/name/displayName");
+    }
+
+    [Fact]
+    public async Task Cannot_set_read_only_compound_property_on_update()
+    {
+        // Arrange
+        Contact contact = _fakers.Contact.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                id = contact.StringId,
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            lastName = contact.Content.Name.LastName,
+                            displayName = "Changed Display Name"
+                        }
+                    }
+                }
+            }
+        };
+
+        string route = $"/contacts/{contact.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
+        error.Detail.Should().Be("Attribute 'displayName' on compound type 'ContactName' is read-only.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/name/displayName");
+    }
+
+    [Fact]
+    public async Task Cannot_send_unknown_compound_property_when_disallowed()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = new
+                    {
+                        name = new
+                        {
+                            lastName = "Doe",
+                            extraProp = "Unexpected"
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
+        error.Detail.Should().Be("Attribute 'extraProp' does not exist on compound type 'ContactName'.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/content/name/extraProp");
     }
 }
