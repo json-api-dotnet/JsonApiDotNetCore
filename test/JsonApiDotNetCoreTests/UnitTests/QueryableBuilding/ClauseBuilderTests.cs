@@ -21,6 +21,7 @@ public sealed class ClauseBuilderTests : IDisposable
     private readonly ResourceType _resourceType;
     private readonly IReadOnlyModel _entityModel;
     private readonly ServiceContainer _serviceContainer;
+    private readonly IResourceFactory _resourceFactory;
     private readonly FilterParser _filterParser;
     private readonly SortParser _sortParser;
 
@@ -32,11 +33,12 @@ public sealed class ClauseBuilderTests : IDisposable
         _resourceType = resourceGraph.GetResourceType<CompoundModel>();
 
         var modelBuilder = new ModelBuilder();
+        modelBuilder.Entity<CompoundModel>();
         _entityModel = modelBuilder.Model.FinalizeModel();
 
         _serviceContainer = new ServiceContainer();
-        var resourceFactory = new ResourceFactory(_serviceContainer);
-        _filterParser = new FilterParser(resourceFactory);
+        _resourceFactory = new ResourceFactory(_serviceContainer);
+        _filterParser = new FilterParser(_resourceFactory);
         _sortParser = new SortParser();
     }
 
@@ -193,6 +195,93 @@ public sealed class ClauseBuilderTests : IDisposable
         // Assert
         result.ToString().Should().Contain(
             ".OrderByDescending(compoundModel => compoundModel.Details.Nested.Description).ThenBy(compoundModel => compoundModel.Details.Title)");
+    }
+
+    [Fact]
+    public void Builds_select_clause_for_compound_attribute()
+    {
+        // Arrange
+        var selection = new FieldSelection();
+        FieldSelectors selectors = selection.GetOrCreateSelectors(_resourceType);
+        AttrAttribute detailsAttr = _resourceType.GetAttributeByPropertyName(nameof(CompoundModel.Details));
+        selectors.IncludeAttribute(detailsAttr);
+        FieldSelectors childSelectors = selectors.GetOrCreateChildSelectors(detailsAttr);
+        AttrAttribute titleAttr = detailsAttr.CompoundType!.GetAttributeByPropertyName(nameof(CompoundRoot.Title));
+        childSelectors.IncludeAttribute(titleAttr);
+
+        var selectClauseBuilder = new SelectClauseBuilder(_resourceFactory);
+        var lambdaScopeFactory = new LambdaScopeFactory();
+        using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
+
+        IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
+
+        // Act
+        Expression result = selectClauseBuilder.ApplySelect(selection, context);
+
+        // Assert
+        result.ToString().Should().Contain("new CompoundRoot() {Title = compoundModel.Details.Title}");
+    }
+
+    [Fact]
+    public void Builds_select_clause_for_nested_compound_attribute()
+    {
+        // Arrange
+        var selection = new FieldSelection();
+        FieldSelectors selectors = selection.GetOrCreateSelectors(_resourceType);
+        AttrAttribute detailsAttr = _resourceType.GetAttributeByPropertyName(nameof(CompoundModel.Details));
+        selectors.IncludeAttribute(detailsAttr);
+        FieldSelectors childSelectors = selectors.GetOrCreateChildSelectors(detailsAttr);
+        AttrAttribute nestedAttr = detailsAttr.CompoundType!.GetAttributeByPropertyName(nameof(CompoundRoot.Nested));
+        childSelectors.IncludeAttribute(nestedAttr);
+        FieldSelectors grandchildSelectors = childSelectors.GetOrCreateChildSelectors(nestedAttr);
+        AttrAttribute descAttr = nestedAttr.CompoundType!.GetAttributeByPropertyName(nameof(CompoundNested.Description));
+        grandchildSelectors.IncludeAttribute(descAttr);
+
+        var selectClauseBuilder = new SelectClauseBuilder(_resourceFactory);
+        var lambdaScopeFactory = new LambdaScopeFactory();
+        using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
+
+        IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
+
+        // Act
+        Expression result = selectClauseBuilder.ApplySelect(selection, context);
+
+        // Assert
+        result.ToString().Should().Contain("new CompoundNested() {Description = compoundModel.Details.Nested.Description}");
+    }
+
+    [Fact]
+    public void Builds_select_clause_for_compound_collection_attribute_without_crashing()
+    {
+        // Arrange
+        var selection = new FieldSelection();
+        FieldSelectors selectors = selection.GetOrCreateSelectors(_resourceType);
+        AttrAttribute itemsAttr = _resourceType.GetAttributeByPropertyName(nameof(CompoundModel.Items));
+        selectors.IncludeAttribute(itemsAttr);
+        FieldSelectors childSelectors = selectors.GetOrCreateChildSelectors(itemsAttr);
+        AttrAttribute labelAttr = itemsAttr.CompoundType!.GetAttributeByPropertyName(nameof(CompoundItem.Label));
+        childSelectors.IncludeAttribute(labelAttr);
+
+        var selectClauseBuilder = new SelectClauseBuilder(_resourceFactory);
+        var lambdaScopeFactory = new LambdaScopeFactory();
+        using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
+
+        IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
+
+        // Act
+        Expression result = selectClauseBuilder.ApplySelect(selection, context);
+
+        // Assert
+        result.ToString().Should().Contain("Items = compoundModel.Items");
     }
 
     public void Dispose()

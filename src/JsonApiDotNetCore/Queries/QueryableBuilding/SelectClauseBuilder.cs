@@ -215,7 +215,10 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         }
         else if (propertySelector.ChildSelectors is { IsEmpty: false })
         {
-            assignmentRightHandSide = CreateCompoundMemberInit(propertySelector.ChildSelectors, propertyAccess, context);
+            if (CollectionConverter.Instance.FindCollectionElementType(propertySelector.Property.PropertyType) == null)
+            {
+                assignmentRightHandSide = CreateCompoundMemberInit(propertySelector.ChildSelectors, propertyAccess, context);
+            }
         }
 
         MemberAssignment assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
@@ -236,7 +239,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
                 Expression childRightHandSide;
 
-                if (grandchildSelectors is { IsEmpty: false })
+                if (grandchildSelectors is { IsEmpty: false } && !childAttr.IsCollection)
                 {
                     childRightHandSide = CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, context);
                 }
@@ -265,7 +268,9 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             return CreateCollectionInitializer(selectorPropertyInfo, bodyElementType, layer, context);
         }
 
-        if (layer.Selection == null || layer.Selection.IsEmpty)
+        if (layer.Selection == null || layer.Selection.IsEmpty ||
+            layer.ResourceType.Attributes.Any(attr => attr.IsCompound) ||
+            layer.Selection.GetResourceTypes().Any(type => type.Attributes.Any(attr => attr.IsCompound)))
         {
             return propertyAccess;
         }
