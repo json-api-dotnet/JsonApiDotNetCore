@@ -18,8 +18,13 @@ public sealed class AddressBook : Identifiable<long>
     [Attr(IsCompound = true)]
     public List<ContactRoot> Favorites { get; set; } = [];
 
+    // Scalar collection of strings for text-matching filter tests (startsWith, contains, endsWith)
     [Attr]
-    public List<string>? SyncUrls { get; set; }
+    public List<string>? Categories { get; set; }
+
+    // Scalar collection of Guid value types for count, has, and sort=count tests
+    [Attr]
+    public List<Guid>? SyncDeviceIds { get; set; }
 
     [HasMany]
     public ISet<Contact> Contacts { get; set; } = new HashSet<Contact>();
@@ -30,7 +35,7 @@ public sealed class AddressBook : Identifiable<long>
 public sealed class Contact : Identifiable<long>
 {
     [Attr(IsCompound = true)]
-    public required ContactRoot Content { get; set; }
+    public ContactRoot Content { get; set; } = null!;
 
     [Attr]
     public string? Remarks { get; set; }
@@ -58,7 +63,7 @@ public sealed class ContactNote : Identifiable<long>
 public sealed class ContactRoot
 {
     [Attr(IsCompound = true)]
-    public required ContactName Name { get; set; }
+    public ContactName Name { get; set; } = null!;
 
     [Attr(IsCompound = true)]
     public ContactCompany? Company { get; set; }
@@ -72,11 +77,23 @@ public sealed class ContactRoot
     [Attr(IsCompound = true)]
     public ContactDate? BirthDate { get; set; }
 
+    // Restricted capability: AllowView blocked (never serialized to clients)
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowView)]
+    public string? SecurityPin { get; set; }
+
+    // Scalar collection with nullable elements (int?) and collection-level nullability
+    [Attr]
+    public List<int?>? Ratings { get; set; }
+
     [Attr(IsCompound = true)]
     public List<LabeledValue<string>> EmailAddresses { get; set; } = [];
 
     [Attr(IsCompound = true)]
     public List<LabeledValue<string>> Relations { get; set; } = [];
+
+    // Generic compound type with DateOnly value type
+    [Attr(IsCompound = true)]
+    public List<LabeledValue<DateOnly>> ImportantDates { get; set; } = [];
 }
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -86,35 +103,52 @@ public sealed class ContactName
     public string? FirstName { get; set; }
 
     [Attr]
-    public required string LastName { get; set; }
+    public string? MiddleName { get; set; }
 
     [Attr]
-    public required string DisplayName { get; set; }
+    public string LastName { get; set; } = null!;
+
+    // Calculated read-only property (get-only; no setter)
+    [Attr]
+    public string DisplayName => string.Join(' ', new[] { FirstName, MiddleName, LastName }.Where(s => !string.IsNullOrEmpty(s)));
+
+    // Restricted capability: AllowCreate blocked (POST returns 422, PATCH allowed)
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
+    public string? NickName { get; set; }
+
+    // Restricted capability: AllowChange blocked (POST allowed, PATCH returns 422)
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
+    public string? MaidenName { get; set; }
 }
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class ContactCompany
 {
     [Attr]
-    public required string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [Attr]
     public string? Department { get; set; }
+
+    // Scalar collection of TimeSpan value types inside a JSON-mapped complex type
+    [Attr]
+    public List<TimeSpan> BusinessHours { get; set; } = [];
 }
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class ContactAddress
 {
     [Attr]
-    public required string IsoCountryCode { get; set; }
+    public string IsoCountryCode { get; set; } = null!;
 
     [Attr]
-    public required string City { get; set; }
+    public string City { get; set; } = null!;
 
     [Attr]
     public string? Line1 { get; set; }
 
-    [Attr]
+    // Custom public name "zipCode"; JsonPropertyName is neither needed nor used
+    [Attr(PublicName = "zipCode")]
     public string? PostalCode { get; set; }
 
     [Attr]
@@ -127,8 +161,10 @@ public sealed class ContactPhoneNumber
     [Attr]
     public string? CountryPrefix { get; set; }
 
+    // [Required] attribute on collection element to test write-side ModelState validation
     [Attr]
-    public required string Number { get; set; }
+    [Required]
+    public string Number { get; set; } = null!;
 
     [Attr]
     public string? Label { get; set; }
@@ -156,7 +192,7 @@ public sealed class ContactDate
 public sealed class LabeledValue<T>
 {
     [Attr]
-    public required T Value { get; set; }
+    public T Value { get; set; } = default!;
 
     [Attr]
     public string? Label { get; set; }
