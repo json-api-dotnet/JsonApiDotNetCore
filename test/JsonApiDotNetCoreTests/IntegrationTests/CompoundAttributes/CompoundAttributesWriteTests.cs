@@ -37,8 +37,7 @@ public sealed class CompoundAttributesWriteTests
                         name = new
                         {
                             firstName = "John",
-                            lastName = "Doe",
-                            displayName = "John Doe"
+                            lastName = "Doe"
                         },
                         company = new
                         {
@@ -105,7 +104,7 @@ public sealed class CompoundAttributesWriteTests
                 attributes = new
                 {
                     name = "Work Address Book",
-                    syncUrls = new[]
+                    categories = new[]
                     {
                         "https://example.com/sync",
                         "https://backup.example.com"
@@ -130,8 +129,8 @@ public sealed class CompoundAttributesWriteTests
             AddressBook addressBookInDatabase = await dbContext.AddressBooks.FirstWithIdAsync(long.Parse(newAddressBookId));
 
             addressBookInDatabase.Name.Should().Be("Work Address Book");
-            addressBookInDatabase.SyncUrls.Should().NotBeNull();
-            addressBookInDatabase.SyncUrls.Should().BeEquivalentTo("https://example.com/sync", "https://backup.example.com");
+            addressBookInDatabase.Categories.Should().NotBeNull();
+            addressBookInDatabase.Categories.Should().BeEquivalentTo("https://example.com/sync", "https://backup.example.com");
         });
     }
 
@@ -161,8 +160,7 @@ public sealed class CompoundAttributesWriteTests
                         name = new
                         {
                             firstName = "Jane",
-                            lastName = "Smith",
-                            displayName = "Jane Smith"
+                            lastName = "Smith"
                         },
                         phoneNumbers = new[]
                         {
@@ -248,7 +246,7 @@ public sealed class CompoundAttributesWriteTests
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
 
-        existingAddressBook.SyncUrls =
+        existingAddressBook.Categories =
         [
             "https://old1.com",
             "https://old2.com"
@@ -269,7 +267,7 @@ public sealed class CompoundAttributesWriteTests
                 id = existingAddressBook.StringId,
                 attributes = new
                 {
-                    syncUrls = new[]
+                    categories = new[]
                     {
                         "https://new1.com"
                     }
@@ -290,7 +288,7 @@ public sealed class CompoundAttributesWriteTests
         {
             AddressBook addressBookInDatabase = await dbContext.AddressBooks.FirstWithIdAsync(existingAddressBook.Id);
 
-            addressBookInDatabase.SyncUrls.Should().BeEquivalentTo("https://new1.com");
+            addressBookInDatabase.Categories.Should().BeEquivalentTo("https://new1.com");
         });
     }
 
@@ -328,8 +326,7 @@ public sealed class CompoundAttributesWriteTests
                         name = new
                         {
                             firstName = existingContact.Content.Name.FirstName,
-                            lastName = existingContact.Content.Name.LastName,
-                            displayName = existingContact.Content.Name.DisplayName
+                            lastName = existingContact.Content.Name.LastName
                         },
                         phoneNumbers = Array.Empty<object>()
                     }

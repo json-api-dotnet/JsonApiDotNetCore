@@ -167,7 +167,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/addressBooks/{addressBook.StringId}?fields[addressBooks]=syncUrls";
+        string route = $"/addressBooks/{addressBook.StringId}?fields[addressBooks]=categories";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -177,7 +177,7 @@ public sealed class CompoundAttributesSparseFieldSetTests
 
         responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("name");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("syncUrls");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("categories");
     }
 
     [Fact]

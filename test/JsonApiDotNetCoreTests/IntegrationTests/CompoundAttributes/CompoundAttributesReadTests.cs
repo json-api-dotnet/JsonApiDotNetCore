@@ -198,13 +198,13 @@ public sealed class CompoundAttributesReadTests
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
 
-        addressBooks[0].SyncUrls =
+        addressBooks[0].Categories =
         [
             "https://example.com/sync",
             "https://backup.org"
         ];
 
-        addressBooks[1].SyncUrls = ["https://other.com/api"];
+        addressBooks[1].Categories = ["https://other.com/api"];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -213,7 +213,7 @@ public sealed class CompoundAttributesReadTests
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/addressBooks?filter=has(syncUrls,equals(_,'https://example.com/sync'))";
+        const string route = "/addressBooks?filter=has(categories,equals(_,'https://example.com/sync'))";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -229,8 +229,8 @@ public sealed class CompoundAttributesReadTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        addressBooks[0].SyncUrls = ["https://contoso.com/sync"];
-        addressBooks[1].SyncUrls = ["https://fabrikam.com/sync"];
+        addressBooks[0].Categories = ["https://contoso.com/sync"];
+        addressBooks[1].Categories = ["https://fabrikam.com/sync"];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -239,7 +239,7 @@ public sealed class CompoundAttributesReadTests
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/addressBooks?filter=has(syncUrls,contains(_,'contoso'))";
+        const string route = "/addressBooks?filter=has(categories,contains(_,'contoso'))";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -304,14 +304,14 @@ public sealed class CompoundAttributesReadTests
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
 
-        addressBooks[0].SyncUrls =
+        addressBooks[0].Categories =
         [
             "url1",
             "url2",
             "url3"
         ];
 
-        addressBooks[1].SyncUrls = ["url1"];
+        addressBooks[1].Categories = ["url1"];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -320,7 +320,7 @@ public sealed class CompoundAttributesReadTests
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/addressBooks?filter=greaterThan(count(syncUrls),'1')";
+        const string route = "/addressBooks?filter=greaterThan(count(categories),'1')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

@@ -32,13 +32,16 @@ internal sealed class CompoundAttributesFakers
         _lazyContactNameFaker = new Lazy<Faker<ContactName>>(() => new Faker<ContactName>()
             .MakeDeterministic()
             .RuleFor(name => name.FirstName, faker => faker.Name.FirstName())
+            .RuleFor(name => name.MiddleName, faker => faker.Name.FirstName())
             .RuleFor(name => name.LastName, faker => faker.Name.LastName())
-            .RuleFor(name => name.DisplayName, (_, name) => $"{name.FirstName} {name.LastName}"));
+            .RuleFor(name => name.NickName, faker => faker.Internet.UserName())
+            .RuleFor(name => name.MaidenName, faker => faker.Name.LastName()));
 
         _lazyContactCompanyFaker = new Lazy<Faker<ContactCompany>>(() => new Faker<ContactCompany>()
             .MakeDeterministic()
             .RuleFor(company => company.Name, faker => faker.Company.CompanyName())
-            .RuleFor(company => company.Department, faker => faker.Commerce.Department()));
+            .RuleFor(company => company.Department, faker => faker.Commerce.Department())
+            .RuleFor(company => company.BusinessHours, _ => [TimeSpan.FromHours(9), TimeSpan.FromHours(17)]));
 
         _lazyContactAddressFaker = new Lazy<Faker<ContactAddress>>(() => new Faker<ContactAddress>()
             .MakeDeterministic()
@@ -65,6 +68,8 @@ internal sealed class CompoundAttributesFakers
             .RuleFor(root => root.Name, _ => ContactName.Generate())
             .RuleFor(root => root.Company, _ => ContactCompany.Generate())
             .RuleFor(root => root.BirthDate, _ => ContactDate.Generate())
+            .RuleFor(root => root.SecurityPin, faker => faker.Random.Replace("####"))
+            .RuleFor(root => root.Ratings, faker => [faker.Random.Number(1, 5), null, faker.Random.Number(1, 5)])
             .RuleFor(root => root.PhoneNumbers, _ => ContactPhoneNumber.GenerateList(2))
             .RuleFor(root => root.Addresses, _ => ContactAddress.GenerateList(1))
             .RuleFor(root => root.EmailAddresses, faker =>
@@ -82,6 +87,14 @@ internal sealed class CompoundAttributesFakers
                     Value = faker.Name.FullName(),
                     Label = "friend"
                 }
+            ])
+            .RuleFor(root => root.ImportantDates, faker =>
+            [
+                new LabeledValue<DateOnly>
+                {
+                    Value = DateOnly.FromDateTime(faker.Date.Past()),
+                    Label = "anniversary"
+                }
             ]));
 
         _lazyContactFaker = new Lazy<Faker<Contact>>(() => new Faker<Contact>()
@@ -94,10 +107,15 @@ internal sealed class CompoundAttributesFakers
             .RuleFor(book => book.Name, faker => faker.Commerce.Department())
             .RuleFor(book => book.EmergencyContact, _ => ContactRoot.Generate())
             .RuleFor(book => book.Favorites, _ => ContactRoot.GenerateList(2))
-            .RuleFor(book => book.SyncUrls, faker =>
+            .RuleFor(book => book.Categories, faker =>
             [
-                faker.Internet.Url(),
-                faker.Internet.Url()
+                faker.Commerce.Categories(1)[0],
+                faker.Commerce.Categories(1)[0]
+            ])
+            .RuleFor(book => book.SyncDeviceIds, faker =>
+            [
+                faker.Random.Guid(),
+                faker.Random.Guid()
             ]));
     }
 }
