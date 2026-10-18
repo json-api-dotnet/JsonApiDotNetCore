@@ -302,8 +302,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return attrMap.Count > 0 ? attrMap : null;
     }
 
-    private Dictionary<string, object?> ConvertCompoundObject(object compoundInstance, CompoundType compoundType,
-        CompoundSelectionContext context)
+    private Dictionary<string, object?> ConvertCompoundObject(object compoundInstance, CompoundType compoundType, CompoundSelectionContext context)
     {
         var prunedMap = new Dictionary<string, object?>();
 
@@ -358,24 +357,6 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
 
         return prunedMap;
-    }
-
-    private readonly struct CompoundSelectionContext
-    {
-        public HashSet<ResourceFieldAttribute>? DirectFields { get; }
-        public Dictionary<ResourceFieldAttribute, List<ResourceFieldChainExpression>>? DeeperChainsByAttribute { get; }
-
-        public CompoundSelectionContext(IReadOnlyList<ResourceFieldChainExpression>? fieldChains)
-        {
-            if (fieldChains is { Count: > 0 })
-            {
-                DirectFields = fieldChains.Select(c => c.Fields[0]).ToHashSet();
-                DeeperChainsByAttribute = fieldChains
-                    .Where(c => c.Fields.Count > 1)
-                    .GroupBy(c => c.Fields[0])
-                    .ToDictionary(g => g.Key, g => g.Select(c => new ResourceFieldChainExpression(c.Fields.RemoveAt(0))).ToList());
-            }
-        }
     }
 
     private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,
@@ -514,5 +495,22 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
 
         return !hasErrors && _requestQueryStringAccessor.Query.ContainsKey("include") ? Array.Empty<ResourceObject>() : null;
+    }
+
+    private readonly struct CompoundSelectionContext
+    {
+        public HashSet<ResourceFieldAttribute>? DirectFields { get; }
+        public Dictionary<ResourceFieldAttribute, List<ResourceFieldChainExpression>>? DeeperChainsByAttribute { get; }
+
+        public CompoundSelectionContext(IReadOnlyList<ResourceFieldChainExpression>? fieldChains)
+        {
+            if (fieldChains is { Count: > 0 })
+            {
+                DirectFields = fieldChains.Select(c => c.Fields[0]).ToHashSet();
+
+                DeeperChainsByAttribute = fieldChains.Where(c => c.Fields.Count > 1).GroupBy(c => c.Fields[0]).ToDictionary(g => g.Key,
+                    g => g.Select(c => new ResourceFieldChainExpression(c.Fields.RemoveAt(0))).ToList());
+            }
+        }
     }
 }

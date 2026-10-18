@@ -346,6 +346,7 @@ public partial class ResourceGraphBuilder
 
             SetPublicName(attribute, property);
             attribute.Property = property;
+
             attribute.IsCollection = property.PropertyType != typeof(string) &&
                 CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) != null;
 
@@ -448,6 +449,7 @@ public partial class ResourceGraphBuilder
             {
                 SetPublicName(attribute, property);
                 attribute.Property = property;
+
                 attribute.IsCollection = property.PropertyType != typeof(string) &&
                     CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) != null;
 

@@ -79,6 +79,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
             else if (attributeValue != null && !attr.Property.PropertyType.IsInstanceOfType(attributeValue))
             {
                 JsonElement serializedElement = JsonSerializer.SerializeToElement(attributeValue, _options.SerializerReadOptions);
+
                 attributeValue = attr.IsCollection
                     ? ConvertCompoundCollection(serializedElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state)
                     : ConvertCompoundObject(serializedElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state);
@@ -111,8 +112,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         state.WritableTargetedFields!.Attributes.Add(attr);
     }
 
-    private object? ConvertCompoundObject(JsonElement element, CompoundType compoundType, Type targetType, string? memberName,
-        RequestAdapterState state)
+    private object? ConvertCompoundObject(JsonElement element, CompoundType compoundType, Type targetType, string? memberName, RequestAdapterState state)
     {
         if (element.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
         {
@@ -122,6 +122,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (element.ValueKind != JsonValueKind.Object)
         {
             string typeName = RuntimeTypeConverter.GetFriendlyTypeName(targetType);
+
             string message = memberName != null
                 ? $"Failed to convert attribute '{memberName}' with value '{element}' of type '{element.ValueKind}' to type '{typeName}'."
                 : $"Failed to convert element with value '{element}' of type '{element.ValueKind}' to type '{typeName}'.";
@@ -197,6 +198,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (element.ValueKind != JsonValueKind.Array)
         {
             string typeName = RuntimeTypeConverter.GetFriendlyTypeName(collectionType);
+
             string message = memberName != null
                 ? $"Failed to convert attribute '{memberName}' with value '{element}' of type '{element.ValueKind}' to type '{typeName}'."
                 : $"Failed to convert element with value '{element}' of type '{element.ValueKind}' to type '{typeName}'.";
@@ -204,9 +206,8 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
             throw new ModelConversionException(state.Position, "Incompatible attribute value found.", message);
         }
 
-        Type elementType = CollectionConverter.Instance.FindCollectionElementType(collectionType)
-            ?? (collectionType.IsArray ? collectionType.GetElementType() : null)
-            ?? elementCompoundType.ClrType;
+        Type elementType = CollectionConverter.Instance.FindCollectionElementType(collectionType) ??
+            (collectionType.IsArray ? collectionType.GetElementType() : null) ?? elementCompoundType.ClrType;
 
         var items = new List<object?>();
         int index = 0;
@@ -227,7 +228,8 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
         if (collectionType.IsArray)
         {
-            Array array = Array.CreateInstance(elementType, items.Count);
+            var array = Array.CreateInstance(elementType, items.Count);
+
             for (int i = 0; i < items.Count; i++)
             {
                 array.SetValue(items[i], i);
@@ -243,8 +245,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
     {
         try
         {
-            return Activator.CreateInstance(type, nonPublic: true)
-                ?? throw new InvalidOperationException($"Failed to instantiate compound type '{type.Name}'.");
+            return Activator.CreateInstance(type, true) ?? throw new InvalidOperationException($"Failed to instantiate compound type '{type.Name}'.");
         }
         catch (MissingMethodException exception)
         {
@@ -258,6 +259,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (attr == null)
         {
             string containerKind = container is ResourceType ? "resource type" : "compound type";
+
             throw new ModelConversionException(state.Position, "Unknown attribute found.",
                 $"Attribute '{attributeName}' does not exist on {containerKind} '{container}'.");
         }
@@ -285,6 +287,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (state.Request.WriteOperation == WriteOperationKind.CreateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
         {
             string containerKind = container is ResourceType ? "resource type" : "compound type";
+
             throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when creating resource.",
                 $"The attribute '{attr}' on {containerKind} '{container}' cannot be assigned to.");
         }
@@ -295,6 +298,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (state.Request.WriteOperation == WriteOperationKind.UpdateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
         {
             string containerKind = container is ResourceType ? "resource type" : "compound type";
+
             throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when updating resource.",
                 $"The attribute '{attr}' on {containerKind} '{container}' cannot be assigned to.");
         }
@@ -305,8 +309,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (attr.Property.SetMethod == null)
         {
             string containerKind = container is ResourceType ? "resource type" : "compound type";
-            throw new ModelConversionException(state.Position, "Attribute is read-only.",
-                $"Attribute '{attr}' on {containerKind} '{container}' is read-only.");
+            throw new ModelConversionException(state.Position, "Attribute is read-only.", $"Attribute '{attr}' on {containerKind} '{container}' is read-only.");
         }
     }
 

@@ -17,9 +17,7 @@ public sealed class SparseFieldSetExpressionExtensionsTests
     public SparseFieldSetExpressionExtensionsTests()
     {
         var options = new JsonApiOptions();
-        _resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-            .Add<Contact, long>()
-            .Build();
+        _resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Contact, long>().Build();
     }
 
     [Fact]
@@ -41,7 +39,7 @@ public sealed class SparseFieldSetExpressionExtensionsTests
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet!.FieldChains.Should().HaveCount(2);
+        updatedSet.FieldChains.Should().HaveCount(2);
         updatedSet.FieldChains.Should().Contain(nestedChain);
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
         updatedSet.FieldChains.Should().Contain(new ResourceFieldChainExpression(remarksAttr));
@@ -69,7 +67,7 @@ public sealed class SparseFieldSetExpressionExtensionsTests
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet!.FieldChains.Should().HaveCount(1);
+        updatedSet.FieldChains.Should().HaveCount(1);
         updatedSet.FieldChains.Should().Contain(nestedChain);
         updatedSet.ToString().Should().Be("content.name.lastName");
     }
@@ -95,7 +93,7 @@ public sealed class SparseFieldSetExpressionExtensionsTests
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet!.FieldChains.Should().HaveCount(1);
+        updatedSet.FieldChains.Should().HaveCount(1);
         updatedSet.FieldChains.Should().Contain(remarksChain);
         updatedSet.ToString().Should().Be("remarks");
     }
@@ -113,7 +111,7 @@ public sealed class SparseFieldSetExpressionExtensionsTests
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet!.FieldChains.Should().HaveCount(2);
+        updatedSet.FieldChains.Should().HaveCount(2);
         updatedSet.ToString().Should().Be("content.name.lastName,remarks");
     }
 
@@ -123,7 +121,8 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         // Arrange
         ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
-        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)))
+
+        SparseFieldSetExpression? initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)))
             .Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
 
         // Act
@@ -131,7 +130,7 @@ public sealed class SparseFieldSetExpressionExtensionsTests
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet!.FieldChains.Should().HaveCount(1);
+        updatedSet.FieldChains.Should().HaveCount(1);
         updatedSet.ToString().Should().Be("remarks");
     }
 
@@ -144,11 +143,15 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)));
 
         // Act
-        SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => new { c.Remarks, c.Content!.Name!.LastName }, _resourceGraph);
+        SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => new
+        {
+            c.Remarks,
+            c.Content!.Name!.LastName
+        }, _resourceGraph);
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet!.FieldChains.Should().HaveCount(2);
+        updatedSet.FieldChains.Should().HaveCount(2);
         updatedSet.ToString().Should().Be("content.name.lastName,remarks");
     }
 
