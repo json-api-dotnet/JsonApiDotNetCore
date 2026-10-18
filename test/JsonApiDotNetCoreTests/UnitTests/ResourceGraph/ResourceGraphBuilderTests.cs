@@ -492,6 +492,29 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
+    public void Generic_Find_and_Get_overloads_on_ResourceGraph_succeed_and_fail_as_expected()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<ResourceWithCompoundAttributes, long>();
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Act & Assert
+        resourceGraph.FindResourceType<ResourceWithCompoundAttributes>().Should().NotBeNull();
+        resourceGraph.FindResourceType<ResourceWithCompoundAttributes>()!.ClrType.Should().Be<ResourceWithCompoundAttributes>();
+        resourceGraph.FindResourceType<ResourceWithAttribute>().Should().BeNull();
+
+        resourceGraph.GetCompoundType<TestRootCompound>().ClrType.Should().Be<TestRootCompound>();
+        resourceGraph.FindCompoundType<TestRootCompound>().Should().NotBeNull();
+        resourceGraph.FindCompoundType<TestRootCompound>()!.ClrType.Should().Be<TestRootCompound>();
+        resourceGraph.FindCompoundType<string>().Should().BeNull();
+
+        Action action = () => resourceGraph.GetCompoundType<string>();
+        action.Should().ThrowExactly<InvalidOperationException>();
+    }
+
+    [Fact]
     public void Automatically_strips_AllowSort_from_compound_attributes()
     {
         // Arrange

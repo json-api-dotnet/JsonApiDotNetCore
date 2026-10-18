@@ -44,6 +44,12 @@ public interface IResourceGraph
     ResourceType? FindResourceType(Type resourceClrType);
 
     /// <summary>
+    /// Attempts to get metadata for the resource of the specified CLR type. Returns <c>null</c> when not found.
+    /// </summary>
+    ResourceType? FindResourceType<TResource>()
+        where TResource : class, IIdentifiable;
+
+    /// <summary>
     /// Gets the metadata for all registered compound types.
     /// </summary>
     IReadOnlySet<CompoundType> GetCompoundTypes();
@@ -54,9 +60,19 @@ public interface IResourceGraph
     CompoundType GetCompoundType(Type clrType);
 
     /// <summary>
+    /// Gets the metadata for the compound type of the specified CLR type. Throws an <see cref="InvalidOperationException" /> when not found.
+    /// </summary>
+    CompoundType GetCompoundType<TCompound>();
+
+    /// <summary>
     /// Attempts to get metadata for the compound type of the specified CLR type. Returns <c>null</c> when not found.
     /// </summary>
     CompoundType? FindCompoundType(Type clrType);
+
+    /// <summary>
+    /// Attempts to get metadata for the compound type of the specified CLR type. Returns <c>null</c> when not found.
+    /// </summary>
+    CompoundType? FindCompoundType<TCompound>();
 
     /// <summary>
     /// Gets the fields (attributes and relationships) for <typeparamref name="TResource" /> that are targeted by the selector.
