@@ -115,6 +115,7 @@ public abstract class ResourceFieldAttribute : Attribute
 
     protected void AssertIsIdentifiable(object? resource)
     {
+        // Fields in a CompoundType represent unidentifiable embedded value objects, so skip IIdentifiable check for them.
         if (_containingType is not CompoundType && resource is not null and not IIdentifiable)
         {
 #pragma warning disable CA1062 // Validate arguments of public methods
