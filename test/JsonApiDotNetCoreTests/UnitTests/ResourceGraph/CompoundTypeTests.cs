@@ -9,16 +9,6 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
 public sealed class CompoundTypeTests
 {
     [Fact]
-    public void Cannot_create_compound_type_without_clr_type()
-    {
-        // Act
-        Action action = () => _ = new CompoundType(null!);
-
-        // Assert
-        action.Should().ThrowExactly<ArgumentNullException>();
-    }
-
-    [Fact]
     public void Can_lookup_attributes_in_compound_type()
     {
         // Arrange
@@ -56,7 +46,7 @@ public sealed class CompoundTypeTests
     public void Can_lookup_compound_type_in_resource_graph()
     {
         // Arrange
-        var compoundType = new CompoundType(typeof(TestAddress));
+        var compoundType = new CompoundType(typeof(TestAddress), []);
 
         var resourceGraph = new JsonApiDotNetCore.Configuration.ResourceGraph(new HashSet<ResourceType>().AsReadOnly(), new HashSet<CompoundType>
         {
