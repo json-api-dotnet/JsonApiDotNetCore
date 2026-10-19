@@ -95,13 +95,6 @@ public sealed class QueryClauseBuilderContext
         return new QueryClauseBuilderContext(source, ResourceType, ExtensionType, EntityModel, LambdaScopeFactory, LambdaScope, QueryableBuilder, State);
     }
 
-    public QueryClauseBuilderContext WithExtensionType(Type extensionType)
-    {
-        ArgumentNullException.ThrowIfNull(extensionType);
-
-        return new QueryClauseBuilderContext(Source, ResourceType, extensionType, EntityModel, LambdaScopeFactory, LambdaScope, QueryableBuilder, State);
-    }
-
     public QueryClauseBuilderContext WithLambdaScope(LambdaScope lambdaScope)
     {
         ArgumentNullException.ThrowIfNull(lambdaScope);
