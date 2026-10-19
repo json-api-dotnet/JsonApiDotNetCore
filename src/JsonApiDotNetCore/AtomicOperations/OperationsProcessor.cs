@@ -86,7 +86,7 @@ public class OperationsProcessor : IOperationsProcessor
         }
         catch (JsonApiException exception)
         {
-            string operationPointer = indexTracker.OperationIndex != null ? $"/atomic:operations[{indexTracker.OperationIndex}]" : "/atomic:operations";
+            string operationPointer = indexTracker.OperationIndex != null ? $"/atomic:operations/{indexTracker.OperationIndex}" : "/atomic:operations";
 
             foreach (ErrorObject error in exception.Errors)
             {

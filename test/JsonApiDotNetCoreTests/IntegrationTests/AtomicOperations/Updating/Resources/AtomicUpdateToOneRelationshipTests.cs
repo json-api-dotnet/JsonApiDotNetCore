@@ -612,7 +612,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/lyric");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -665,7 +665,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/lyric");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -726,7 +726,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null', instead of an array.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/lyric/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -775,7 +775,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/track/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/track/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -825,7 +825,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/lyric/data/type");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -874,7 +874,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/lyric/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -925,7 +925,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/lyric/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -985,7 +985,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'lyrics' with ID '{lyricId}' in relationship 'lyric' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
         error.Meta.Should().NotContainKey("requestBody");
     }
 
@@ -1043,7 +1043,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'lyrics' of relationship 'lyric'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/lyric/data/type");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -1101,7 +1101,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
         error.Detail.Should().Be("The relationship 'language' on resource type 'lyrics' cannot be assigned to.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/language");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/language");
         error.Meta.Should().HaveRequestBody();
     }
 }

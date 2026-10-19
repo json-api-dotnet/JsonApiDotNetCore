@@ -84,7 +84,8 @@ public sealed class InvalidModelStateException(
 
     private static string? ResolveSourcePointerInArrayIndexer(ArrayIndexerSegment segment, IResourceGraph resourceGraph)
     {
-        string sourcePointer = $"{segment.SourcePointer ?? "/atomic:operations"}[{segment.ArrayIndex}]";
+        string prefix = segment.SourcePointer ?? "/atomic:operations";
+        string sourcePointer = $"{prefix}/{segment.ArrayIndex}";
         Type elementType = segment.GetCollectionElementType();
 
         ModelStateKeySegment? nextSegment = segment.GetNextSegment(elementType, segment.IsInComplexType, sourcePointer);

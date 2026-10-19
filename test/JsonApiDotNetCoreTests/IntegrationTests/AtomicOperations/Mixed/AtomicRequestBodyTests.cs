@@ -174,7 +174,7 @@ public sealed class AtomicRequestBodyTests : IClassFixture<IntegrationTestContex
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
         error.Meta.Should().HaveRequestBody();
     }
 

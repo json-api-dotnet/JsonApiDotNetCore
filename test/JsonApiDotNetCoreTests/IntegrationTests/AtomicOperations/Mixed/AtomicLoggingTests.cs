@@ -118,7 +118,7 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
         error.Title.Should().Be("An unhandled error occurred while processing an operation in this request.");
         error.Detail.Should().Be("Simulated operation failure.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
 

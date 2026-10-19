@@ -58,14 +58,14 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Title field is required.");
         error1.Source.Should().NotBeNull();
-        error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
+        error1.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/title");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
         error2.Source.Should().NotBeNull();
-        error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
+        error2.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/lengthInSeconds");
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("ReleasedAt must be in the past.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/releasedAt");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/releasedAt");
     }
 
     [Fact]
@@ -229,14 +229,14 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Title field is required.");
         error1.Source.Should().NotBeNull();
-        error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
+        error1.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/title");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
         error2.Source.Should().NotBeNull();
-        error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
+        error2.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/lengthInSeconds");
     }
 
     [Fact]
@@ -516,14 +516,14 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Name field is required.");
         error1.Source.Should().NotBeNull();
-        error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
+        error1.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/name");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
         error2.Source.Should().NotBeNull();
-        error2.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/lengthInSeconds");
+        error2.Source.Pointer.Should().Be("/atomic:operations/1/data/attributes/lengthInSeconds");
     }
 
     [Fact]
@@ -606,13 +606,13 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The Name field is required.");
         error2.Source.Should().NotBeNull();
-        error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
+        error2.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/name");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error3.Title.Should().Be("Input validation failed.");
         error3.Detail.Should().Be("The Name field is required.");
         error3.Source.Should().NotBeNull();
-        error3.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/name");
+        error3.Source.Pointer.Should().Be("/atomic:operations/1/data/attributes/name");
     }
 }

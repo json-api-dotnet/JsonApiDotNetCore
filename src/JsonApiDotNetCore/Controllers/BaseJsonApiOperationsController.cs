@@ -149,7 +149,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
                         $"on resource type '{operationRequest.Relationship.LeftType}'.",
                     Source = new ErrorSource
                     {
-                        Pointer = $"/atomic:operations[{operationIndex}]"
+                        Pointer = $"/atomic:operations/{operationIndex}"
                     }
                 });
             }
@@ -163,7 +163,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
                     Detail = $"The '{operationCode}' resource operation is not accessible for resource type '{operationRequest.PrimaryResourceType}'.",
                     Source = new ErrorSource
                     {
-                        Pointer = $"/atomic:operations[{operationIndex}]"
+                        Pointer = $"/atomic:operations/{operationIndex}"
                     }
                 });
             }

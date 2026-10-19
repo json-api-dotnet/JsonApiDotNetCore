@@ -237,7 +237,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/performers/data/0");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -289,7 +289,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]/type");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/performers/data/0/type");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -340,7 +340,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/performers/data/0");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -406,7 +406,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error1.Title.Should().Be("A related resource does not exist.");
         error1.Detail.Should().Be($"Related resource of type 'performers' with ID '{performerId1}' in relationship 'performers' does not exist.");
         error1.Source.Should().NotBeNull();
-        error1.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error1.Source.Pointer.Should().Be("/atomic:operations/0");
         error1.Meta.Should().NotContainKey("requestBody");
 
         ErrorObject error2 = responseDocument.Errors[1];
@@ -414,7 +414,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error2.Title.Should().Be("A related resource does not exist.");
         error2.Detail.Should().Be($"Related resource of type 'performers' with ID '{performerId2}' in relationship 'performers' does not exist.");
         error2.Source.Should().NotBeNull();
-        error2.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error2.Source.Pointer.Should().Be("/atomic:operations/0");
         error2.Meta.Should().NotContainKey("requestBody");
     }
 
@@ -466,7 +466,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'performers' of relationship 'performers'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]/type");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/performers/data/0/type");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -589,7 +589,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/performers");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -634,7 +634,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/tracks/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -681,7 +681,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of an object.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/tracks/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -733,7 +733,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
         error.Detail.Should().Be("The relationship 'occursIn' on resource type 'musicTracks' cannot be assigned to.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/occursIn");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/occursIn");
         error.Meta.Should().HaveRequestBody();
     }
 }

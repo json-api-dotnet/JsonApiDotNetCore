@@ -234,7 +234,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -289,7 +289,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Title.Should().Be("Another resource with the specified ID already exists.");
         error.Detail.Should().Be($"Another resource of type 'textLanguages' with ID '{languageToCreate.StringId}' already exists.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
         error.Meta.Should().NotContainKey("requestBody");
     }
 
@@ -333,7 +333,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
         error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/id");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -428,7 +428,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Title.Should().Be("Failed to deserialize request body: The 'lid' element cannot be used because a client-generated ID is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/lid");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/lid");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -468,7 +468,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data");
         error.Meta.Should().HaveRequestBody();
     }
 }

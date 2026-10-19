@@ -354,7 +354,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/href");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -388,7 +388,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'ref' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -426,7 +426,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/ref");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -465,7 +465,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/type");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/ref/type");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -503,7 +503,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/ref");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -544,7 +544,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("The requested resource does not exist.");
         error.Detail.Should().Be($"Resource of type 'performers' with ID '{performerId}' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
         error.Meta.Should().NotContainKey("requestBody");
     }
 
@@ -585,7 +585,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
         error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int64'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/id");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/ref/id");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -625,7 +625,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/ref");
         error.Meta.Should().HaveRequestBody();
     }
 }

@@ -260,7 +260,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
         error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'playlists'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/doesNotExist");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/doesNotExist");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -365,7 +365,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
         error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'lyrics'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/doesNotExist");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/relationships/doesNotExist");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -477,7 +477,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The use of client-generated IDs is disabled.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/id");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -512,7 +512,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/href");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -550,7 +550,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'relationship' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/ref");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -584,7 +584,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]");
+        error.Source.Pointer.Should().Be("/atomic:operations/0");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -619,7 +619,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -666,7 +666,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of an array.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -706,7 +706,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -744,7 +744,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/type");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -789,7 +789,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
         error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/isArchived");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -831,7 +831,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
         error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '12345' of type 'Number' to type 'DateTimeOffset'.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/bornAt");
         error.Meta.Should().HaveRequestBody();
     }
 
@@ -984,7 +984,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
         error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/createdAt");
         error.Meta.Should().HaveRequestBody();
     }
 }

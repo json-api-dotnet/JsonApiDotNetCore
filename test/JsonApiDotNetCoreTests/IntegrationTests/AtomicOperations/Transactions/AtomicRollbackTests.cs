@@ -95,7 +95,7 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'performers' with ID '{unknownPerformerId}' in relationship 'performers' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -175,7 +175,7 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'performers' with ID '{unknownPerformerId}' in relationship 'performers' does not exist.");
         error.Source.Should().NotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[1]");
+        error.Source.Pointer.Should().Be("/atomic:operations/1");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
