@@ -22,12 +22,13 @@ public sealed class CompoundType : IAttributeContainer
     /// <inheritdoc />
     public IReadOnlyCollection<AttrAttribute> Attributes { get; }
 
-    public CompoundType(Type clrType, IReadOnlyCollection<AttrAttribute>? attributes = null)
+    public CompoundType(Type clrType, IReadOnlyCollection<AttrAttribute> attributes)
     {
         ArgumentNullException.ThrowIfNull(clrType);
+        ArgumentNullException.ThrowIfNull(attributes);
 
         ClrType = clrType;
-        Attributes = attributes ?? [];
+        Attributes = attributes;
 
         foreach (AttrAttribute attribute in Attributes)
         {

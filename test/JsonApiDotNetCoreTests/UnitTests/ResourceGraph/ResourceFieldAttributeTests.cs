@@ -264,7 +264,7 @@ public sealed class ResourceFieldAttributeTests
     public void Can_set_and_get_IsCompound_and_CompoundType()
     {
         // Arrange
-        var compoundType = new CompoundType(typeof(TestResource));
+        var compoundType = new CompoundType(typeof(TestResource), []);
 
         var attribute = new AttrAttribute
         {
