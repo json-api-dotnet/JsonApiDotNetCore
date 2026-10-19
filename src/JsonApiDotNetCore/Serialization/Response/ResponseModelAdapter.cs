@@ -235,24 +235,17 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return resourceObject;
     }
 
-    protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
-        IImmutableSet<ResourceFieldAttribute> fieldSet)
-    {
-        return ConvertAttributes(resource, resourceType, new SparseFieldSetExpression(fieldSet));
-    }
-
-    protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
-        SparseFieldSetExpression fieldSetExpression)
+    protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType, SparseFieldSetExpression fieldSet)
     {
         ArgumentNullException.ThrowIfNull(resource);
         ArgumentNullException.ThrowIfNull(resourceType);
-        ArgumentNullException.ThrowIfNull(fieldSetExpression);
+        ArgumentNullException.ThrowIfNull(fieldSet);
 
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 
         foreach (AttrAttribute attr in resourceType.Attributes)
         {
-            if (!fieldSetExpression.Fields.Contains(attr) || attr.Property.Name == nameof(Identifiable<>.Id))
+            if (!fieldSet.Fields.Contains(attr) || attr.Property.Name == nameof(Identifiable<>.Id))
             {
                 continue;
             }
@@ -273,8 +266,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
             if (value != null && attr.IsCompound)
             {
                 // Check if any field chains exist for this compound attribute with deeper paths
-                List<ResourceFieldChainExpression> subChains = fieldSetExpression.FieldChains
-                    .Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(attr))
+                List<ResourceFieldChainExpression> subChains = fieldSet.FieldChains.Where(chain => chain.Fields.Count > 1 && chain.Fields[0].Equals(attr))
                     .Select(chain => new ResourceFieldChainExpression(chain.Fields.RemoveAt(0))).ToList();
 
                 var context = new CompoundSelectionContext(subChains.Count > 0 ? subChains : null);
