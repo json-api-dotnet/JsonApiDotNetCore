@@ -36,8 +36,8 @@ internal sealed class LengthFilterParser(IResourceFactory resourceFactory)
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
+            FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];
 
