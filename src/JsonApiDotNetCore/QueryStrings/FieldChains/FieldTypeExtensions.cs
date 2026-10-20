@@ -6,67 +6,118 @@ internal static class FieldTypeExtensions
 {
     public static void WriteTo(this FieldTypes choices, StringBuilder builder, bool pluralize, bool prefix)
     {
-        int startOffset = builder.Length;
+        var writer = new ChoiceWriter(builder, pluralize, prefix);
 
         if (choices.HasFlag(FieldTypes.Field))
         {
-            WriteChoice("field", pluralize, prefix, false, builder, startOffset);
-            return;
+            writer.Write("field");
         }
-
-        if (choices.HasFlag(FieldTypes.ToManyRelationship) && !choices.HasFlag(FieldTypes.Relationship))
+        else
         {
-            WriteChoice("to-many relationship", pluralize, prefix, false, builder, startOffset);
-        }
-
-        if (choices.HasFlag(FieldTypes.ToOneRelationship) && !choices.HasFlag(FieldTypes.Relationship))
-        {
-            WriteChoice("to-one relationship", pluralize, prefix, false, builder, startOffset);
-        }
-
-        if (choices.HasFlag(FieldTypes.Relationship))
-        {
-            WriteChoice("relationship", pluralize, prefix, false, builder, startOffset);
-        }
-
-        if (choices.HasFlag(FieldTypes.ScalarAttribute))
-        {
-            WriteChoice("attribute", pluralize, prefix, true, builder, startOffset);
-        }
-
-        if (choices.HasFlag(FieldTypes.CompoundAttribute))
-        {
-            WriteChoice("compound attribute", pluralize, prefix, false, builder, startOffset);
-        }
-
-        if (choices.HasFlag(FieldTypes.ScalarCollectionAttribute))
-        {
-            WriteChoice("scalar collection", pluralize, prefix, false, builder, startOffset);
-        }
-
-        if (choices.HasFlag(FieldTypes.CompoundCollectionAttribute))
-        {
-            WriteChoice("compound collection", pluralize, prefix, false, builder, startOffset);
+            WriteRelationships(choices, writer);
+            WriteAttributes(choices, writer);
         }
     }
 
-    private static void WriteChoice(string typeText, bool pluralize, bool prefix, bool isAttribute, StringBuilder builder, int startOffset)
+    private static void WriteRelationships(FieldTypes choices, ChoiceWriter writer)
     {
-        if (builder.Length > startOffset)
+        if (choices.HasFlag(FieldTypes.Relationship))
         {
-            builder.Append(" or ");
+            writer.Write("relationship");
         }
-
-        if (prefix && !pluralize)
+        else if (choices.HasFlag(FieldTypes.ToOneRelationship))
         {
-            builder.Append(isAttribute ? "an " : "a ");
+            writer.Write("to-one relationship");
         }
-
-        builder.Append(typeText);
-
-        if (pluralize)
+        else if (choices.HasFlag(FieldTypes.ToManyRelationship))
         {
-            builder.Append('s');
+            writer.Write("to-many relationship");
+        }
+    }
+
+    private static void WriteAttributes(FieldTypes choices, ChoiceWriter writer)
+    {
+        if (choices.HasFlag(FieldTypes.Attribute))
+        {
+            writer.Write("attribute");
+        }
+        else
+        {
+            bool hasScalar = choices.HasFlag(FieldTypes.ScalarAttribute);
+            bool hasCompound = choices.HasFlag(FieldTypes.CompoundAttribute);
+            bool hasScalarCollection = choices.HasFlag(FieldTypes.ScalarCollectionAttribute);
+            bool hasCompoundCollection = choices.HasFlag(FieldTypes.CompoundCollectionAttribute);
+
+            if (hasScalar && hasCompound && !hasScalarCollection && !hasCompoundCollection)
+            {
+                writer.Write("non-collection attribute");
+            }
+            else if (hasScalarCollection && hasCompoundCollection && !hasScalar && !hasCompound)
+            {
+                writer.Write("collection attribute");
+            }
+            else
+            {
+                WriteScalarAttributes(hasScalar, hasScalarCollection, writer);
+                WriteCompoundAttributes(hasCompound, hasCompoundCollection, writer);
+            }
+        }
+    }
+
+    private static void WriteScalarAttributes(bool hasScalar, bool hasScalarCollection, ChoiceWriter writer)
+    {
+        if (hasScalar && hasScalarCollection)
+        {
+            writer.Write("scalar attribute");
+        }
+        else if (hasScalar)
+        {
+            writer.Write("scalar non-collection attribute");
+        }
+        else if (hasScalarCollection)
+        {
+            writer.Write("scalar collection attribute");
+        }
+    }
+
+    private static void WriteCompoundAttributes(bool hasCompound, bool hasCompoundCollection, ChoiceWriter writer)
+    {
+        if (hasCompound && hasCompoundCollection)
+        {
+            writer.Write("compound attribute");
+        }
+        else if (hasCompound)
+        {
+            writer.Write("compound non-collection attribute");
+        }
+        else if (hasCompoundCollection)
+        {
+            writer.Write("compound collection attribute");
+        }
+    }
+
+    private readonly ref struct ChoiceWriter(StringBuilder builder, bool pluralize, bool prefix)
+    {
+        private readonly int _startOffset = builder.Length;
+
+        public void Write(string choice)
+        {
+            if (builder.Length > _startOffset)
+            {
+                builder.Append(" or ");
+            }
+
+            if (prefix && !pluralize)
+            {
+                builder.Append(choice.StartsWith('a') ? "an " : "a ");
+            }
+
+            builder.Append(choice);
+
+            if (pluralize)
+            {
+                builder.Append('s');
+            }
         }
     }
 }

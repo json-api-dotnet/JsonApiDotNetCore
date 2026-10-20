@@ -35,7 +35,7 @@ internal sealed class LengthSortParser : SortParser
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInScalarAttribute,
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
             FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, null);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];

@@ -14,10 +14,11 @@ public sealed class FieldChainPattern
     public const char ToManyRelationshipToken = 'M';
     public const char ToOneRelationshipToken = 'O';
     public const char RelationshipToken = 'R';
-    public const char AttributeToken = 'A';
+    public const char ScalarAttributeToken = 'S';
     public const char CompoundAttributeToken = 'C';
     public const char ScalarCollectionToken = 'L';
     public const char CompoundCollectionToken = 'Q';
+    public const char AttributeToken = 'A';
     public const char FieldToken = 'F';
 
     /// <summary>
@@ -81,27 +82,33 @@ public sealed class FieldChainPattern
     /// </description>
     /// </item>
     /// <item>
-    /// <term>A</term>
+    /// <term>S</term>
     /// <description>
-    /// Matches an attribute.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <term>C</term>
-    /// <description>
-    /// Matches a compound attribute.
+    /// Matches a scalar non-collection attribute.
     /// </description>
     /// </item>
     /// <item>
     /// <term>L</term>
     /// <description>
-    /// Matches a scalar collection.
+    /// Matches a scalar collection attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>C</term>
+    /// <description>
+    /// Matches a compound non-collection attribute.
     /// </description>
     /// </item>
     /// <item>
     /// <term>Q</term>
     /// <description>
-    /// Matches a compound collection.
+    /// Matches a compound collection attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>A</term>
+    /// <description>
+    /// Matches an attribute.
     /// </description>
     /// </item>
     /// <item>
@@ -168,8 +175,8 @@ public sealed class FieldChainPattern
     /// <returns>
     /// The match result.
     /// </returns>
-    public PatternMatchResult Match(string fieldChain, IAttributeContainer container, FieldChainPatternMatchOptions options,
-        ILoggerFactory? loggerFactory = null)
+    public PatternMatchResult Match(string fieldChain, IAttributeContainer container,
+        FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None, ILoggerFactory? loggerFactory = null)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
         ArgumentNullException.ThrowIfNull(container);

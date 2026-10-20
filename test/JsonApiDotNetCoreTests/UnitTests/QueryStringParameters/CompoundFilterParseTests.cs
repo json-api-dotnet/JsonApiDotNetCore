@@ -80,8 +80,8 @@ public sealed class CompoundFilterParseTests
 
     [Theory]
     [InlineData("filter", "greaterThan(details^,null)",
-        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
-        "To-one relationship or attribute or compound attribute on compound type 'CompoundRoot' expected.")]
+        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on compound type 'CompoundRoot' expected.")]
     [InlineData("filter", "equals(details.^unknown,'x')", "Field 'unknown' does not exist on compound type 'CompoundRoot'.")]
     [InlineData("filter", "has(details.numbers,equals(_,^null))", "Function, value between quotes or _ expected.")]
     [InlineData("filter", "has(tags,equals(^unknown,'work'))", "Function or _ expected.")]

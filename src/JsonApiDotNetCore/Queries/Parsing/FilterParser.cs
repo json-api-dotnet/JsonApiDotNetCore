@@ -53,26 +53,10 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         {
             if (_containerStack.Count == 0)
             {
-                throw new InvalidOperationException("No resource type is currently in scope. Call Parse() first.");
+                throw new InvalidOperationException($"No resource or compound type is currently in scope. Call {nameof(Parse)}() first.");
             }
 
             return _containerStack.Peek();
-        }
-    }
-
-    /// <summary>
-    /// Gets the resource type currently in scope. Call <see cref="InScopeOfResourceType" /> to temporarily change the current resource type.
-    /// </summary>
-    protected ResourceType ResourceTypeInScope
-    {
-        get
-        {
-            if (ContainerInScope is ResourceType resourceType)
-            {
-                return resourceType;
-            }
-
-            throw new InvalidOperationException($"The container currently in scope is not a resource type: '{ContainerInScope}'.");
         }
     }
 
@@ -94,7 +78,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         _scalarCollectionElementTypeStack.Clear();
         FilterExpression expression;
 
-        using (InScopeOfResourceType(resourceType))
+        using (InScopeOfContainer(resourceType))
         {
             expression = ParseFilter();
 
@@ -562,7 +546,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
             if (lastField is HasManyAttribute hasManyRelationship)
             {
-                using (InScopeOfResourceType(hasManyRelationship.RightType))
+                using (InScopeOfContainer(hasManyRelationship.RightType))
                 {
                     filter = ParseFilter();
                 }
@@ -600,7 +584,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             throw new QueryParseException("Function 'isType' cannot be used on scalar collection elements.", position);
         }
 
-        if (ContainerInScope is not ResourceType)
+        if (ContainerInScope is not ResourceType resourceTypeInScope)
         {
             int position = GetNextTokenPositionOrEnd();
             throw new QueryParseException("Function 'isType' cannot be used on compound types.", position);
@@ -613,7 +597,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        ResourceType baseType = targetToOneRelationship != null ? ((RelationshipAttribute)targetToOneRelationship.Fields[^1]).RightType : ResourceTypeInScope;
+        ResourceType baseType = targetToOneRelationship != null ? ((RelationshipAttribute)targetToOneRelationship.Fields[^1]).RightType : resourceTypeInScope;
         ResourceType derivedType = ParseDerivedType(baseType);
 
         FilterExpression? child = TryParseFilterInIsType(derivedType);
@@ -630,7 +614,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             return null;
         }
 
-        return ParseFieldChain(BuiltInPatterns.ToOneChain, FieldChainPatternMatchOptions.None, ResourceTypeInScope, "Relationship name or , expected.");
+        return ParseFieldChain(BuiltInPatterns.ToOneChain, FieldChainPatternMatchOptions.None, ContainerInScope, "Relationship name or , expected.");
     }
 
     private ResourceType ParseDerivedType(ResourceType baseType)
@@ -686,7 +670,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         {
             EatSingleCharacterToken(TokenKind.Comma);
 
-            using (InScopeOfResourceType(derivedType))
+            using (InScopeOfContainer(derivedType))
             {
                 filter = ParseFilter();
             }
@@ -777,14 +761,6 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     }
 
     /// <summary>
-    /// Changes the resource type currently in scope and restores the original resource type when the return value is disposed.
-    /// </summary>
-    protected IDisposable InScopeOfResourceType(ResourceType resourceType)
-    {
-        return InScopeOfContainer(resourceType);
-    }
-
-    /// <summary>
     /// Changes the container currently in scope and restores the original container when the return value is disposed.
     /// </summary>
     protected IDisposable InScopeOfContainer(IAttributeContainer container)
@@ -810,8 +786,11 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     {
         if (_containerStack.Count > 0)
         {
-            throw new InvalidOperationException("There is still a resource type in scope after parsing has completed. " +
-                $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfResourceType)}().");
+            IAttributeContainer containerAtTopOfStack = _containerStack.Peek();
+            string containerType = containerAtTopOfStack is ResourceType ? "resource type" : "compound type";
+
+            throw new InvalidOperationException($"There is still a {containerType} in scope after parsing has completed. " +
+                $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfContainer)}().");
         }
     }
 
