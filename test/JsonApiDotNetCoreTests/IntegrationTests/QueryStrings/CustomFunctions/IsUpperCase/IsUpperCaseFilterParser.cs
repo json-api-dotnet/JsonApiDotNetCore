@@ -26,8 +26,8 @@ internal sealed class IsUpperCaseFilterParser(IResourceFactory resourceFactory)
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
+            FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];
 

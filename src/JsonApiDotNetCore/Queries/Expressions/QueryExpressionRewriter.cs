@@ -51,6 +51,11 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return expression;
     }
 
+    public override QueryExpression VisitCollectionElementValue(CollectionElementValueExpression expression, TArgument argument)
+    {
+        return expression;
+    }
+
     public override QueryExpression? VisitLogical(LogicalExpression expression, TArgument argument)
     {
         IImmutableList<FilterExpression> newTerms = VisitList(expression.Terms, argument);

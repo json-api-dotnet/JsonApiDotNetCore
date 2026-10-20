@@ -11,6 +11,8 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 [PublicAPI]
 public class SortParser : QueryExpressionParser, ISortParser
 {
+    private bool _isInsideCount;
+
     /// <inheritdoc />
     public SortExpression Parse(string source, ResourceType resourceType)
     {
@@ -91,7 +93,9 @@ public class SortParser : QueryExpressionParser, ISortParser
         else
         {
             string errorMessage = !isAscending ? "Count function or field name expected." : "-, count function or field name expected.";
-            target = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, errorMessage);
+
+            target = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType,
+                errorMessage);
         }
 
         return new SortElementExpression(target, isAscending);
@@ -128,8 +132,19 @@ public class SortParser : QueryExpressionParser, ISortParser
         EatText(Keywords.Count);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetCollection =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, null);
+        _isInsideCount = true;
+
+        ResourceFieldChainExpression targetCollection;
+
+        try
+        {
+            targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection, FieldChainPatternMatchOptions.AllowDerivedTypes,
+                resourceType, null);
+        }
+        finally
+        {
+            _isInsideCount = false;
+        }
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
@@ -140,7 +155,10 @@ public class SortParser : QueryExpressionParser, ISortParser
     {
         ArgumentNullException.ThrowIfNull(field);
 
-        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
+        // Intermediate compound attributes are skipped during capability checks because AllowSort was stripped at startup
+        // to prevent sorting by whole compound objects, while built-in sort pattern '[OC]*A' ensures only leaf scalar attributes are evaluated.
+        if (!_isInsideCount && field is AttrAttribute { IsCompound: false, IsCollection: false } attribute &&
+            !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
             throw new QueryParseException($"Sorting on attribute '{attribute}' is not allowed.", position);
         }

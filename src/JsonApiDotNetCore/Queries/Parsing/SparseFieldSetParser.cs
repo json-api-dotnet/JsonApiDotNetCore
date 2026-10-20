@@ -29,7 +29,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
+        ImmutableHashSet<ResourceFieldChainExpression>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldChainExpression>();
 
         while (TokenStack.Count > 0)
         {
@@ -38,11 +38,10 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
                 EatSingleCharacterToken(TokenKind.Comma);
             }
 
-            ResourceFieldChainExpression nextChain =
-                ParseFieldChain(BuiltInPatterns.SingleField, FieldChainPatternMatchOptions.None, resourceType, "Field name expected.");
+            ResourceFieldChainExpression nextChain = ParseFieldChain(BuiltInPatterns.CompoundOrCompoundCollectionChainEndingInField,
+                FieldChainPatternMatchOptions.None, resourceType, "Field name expected.");
 
-            ResourceFieldAttribute nextField = nextChain.Fields.Single();
-            fieldSetBuilder.Add(nextField);
+            fieldSetBuilder.Add(nextChain);
         }
 
         return fieldSetBuilder.Count > 0 ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;

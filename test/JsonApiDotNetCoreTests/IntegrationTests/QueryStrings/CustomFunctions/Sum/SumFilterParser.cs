@@ -38,7 +38,7 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetToManyRelationshipChain = ParseFieldChain(SingleToManyRelationshipChain, FieldChainPatternMatchOptions.None,
-            ResourceTypeInScope, "To-many relationship expected.");
+            ContainerInScope, "To-many relationship expected.");
 
         EatSingleCharacterToken(TokenKind.Comma);
 
@@ -53,7 +53,7 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
     {
         var toManyRelationship = (HasManyAttribute)targetChain.Fields.Single();
 
-        using IDisposable scope = InScopeOfResourceType(toManyRelationship.RightType);
+        using IDisposable scope = InScopeOfContainer(toManyRelationship.RightType);
         return ParseSumSelector();
     }
 
@@ -73,8 +73,8 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
             return function;
         }
 
-        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None,
-            ResourceTypeInScope, null);
+        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
+            FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         var attrAttribute = (AttrAttribute)fieldChain.Fields[^1];
 

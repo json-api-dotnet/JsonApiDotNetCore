@@ -1,8 +1,11 @@
 using System.Reflection;
 using FluentAssertions;
+using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
@@ -228,6 +231,63 @@ public sealed class ResourceFieldAttributeTests
 
         // Assert
         action.Should().ThrowExactly<ArgumentException>().WithMessage("Object of type 'System.DateTime' cannot be converted to type 'System.Boolean'.");
+    }
+
+    [Fact]
+    public void Evaluates_IsCollection_correctly()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<TestResourceWithCollections, long>();
+        IResourceGraph resourceGraph = builder.Build();
+
+        ResourceType resourceType = resourceGraph.GetResourceType<TestResourceWithCollections>();
+        AttrAttribute scalarAttr = resourceType.GetAttributeByPropertyName(nameof(TestResourceWithCollections.ScalarString));
+        AttrAttribute listAttr = resourceType.GetAttributeByPropertyName(nameof(TestResourceWithCollections.StringList));
+        AttrAttribute setAttr = resourceType.GetAttributeByPropertyName(nameof(TestResourceWithCollections.IntSet));
+
+        // Assert
+        scalarAttr.IsCollection.Should().BeFalse();
+        listAttr.IsCollection.Should().BeTrue();
+        setAttr.IsCollection.Should().BeTrue();
+
+        var customAttr = new AttrAttribute
+        {
+            IsCollection = true
+        };
+
+        customAttr.IsCollection.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Can_set_and_get_IsCompound_and_CompoundType()
+    {
+        // Arrange
+        var compoundType = new CompoundType(typeof(TestResource), []);
+
+        var attribute = new AttrAttribute
+        {
+            IsCompound = true,
+            CompoundType = compoundType
+        };
+
+        // Assert
+        attribute.IsCompound.Should().BeTrue();
+        attribute.CompoundType.Should().Be(compoundType);
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class TestResourceWithCollections : Identifiable<long>
+    {
+        [Attr]
+        public string? ScalarString { get; set; }
+
+        [Attr]
+        public List<string>? StringList { get; set; }
+
+        [Attr]
+        public ISet<int>? IntSet { get; set; }
     }
 
     private sealed class TestResource : Identifiable<long>

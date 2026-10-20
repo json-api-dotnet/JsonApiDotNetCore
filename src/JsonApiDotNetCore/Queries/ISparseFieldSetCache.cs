@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -14,6 +16,7 @@ namespace JsonApiDotNetCore.Queries;
 /// first invocation is used to obtain the fields to retrieve from the underlying data store, while the second invocation is used to determine which
 /// fields to write to the response body.
 /// </remarks>
+[PublicAPI]
 public interface ISparseFieldSetCache
 {
     /// <summary>
@@ -31,6 +34,16 @@ public interface ISparseFieldSetCache
     /// Gets the evaluated set of sparse fields to serialize into the response body.
     /// </summary>
     IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceType resourceType);
+
+    /// <summary>
+    /// Gets the sparse fieldset expression to retrieve from the underlying data store, or null to retrieve all fields.
+    /// </summary>
+    SparseFieldSetExpression? GetSparseFieldSetExpressionForQuery(ResourceType resourceType);
+
+    /// <summary>
+    /// Gets the evaluated sparse fieldset expression to serialize into the response body.
+    /// </summary>
+    SparseFieldSetExpression GetSparseFieldSetExpressionForSerializer(ResourceType resourceType);
 
     /// <summary>
     /// Resets the cached results from resource definition callbacks.

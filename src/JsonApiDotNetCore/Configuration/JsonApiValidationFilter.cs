@@ -31,20 +31,44 @@ internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
 
         IServiceProvider serviceProvider = GetScopedServiceProvider();
         var request = serviceProvider.GetRequiredService<IJsonApiRequest>();
-        bool isTopResourceInPrimaryRequest = string.IsNullOrEmpty(parentEntry.Key) && IsAtPrimaryEndpoint(request);
 
-        if (!isTopResourceInPrimaryRequest)
+        if (!IsAtPrimaryEndpoint(request))
         {
             return false;
         }
 
-        if (request.WriteOperation == WriteOperationKind.UpdateResource)
+        if (string.IsNullOrEmpty(parentEntry.Key))
         {
-            var targetedFields = serviceProvider.GetRequiredService<ITargetedFields>();
-            return IsFieldTargeted(entry, targetedFields);
+            if (request.WriteOperation == WriteOperationKind.UpdateResource)
+            {
+                var targetedFields = serviceProvider.GetRequiredService<ITargetedFields>();
+                return IsFieldTargeted(entry, targetedFields);
+            }
+
+            return true;
         }
 
-        return true;
+        var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
+        return IsInCompoundType(parentEntry, resourceGraph);
+    }
+
+    private static bool IsInCompoundType(ValidationEntry parentEntry, IResourceGraph resourceGraph)
+    {
+        Type modelType = parentEntry.Metadata.ModelType;
+
+        if (resourceGraph.FindCompoundType(modelType) != null)
+        {
+            return true;
+        }
+
+        Type? elementType = CollectionConverter.Instance.FindCollectionElementType(modelType);
+
+        if (elementType != null && resourceGraph.FindCompoundType(elementType) != null)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private IServiceProvider GetScopedServiceProvider()
