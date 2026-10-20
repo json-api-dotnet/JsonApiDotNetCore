@@ -59,17 +59,17 @@ public sealed class CompoundSortParseTests
 
     [Theory]
     [InlineData("sort", "details^",
-        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
-        "To-one relationship or attribute or compound attribute on compound type 'CompoundRoot' expected.")]
+        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on compound type 'CompoundRoot' expected.")]
     [InlineData("sort", "^tags",
-        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
-        "To-one relationship or attribute or compound attribute on resource type 'compoundModels' expected.")]
+        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'compoundModels' expected.")]
     [InlineData("sort", "^items",
-        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
-        "To-one relationship or attribute or compound attribute on resource type 'compoundModels' expected.")]
+        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'compoundModels' expected.")]
     [InlineData("sort", "count(details^)",
-        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection. " +
-        "Relationship or compound attribute or scalar collection or compound collection on compound type 'CompoundRoot' expected.")]
+        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on compound type 'CompoundRoot' expected.")]
     public void Reader_Read_Compound_Sort_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange

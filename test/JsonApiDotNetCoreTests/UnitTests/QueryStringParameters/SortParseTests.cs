@@ -97,8 +97,8 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort", "-^", "Count function or field name expected.")]
     [InlineData("sort", "^abc", "Field 'abc' does not exist on resource type 'blogs'.")]
     [InlineData("sort[posts]", "author^",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by an attribute. " +
-        "To-one relationship or attribute or compound attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'webAccounts' expected.")]
     [InlineData("sort[posts]", "author.^livingAddress", "Field 'livingAddress' does not exist on resource type 'webAccounts'.")]
     [InlineData("sort", "-count^", "( expected.")]
     [InlineData("sort", "count^", "( expected.")]
@@ -107,11 +107,11 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort", "count(^-abc)", "Field name expected.")]
     [InlineData("sort", "count(^abc)", "Field 'abc' does not exist on resource type 'blogs'.")]
     [InlineData("sort", "count(^id)",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection. " +
-        "Relationship or compound attribute or scalar collection or compound collection on resource type 'blogs' expected.")]
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'blogs' expected.")]
     [InlineData("sort[posts]", "count(author^)",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection. " +
-        "Relationship or compound attribute or scalar collection or compound collection on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("sort[posts]", "caption,^", "-, count function or field name expected.")]
     [InlineData("sort[posts]", "caption^:", ", expected.")]
     [InlineData("sort[posts]", "caption,-^", "Count function or field name expected.")]

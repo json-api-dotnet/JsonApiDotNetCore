@@ -37,7 +37,7 @@ public sealed class CompoundAttributesValidationTests
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Contain("zero or more to-one relationships or compound attributes, followed by an attribute");
+        error.Detail.Should().Contain("zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute");
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public sealed class CompoundAttributesValidationTests
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Contain("zero or more to-one relationships or compound attributes, followed by an attribute");
+        error.Detail.Should().Contain("zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute");
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public sealed class CompoundAttributesValidationTests
         error.Title.Should().Be("The specified filter is invalid.");
 
         error.Detail.Should().Contain(
-            "zero or more to-one relationships or compound attributes, followed by a to-one relationship or an attribute or a compound attribute");
+            "zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or a non-collection attribute");
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public sealed class CompoundAttributesValidationTests
         error.Title.Should().Be("The specified filter is invalid.");
 
         error.Detail.Should().Contain(
-            "zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection");
+            "zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute");
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public sealed class CompoundAttributesValidationTests
         error.Title.Should().Be("The specified filter is invalid.");
 
         error.Detail.Should().Contain(
-            "zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection");
+            "zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute");
     }
 
     [Fact]

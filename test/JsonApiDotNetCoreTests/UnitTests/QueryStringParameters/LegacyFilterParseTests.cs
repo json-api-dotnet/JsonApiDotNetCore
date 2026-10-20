@@ -36,8 +36,8 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     [InlineData("filter[]", "Expected field name between brackets in filter parameter name.")]
     [InlineData("filter[some]", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[author.posts]",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-one relationship or an attribute or a compound attribute. " +
-        "To-one relationship or attribute or compound attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or a non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter[some.id]", "Field 'some' does not exist on resource type 'blogPosts'.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
@@ -63,11 +63,11 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter", "expr:equals(author,'Joe')", "null expected.")]
     [InlineData("filter", "expr:has(author)",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection. " +
-        "Relationship or compound attribute or scalar collection or compound collection on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "expr:equals(count(author),'1')",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound attributes, followed by a to-many relationship or a scalar collection or a compound collection. " +
-        "Relationship or compound attribute or scalar collection or compound collection on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'webAccounts' expected.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Act

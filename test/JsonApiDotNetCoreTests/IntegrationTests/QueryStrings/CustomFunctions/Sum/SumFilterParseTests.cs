@@ -42,8 +42,8 @@ public sealed class SumFilterParseTests : BaseParseTests
     [InlineData("filter", "equals(sum(posts^))", ", expected.")]
     [InlineData("filter", "equals(sum(posts,^))", "Field name expected.")]
     [InlineData("filter", "equals(sum(posts,author^))",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
-        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "equals(sum(posts,^url))", "Attribute of a numeric type expected.")]
     [InlineData("filter", "equals(sum(posts,^has(labels)))", "Function that returns a numeric type expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)

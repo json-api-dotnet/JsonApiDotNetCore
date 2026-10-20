@@ -63,10 +63,10 @@ public sealed class CompoundSparseFieldSetParseTests
     [Theory]
     [InlineData("fields[compoundModels]", "details.^unknown", "Field 'unknown' does not exist on compound type 'CompoundRoot'.")]
     [InlineData("fields[compoundModels]", "parent.^name",
-        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more compound attributes or compound collections, followed by a field. " +
+        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more compound attributes, followed by a field. " +
         "End of field chain expected.")]
     [InlineData("fields[compoundModels]", "tags.^something",
-        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more compound attributes or compound collections, followed by a field. " +
+        "Field chain on resource type 'compoundModels' failed to match the pattern: zero or more compound attributes, followed by a field. " +
         "End of field chain expected.")]
     public void Reader_Read_Compound_SparseFieldSet_Fails(string parameterName, string parameterValue, string errorMessage)
     {
