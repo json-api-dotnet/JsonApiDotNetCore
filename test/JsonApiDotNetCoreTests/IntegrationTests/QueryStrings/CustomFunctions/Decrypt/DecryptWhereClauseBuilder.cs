@@ -18,7 +18,7 @@ internal sealed class DecryptWhereClauseBuilder : WhereClauseBuilder
 
     private MethodCallExpression VisitDecrypt(DecryptExpression expression, QueryClauseBuilderContext context)
     {
-        Expression propertyAccess = Visit(expression.TargetAttribute, context);
+        Expression propertyAccess = Visit(expression.Target, context);
         return Expression.Call(null, DatabaseFunctionStub.DecryptMethod, propertyAccess);
     }
 }

@@ -30,8 +30,8 @@ public sealed class QueryExpressionTests
                 TestExpressionFactory.Instance.Count()
             ],
             [
-                TestExpressionFactory.Instance.ElementValue(),
-                TestExpressionFactory.Instance.ElementValue()
+                TestExpressionFactory.Instance.ScalarCollectionElementValue(),
+                TestExpressionFactory.Instance.ScalarCollectionElementValue()
             ],
             [
                 TestExpressionFactory.Instance.Has(),
@@ -339,9 +339,9 @@ public sealed class QueryExpressionTests
             return new CountExpression(ResourceFieldChainForChildren());
         }
 
-        public CollectionElementValueExpression ElementValue()
+        public ScalarCollectionElementValueExpression ScalarCollectionElementValue()
         {
-            return new CollectionElementValueExpression(typeof(string));
+            return new ScalarCollectionElementValueExpression(typeof(string));
         }
 
         public HasExpression Has()

@@ -161,6 +161,25 @@ public sealed class CompoundAttributesValidationTests
     }
 
     [Fact]
+    public async Task Cannot_use_underscore_on_compound_collection()
+    {
+        // Arrange
+        const string route = "/contacts?filter=has(content.phoneNumbers,startsWith(_.countryPrefix,'%2B31'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be("Function or field name expected. Failed at position 37: has(content.phoneNumbers,startsWith(^_.countryPrefix,'+31'))");
+    }
+
+    [Fact]
     public async Task Cannot_create_contact_with_missing_required_compound_property()
     {
         // Arrange

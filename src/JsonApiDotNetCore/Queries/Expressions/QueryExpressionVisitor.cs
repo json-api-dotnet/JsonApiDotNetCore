@@ -44,7 +44,7 @@ public abstract class QueryExpressionVisitor<TArgument, TResult>
         return DefaultVisit(expression, argument);
     }
 
-    public virtual TResult VisitCollectionElementValue(CollectionElementValueExpression expression, TArgument argument)
+    public virtual TResult VisitScalarCollectionElementValue(ScalarCollectionElementValueExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);
     }

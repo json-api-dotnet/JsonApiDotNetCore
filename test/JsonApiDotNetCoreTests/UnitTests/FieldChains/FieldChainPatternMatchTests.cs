@@ -447,13 +447,13 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("L", $"^{Q}", $"Scalar collection attribute on resource type '{T}' expected.")]
     [InlineData("Q", $"^{L}", $"Compound collection attribute on resource type '{T}' expected.")]
     // Navigation on compound type
-    [InlineData("CS", $"{C}.^{C2}", "Scalar non-collection attribute on compound type 'CompoundRoot' expected.")]
-    [InlineData("CS", $"{C}.^{X}", "Field 'unknown' does not exist on compound type 'CompoundRoot'.")]
-    [InlineData("CCS", $"{C}.{C2}.^{X}", "Field 'unknown' does not exist on compound type 'CompoundNested'.")]
+    [InlineData("CS", $"{C}.^{C2}", "Scalar non-collection attribute on compound type 'RootCompound' expected.")]
+    [InlineData("CS", $"{C}.^{X}", "Field 'unknown' does not exist on compound type 'RootCompound'.")]
+    [InlineData("CCS", $"{C}.{C2}.^{X}", "Field 'unknown' does not exist on compound type 'NestedCompound'.")]
     // Too much input on compound type
     [InlineData("C", $"{C}.^{A2}", "End of field chain expected.")]
     // Direct navigation into collection rejected
-    [InlineData("[OC]*S", $"{C}.^{Q}", "To-one relationship or non-collection attribute on compound type 'CompoundRoot' expected.")]
+    [InlineData("[OC]*S", $"{C}.^{Q}", "Non-collection attribute on compound type 'RootCompound' expected.")]
     public void MatchFails(string patternText, string fieldChainText, string failureMessage)
     {
         // Arrange

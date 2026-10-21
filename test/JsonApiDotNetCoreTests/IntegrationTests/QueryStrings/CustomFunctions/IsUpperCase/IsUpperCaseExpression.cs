@@ -4,8 +4,8 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.IsUpperCase;
 
 /// <summary>
-/// This expression tests if the value of a JSON:API attribute is upper case. It represents the "isUpperCase" filter function, resulting from text such
-/// as:
+/// This expression tests if the value of a JSON:API attribute or scalar collection element is upper case. It represents the "isUpperCase" filter
+/// function, resulting from text such as:
 /// <c>
 /// isUpperCase(title)
 /// </c>
@@ -13,23 +13,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.I
 /// <c>
 /// isUpperCase(owner.lastName)
 /// </c>
+/// , or:
+/// <c>
+/// isUpperCase(_)
+/// </c>
 /// .
 /// </summary>
-internal sealed class IsUpperCaseExpression : FilterExpression
+internal sealed class IsUpperCaseExpression(QueryExpression target) : FilterExpression
 {
     public const string Keyword = "isUpperCase";
 
     /// <summary>
-    /// The string attribute whose value to inspect. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// The string attribute or scalar collection element whose value to inspect.
     /// </summary>
-    public ResourceFieldChainExpression TargetAttribute { get; }
-
-    public IsUpperCaseExpression(ResourceFieldChainExpression targetAttribute)
-    {
-        ArgumentNullException.ThrowIfNull(targetAttribute);
-
-        TargetAttribute = targetAttribute;
-    }
+    public QueryExpression Target { get; } = target;
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
@@ -52,7 +49,7 @@ internal sealed class IsUpperCaseExpression : FilterExpression
 
         builder.Append(Keyword);
         builder.Append('(');
-        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute.ToString());
+        builder.Append(toFullString ? Target.ToFullString() : Target.ToString());
         builder.Append(')');
 
         return builder.ToString();
@@ -72,11 +69,11 @@ internal sealed class IsUpperCaseExpression : FilterExpression
 
         var other = (IsUpperCaseExpression)obj;
 
-        return TargetAttribute.Equals(other.TargetAttribute);
+        return Target.Equals(other.Target);
     }
 
     public override int GetHashCode()
     {
-        return TargetAttribute.GetHashCode();
+        return Target.GetHashCode();
     }
 }

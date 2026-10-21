@@ -129,4 +129,42 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Posts[1].StringId);
     }
+
+    [Fact]
+    public async Task Can_filter_casing_in_scalar_collection_elements()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+
+        blogs[0].Tags =
+        [
+            "csharp",
+            "dotnet"
+        ];
+
+        blogs[1].Tags =
+        [
+            "csharp",
+            "DOTNET"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=has(tags,isUpperCase(_))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
 }
