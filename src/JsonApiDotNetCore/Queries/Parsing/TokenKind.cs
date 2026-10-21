@@ -10,6 +10,7 @@ public enum TokenKind
     Comma,
     Colon,
     Minus,
+    Underscore,
     Text,
     QuotedText
 }

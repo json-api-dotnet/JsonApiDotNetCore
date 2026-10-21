@@ -58,6 +58,11 @@ internal sealed class MatchError
 
     public static MatchError CreateForFieldTypeMismatch(int position, IAttributeContainer? container, FieldTypes choices)
     {
+        if (container is CompoundType)
+        {
+            choices &= ~FieldTypes.Relationship;
+        }
+
         var builder = new MessageBuilder();
 
         builder.WriteChoices(choices);
@@ -71,6 +76,11 @@ internal sealed class MatchError
 
     public static MatchError CreateForTooMuchInput(int position, IAttributeContainer? container, FieldTypes choices)
     {
+        if (container is CompoundType)
+        {
+            choices &= ~FieldTypes.Relationship;
+        }
+
         var builder = new MessageBuilder();
 
         builder.WriteEndOfChain();

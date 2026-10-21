@@ -39,6 +39,8 @@ public sealed class LengthFilterParseTests : BaseParseTests
     [InlineData("filter", "equals(length(^null)", "Field name expected.")]
     [InlineData("filter", "equals(length(title)^)", ", expected.")]
     [InlineData("filter", "equals(length(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("filter", "has(tags,equals(length(^some),'1'))", "_ expected.")]
+    [InlineData("filter", "has(tags,equals(length(^),'1'))", "_ expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -66,6 +68,8 @@ public sealed class LengthFilterParseTests : BaseParseTests
     [InlineData("filter", "greaterThan(length(owner.userName),'1')", null)]
     [InlineData("filter", "has(posts,lessThan(length(author.userName),'1'))", null)]
     [InlineData("filter", "or(equals(length(title),'1'),equals(length(platformName),'1'))", null)]
+    [InlineData("filter", "has(tags,equals(length(_),'1'))", null)]
+    [InlineData("filter", "has(tags,greaterThan(length(_),'5'))", null)]
     [InlineData("filter[posts]", "equals(length(author.userName),'1')", "posts")]
     public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {

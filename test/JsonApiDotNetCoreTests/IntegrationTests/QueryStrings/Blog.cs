@@ -14,6 +14,9 @@ public sealed class Blog : Identifiable<long>
     [Attr]
     public string PlatformName { get; set; } = null!;
 
+    [Attr]
+    public IList<string> Tags { get; set; } = new List<string>();
+
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
     public bool ShowAdvertisements => PlatformName.EndsWith("(using free account)", StringComparison.Ordinal);
 

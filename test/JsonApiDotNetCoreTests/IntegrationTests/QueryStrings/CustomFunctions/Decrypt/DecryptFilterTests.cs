@@ -132,4 +132,43 @@ public sealed class DecryptFilterTests : IClassFixture<IntegrationTestContext<Te
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Posts[1].StringId);
     }
+
+    [Fact]
+    public async Task Can_filter_on_encrypted_column_in_scalar_collection_elements()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+
+        blogs[0].Tags =
+        [
+            Convert.ToBase64String("public"u8),
+            Convert.ToBase64String("normal"u8)
+        ];
+
+        blogs[1].Tags =
+        [
+            Convert.ToBase64String("public"u8),
+            Convert.ToBase64String("secret"u8)
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.DeclareDecryptFunctionAsync();
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=has(tags,equals(decrypt(_),'secret'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
 }

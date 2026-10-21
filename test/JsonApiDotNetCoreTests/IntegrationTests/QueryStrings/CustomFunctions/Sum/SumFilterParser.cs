@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Numerics;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
@@ -34,11 +35,17 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
 
     private SumExpression ParseSum()
     {
+        if (CurrentScope is not AttributeContainerFilterScope containerScope)
+        {
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function 'sum' cannot be used on scalar collection elements.", position);
+        }
+
         EatText(SumExpression.Keyword);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetToManyRelationshipChain = ParseFieldChain(SingleToManyRelationshipChain, FieldChainPatternMatchOptions.None,
-            ContainerInScope, "To-many relationship expected.");
+            containerScope.Container, "To-many relationship expected.");
 
         EatSingleCharacterToken(TokenKind.Comma);
 
@@ -59,6 +66,11 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
 
     private QueryExpression ParseSumSelector()
     {
+        if (CurrentScope is not AttributeContainerFilterScope containerScope)
+        {
+            throw new UnreachableException();
+        }
+
         int position = GetNextTokenPositionOrEnd();
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
@@ -74,7 +86,7 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
         }
 
         ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.None, ContainerInScope, null);
+            FieldChainPatternMatchOptions.None, containerScope.Container, null);
 
         var attrAttribute = (AttrAttribute)fieldChain.Fields[^1];
 

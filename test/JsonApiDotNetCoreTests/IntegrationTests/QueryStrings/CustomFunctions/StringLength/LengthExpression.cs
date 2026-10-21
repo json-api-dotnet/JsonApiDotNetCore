@@ -4,7 +4,8 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;
 
 /// <summary>
-/// This expression determines the string length of a JSON:API attribute. It represents the "length" function, resulting from text such as:
+/// This expression determines the string length of a JSON:API attribute or scalar collection element. It represents the "length" function, resulting
+/// from text such as:
 /// <c>
 /// length(title)
 /// </c>
@@ -12,28 +13,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.S
 /// <c>
 /// length(owner.lastName)
 /// </c>
+/// , or:
+/// <c>
+/// length(_)
+/// </c>
 /// .
 /// </summary>
-internal sealed class LengthExpression : FunctionExpression
+internal sealed class LengthExpression(QueryExpression target) : FunctionExpression
 {
     public const string Keyword = "length";
 
     /// <summary>
-    /// The string attribute whose length to determine. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// The string attribute or scalar collection element whose length to determine.
     /// </summary>
-    public ResourceFieldChainExpression TargetAttribute { get; }
+    public QueryExpression Target { get; } = target;
 
     /// <summary>
     /// The CLR type this function returns, which is always <see cref="int" />.
     /// </summary>
     public override Type ReturnType { get; } = typeof(int);
-
-    public LengthExpression(ResourceFieldChainExpression targetAttribute)
-    {
-        ArgumentNullException.ThrowIfNull(targetAttribute);
-
-        TargetAttribute = targetAttribute;
-    }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
@@ -56,7 +54,7 @@ internal sealed class LengthExpression : FunctionExpression
 
         builder.Append(Keyword);
         builder.Append('(');
-        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute.ToString());
+        builder.Append(toFullString ? Target.ToFullString() : Target.ToString());
         builder.Append(')');
 
         return builder.ToString();
@@ -76,11 +74,11 @@ internal sealed class LengthExpression : FunctionExpression
 
         var other = (LengthExpression)obj;
 
-        return TargetAttribute.Equals(other.TargetAttribute);
+        return Target.Equals(other.Target);
     }
 
     public override int GetHashCode()
     {
-        return TargetAttribute.GetHashCode();
+        return Target.GetHashCode();
     }
 }

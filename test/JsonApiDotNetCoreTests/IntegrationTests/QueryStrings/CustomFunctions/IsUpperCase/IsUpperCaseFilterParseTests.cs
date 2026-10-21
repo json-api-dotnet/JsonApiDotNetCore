@@ -39,6 +39,8 @@ public sealed class IsUpperCaseFilterParseTests : BaseParseTests
     [InlineData("filter", "isUpperCase(^null)", "Field name expected.")]
     [InlineData("filter", "isUpperCase(title)^)", "End of expression expected.")]
     [InlineData("filter", "isUpperCase(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("filter", "has(tags,isUpperCase(^some))", "_ expected.")]
+    [InlineData("filter", "has(tags,isUpperCase(^))", "_ expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -66,6 +68,7 @@ public sealed class IsUpperCaseFilterParseTests : BaseParseTests
     [InlineData("filter", "isUpperCase(owner.userName)", null)]
     [InlineData("filter", "has(posts,isUpperCase(author.userName))", null)]
     [InlineData("filter", "or(isUpperCase(title),isUpperCase(platformName))", null)]
+    [InlineData("filter", "has(tags,isUpperCase(_))", null)]
     [InlineData("filter[posts]", "isUpperCase(author.userName)", "posts")]
     public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {

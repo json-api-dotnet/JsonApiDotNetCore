@@ -51,7 +51,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return expression;
     }
 
-    public override QueryExpression VisitCollectionElementValue(CollectionElementValueExpression expression, TArgument argument)
+    public override QueryExpression VisitScalarCollectionElementValue(ScalarCollectionElementValueExpression expression, TArgument argument)
     {
         return expression;
     }

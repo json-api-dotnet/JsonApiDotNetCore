@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -34,10 +35,42 @@ internal sealed class LengthFilterParser(IResourceFactory resourceFactory)
         EatText(LengthExpression.Keyword);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
+        QueryExpression target = CurrentScope switch
+        {
+            ScalarCollectionElementFilterScope collectionScope => ParseScalarCollectionElement(collectionScope),
+            AttributeContainerFilterScope containerScope => ParseTargetAttribute(containerScope),
+            _ => throw new UnreachableException()
+        };
+
+        EatSingleCharacterToken(TokenKind.CloseParen);
+
+        return new LengthExpression(target);
+    }
+
+    private ScalarCollectionElementValueExpression ParseScalarCollectionElement(ScalarCollectionElementFilterScope collectionScope)
+    {
+        int position = GetNextTokenPositionOrEnd();
+        ScalarCollectionElementValueExpression? elementValue = TryParseScalarCollectionElement(collectionScope);
+
+        if (elementValue == null)
+        {
+            throw new QueryParseException("_ expected.", position);
+        }
+
+        if (collectionScope.ElementType != typeof(string))
+        {
+            throw new QueryParseException("Element of type 'String' expected.", position);
+        }
+
+        return elementValue;
+    }
+
+    private ResourceFieldChainExpression ParseTargetAttribute(AttributeContainerFilterScope containerScope)
+    {
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
         ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.None, ContainerInScope, null);
+            FieldChainPatternMatchOptions.None, containerScope.Container, null);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];
 
@@ -47,8 +80,6 @@ internal sealed class LengthFilterParser(IResourceFactory resourceFactory)
             throw new QueryParseException("Attribute of type 'String' expected.", position);
         }
 
-        EatSingleCharacterToken(TokenKind.CloseParen);
-
-        return new LengthExpression(targetAttributeChain);
+        return targetAttributeChain;
     }
 }
