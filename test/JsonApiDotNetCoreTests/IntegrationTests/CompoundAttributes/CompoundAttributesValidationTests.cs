@@ -96,7 +96,7 @@ public sealed class CompoundAttributesValidationTests
         error.Title.Should().Be("The specified filter is invalid.");
 
         error.Detail.Should().Contain(
-            "zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or a non-collection attribute");
+            "zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or an attribute");
     }
 
     [Fact]

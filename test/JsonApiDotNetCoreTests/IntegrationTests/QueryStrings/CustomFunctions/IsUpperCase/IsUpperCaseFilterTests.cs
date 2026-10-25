@@ -64,16 +64,16 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
         blog.Posts = _fakers.BlogPost.GenerateList(4);
 
         blog.Posts[0].Caption = blog.Posts[0].Caption.ToUpperInvariant();
-        blog.Posts[0].Url = blog.Posts[0].Url.ToUpperInvariant();
+        blog.Posts[0].Url = blog.Posts[0].Url!.ToUpperInvariant();
 
         blog.Posts[1].Caption = blog.Posts[1].Caption.ToUpperInvariant();
-        blog.Posts[1].Url = blog.Posts[1].Url.ToLowerInvariant();
+        blog.Posts[1].Url = blog.Posts[1].Url!.ToLowerInvariant();
 
         blog.Posts[2].Caption = blog.Posts[1].Caption.ToLowerInvariant();
-        blog.Posts[2].Url = blog.Posts[1].Url.ToUpperInvariant();
+        blog.Posts[2].Url = blog.Posts[1].Url!.ToUpperInvariant();
 
         blog.Posts[3].Caption = blog.Posts[2].Caption.ToLowerInvariant();
-        blog.Posts[3].Url = blog.Posts[2].Url.ToLowerInvariant();
+        blog.Posts[3].Url = blog.Posts[2].Url!.ToLowerInvariant();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
