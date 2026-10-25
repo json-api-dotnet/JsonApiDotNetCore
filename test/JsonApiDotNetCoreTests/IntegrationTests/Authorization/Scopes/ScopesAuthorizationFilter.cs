@@ -88,9 +88,9 @@ internal sealed class ScopesAuthorizationFilter : IActionFilter
                 {
                     _authScopeSet.Include(relationship, Permission.Read);
                 }
-                else
+                else if (field.ContainingType is ResourceType resourceType)
                 {
-                    _authScopeSet.Include((ResourceType)field.ContainingType, Permission.Read);
+                    _authScopeSet.Include(resourceType, Permission.Read);
                 }
             }
 
