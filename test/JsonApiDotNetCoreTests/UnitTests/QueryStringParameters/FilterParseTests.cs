@@ -110,14 +110,29 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "equals^'", "Unexpected ' outside text.")]
     [InlineData("filter", "equals(^", "Function or field name expected.")]
     [InlineData("filter", "equals(^'1'", "Function or field name expected.")]
-    [InlineData("filter", "equals(count(posts),^", "Function, field name or value between quotes expected.")]
-    [InlineData("filter", "equals(count(posts),^null)", "Function, field name or value between quotes expected.")]
+    [InlineData("filter", "equals(count(posts),^", "Function, field name, value between quotes or null expected.")]
+    [InlineData("filter", "greaterThan(count(posts),^null)", "Function, field name or value between quotes expected.")]
+    [InlineData("filter", "greaterThan(showAdvertisements,^null)", "Function, field name or value between quotes expected.")]
     [InlineData("filter", "equals(owner.^.displayName,'')", "Function or field name expected.")]
     [InlineData("filter", "equals(owner.displayName.^,'')", "Function or field name expected.")]
     [InlineData("filter", "equals(title,'^)", "' expected.")]
-    [InlineData("filter", "equals(title,null^", ") expected.")]
-    [InlineData("filter", "equals(^null", "Function or field name expected.")]
     [InlineData("filter", "equals(title,^(", "Function, field name, value between quotes or null expected.")]
+    [InlineData("filter", "equals(description,null^", ") expected.")]
+    [InlineData("filter", "equals(description,^(", "Function, field name, value between quotes or null expected.")]
+    [InlineData("filter", "equals(shareCount,null^", ") expected.")]
+    [InlineData("filter", "equals(shareCount,^(", "Function, field name, value between quotes or null expected.")]
+    [InlineData("filter", "has(tags,equals(^unknown,'work'))", "Function or _ expected.")]
+    [InlineData("filter", "has(tags,contains(^unknown,'work'))", "Function or _ expected.")]
+    [InlineData("filter", "has(tags,any(^unknown))", "Function or _ expected.")]
+    [InlineData("filter", "has(tags,^has(tags,equals(_,'w')))", "Function 'has' cannot be used on scalar collection elements.")]
+    [InlineData("filter", "has(tags,equals(^count(tags),'1'))", "Function 'count' cannot be used on scalar collection elements.")]
+    [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' cannot be used on scalar collection elements.")]
+    [InlineData("filter", "equals(title,^_)", "Function, field name, value between quotes or null expected.")]
+    [InlineData("filter", "equals(owner,^'some')", "null expected.")]
+    [InlineData("filter", "equals(^posts,null)",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or an attribute. " +
+        "To-one relationship or attribute on resource type 'blogs' expected.")]
+    [InlineData("filter", "equals(^null", "Function or field name expected.")]
     [InlineData("filter", "has(posts,^", "Filter function expected.")]
     [InlineData("filter", "contains^)", "( expected.")]
     [InlineData("filter", "contains(title,'a'^,'b')", ") expected.")]
@@ -126,8 +141,8 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter[posts]", "contains(author^,null)",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
         "To-one relationship or non-collection attribute on resource type 'webAccounts' expected.")]
-    [InlineData("filter", "any(^null,'a','b')", "Field name expected.")]
-    [InlineData("filter", "any(^'a','b','c')", "Field name expected.")]
+    [InlineData("filter", "any(^null,'a','b')", "Function or field name expected.")]
+    [InlineData("filter", "any(^'a','b','c')", "Function or field name expected.")]
     [InlineData("filter", "any(title,'b','c',^)", "Value between quotes expected.")]
     [InlineData("filter", "any(equals(title,'x'),^'b')", "Failed to convert 'b' of type 'String' to type 'Boolean'.")]
     [InlineData("filter", "any(title^)", ", expected.")]
@@ -141,7 +156,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "and(^null", "Filter function expected.")]
     [InlineData("filter", "^expr:equals(caption,'some')", "Filter function expected.")]
     [InlineData("filter", "^expr:Equals(caption,'some')", "Filter function expected.")]
-    [InlineData("filter", "isType(^", "Relationship name or , expected.")]
+    [InlineData("filter", "isType(^", "To-one relationship name or , expected.")]
     [InlineData("filter", "isType(,^", "Resource type expected.")]
     [InlineData("filter[posts.contributors]", "isType(,^some)", "Resource type 'some' does not exist or does not derive from 'humans'.")]
     [InlineData("filter[posts.contributors]", "isType(,^humans)", "Resource type 'humans' does not exist or does not derive from 'humans'.")]
@@ -188,7 +203,22 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter[owner.person.wife.children]", "not(equals(mother,null))", "owner.person.wife.children")]
     [InlineData("filter", "equals(count(posts),'1')", null)]
     [InlineData("filter", "equals(count(posts),count(owner.posts))", null)]
+    [InlineData("filter", "equals(count(posts),null)", null)]
+    [InlineData("filter", "equals(showAdvertisements,null)", null)]
+    [InlineData("filter", "equals(owner.preferences.useDarkTheme,null)", null)]
     [InlineData("filter", "equals(has(posts),'true')", null)]
+    [InlineData("filter", "equals(description,null)", null)]
+    [InlineData("filter", "equals(shareCount,null)", null)]
+    [InlineData("filter", "equals(owner,null)", null)]
+    [InlineData("filter", "equals(tags,null)", null)]
+    [InlineData("filter", "not(equals(tags,null))", null)]
+    [InlineData("filter", "has(tags)", null)]
+    [InlineData("filter", "has(tags,equals(_,'work'))", null)]
+    [InlineData("filter", "has(tags,startsWith(_,'w'))", null)]
+    [InlineData("filter", "has(tags,contains(_,'o'))", null)]
+    [InlineData("filter", "has(tags,endsWith(_,'k'))", null)]
+    [InlineData("filter", "has(tags,any(_,'work'))", null)]
+    [InlineData("filter", "has(tags,not(equals(_,'spam')))", null)]
     [InlineData("filter[posts]", "equals(caption,null)", "posts")]
     [InlineData("filter[posts]", "equals(author,null)", "posts")]
     [InlineData("filter[posts]", "equals(author.userName,author.displayName)", "posts")]
@@ -232,7 +262,7 @@ public sealed class FilterParseTests : BaseParseTests
         // Arrange
         using var serviceProvider = new ServiceContainer();
         var resourceFactory = new ResourceFactory(serviceProvider);
-        var parser = new NotDisposingFilterParser(resourceFactory);
+        var parser = new NotDisposingContainerScopeFilterParser(resourceFactory);
 
         // Act
         Action action = () => parser.Parse("equals(title,'some')", Request.PrimaryResourceType!);
@@ -243,39 +273,68 @@ public sealed class FilterParseTests : BaseParseTests
     }
 
     [Fact]
-    public void Throws_When_No_ResourceType_In_Scope()
+    public void Throws_When_ScalarCollection_Scope_Not_Disposed()
     {
         // Arrange
         using var serviceProvider = new ServiceContainer();
         var resourceFactory = new ResourceFactory(serviceProvider);
-        var parser = new ResourceTypeAccessingFilterParser(resourceFactory);
+        var parser = new NotDisposingScalarCollectionScopeFilterParser(resourceFactory);
+
+        // Act
+        Action action = () => parser.Parse("equals(_,'some')", Request.PrimaryResourceType!);
+
+        // Assert
+        action.Should().ThrowExactly<InvalidOperationException>().WithMessage(
+            "There is still a scalar collection element type in scope after parsing has completed. " +
+            "Verify that Dispose() is called on all return values of InScopeOfScalarCollection().");
+    }
+
+    [Fact]
+    public void Throws_When_No_Filter_Scope_Is_Active()
+    {
+        // Arrange
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
+        var parser = new ScopeAccessingFilterParser(resourceFactory);
 
         // Act
         Action action = () => parser.Parse("equals(title,'some')", Request.PrimaryResourceType!);
 
         // Assert
-        action.Should().ThrowExactly<InvalidOperationException>().WithMessage("No resource or compound type is currently in scope. Call Parse() first.");
+        action.Should().ThrowExactly<InvalidOperationException>().WithMessage("No filter scope is currently active. Call Parse() first.");
     }
 
-    private sealed class NotDisposingFilterParser(IResourceFactory resourceFactory)
+    private sealed class NotDisposingContainerScopeFilterParser(IResourceFactory resourceFactory)
         : FilterParser(resourceFactory)
     {
         protected override FilterExpression ParseFilter()
         {
             // Forgot to dispose the return value.
-            _ = InScopeOfContainer(ContainerInScope);
+            _ = InScopeOfContainer(((AttributeContainerFilterScope)CurrentScope).Container);
 
             return base.ParseFilter();
         }
     }
 
-    private sealed class ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory)
+    private sealed class NotDisposingScalarCollectionScopeFilterParser(IResourceFactory resourceFactory)
+        : FilterParser(resourceFactory)
+    {
+        protected override FilterExpression ParseFilter()
+        {
+            // Forgot to dispose the return value.
+            _ = InScopeOfScalarCollection(typeof(string));
+
+            return base.ParseFilter();
+        }
+    }
+
+    private sealed class ScopeAccessingFilterParser(IResourceFactory resourceFactory)
         : FilterParser(resourceFactory)
     {
         protected override void Tokenize(string source)
         {
-            // There is no container in scope yet.
-            _ = ContainerInScope;
+            // Fails because there is no scope active yet.
+            _ = CurrentScope;
 
             base.Tokenize(source);
         }

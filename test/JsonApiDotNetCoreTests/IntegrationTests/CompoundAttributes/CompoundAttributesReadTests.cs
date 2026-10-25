@@ -146,6 +146,29 @@ public sealed class CompoundAttributesReadTests
     }
 
     [Fact]
+    public async Task Can_filter_by_null_on_root_compound_attribute()
+    {
+        // Arrange
+        List<Contact> contacts = _fakers.Contact.GenerateList(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.AddRange(contacts);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/contacts?filter=equals(content,null)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.ManyValue.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Can_filter_on_compound_collection_using_has()
     {
         // Arrange
@@ -808,6 +831,47 @@ public sealed class CompoundAttributesReadTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(contacts[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_importantDates_by_null_value()
+    {
+        // Arrange
+        List<Contact> contacts = _fakers.Contact.GenerateList(2);
+
+        contacts[0].Content.ImportantDates =
+        [
+            new LabeledValue<DateOnly>
+            {
+                Value = new DateOnly(2020, 5, 15),
+                Label = "anniversary"
+            }
+        ];
+
+        contacts[1].Content.ImportantDates =
+        [
+            new LabeledValue<DateOnly>
+            {
+                Value = new DateOnly(2018, 1, 1),
+                Label = "hired"
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.AddRange(contacts);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/contacts?filter=has(content.importantDates,equals(value,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.ManyValue.Should().BeEmpty();
     }
 
     [Fact]

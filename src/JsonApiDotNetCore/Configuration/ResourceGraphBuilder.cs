@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Configuration;
 /// Builds and configures the <see cref="ResourceGraph" />.
 /// </summary>
 [PublicAPI]
-public partial class ResourceGraphBuilder
+public sealed partial class ResourceGraphBuilder
 {
     private readonly IJsonApiOptions _options;
     private readonly ILogger<ResourceGraphBuilder> _logger;
@@ -86,9 +86,15 @@ public partial class ResourceGraphBuilder
     {
         foreach (RelationshipAttribute relationship in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Relationships))
         {
-            Type rightClrType = relationship is HasOneAttribute
+            Type? rightClrType = relationship is HasOneAttribute
                 ? relationship.Property.PropertyType
-                : relationship.Property.PropertyType.GetGenericArguments()[0];
+                : CollectionConverter.Instance.FindCollectionElementType(relationship.Property.PropertyType);
+
+            if (rightClrType == null)
+            {
+                throw new InvalidConfigurationException(
+                    $"To-many relationship '{relationship.LeftType.ClrType}.{relationship.Property.Name}' must use a collection type.");
+            }
 
             ResourceType? rightType = resourceGraph.FindResourceType(rightClrType);
 

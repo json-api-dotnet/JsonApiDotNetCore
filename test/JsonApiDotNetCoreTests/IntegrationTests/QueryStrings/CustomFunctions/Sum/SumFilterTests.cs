@@ -117,7 +117,7 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<BlogPost>();
+            await dbContext.ClearTableAsync<Blog>();
             dbContext.Blogs.Add(blog);
             await dbContext.SaveChangesAsync();
         });

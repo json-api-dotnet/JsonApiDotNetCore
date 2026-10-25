@@ -166,12 +166,23 @@ public sealed class QueryExpressionTests
 
     [Theory]
     [MemberData(nameof(ExpressionTestData))]
-    public void Expressions_have_same_return_type(QueryExpression left, QueryExpression right)
+    public void Function_expressions_have_same_return_type(QueryExpression left, QueryExpression right)
     {
         if (left is FunctionExpression leftFunction && right is FunctionExpression rightFunction)
         {
             // Assert
             leftFunction.ReturnType.Should().Be(rightFunction.ReturnType);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ExpressionTestData))]
+    public void Scalar_collection_expressions_have_same_return_type(QueryExpression left, QueryExpression right)
+    {
+        if (left is ScalarCollectionElementValueExpression leftElement && right is ScalarCollectionElementValueExpression rightElement)
+        {
+            // Assert
+            leftElement.ElementType.Should().Be(rightElement.ElementType);
         }
     }
 

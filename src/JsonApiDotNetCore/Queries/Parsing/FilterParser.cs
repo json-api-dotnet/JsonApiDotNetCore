@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -14,8 +15,6 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 [PublicAPI]
 public class FilterParser : QueryExpressionParser, IFilterParser
 {
-    private const string CollectionElementSymbol = CollectionElementValueExpression.Symbol;
-
     private static readonly HashSet<string> FilterKeywords =
     [
         Keywords.Not,
@@ -36,27 +35,22 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     ];
 
     private readonly IResourceFactory _resourceFactory;
-    private readonly Stack<IAttributeContainer> _containerStack = new();
-    private readonly Stack<Type> _scalarCollectionElementTypeStack = new();
+    private readonly Stack<FilterScope> _scopeStack = new();
 
     /// <summary>
-    /// Gets the CLR type of the scalar collection element currently in scope, or <c>null</c> if not in scope of a scalar collection.
+    /// Gets the current filter scope. Call <see cref="InScopeOfContainer" /> or <see cref="InScopeOfScalarCollection" /> to temporarily change the current
+    /// scope.
     /// </summary>
-    protected Type? ScalarCollectionElementTypeInScope => _scalarCollectionElementTypeStack.Count > 0 ? _scalarCollectionElementTypeStack.Peek() : null;
-
-    /// <summary>
-    /// Gets the container currently in scope. Call <see cref="InScopeOfContainer" /> to temporarily change the current container.
-    /// </summary>
-    protected IAttributeContainer ContainerInScope
+    protected FilterScope CurrentScope
     {
         get
         {
-            if (_containerStack.Count == 0)
+            if (_scopeStack.Count == 0)
             {
-                throw new InvalidOperationException($"No resource or compound type is currently in scope. Call {nameof(Parse)}() first.");
+                throw new InvalidOperationException($"No filter scope is currently active. Call {nameof(Parse)}() first.");
             }
 
-            return _containerStack.Peek();
+            return _scopeStack.Peek();
         }
     }
 
@@ -74,21 +68,17 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         Tokenize(source);
 
-        _containerStack.Clear();
-        _scalarCollectionElementTypeStack.Clear();
-        FilterExpression expression;
+        _scopeStack.Clear();
 
         using (InScopeOfContainer(resourceType))
         {
-            expression = ParseFilter();
+            FilterExpression expression = ParseFilter();
 
             AssertTokenStackIsEmpty();
+            AssertFilterScopeStackHasOnlyRoot();
+
+            return expression;
         }
-
-        AssertContainerStackIsEmpty();
-        AssertScalarCollectionElementTypeStackIsEmpty();
-
-        return expression;
     }
 
     protected virtual bool IsFunction(string name)
@@ -116,7 +106,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private CountExpression ParseCount()
     {
-        if (ScalarCollectionElementTypeInScope != null)
+        if (CurrentScope is not AttributeContainerFilterScope containerScope)
         {
             int position = GetNextTokenPositionOrEnd();
             throw new QueryParseException("Function 'count' cannot be used on scalar collection elements.", position);
@@ -126,7 +116,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection,
-            FieldChainPatternMatchOptions.None, ContainerInScope, null);
+            FieldChainPatternMatchOptions.None, containerScope.Container, null);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
@@ -229,69 +219,82 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         ArgumentException.ThrowIfNullOrEmpty(operatorName);
 
         var comparisonOperator = Enum.Parse<ComparisonOperator>(operatorName.Pascalize());
+        bool isEqualityComparison = comparisonOperator == ComparisonOperator.Equals;
 
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        QueryExpression leftTerm = ParseComparisonLeftTerm(comparisonOperator);
+        QueryExpression leftTerm = ParseComparisonLeftTerm(isEqualityComparison);
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        QueryExpression rightTerm = ParseComparisonRightTerm(leftTerm);
+        QueryExpression rightTerm = ParseComparisonRightTerm(leftTerm, isEqualityComparison);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
         return new ComparisonExpression(comparisonOperator, leftTerm, rightTerm);
     }
 
-    private QueryExpression ParseComparisonLeftTerm(ComparisonOperator comparisonOperator)
+    private QueryExpression ParseComparisonLeftTerm(bool isEqualityComparison)
     {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text })
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
         {
-            if (IsFunction(nextToken.Value!))
-            {
-                return ParseFunction();
-            }
+            return ParseFunction();
+        }
 
-            if (ScalarCollectionElementTypeInScope != null)
+        switch (CurrentScope)
+        {
+            case ScalarCollectionElementFilterScope collectionScope:
             {
-                if (nextToken.Value == CollectionElementSymbol)
+                ScalarCollectionElementValueExpression? elementValue = TryParseScalarCollectionElement(collectionScope);
+
+                if (elementValue != null)
                 {
-                    EatText(CollectionElementSymbol);
-                    return new CollectionElementValueExpression(ScalarCollectionElementTypeInScope);
+                    return elementValue;
                 }
 
-                throw new QueryParseException("Function or _ expected.", nextToken.Position);
+                int position = GetNextTokenPositionOrEnd();
+                throw new QueryParseException("Function or _ expected.", position);
+            }
+            case AttributeContainerFilterScope containerScope:
+            {
+                // Allow equality comparison of a to-one relationship or attribute with null.
+                FieldChainPattern pattern = isEqualityComparison
+                    ? BuiltInPatterns.ToOneOrCompoundChainEndingInToOneOrAttribute
+                    : BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute;
+
+                return ParseFieldChain(pattern, FieldChainPatternMatchOptions.None, containerScope.Container, "Function or field name expected.");
+            }
+            default:
+            {
+                throw new UnreachableException();
             }
         }
-
-        if (ScalarCollectionElementTypeInScope != null)
-        {
-            int position = GetNextTokenPositionOrEnd();
-            throw new QueryParseException("Function or _ expected.", position);
-        }
-
-        // Allow equality comparison of a to-one relationship or compound attribute with null.
-        FieldChainPattern pattern = comparisonOperator == ComparisonOperator.Equals
-            ? BuiltInPatterns.ToOneOrCompoundChainEndingInScalarOrCompoundAttributeOrToOne
-            : BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute;
-
-        return ParseFieldChain(pattern, FieldChainPatternMatchOptions.None, ContainerInScope, "Function or field name expected.");
     }
 
-    private QueryExpression ParseComparisonRightTerm(QueryExpression leftTerm)
+    /// <summary>
+    /// Attempts to parse the underscore (_), which represents the current scalar collection element.
+    /// </summary>
+    protected ScalarCollectionElementValueExpression? TryParseScalarCollectionElement(ScalarCollectionElementFilterScope collectionScope)
     {
-        if (leftTerm is CollectionElementValueExpression elementValue)
+        ArgumentNullException.ThrowIfNull(collectionScope);
+
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Underscore)
         {
-            ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(elementValue.ElementType);
-            return ParseTypedComparisonRightTerm(elementValue.ElementType, constantValueConverter);
+            EatSingleCharacterToken(TokenKind.Underscore);
+            return new ScalarCollectionElementValueExpression(collectionScope.ElementType);
         }
 
+        return null;
+    }
+
+    private QueryExpression ParseComparisonRightTerm(QueryExpression leftTerm, bool isEqualityComparison)
+    {
         if (leftTerm is ResourceFieldChainExpression leftFieldChain)
         {
             ResourceFieldAttribute leftLastField = leftFieldChain.Fields[^1];
 
-            if (leftLastField is HasOneAttribute or AttrAttribute { IsCompound: true, IsCollection: false })
+            if (leftLastField is HasOneAttribute or AttrAttribute { IsCompound: true } or AttrAttribute { IsCollection: true })
             {
                 return ParseNull();
             }
@@ -299,41 +302,58 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             var leftAttribute = (AttrAttribute)leftLastField;
 
             ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(leftAttribute);
-            return ParseTypedComparisonRightTerm(leftAttribute.Property.PropertyType, constantValueConverter);
+            return ParseTypedComparisonRightTerm(leftAttribute.Property.PropertyType, constantValueConverter, isEqualityComparison);
         }
 
         if (leftTerm is FunctionExpression leftFunction)
         {
             ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(leftFunction.ReturnType);
-            return ParseTypedComparisonRightTerm(leftFunction.ReturnType, constantValueConverter);
+            return ParseTypedComparisonRightTerm(leftFunction.ReturnType, constantValueConverter, isEqualityComparison);
         }
 
-        throw new InvalidOperationException(
-            $"Internal error: Expected left term to be a function, field chain or element value, instead of '{leftTerm.GetType().Name}': '{leftTerm}'.");
+        if (leftTerm is ScalarCollectionElementValueExpression collectionElement)
+        {
+            ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(collectionElement.ElementType);
+            return ParseTypedComparisonRightTerm(collectionElement.ElementType, constantValueConverter, isEqualityComparison);
+        }
+
+        throw new UnreachableException();
     }
 
-    private QueryExpression ParseTypedComparisonRightTerm(Type leftType, ConstantValueConverter constantValueConverter)
+    private QueryExpression ParseTypedComparisonRightTerm(Type leftType, ConstantValueConverter constantValueConverter, bool isEqualityComparison)
     {
-        bool allowNull = RuntimeTypeConverter.CanContainNull(leftType);
+        // Always allowing to compare equality with null makes the JSON:API contract resilient to internal implementation details.
+        // This unifies the behavior for all attributes types (scalar/compound/collection) across nullability of reference/value types.
+        // Comparing a non-nullable value type to null is a harmless predicate that will simply never match any database records.
+        bool allowNull = isEqualityComparison || RuntimeTypeConverter.CanContainNull(leftType);
 
-        // @formatter:nested_ternary_style expanded
-        string errorMessage = allowNull
-            ? ScalarCollectionElementTypeInScope != null
-                ? "Function, value between quotes, _ or null expected."
-                : "Function, field name, value between quotes or null expected."
-            : ScalarCollectionElementTypeInScope != null
-                ? "Function, value between quotes or _ expected."
-                : "Function, field name or value between quotes expected.";
-        // @formatter:nested_ternary_style restore
+        string errorMessage = (CurrentScope, allowNull) switch
+        {
+            (ScalarCollectionElementFilterScope, true) => "Function, value between quotes, _ or null expected.",
+            (ScalarCollectionElementFilterScope, false) => "Function, value between quotes or _ expected.",
+            (AttributeContainerFilterScope, true) => "Function, field name, value between quotes or null expected.",
+            (AttributeContainerFilterScope, false) => "Function, field name or value between quotes expected.",
+            _ => throw new UnreachableException()
+        };
 
         if (TokenStack.TryPeek(out Token? nextToken))
         {
-            if (nextToken is { Kind: TokenKind.QuotedText })
+            if (nextToken.Kind == TokenKind.QuotedText)
             {
                 TokenStack.Pop();
 
                 object constantValue = constantValueConverter(nextToken.Value!, nextToken.Position);
                 return new LiteralConstantExpression(constantValue, nextToken.Value!);
+            }
+
+            if (CurrentScope is ScalarCollectionElementFilterScope collectionScope)
+            {
+                ScalarCollectionElementValueExpression? elementValue = TryParseScalarCollectionElement(collectionScope);
+
+                if (elementValue != null)
+                {
+                    return elementValue;
+                }
             }
 
             if (nextToken.Kind == TokenKind.Text)
@@ -354,19 +374,11 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                     return ParseFunction();
                 }
 
-                if (ScalarCollectionElementTypeInScope != null)
+                if (CurrentScope is AttributeContainerFilterScope containerScope)
                 {
-                    if (nextToken.Value == CollectionElementSymbol)
-                    {
-                        EatText(CollectionElementSymbol);
-                        return new CollectionElementValueExpression(ScalarCollectionElementTypeInScope);
-                    }
-
-                    throw new QueryParseException(errorMessage, nextToken.Position);
+                    return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, FieldChainPatternMatchOptions.None,
+                        containerScope.Container, errorMessage);
                 }
-
-                return ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, FieldChainPatternMatchOptions.None, ContainerInScope,
-                    errorMessage);
             }
         }
 
@@ -396,58 +408,59 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private QueryExpression ParseTextMatchLeftTerm()
     {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text })
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
         {
-            if (IsFunction(nextToken.Value!))
+            FunctionExpression targetFunction = ParseFunction();
+
+            if (targetFunction.ReturnType != typeof(string))
             {
-                FunctionExpression targetFunction = ParseFunction();
-
-                if (targetFunction.ReturnType != typeof(string))
-                {
-                    throw new QueryParseException("Function that returns type 'String' expected.", nextToken.Position);
-                }
-
-                return targetFunction;
+                throw new QueryParseException("Function that returns type 'String' expected.", nextToken.Position);
             }
 
-            if (ScalarCollectionElementTypeInScope != null)
-            {
-                if (nextToken.Value == CollectionElementSymbol)
-                {
-                    EatText(CollectionElementSymbol);
+            return targetFunction;
+        }
 
-                    if (ScalarCollectionElementTypeInScope != typeof(string))
+        switch (CurrentScope)
+        {
+            case ScalarCollectionElementFilterScope collectionScope:
+            {
+                int position = GetNextTokenPositionOrEnd();
+                ScalarCollectionElementValueExpression? elementValue = TryParseScalarCollectionElement(collectionScope);
+
+                if (elementValue != null)
+                {
+                    if (elementValue.ElementType != typeof(string))
                     {
-                        throw new QueryParseException("Element of type 'String' expected.", nextToken.Position);
+                        throw new QueryParseException("Element of type 'String' expected.", position);
                     }
 
-                    return new CollectionElementValueExpression(ScalarCollectionElementTypeInScope);
+                    return elementValue;
                 }
 
-                throw new QueryParseException("Function or _ expected.", nextToken.Position);
+                throw new QueryParseException("Function or _ expected.", position);
+            }
+            case AttributeContainerFilterScope containerScope:
+            {
+                int chainStartPosition = GetNextTokenPositionOrEnd();
+
+                ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
+                    FieldChainPatternMatchOptions.None, containerScope.Container, "Function or field name expected.");
+
+                var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
+
+                if (targetAttribute.Property.PropertyType != typeof(string))
+                {
+                    int position = chainStartPosition + GetRelativePositionOfLastFieldInChain(targetAttributeChain);
+                    throw new QueryParseException("Attribute of type 'String' expected.", position);
+                }
+
+                return targetAttributeChain;
+            }
+            default:
+            {
+                throw new UnreachableException();
             }
         }
-
-        if (ScalarCollectionElementTypeInScope != null)
-        {
-            int position = GetNextTokenPositionOrEnd();
-            throw new QueryParseException("Function or _ expected.", position);
-        }
-
-        int chainStartPosition = GetNextTokenPositionOrEnd();
-
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.None, ContainerInScope, null);
-
-        var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
-
-        if (targetAttribute.Property.PropertyType != typeof(string))
-        {
-            int position = chainStartPosition + GetRelativePositionOfLastFieldInChain(targetAttributeChain);
-            throw new QueryParseException("Attribute of type 'String' expected.", position);
-        }
-
-        return targetAttributeChain;
     }
 
     protected virtual AnyExpression ParseAny()
@@ -482,49 +495,49 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private (QueryExpression matchTarget, Func<ConstantValueConverter> constantValueConverterFactory) ParseAnyLeftTerm()
     {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text })
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
         {
-            if (IsFunction(nextToken.Value!))
-            {
-                FunctionExpression targetFunction = ParseFunction();
+            FunctionExpression targetFunction = ParseFunction();
 
-                Func<ConstantValueConverter> functionConverterFactory = () => GetConstantValueConverterForType(targetFunction.ReturnType);
-                return (targetFunction, functionConverterFactory);
-            }
+            Func<ConstantValueConverter> functionConverterFactory = () => GetConstantValueConverterForType(targetFunction.ReturnType);
+            return (targetFunction, functionConverterFactory);
+        }
 
-            if (ScalarCollectionElementTypeInScope != null)
+        switch (CurrentScope)
+        {
+            case ScalarCollectionElementFilterScope collectionScope:
             {
-                if (nextToken.Value == CollectionElementSymbol)
+                ScalarCollectionElementValueExpression? elementValue = TryParseScalarCollectionElement(collectionScope);
+
+                if (elementValue != null)
                 {
-                    EatText(CollectionElementSymbol);
-                    var targetExpression = new CollectionElementValueExpression(ScalarCollectionElementTypeInScope);
-
-                    Func<ConstantValueConverter> functionConverterFactory = () => GetConstantValueConverterForType(ScalarCollectionElementTypeInScope);
-                    return (targetExpression, functionConverterFactory);
+                    Func<ConstantValueConverter> functionConverterFactory = () => GetConstantValueConverterForType(elementValue.ElementType);
+                    return (elementValue, functionConverterFactory);
                 }
 
-                throw new QueryParseException("Function or _ expected.", nextToken.Position);
+                int position = GetNextTokenPositionOrEnd();
+                throw new QueryParseException("Function or _ expected.", position);
+            }
+            case AttributeContainerFilterScope containerScope:
+            {
+                ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
+                    FieldChainPatternMatchOptions.None, containerScope.Container, "Function or field name expected.");
+
+                var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
+
+                Func<ConstantValueConverter> attributeConverterFactory = () => GetConstantValueConverterForAttribute(targetAttribute);
+                return (targetAttributeChain, attributeConverterFactory);
+            }
+            default:
+            {
+                throw new UnreachableException();
             }
         }
-
-        if (ScalarCollectionElementTypeInScope != null)
-        {
-            int position = GetNextTokenPositionOrEnd();
-            throw new QueryParseException("Function or _ expected.", position);
-        }
-
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.None, ContainerInScope, null);
-
-        var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
-
-        Func<ConstantValueConverter> attributeConverterFactory = () => GetConstantValueConverterForAttribute(targetAttribute);
-        return (targetAttributeChain, attributeConverterFactory);
     }
 
     protected virtual HasExpression ParseHas()
     {
-        if (ScalarCollectionElementTypeInScope != null)
+        if (CurrentScope is not AttributeContainerFilterScope containerScope)
         {
             int position = GetNextTokenPositionOrEnd();
             throw new QueryParseException("Function 'has' cannot be used on scalar collection elements.", position);
@@ -534,7 +547,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection,
-            FieldChainPatternMatchOptions.None, ContainerInScope, null);
+            FieldChainPatternMatchOptions.None, containerScope.Container, null);
 
         FilterExpression? filter = null;
 
@@ -560,11 +573,9 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             }
             else if (lastField is AttrAttribute { IsCompound: false, IsCollection: true } scalarCollectionAttr)
             {
-                Type elementType = CollectionConverter.Instance.FindCollectionElementType(scalarCollectionAttr.Property.PropertyType) ??
-                    throw new InvalidOperationException(
-                        $"Cannot determine element type for scalar collection attribute '{scalarCollectionAttr.Property.Name}'.");
+                Type elementType = CollectionConverter.Instance.FindCollectionElementType(scalarCollectionAttr.Property.PropertyType)!;
 
-                using (InScopeOfScalarCollectionElementType(elementType))
+                using (InScopeOfScalarCollection(elementType))
                 {
                     filter = ParseFilter();
                 }
@@ -578,22 +589,35 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual IsTypeExpression ParseIsType()
     {
-        if (ScalarCollectionElementTypeInScope != null)
-        {
-            int position = GetNextTokenPositionOrEnd();
-            throw new QueryParseException("Function 'isType' cannot be used on scalar collection elements.", position);
-        }
+        ResourceType resourceTypeInScope;
 
-        if (ContainerInScope is not ResourceType resourceTypeInScope)
+        switch (CurrentScope)
         {
-            int position = GetNextTokenPositionOrEnd();
-            throw new QueryParseException("Function 'isType' cannot be used on compound types.", position);
+            case AttributeContainerFilterScope { Container: ResourceType resourceType }:
+            {
+                resourceTypeInScope = resourceType;
+                break;
+            }
+            case AttributeContainerFilterScope:
+            {
+                int position = GetNextTokenPositionOrEnd();
+                throw new QueryParseException("Function 'isType' cannot be used on compound types.", position);
+            }
+            case ScalarCollectionElementFilterScope:
+            {
+                int position = GetNextTokenPositionOrEnd();
+                throw new QueryParseException("Function 'isType' cannot be used on scalar collection elements.", position);
+            }
+            default:
+            {
+                throw new UnreachableException();
+            }
         }
 
         EatText(Keywords.IsType);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression? targetToOneRelationship = TryParseToOneRelationshipChain();
+        ResourceFieldChainExpression? targetToOneRelationship = TryParseToOneRelationshipChain(resourceTypeInScope);
 
         EatSingleCharacterToken(TokenKind.Comma);
 
@@ -607,14 +631,14 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         return new IsTypeExpression(targetToOneRelationship, derivedType, child);
     }
 
-    private ResourceFieldChainExpression? TryParseToOneRelationshipChain()
+    private ResourceFieldChainExpression? TryParseToOneRelationshipChain(ResourceType resourceTypeInScope)
     {
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
         {
             return null;
         }
 
-        return ParseFieldChain(BuiltInPatterns.ToOneChain, FieldChainPatternMatchOptions.None, ContainerInScope, "Relationship name or , expected.");
+        return ParseFieldChain(BuiltInPatterns.ToOneChain, FieldChainPatternMatchOptions.None, resourceTypeInScope, "To-one relationship name or , expected.");
     }
 
     private ResourceType ParseDerivedType(ResourceType baseType)
@@ -761,65 +785,60 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     }
 
     /// <summary>
-    /// Changes the container currently in scope and restores the original container when the return value is disposed.
+    /// Changes the current filter scope to the specified attribute container (resource type or compound type) and restores the original scope when the
+    /// return value is disposed.
     /// </summary>
     protected IDisposable InScopeOfContainer(IAttributeContainer container)
     {
         ArgumentNullException.ThrowIfNull(container);
 
-        _containerStack.Push(container);
-        return new PopContainerOnDispose(_containerStack);
+        var scope = new AttributeContainerFilterScope(container);
+        return PushFilterScope(scope);
     }
 
     /// <summary>
-    /// Changes the scalar collection element type currently in scope and restores the original type when the return value is disposed.
+    /// Changes the current filter scope to the specified scalar attribute collection type and restores the original scope when the return value is disposed.
     /// </summary>
-    protected IDisposable InScopeOfScalarCollectionElementType(Type elementType)
+    protected IDisposable InScopeOfScalarCollection(Type collectionElementType)
     {
-        ArgumentNullException.ThrowIfNull(elementType);
+        ArgumentNullException.ThrowIfNull(collectionElementType);
 
-        _scalarCollectionElementTypeStack.Push(elementType);
-        return new PopScalarCollectionElementTypeOnDispose(_scalarCollectionElementTypeStack);
+        var scope = new ScalarCollectionElementFilterScope(collectionElementType);
+        return PushFilterScope(scope);
     }
 
-    private void AssertContainerStackIsEmpty()
+    private PopFilterScopeOnDispose PushFilterScope(FilterScope scope)
     {
-        if (_containerStack.Count > 0)
-        {
-            IAttributeContainer containerAtTopOfStack = _containerStack.Peek();
-            string containerType = containerAtTopOfStack is ResourceType ? "resource type" : "compound type";
-
-            throw new InvalidOperationException($"There is still a {containerType} in scope after parsing has completed. " +
-                $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfContainer)}().");
-        }
+        _scopeStack.Push(scope);
+        return new PopFilterScopeOnDispose(_scopeStack);
     }
 
-    private void AssertScalarCollectionElementTypeStackIsEmpty()
+    private void AssertFilterScopeStackHasOnlyRoot()
     {
-        if (_scalarCollectionElementTypeStack.Count > 0)
+        if (_scopeStack.Count > 1)
         {
+            FilterScope scopeAtTopOfStack = _scopeStack.Peek();
+
+            if (scopeAtTopOfStack is AttributeContainerFilterScope containerScope)
+            {
+                string containerType = containerScope.Container is ResourceType ? "resource type" : "compound type";
+
+                throw new InvalidOperationException($"There is still a {containerType} in scope after parsing has completed. " +
+                    $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfContainer)}().");
+            }
+
             throw new InvalidOperationException("There is still a scalar collection element type in scope after parsing has completed. " +
-                $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfScalarCollectionElementType)}().");
+                $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfScalarCollection)}().");
         }
     }
 
-    private sealed class PopContainerOnDispose(Stack<IAttributeContainer> containerStack) : IDisposable
+    private sealed class PopFilterScopeOnDispose(Stack<FilterScope> scopeStack) : IDisposable
     {
-        private readonly Stack<IAttributeContainer> _containerStack = containerStack;
+        private readonly Stack<FilterScope> _scopeStack = scopeStack;
 
         public void Dispose()
         {
-            _containerStack.Pop();
-        }
-    }
-
-    private sealed class PopScalarCollectionElementTypeOnDispose(Stack<Type> scalarCollectionElementTypeStack) : IDisposable
-    {
-        private readonly Stack<Type> _scalarCollectionElementTypeStack = scalarCollectionElementTypeStack;
-
-        public void Dispose()
-        {
-            _scalarCollectionElementTypeStack.Pop();
+            _scopeStack.Pop();
         }
     }
 }

@@ -3,7 +3,11 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the element value of a scalar collection in an expression tree.
+/// Represents the element value of a scalar collection (_), resulting from text such as:
+/// <c>
+/// has(tags,equals(_,'Work'))
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public sealed class ScalarCollectionElementValueExpression : IdentifierExpression
@@ -22,21 +26,25 @@ public sealed class ScalarCollectionElementValueExpression : IdentifierExpressio
         ElementType = elementType;
     }
 
+    /// <inheritdoc />
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
         return visitor.VisitScalarCollectionElementValue(this, argument);
     }
 
+    /// <inheritdoc />
     public override string ToString()
     {
         return Symbol;
     }
 
+    /// <inheritdoc />
     public override string ToFullString()
     {
         return ToString();
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -54,6 +62,7 @@ public sealed class ScalarCollectionElementValueExpression : IdentifierExpressio
         return ElementType == other.ElementType;
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return ElementType.GetHashCode();

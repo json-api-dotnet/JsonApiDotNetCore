@@ -36,8 +36,8 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     [InlineData("filter[]", "Expected field name between brackets in filter parameter name.")]
     [InlineData("filter[some]", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[author.posts]",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or a non-collection attribute. " +
-        "To-one relationship or non-collection attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or an attribute. " +
+        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter[some.id]", "Field 'some' does not exist on resource type 'blogPosts'.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
