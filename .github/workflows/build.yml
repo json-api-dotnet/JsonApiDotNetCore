@@ -23,7 +23,6 @@ concurrency:
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  HOMEBREW_NO_REQUIRE_TAP_TRUST: 1 # https://github.com/ikalnytskyi/action-setup-postgres/issues/65
   SOLUTION_FILE: JsonApiDotNetCore.slnx
 
 jobs:
@@ -40,7 +39,7 @@ jobs:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup PostgreSQL
-      uses: ikalnytskyi/action-setup-postgres@0f1fdf59c857aabfa61ab1a2619e9af34de678d3 # No release > v8 has been published yet
+      uses: ikalnytskyi/action-setup-postgres@v9
       with:
         username: postgres
         password: postgres
