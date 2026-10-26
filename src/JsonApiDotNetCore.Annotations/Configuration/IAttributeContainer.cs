@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Configuration;
 
 /// <summary>
-/// Represents a schema element (such as a resource type or a compound type) that contains JSON:API attributes.
+/// Metadata about the shape of a type that contains JSON:API attributes.
 /// </summary>
 [PublicAPI]
 public interface IAttributeContainer
@@ -15,7 +15,7 @@ public interface IAttributeContainer
     Type ClrType { get; }
 
     /// <summary>
-    /// The attributes contained in this schema element.
+    /// The attributes in this container.
     /// </summary>
     IReadOnlyCollection<AttrAttribute> Attributes { get; }
 

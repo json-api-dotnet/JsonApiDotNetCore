@@ -45,7 +45,7 @@ public sealed class AttrAttribute : ResourceFieldAttribute
     public bool IsCompound { get; set; }
 
     /// <summary>
-    /// The schema of the nested compound type when <see cref="IsCompound" /> is true; otherwise <c>null</c>.
+    /// Provides access to nested attributes when <see cref="IsCompound" /> is true; otherwise <c>null</c>.
     /// </summary>
     public CompoundType? CompoundType { get; internal set; }
 

@@ -41,7 +41,7 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     public PropertyInfo? InverseNavigationProperty { get; set; }
 
     /// <summary>
-    /// The containing resource type in which this relationship is declared. Identical to <see cref="ResourceFieldAttribute.ContainingType" />.
+    /// The containing resource type in which this relationship is defined. Identical to <see cref="ResourceFieldAttribute.ContainingType" />.
     /// </summary>
     public ResourceType LeftType => (ResourceType)ContainingType;
 
