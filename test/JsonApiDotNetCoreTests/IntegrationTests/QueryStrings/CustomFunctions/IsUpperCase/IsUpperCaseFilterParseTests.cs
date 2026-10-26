@@ -38,7 +38,7 @@ public sealed class IsUpperCaseFilterParseTests : BaseParseTests
     [InlineData("filter", "isUpperCase(^caption)", "Field 'caption' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "isUpperCase(^null)", "Field name expected.")]
     [InlineData("filter", "isUpperCase(title)^)", "End of expression expected.")]
-    [InlineData("filter", "isUpperCase(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("filter", "isUpperCase(owner.preferences.^useDarkTheme)", "Attribute 'useDarkTheme' is of type 'Boolean' while type 'String' was expected.")]
     [InlineData("filter", "has(tags,isUpperCase(^some))", "_ expected.")]
     [InlineData("filter", "has(tags,isUpperCase(^))", "_ expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)

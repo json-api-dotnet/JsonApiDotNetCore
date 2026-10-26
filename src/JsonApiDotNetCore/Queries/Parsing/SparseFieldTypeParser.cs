@@ -34,7 +34,7 @@ public class SparseFieldTypeParser : QueryExpressionParser, ISparseFieldTypePars
 
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)
         {
-            throw new QueryParseException("Parameter name expected.", position);
+            throw new QueryParseException(QueryParseChoices.ParameterName, position);
         }
 
         EatSingleCharacterToken(TokenKind.OpenBracket);
@@ -55,7 +55,7 @@ public class SparseFieldTypeParser : QueryExpressionParser, ISparseFieldTypePars
             return GetResourceType(token.Value!, token.Position);
         }
 
-        throw new QueryParseException("Resource type expected.", position);
+        throw new QueryParseException(QueryParseChoices.ResourceType, position);
     }
 
     private ResourceType GetResourceType(string publicName, int position)

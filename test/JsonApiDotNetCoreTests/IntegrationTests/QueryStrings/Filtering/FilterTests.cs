@@ -20,6 +20,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         testContext.UseController<WebAccountsController>();
         testContext.UseController<CalendarsController>();
         testContext.UseController<BlogsController>();
+        testContext.UseController<BlogPostsController>();
 
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = false;
@@ -480,6 +481,65 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         });
 
         const string route = "/calendars?filter=not(equals(showWeekNumbers,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Can_filter_equality_between_to_one_relationships()
+    {
+        // Arrange
+        List<WebAccount> accounts = _fakers.WebAccount.GenerateList(2);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
+
+        posts[0].Author = accounts[0];
+        posts[0].Reviewer = accounts[0];
+
+        posts[1].Author = accounts[0];
+        posts[1].Reviewer = accounts[1];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<BlogPost>();
+            dbContext.Posts.AddRange(posts);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogPosts?filter=equals(author,reviewer)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(posts[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_in_scope_of_relationship_with_blocked_inclusion()
+    {
+        // Arrange
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(2);
+        blog.Posts[0].Parent = blog;
+        blog.Posts[1].Parent = blog;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<BlogPost>();
+            dbContext.Blogs.Add(blog);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/blogPosts?filter[parent.posts]=equals(id,'{blog.Posts[1].StringId}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

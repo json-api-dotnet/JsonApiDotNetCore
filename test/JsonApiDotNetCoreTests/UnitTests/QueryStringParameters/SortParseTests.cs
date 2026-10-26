@@ -94,7 +94,7 @@ public sealed class SortParseTests : BaseParseTests
     [Theory]
     [InlineData("sort", "^", "-, count function or field name expected.")]
     [InlineData("sort", "^ ", "Unexpected whitespace.")]
-    [InlineData("sort", "-^", "Count function or field name expected.")]
+    [InlineData("sort", "-^", "count function or field name expected.")]
     [InlineData("sort", "^abc", "Field 'abc' does not exist on resource type 'blogs'.")]
     [InlineData("sort[posts]", "author^",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
@@ -114,7 +114,7 @@ public sealed class SortParseTests : BaseParseTests
         "Relationship or scalar collection attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("sort[posts]", "caption,^", "-, count function or field name expected.")]
     [InlineData("sort[posts]", "caption^:", ", expected.")]
-    [InlineData("sort[posts]", "caption,-^", "Count function or field name expected.")]
+    [InlineData("sort[posts]", "caption,-^", "count function or field name expected.")]
     [InlineData("sort[posts.contributors]", "^some", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]
     [InlineData("sort[posts.contributors]", "wife.father.^some", "Field 'some' does not exist on resource type 'men'.")]
     [InlineData("sort[posts.contributors]", "count(^some)", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]

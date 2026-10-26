@@ -56,7 +56,7 @@ internal sealed class TimeOffsetFilterParser(IResourceFactory resourceFactory)
             }
         }
 
-        throw new QueryParseException("Time offset between quotes expected.", position);
+        throw new QueryParseException(QueryParseChoices.None, position, "Time offset between quotes");
     }
 
     private static TimeSpan ConvertStringToTimeSpan(string value, int position)
@@ -67,7 +67,7 @@ internal sealed class TimeOffsetFilterParser(IResourceFactory resourceFactory)
         }
         catch (FormatException exception)
         {
-            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{nameof(TimeSpan)}'.", position, exception);
+            throw new QueryParseException($"Failed to convert '{value}' to type '{nameof(TimeSpan)}'.", position, exception);
         }
     }
 

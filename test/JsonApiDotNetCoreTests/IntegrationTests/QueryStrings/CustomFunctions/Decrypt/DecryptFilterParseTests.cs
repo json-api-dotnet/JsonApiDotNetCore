@@ -38,7 +38,7 @@ public sealed class DecryptFilterParseTests : BaseParseTests
     [InlineData("filter", "equals(decrypt(^caption)", "Field 'caption' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "equals(decrypt(^null)", "Field name expected.")]
     [InlineData("filter", "equals(decrypt(title)^)", ", expected.")]
-    [InlineData("filter", "equals(decrypt(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("filter", "equals(decrypt(owner.preferences.^useDarkTheme)", "Attribute 'useDarkTheme' is of type 'Boolean' while type 'String' was expected.")]
     [InlineData("filter", "has(tags,equals(decrypt(^some),'secret'))", "_ expected.")]
     [InlineData("filter", "has(tags,equals(decrypt(^),'secret'))", "_ expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)

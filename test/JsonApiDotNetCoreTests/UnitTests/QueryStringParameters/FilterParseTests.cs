@@ -97,7 +97,7 @@ public sealed class FilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter[posts]", "equals(author,^'some')", "null expected.")]
+    [InlineData("filter[posts]", "equals(author,^'some')", "To-one relationship name or null expected.")]
     [InlineData("filter[posts]", "lessThan(^some,null)", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[posts]", "lessThan(author^,null)",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
@@ -107,15 +107,15 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "contains(owner.displayName,^ )", "Unexpected whitespace.")]
     [InlineData("filter", "^some", "Filter function expected.")]
     [InlineData("filter", "equals^", "( expected.")]
-    [InlineData("filter", "equals^'", "Unexpected ' outside text.")]
+    [InlineData("filter", "equals^'", "Unexpected ' outside quoted text.")]
     [InlineData("filter", "equals(^", "Function or field name expected.")]
     [InlineData("filter", "equals(^'1'", "Function or field name expected.")]
     [InlineData("filter", "equals(count(posts),^", "Function, field name, value between quotes or null expected.")]
     [InlineData("filter", "greaterThan(count(posts),^null)", "Function, field name or value between quotes expected.")]
     [InlineData("filter", "greaterThan(showAdvertisements,^null)", "Function, field name or value between quotes expected.")]
-    [InlineData("filter", "equals(owner.^.displayName,'')", "Function or field name expected.")]
-    [InlineData("filter", "equals(owner.displayName.^,'')", "Function or field name expected.")]
-    [InlineData("filter", "equals(title,'^)", "' expected.")]
+    [InlineData("filter", "equals(owner.^.displayName,'')", "Field name expected.")]
+    [InlineData("filter", "equals(owner.displayName.^,'')", "Field name expected.")]
+    [InlineData("filter", "equals(title,'^)", "Closing ' expected.")]
     [InlineData("filter", "equals(title,^(", "Function, field name, value between quotes or null expected.")]
     [InlineData("filter", "equals(description,null^", ") expected.")]
     [InlineData("filter", "equals(description,^(", "Function, field name, value between quotes or null expected.")]
@@ -126,9 +126,9 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "has(tags,any(^unknown))", "Function or _ expected.")]
     [InlineData("filter", "has(tags,^has(tags,equals(_,'w')))", "Function 'has' cannot be used on scalar collection elements.")]
     [InlineData("filter", "has(tags,equals(^count(tags),'1'))", "Function 'count' cannot be used on scalar collection elements.")]
-    [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' cannot be used on scalar collection elements.")]
+    [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' can only be used on resource types.")]
     [InlineData("filter", "equals(title,^_)", "Function, field name, value between quotes or null expected.")]
-    [InlineData("filter", "equals(owner,^'some')", "null expected.")]
+    [InlineData("filter", "equals(owner,^'some')", "To-one relationship name or null expected.")]
     [InlineData("filter", "equals(^posts,null)",
         "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or an attribute. " +
         "To-one relationship or attribute on resource type 'blogs' expected.")]
@@ -136,7 +136,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "has(posts,^", "Filter function expected.")]
     [InlineData("filter", "contains^)", "( expected.")]
     [InlineData("filter", "contains(title,'a'^,'b')", ") expected.")]
-    [InlineData("filter", "contains(^equals(title,'x'),'a')", "Function that returns type 'String' expected.")]
+    [InlineData("filter", "contains(^equals(title,'x'),'a')", "Function returns type 'Boolean' while type 'String' was expected.")]
     [InlineData("filter", "contains(title,^null)", "Value between quotes expected.")]
     [InlineData("filter[posts]", "contains(author^,null)",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
@@ -144,7 +144,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "any(^null,'a','b')", "Function or field name expected.")]
     [InlineData("filter", "any(^'a','b','c')", "Function or field name expected.")]
     [InlineData("filter", "any(title,'b','c',^)", "Value between quotes expected.")]
-    [InlineData("filter", "any(equals(title,'x'),^'b')", "Failed to convert 'b' of type 'String' to type 'Boolean'.")]
+    [InlineData("filter", "any(equals(title,'x'),^'b')", "Failed to convert 'b' to type 'Boolean'.")]
     [InlineData("filter", "any(title^)", ", expected.")]
     [InlineData("filter[posts]", "any(author^,'a','b')",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
@@ -221,6 +221,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "has(tags,not(equals(_,'spam')))", null)]
     [InlineData("filter[posts]", "equals(caption,null)", "posts")]
     [InlineData("filter[posts]", "equals(author,null)", "posts")]
+    [InlineData("filter[posts]", "equals(author,reviewer)", "posts")]
     [InlineData("filter[posts]", "equals(author.userName,author.displayName)", "posts")]
     [InlineData("filter[posts.comments]", "lessThan(createdAt,'2000-01-01')", "posts.comments")]
     [InlineData("filter[posts.comments]", "lessOrEqual(createdAt,'2000-01-01')", "posts.comments")]

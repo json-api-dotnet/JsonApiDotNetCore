@@ -739,7 +739,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
-        error.Detail.Should().Be($"Retrieving the attribute 'password' is not allowed. {parameterValue}");
+        error.Detail.Should().Be($"Retrieving attribute 'password' is not allowed. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("fields[webAccounts]");
     }
@@ -764,7 +764,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
-        error.Detail.Should().Be($"Retrieving the relationship 'person' is not allowed. {parameterValue}");
+        error.Detail.Should().Be($"Retrieving relationship 'person' is not allowed. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("fields[webAccounts]");
     }
@@ -789,7 +789,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
-        error.Detail.Should().Be($"Retrieving the relationship 'appointments' is not allowed. {parameterValue}");
+        error.Detail.Should().Be($"Retrieving relationship 'appointments' is not allowed. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("fields[calendars]");
     }

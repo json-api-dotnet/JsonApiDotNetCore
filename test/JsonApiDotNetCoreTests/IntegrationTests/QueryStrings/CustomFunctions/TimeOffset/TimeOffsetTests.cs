@@ -122,7 +122,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Failed to convert '*' of type 'String' to type 'TimeSpan'. {parameterValue}");
+        error.Detail.Should().Be($"Failed to convert '*' to type 'TimeSpan'. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -191,7 +191,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
+        error.Detail.Should().Be($"Attribute 'remindsAt' is of type 'DateTime' while type 'String' was expected. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

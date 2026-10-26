@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;
@@ -35,15 +36,16 @@ internal sealed class LengthSortParser : SortParser
 
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, resourceType,
+            FieldChainPatternMatchOptions.AllowDerivedTypes);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];
 
         if (attribute.Property.PropertyType != typeof(string))
         {
             int position = chainStartPosition + GetRelativePositionOfLastFieldInChain(targetAttributeChain);
-            throw new QueryParseException("Attribute of type 'String' expected.", position);
+            string actualTypeName = RuntimeTypeConverter.GetFriendlyTypeName(attribute.Property.PropertyType);
+            throw new QueryParseException($"Attribute '{attribute.PublicName}' is of type '{actualTypeName}' while type 'String' was expected.", position);
         }
 
         EatSingleCharacterToken(TokenKind.CloseParen);

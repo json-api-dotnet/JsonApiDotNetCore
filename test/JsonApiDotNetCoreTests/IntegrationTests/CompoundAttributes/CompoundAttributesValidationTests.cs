@@ -157,7 +157,7 @@ public sealed class CompoundAttributesValidationTests
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Contain("Function 'isType' cannot be used on compound types");
+        error.Detail.Should().Contain("Function 'isType' can only be used on resource types");
     }
 
     [Fact]

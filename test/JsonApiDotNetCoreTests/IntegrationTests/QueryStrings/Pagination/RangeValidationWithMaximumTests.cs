@@ -73,7 +73,7 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Page number cannot be higher than {MaximumPageNumber}. {parameterValue}");
+        error.Detail.Should().Be($"Page number cannot be greater than {MaximumPageNumber}. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -148,7 +148,7 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Page size cannot be higher than {MaximumPageSize}. {parameterValue}");
+        error.Detail.Should().Be($"Page size cannot be greater than {MaximumPageSize}. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
