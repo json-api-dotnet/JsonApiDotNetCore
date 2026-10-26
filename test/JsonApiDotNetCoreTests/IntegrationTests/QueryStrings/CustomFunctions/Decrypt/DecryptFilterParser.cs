@@ -54,12 +54,13 @@ internal sealed class DecryptFilterParser(IResourceFactory resourceFactory)
 
         if (elementValue == null)
         {
-            throw new QueryParseException("_ expected.", position);
+            throw new QueryParseException(QueryParseChoices.Underscore, position);
         }
 
         if (collectionScope.ElementType != typeof(string))
         {
-            throw new QueryParseException("Element of type 'String' expected.", position);
+            string actualTypeName = RuntimeTypeConverter.GetFriendlyTypeName(collectionScope.ElementType);
+            throw new QueryParseException($"Element is of type '{actualTypeName}' while type 'String' was expected.", position);
         }
 
         return elementValue;
@@ -70,14 +71,15 @@ internal sealed class DecryptFilterParser(IResourceFactory resourceFactory)
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
         ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.None, containerScope.Container, null);
+            containerScope.Container);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];
 
         if (attribute.Property.PropertyType != typeof(string))
         {
             int position = chainStartPosition + GetRelativePositionOfLastFieldInChain(targetAttributeChain);
-            throw new QueryParseException("Attribute of type 'String' expected.", position);
+            string actualTypeName = RuntimeTypeConverter.GetFriendlyTypeName(attribute.Property.PropertyType);
+            throw new QueryParseException($"Attribute '{attribute.PublicName}' is of type '{actualTypeName}' while type 'String' was expected.", position);
         }
 
         return targetAttributeChain;

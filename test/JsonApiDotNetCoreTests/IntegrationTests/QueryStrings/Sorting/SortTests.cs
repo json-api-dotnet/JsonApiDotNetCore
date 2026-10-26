@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting;
 
 public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
-    private const string CollectionErrorMessage = "This query string parameter can only be used on a collection of resources (not on a single resource).";
+    private const string CollectionErrorMessage = "Query string parameter 'sort' can only be used on a collection of resources.";
 
     private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();
@@ -297,6 +297,31 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         responseDocument.Included[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
         responseDocument.Included[1].Id.Should().Be(post.Labels.ElementAt(0).StringId);
         responseDocument.Included[2].Id.Should().Be(post.Labels.ElementAt(2).StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_in_scope_of_relationship_with_blocked_inclusion()
+    {
+        // Arrange
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<BlogPost>();
+            dbContext.Blogs.Add(blog);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogPosts?sort[parent.posts]=-caption";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
     }
 
     [Fact]

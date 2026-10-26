@@ -30,11 +30,11 @@ public sealed class SumFilterParseTests : BaseParseTests
 
     [Theory]
     [InlineData("filter", "equals(sum^", "( expected.")]
-    [InlineData("filter", "equals(sum(^", "To-many relationship expected.")]
+    [InlineData("filter", "equals(sum(^", "To-many relationship name expected.")]
     [InlineData("filter", "equals(sum(^ ", "Unexpected whitespace.")]
-    [InlineData("filter", "equals(sum(^)", "To-many relationship expected.")]
-    [InlineData("filter", "equals(sum(^'a')", "To-many relationship expected.")]
-    [InlineData("filter", "equals(sum(^null)", "To-many relationship expected.")]
+    [InlineData("filter", "equals(sum(^)", "To-many relationship name expected.")]
+    [InlineData("filter", "equals(sum(^'a')", "To-many relationship name expected.")]
+    [InlineData("filter", "equals(sum(^null)", "To-many relationship name expected.")]
     [InlineData("filter", "equals(sum(^some)", "Field 'some' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "equals(sum(^title)",
         "Field chain on resource type 'blogs' failed to match the pattern: a to-many relationship. " +

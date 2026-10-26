@@ -352,6 +352,6 @@ public sealed class AttributeTypeFilterTests : IClassFixture<IntegrationTestCont
         }
 
         string propertyType = RuntimeTypeConverter.GetFriendlyTypeName(property.PropertyType);
-        return $"Failed to convert '{actualValue}' of type 'String' to type '{propertyType}'.";
+        return $"Failed to convert '{actualValue}' to type '{propertyType}'.";
     }
 }

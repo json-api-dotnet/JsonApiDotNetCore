@@ -38,9 +38,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
                 EatSingleCharacterToken(TokenKind.Comma);
             }
 
-            ResourceFieldChainExpression nextChain = ParseFieldChain(BuiltInPatterns.CompoundOrCompoundCollectionChainEndingInField,
-                FieldChainPatternMatchOptions.None, resourceType, "Field name expected.");
-
+            ResourceFieldChainExpression nextChain = ParseFieldChain(BuiltInPatterns.CompoundOrCompoundCollectionChainEndingInField, resourceType);
             fieldSetBuilder.Add(nextChain);
         }
 
@@ -54,7 +52,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
         if (field.IsViewBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
-            throw new QueryParseException($"Retrieving the {kind} '{field}' is not allowed.", position);
+            throw new QueryParseException($"Retrieving {kind} '{field}' is not allowed.", position);
         }
     }
 }

@@ -38,7 +38,7 @@ public sealed class LengthFilterParseTests : BaseParseTests
     [InlineData("filter", "equals(length(^caption)", "Field 'caption' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "equals(length(^null)", "Field name expected.")]
     [InlineData("filter", "equals(length(title)^)", ", expected.")]
-    [InlineData("filter", "equals(length(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("filter", "equals(length(owner.preferences.^useDarkTheme)", "Attribute 'useDarkTheme' is of type 'Boolean' while type 'String' was expected.")]
     [InlineData("filter", "has(tags,equals(length(^some),'1'))", "_ expected.")]
     [InlineData("filter", "has(tags,equals(length(^),'1'))", "_ expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)

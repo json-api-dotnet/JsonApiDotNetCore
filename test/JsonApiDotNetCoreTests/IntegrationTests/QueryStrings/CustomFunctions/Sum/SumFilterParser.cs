@@ -37,23 +37,28 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
     {
         if (CurrentScope is not AttributeContainerFilterScope containerScope)
         {
-            int position = GetNextTokenPositionOrEnd();
-            throw new QueryParseException("Function 'sum' cannot be used on scalar collection elements.", position);
+            int elementPosition = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Function 'sum' cannot be used on scalar collection elements.", elementPosition);
         }
 
         EatText(SumExpression.Keyword);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetToManyRelationshipChain = ParseFieldChain(SingleToManyRelationshipChain, FieldChainPatternMatchOptions.None,
-            containerScope.Container, "To-many relationship expected.");
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text && !IsNullConstantToken(nextToken))
+        {
+            ResourceFieldChainExpression targetToManyRelationshipChain = ParseFieldChain(SingleToManyRelationshipChain, containerScope.Container);
 
-        EatSingleCharacterToken(TokenKind.Comma);
+            EatSingleCharacterToken(TokenKind.Comma);
 
-        QueryExpression selector = ParseSumSelectorInScope(targetToManyRelationshipChain);
+            QueryExpression selector = ParseSumSelectorInScope(targetToManyRelationshipChain);
 
-        EatSingleCharacterToken(TokenKind.CloseParen);
+            EatSingleCharacterToken(TokenKind.CloseParen);
 
-        return new SumExpression(targetToManyRelationshipChain, selector);
+            return new SumExpression(targetToManyRelationshipChain, selector);
+        }
+
+        int position = GetNextTokenPositionOrEnd();
+        throw new QueryParseException(QueryParseChoices.ToManyRelationshipName, position);
     }
 
     private QueryExpression ParseSumSelectorInScope(ResourceFieldChainExpression targetChain)
@@ -85,8 +90,7 @@ internal sealed class SumFilterParser(IResourceFactory resourceFactory)
             return function;
         }
 
-        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute,
-            FieldChainPatternMatchOptions.None, containerScope.Container, null);
+        ResourceFieldChainExpression fieldChain = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, containerScope.Container);
 
         var attrAttribute = (AttrAttribute)fieldChain.Fields[^1];
 

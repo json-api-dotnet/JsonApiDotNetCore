@@ -48,11 +48,12 @@ public abstract class QueryStringParameterReader
         return _resourceGraph.GetResourceType(lastField.Property.PropertyType);
     }
 
-    protected void AssertIsCollectionRequest()
+    protected void AssertIsCollectionRequest(string parameterName)
     {
         if (!_isCollectionRequest)
         {
-            throw new QueryParseException("This query string parameter can only be used on a collection of resources (not on a single resource).", 0);
+            string message = $"Query string parameter '{parameterName}' can only be used on a collection of resources.";
+            throw new QueryParseException(message, 0);
         }
     }
 }

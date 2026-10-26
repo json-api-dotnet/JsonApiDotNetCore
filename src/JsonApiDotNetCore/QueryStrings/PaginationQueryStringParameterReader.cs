@@ -65,7 +65,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
             if (constraint.Elements.Any(element => element.Scope == null))
             {
                 isParameterNameValid = false;
-                AssertIsCollectionRequest();
+                AssertIsCollectionRequest(parameterName);
                 isParameterNameValid = true;
             }
 
@@ -102,7 +102,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
             {
                 if (element.Value > _options.MaximumPageSize.Value)
                 {
-                    throw new QueryParseException($"Page size cannot be higher than {_options.MaximumPageSize}.", element.Position);
+                    throw new QueryParseException($"Page size cannot be greater than {_options.MaximumPageSize}.", element.Position);
                 }
 
                 if (element.Value == 0)
@@ -128,7 +128,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
             {
                 if (element.Value > _options.MaximumPageNumber.OneBasedValue)
                 {
-                    throw new QueryParseException($"Page number cannot be higher than {_options.MaximumPageNumber}.", element.Position);
+                    throw new QueryParseException($"Page number cannot be greater than {_options.MaximumPageNumber}.", element.Position);
                 }
             }
 
