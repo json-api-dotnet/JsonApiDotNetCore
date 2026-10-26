@@ -4,12 +4,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Configuration;
 
 /// <summary>
-/// Metadata about the shape of an embedded compound value object in the resource graph.
+/// Metadata about the shape of a compound JSON:API attribute in the resource graph.
 /// </summary>
-/// <remarks>
-/// Compound types used with sparse fieldsets or request deserialization must provide an accessible parameterless constructor (can be non-public) to
-/// support member initialization expressions and object instantiation.
-/// </remarks>
 [PublicAPI]
 public sealed class CompoundType : IAttributeContainer
 {
