@@ -35,7 +35,8 @@ internal sealed class CompoundAttributesFakers
             .RuleFor(name => name.MiddleName, faker => faker.Name.FirstName())
             .RuleFor(name => name.LastName, faker => faker.Name.LastName())
             .RuleFor(name => name.NickName, faker => faker.Internet.UserName())
-            .RuleFor(name => name.MaidenName, faker => faker.Name.LastName()));
+            .RuleFor(name => name.MaidenName, faker => faker.Name.LastName())
+            .RuleFor(name => name.SecretAlias, faker => faker.Name.FindName()));
 
         _lazyContactCompanyFaker = new Lazy<Faker<ContactCompany>>(() => new Faker<ContactCompany>()
             .MakeDeterministic()

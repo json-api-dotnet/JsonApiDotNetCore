@@ -21,7 +21,7 @@ public sealed class SparseFieldSetExpressionExtensionsTests
     }
 
     [Fact]
-    public void Including_preserves_nested_field_chains()
+    public void Including_preserves_nested_field_elements()
     {
         // Arrange
         ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
@@ -31,18 +31,30 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         CompoundType nameType = nameAttr.CompoundType!;
         AttrAttribute lastNameAttr = nameType.GetAttributeByPropertyName(nameof(PersonName.LastName));
 
-        var nestedChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(contentAttr, nameAttr, lastNameAttr));
-        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(nestedChain));
+        var lastNameElement = new SparseFieldSetElementExpression(lastNameAttr);
+
+        var nameElement = new SparseFieldSetElementExpression(nameAttr,
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(lastNameAttr, lastNameElement));
+
+        var contentElement = new SparseFieldSetElementExpression(contentAttr,
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(nameAttr, nameElement));
+
+        var initialSet =
+            new SparseFieldSetExpression(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(contentAttr, contentElement));
 
         // Act
         SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => c.Remarks, _resourceGraph);
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet.FieldChains.Should().HaveCount(2);
-        updatedSet.FieldChains.Should().Contain(nestedChain);
+        updatedSet.Elements.Should().HaveCount(2);
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
-        updatedSet.FieldChains.Should().Contain(new ResourceFieldChainExpression(remarksAttr));
+
+        updatedSet.Elements.Keys.Should().Contain([
+            contentAttr,
+            remarksAttr
+        ]);
+
         updatedSet.ToString().Should().Be("content.name.lastName,remarks");
     }
 
@@ -58,17 +70,26 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         AttrAttribute lastNameAttr = nameType.GetAttributeByPropertyName(nameof(PersonName.LastName));
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
 
-        var nestedChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(contentAttr, nameAttr, lastNameAttr));
-        var remarksChain = new ResourceFieldChainExpression(remarksAttr);
-        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(nestedChain, remarksChain));
+        var lastNameElement = new SparseFieldSetElementExpression(lastNameAttr);
+
+        var nameElement = new SparseFieldSetElementExpression(nameAttr,
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(lastNameAttr, lastNameElement));
+
+        var contentElement = new SparseFieldSetElementExpression(contentAttr,
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(nameAttr, nameElement));
+
+        var remarksElement = new SparseFieldSetElementExpression(remarksAttr);
+
+        var initialSet = new SparseFieldSetExpression(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty
+            .Add(contentAttr, contentElement).Add(remarksAttr, remarksElement));
 
         // Act
         SparseFieldSetExpression? updatedSet = initialSet.Excluding<Contact>(c => c.Remarks, _resourceGraph);
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet.FieldChains.Should().HaveCount(1);
-        updatedSet.FieldChains.Should().Contain(nestedChain);
+        updatedSet.Elements.Should().HaveCount(1);
+        updatedSet.Elements.Values.Single().Field.Should().Be(contentAttr);
         updatedSet.ToString().Should().Be("content.name.lastName");
     }
 
@@ -84,18 +105,107 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         AttrAttribute lastNameAttr = nameType.GetAttributeByPropertyName(nameof(PersonName.LastName));
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
 
-        var nestedChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(contentAttr, nameAttr, lastNameAttr));
-        var remarksChain = new ResourceFieldChainExpression(remarksAttr);
-        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(nestedChain, remarksChain));
+        var lastNameElement = new SparseFieldSetElementExpression(lastNameAttr);
+
+        var nameElement = new SparseFieldSetElementExpression(nameAttr,
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(lastNameAttr, lastNameElement));
+
+        var contentElement = new SparseFieldSetElementExpression(contentAttr,
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(nameAttr, nameElement));
+
+        var remarksElement = new SparseFieldSetElementExpression(remarksAttr);
+
+        var initialSet = new SparseFieldSetExpression(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty
+            .Add(contentAttr, contentElement).Add(remarksAttr, remarksElement));
 
         // Act
         SparseFieldSetExpression? updatedSet = initialSet.Excluding<Contact>(c => c.Content, _resourceGraph);
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet.FieldChains.Should().HaveCount(1);
-        updatedSet.FieldChains.Should().Contain(remarksChain);
+        updatedSet.Elements.Should().HaveCount(1);
+        updatedSet.Elements.Values.Single().Field.Should().Be(remarksAttr);
         updatedSet.ToString().Should().Be("remarks");
+    }
+
+    [Fact]
+    public void Excluding_leaf_from_whole_compound_expands_siblings_and_excludes_leaf()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute contentAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Content));
+        var wholeContentElement = new SparseFieldSetElementExpression(contentAttr);
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(contentAttr, wholeContentElement));
+
+        // Act - exclude Content.Name.LastName, which should keep Content.Name.FirstName
+        SparseFieldSetExpression? updatedSet = initialSet.Excluding<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet.ToString().Should().Be("content.name.firstName");
+    }
+
+    [Fact]
+    public void Excluding_all_fields_returns_Empty_singleton()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(remarksAttr,
+                    new SparseFieldSetElementExpression(remarksAttr)));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Excluding(remarksAttr);
+
+        // Assert
+        updatedSet.Should().BeSameAs(SparseFieldSetExpression.Empty);
+        updatedSet.Elements.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Including_whole_compound_when_leaf_already_selected_widens_to_whole_compound()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
+
+        SparseFieldSetExpression? initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(remarksAttr,
+                    new SparseFieldSetElementExpression(remarksAttr))).Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => c.Content, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet.ToString().Should().Be("content,remarks");
+    }
+
+    [Fact]
+    public void Including_leaf_when_whole_compound_already_selected_is_noop()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute contentAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Content));
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(contentAttr,
+                    new SparseFieldSetElementExpression(contentAttr)));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet.ToString().Should().Be("content");
     }
 
     [Fact]
@@ -104,14 +214,18 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         // Arrange
         ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
-        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)));
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(remarksAttr,
+                    new SparseFieldSetElementExpression(remarksAttr)));
 
         // Act
         SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet.FieldChains.Should().HaveCount(2);
+        updatedSet.Elements.Should().HaveCount(2);
         updatedSet.ToString().Should().Be("content.name.lastName,remarks");
     }
 
@@ -122,15 +236,17 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
 
-        SparseFieldSetExpression? initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)))
-            .Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+        SparseFieldSetExpression? initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(remarksAttr,
+                    new SparseFieldSetElementExpression(remarksAttr))).Including<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
 
         // Act
         SparseFieldSetExpression? updatedSet = initialSet.Excluding<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet.FieldChains.Should().HaveCount(1);
+        updatedSet.Elements.Should().HaveCount(1);
         updatedSet.ToString().Should().Be("remarks");
     }
 
@@ -140,7 +256,11 @@ public sealed class SparseFieldSetExpressionExtensionsTests
         // Arrange
         ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
         AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
-        var initialSet = new SparseFieldSetExpression(ImmutableHashSet.Create(new ResourceFieldChainExpression(remarksAttr)));
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(remarksAttr,
+                    new SparseFieldSetElementExpression(remarksAttr)));
 
         // Act
         SparseFieldSetExpression? updatedSet = initialSet.Including<Contact>(c => new
@@ -151,8 +271,57 @@ public sealed class SparseFieldSetExpressionExtensionsTests
 
         // Assert
         updatedSet.Should().NotBeNull();
-        updatedSet.FieldChains.Should().HaveCount(2);
+        updatedSet.Elements.Should().HaveCount(2);
         updatedSet.ToString().Should().Be("content.name.lastName,remarks");
+    }
+
+    [Fact]
+    public void Including_single_ResourceFieldAttribute_adds_field_chain()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
+        AttrAttribute contentAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Content));
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(remarksAttr,
+                    new SparseFieldSetElementExpression(remarksAttr)));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Including(contentAttr);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet.Elements.Should().HaveCount(2);
+
+        updatedSet.Elements.Keys.Should().Contain([
+            contentAttr,
+            remarksAttr
+        ]);
+
+        updatedSet.ToString().Should().Be("content,remarks");
+    }
+
+    [Fact]
+    public void Excluding_single_ResourceFieldAttribute_removes_field_chain()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute remarksAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Remarks));
+        AttrAttribute contentAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Content));
+
+        var initialSet = new SparseFieldSetExpression(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty
+            .Add(remarksAttr, new SparseFieldSetElementExpression(remarksAttr)).Add(contentAttr, new SparseFieldSetElementExpression(contentAttr)));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Excluding(remarksAttr);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet.Elements.Should().HaveCount(1);
+        updatedSet.Elements.Values.Single().Field.Should().Be(contentAttr);
+        updatedSet.ToString().Should().Be("content");
     }
 
     [Fact]
@@ -187,6 +356,9 @@ public sealed class SparseFieldSetExpressionExtensionsTests
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class PersonName
     {
+        [Attr]
+        public string? FirstName { get; set; }
+
         [Attr]
         public string? LastName { get; set; }
     }

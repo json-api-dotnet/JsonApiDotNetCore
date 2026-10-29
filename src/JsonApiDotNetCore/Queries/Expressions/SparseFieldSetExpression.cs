@@ -9,52 +9,68 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 /// <c>
 /// firstName,lastName,articles
 /// </c>
+/// , or:
+/// <c>
+/// contact.name.firstName,contact.address
+/// </c>
 /// .
 /// </summary>
 [PublicAPI]
 public class SparseFieldSetExpression : QueryExpression
 {
     /// <summary>
-    /// The set of JSON:API fields to include.
+    /// Indicates not to include any fields.
     /// </summary>
-    public IImmutableSet<ResourceFieldAttribute> Fields { get; }
+    public static readonly SparseFieldSetExpression Empty = new();
 
     /// <summary>
-    /// The set of JSON:API field chains to include.
+    /// The JSON:API fields included in this sparse fieldset tree, keyed by field (attribute or relationship).
     /// </summary>
-    public IImmutableSet<ResourceFieldChainExpression> FieldChains { get; }
+    public IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> Elements { get; }
 
-    public SparseFieldSetExpression(IImmutableSet<ResourceFieldAttribute> fields)
+    public SparseFieldSetExpression(IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> elements)
     {
-        ArgumentGuard.NotNullNorEmpty(fields);
+        ArgumentGuard.NotNullNorEmpty(elements);
 
-        Fields = fields;
-        FieldChains = fields.Select(field => new ResourceFieldChainExpression(ImmutableArray.Create(field))).ToImmutableHashSet();
+        Elements = elements;
     }
 
-    public SparseFieldSetExpression(IImmutableSet<ResourceFieldChainExpression> fieldChains)
+    private SparseFieldSetExpression()
     {
-        ArgumentGuard.NotNullNorEmpty(fieldChains);
-
-        FieldChains = fieldChains;
-        Fields = fieldChains.Select(chain => chain.Fields[0]).ToImmutableHashSet();
+        Elements = ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty;
     }
 
+    internal static SparseFieldSetExpression Create(IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> elements)
+    {
+        ArgumentNullException.ThrowIfNull(elements);
+
+        return elements.Count > 0 ? new SparseFieldSetExpression(elements) : Empty;
+    }
+
+    /// <inheritdoc />
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
         return visitor.VisitSparseFieldSet(this, argument);
     }
 
+    /// <inheritdoc />
     public override string ToString()
     {
-        return string.Join(',', FieldChains.Select(chain => chain.ToString()).Order());
+        return InnerToString(false);
     }
 
+    /// <inheritdoc />
     public override string ToFullString()
     {
-        return string.Join(',', FieldChains.Select(chain => $"{chain.ToFullString()}").Order());
+        return InnerToString(true);
     }
 
+    private string InnerToString(bool toFullString)
+    {
+        return string.Join(',', Elements.Values.SelectMany(element => SparseFieldSetElementExpression.Flatten(element, toFullString)).Order());
+    }
+
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -69,16 +85,18 @@ public class SparseFieldSetExpression : QueryExpression
 
         var other = (SparseFieldSetExpression)obj;
 
-        return FieldChains.SetEquals(other.FieldChains);
+        return Elements.DictionaryEquals(other.Elements);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
 
-        foreach (ResourceFieldChainExpression chain in FieldChains)
+        foreach ((ResourceFieldAttribute field, SparseFieldSetElementExpression element) in Elements.OrderBy(pair => pair.Key.PublicName))
         {
-            hashCode.Add(chain);
+            hashCode.Add(field);
+            hashCode.Add(element);
         }
 
         return hashCode.ToHashCode();

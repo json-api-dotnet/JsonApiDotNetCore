@@ -80,6 +80,20 @@ internal sealed class ScopesAuthorizationFilter : IActionFilter
             return base.VisitIncludeElement(expression, argument);
         }
 
+        public override QueryExpression VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, object? argument)
+        {
+            if (expression.Field is RelationshipAttribute relationship)
+            {
+                _authScopeSet.Include(relationship, Permission.Read);
+            }
+            else if (expression.Field.ContainingType is ResourceType resourceType)
+            {
+                _authScopeSet.Include(resourceType, Permission.Read);
+            }
+
+            return base.VisitSparseFieldSetElement(expression, argument);
+        }
+
         public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
         {
             foreach (ResourceFieldAttribute field in expression.Fields)

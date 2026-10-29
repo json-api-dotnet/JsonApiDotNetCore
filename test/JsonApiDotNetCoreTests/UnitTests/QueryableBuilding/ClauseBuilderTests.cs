@@ -284,6 +284,35 @@ public sealed class ClauseBuilderTests : IDisposable
         result.ToString().Should().Contain("Items = compoundModel.Items");
     }
 
+    [Fact]
+    public void Builds_select_clause_for_compound_attribute_with_readonly_property()
+    {
+        // Arrange
+        var selection = new FieldSelection();
+        FieldSelectors selectors = selection.GetOrCreateSelectors(_resourceType);
+        AttrAttribute detailsAttr = _resourceType.GetAttributeByPropertyName(nameof(CompoundModel.Details));
+        selectors.IncludeAttribute(detailsAttr);
+        FieldSelectors childSelectors = selectors.GetOrCreateChildSelectors(detailsAttr);
+        AttrAttribute calcAttr = detailsAttr.CompoundType!.GetAttributeByPropertyName(nameof(CompoundRoot.Calculated));
+        childSelectors.IncludeAttribute(calcAttr);
+
+        var selectClauseBuilder = new SelectClauseBuilder(_resourceFactory);
+        var lambdaScopeFactory = new LambdaScopeFactory();
+        using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(typeof(CompoundModel));
+
+        IQueryable<CompoundModel> source = Array.Empty<CompoundModel>().AsQueryable();
+
+        var context = new QueryClauseBuilderContext(source.Expression, _resourceType, typeof(Queryable), _entityModel, lambdaScopeFactory, lambdaScope,
+            new DummyQueryableBuilder(), null);
+
+        // Act
+        Expression result = selectClauseBuilder.ApplySelect(selection, context);
+
+        // Assert
+        result.ToString().Should().Contain("Title = compoundModel.Details.Title");
+        result.ToString().Should().NotContain("Name = compoundModel.Name");
+    }
+
     public void Dispose()
     {
         _serviceContainer.Dispose();
@@ -318,6 +347,9 @@ public sealed class ClauseBuilderTests : IDisposable
     {
         [Attr]
         public string? Title { get; set; }
+
+        [Attr]
+        public string? Calculated => Title?.ToUpperInvariant();
 
         [Attr(IsCompound = true)]
         public CompoundNested? Nested { get; set; }

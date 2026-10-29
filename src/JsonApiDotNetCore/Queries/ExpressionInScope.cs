@@ -1,28 +1,21 @@
-using JetBrains.Annotations;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Queries;
 
 /// <summary>
-/// Represents an expression coming from query string. The scope determines at which depth in the <see cref="IResourceGraph" /> to apply its expression.
+/// The expression that represents a parsed query string parameter, along with the scope to which it applies.
 /// </summary>
-[PublicAPI]
-public class ExpressionInScope
+public abstract class ExpressionInScope
 {
-    public ResourceFieldChainExpression? Scope { get; }
     public QueryExpression Expression { get; }
 
-    public ExpressionInScope(ResourceFieldChainExpression? scope, QueryExpression expression)
+    /// <summary>
+    /// This constructor prevents external inheritance.
+    /// </summary>
+    private protected ExpressionInScope(QueryExpression expression)
     {
         ArgumentNullException.ThrowIfNull(expression);
 
-        Scope = scope;
         Expression = expression;
-    }
-
-    public override string ToString()
-    {
-        return $"{Scope} => {Expression}";
     }
 }

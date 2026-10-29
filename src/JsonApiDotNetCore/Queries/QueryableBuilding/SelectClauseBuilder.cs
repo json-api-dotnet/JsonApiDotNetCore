@@ -238,16 +238,19 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         Type compoundClrType = propertyAccess.Type;
         var assignments = new List<MemberBinding>();
 
-        foreach ((ResourceFieldAttribute resourceField, _) in childSelectors)
+        if (childSelectors.ContainsReadOnlyAttribute)
         {
-            if (resourceField is AttrAttribute childAttr && childAttr.Property.SetMethod != null)
+            // If a read-only attribute is selected within this compound type, its calculated value likely depends on another property,
+            // so fetch all writable properties of this compound type.
+            foreach (PropertyInfo property in compoundClrType.GetProperties().Where(p => p.SetMethod != null))
             {
-                MemberExpression childPropertyAccess = Expression.Property(propertyAccess, childAttr.Property);
-                FieldSelectors? grandchildSelectors = childSelectors.GetChildSelectors(childAttr);
+                MemberExpression childPropertyAccess = Expression.Property(propertyAccess, property);
+                AttrAttribute? childAttr = childSelectors.Keys.OfType<AttrAttribute>().FirstOrDefault(a => a.Property == property);
+                FieldSelectors? grandchildSelectors = childAttr != null ? childSelectors.GetChildSelectors(childAttr) : null;
 
                 Expression childRightHandSide;
 
-                if (grandchildSelectors is { IsEmpty: false } && !childAttr.IsCollection)
+                if (grandchildSelectors is { IsEmpty: false } && childAttr is not { IsCollection: true })
                 {
                     childRightHandSide = CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, context);
                 }
@@ -256,7 +259,31 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
                     childRightHandSide = childPropertyAccess;
                 }
 
-                assignments.Add(Expression.Bind(childAttr.Property, childRightHandSide));
+                assignments.Add(Expression.Bind(property, childRightHandSide));
+            }
+        }
+        else
+        {
+            foreach ((ResourceFieldAttribute resourceField, _) in childSelectors)
+            {
+                if (resourceField is AttrAttribute childAttr && childAttr.Property.SetMethod != null)
+                {
+                    MemberExpression childPropertyAccess = Expression.Property(propertyAccess, childAttr.Property);
+                    FieldSelectors? grandchildSelectors = childSelectors.GetChildSelectors(childAttr);
+
+                    Expression childRightHandSide;
+
+                    if (grandchildSelectors is { IsEmpty: false } && !childAttr.IsCollection)
+                    {
+                        childRightHandSide = CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, context);
+                    }
+                    else
+                    {
+                        childRightHandSide = childPropertyAccess;
+                    }
+
+                    assignments.Add(Expression.Bind(childAttr.Property, childRightHandSide));
+                }
             }
         }
 

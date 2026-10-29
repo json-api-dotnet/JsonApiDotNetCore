@@ -175,9 +175,8 @@ public sealed class PaginationParseTests : BaseParseTests
             _reader.Read("page[size]", pageSize);
         }
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         string[] scopeTreesExpectedArray = scopeTreesExpected.Split("|");
         ResourceFieldChainExpression?[] scopeTrees = constraints.Select(expressionInScope => expressionInScope.Scope).ToArray();
 

@@ -38,20 +38,15 @@ public sealed class CompoundAttributesSparseFieldSetTests
         string route = $"/contacts/{contact.StringId}?fields[contacts]=content.name.lastName";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("remarks");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
+        JsonElement attributes = responseElement.GetProperty("data").GetProperty("attributes");
+        attributes.TryGetProperty("remarks", out _).Should().BeFalse();
 
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
-
+        JsonElement contentElement = attributes.GetProperty("content");
         contentElement.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         nameElement.TryGetProperty("firstName", out _).Should().BeFalse();
@@ -76,20 +71,15 @@ public sealed class CompoundAttributesSparseFieldSetTests
         string route = $"/contacts/{contact.StringId}?fields[contacts]=content.name.lastName,remarks";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("remarks");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
+        JsonElement attributes = responseElement.GetProperty("data").GetProperty("attributes");
+        attributes.TryGetProperty("remarks", out _).Should().BeTrue();
 
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
-
+        JsonElement contentElement = attributes.GetProperty("content");
         contentElement.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         nameElement.TryGetProperty("firstName", out _).Should().BeFalse();
@@ -111,18 +101,15 @@ public sealed class CompoundAttributesSparseFieldSetTests
         string route = $"/contacts/{contact.StringId}?fields[contacts]=content";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-        responseDocument.Data.SingleValue.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("remarks");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("content");
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement contentElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
+        JsonElement attributes = responseElement.GetProperty("data").GetProperty("attributes");
+        attributes.TryGetProperty("remarks", out _).Should().BeFalse();
 
+        JsonElement contentElement = attributes.GetProperty("content");
         contentElement.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         nameElement.GetProperty("firstName").GetString().Should().Be(contact.Content.Name.FirstName);
@@ -223,19 +210,15 @@ public sealed class CompoundAttributesSparseFieldSetTests
         string route = $"/addressBooks/{addressBook.StringId}?fields[addressBooks]=favorites.name.lastName";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("name");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("favorites");
+        JsonElement attributes = responseElement.GetProperty("data").GetProperty("attributes");
+        attributes.TryGetProperty("name", out _).Should().BeFalse();
 
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement favoritesElement = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("favorites");
-
+        JsonElement favoritesElement = attributes.GetProperty("favorites");
         favoritesElement.GetArrayLength().Should().Be(2);
 
         for (int i = 0; i < 2; i++)
@@ -264,16 +247,12 @@ public sealed class CompoundAttributesSparseFieldSetTests
         string route = $"/contacts/{contact.StringId}?fields[contacts]=content.name.firstName,content.name.lastName";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement content = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
-
+        JsonElement content = responseElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
         content.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("firstName").GetString().Should().Be(contact.Content.Name.FirstName);
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
@@ -303,16 +282,12 @@ public sealed class CompoundAttributesSparseFieldSetTests
         string route = $"/contacts/{contact.StringId}?fields[contacts]=content.name.lastName,content.company.name";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement content = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
-
+        JsonElement content = responseElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
         content.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         nameElement.TryGetProperty("firstName", out _).Should().BeFalse();
@@ -342,19 +317,19 @@ public sealed class CompoundAttributesSparseFieldSetTests
         string route = $"/contacts/{contact.StringId}?include=addressBook&fields[contacts]=content.name.lastName,addressBook&fields[addressBooks]=name";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-        responseDocument.Data.SingleValue.Should().NotBeNull();
-        responseDocument.Included.Should().HaveCount(1);
-        responseDocument.Included[0].Attributes.Should().ContainKey("name");
-        responseDocument.Included[0].Attributes.Should().NotContainKey("categories");
 
-        string responseRaw = await httpResponse.Content.ReadAsStringAsync();
-        using JsonDocument jsonDocument = JsonDocument.Parse(responseRaw);
-        JsonElement content = jsonDocument.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
+        JsonElement included = responseElement.GetProperty("included");
+        included.GetArrayLength().Should().Be(1);
 
+        JsonElement includedAttributes = included[0].GetProperty("attributes");
+        includedAttributes.TryGetProperty("name", out _).Should().BeTrue();
+        includedAttributes.TryGetProperty("categories", out _).Should().BeFalse();
+
+        JsonElement content = responseElement.GetProperty("data").GetProperty("attributes").GetProperty("content");
         content.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
         nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
         nameElement.TryGetProperty("firstName", out _).Should().BeFalse();
@@ -395,5 +370,136 @@ public sealed class CompoundAttributesSparseFieldSetTests
             contactInDatabase.Content.Name.Should().NotBeNull();
             contactInDatabase.Content.Name.LastName.Should().Be(contact.Content.Name.LastName);
         });
+    }
+
+    [Fact]
+    public async Task View_blocked_nested_attribute_is_pruned_when_retrieving_compound_attribute()
+    {
+        // Arrange
+        Contact contact = _fakers.Contact.Generate();
+        contact.Content.Name.SecretAlias = "Classified";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/contacts/{contact.StringId}?fields[contacts]=content";
+
+        // Act
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        JsonElement name = responseElement.GetProperty("data").GetProperty("attributes").GetProperty("content").GetProperty("name");
+        name.TryGetProperty("lastName", out _).Should().BeTrue();
+        name.TryGetProperty("secretAlias", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Cannot_select_view_blocked_nested_attribute()
+    {
+        // Arrange
+        Contact contact = _fakers.Contact.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var parameterValue = new MarkedText("content.name.^secretAlias", '^');
+        string route = $"/contacts/{contact.StringId}?fields[contacts]={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified fieldset is invalid.");
+        error.Detail.Should().Be($"Retrieving attribute 'secretAlias' is not allowed. {parameterValue}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("fields[contacts]");
+    }
+
+    [Fact]
+    public async Task Can_select_leaf_property_in_compound_attribute_at_secondary_endpoint()
+    {
+        // Arrange
+        AddressBook addressBook = _fakers.AddressBook.Generate();
+        Contact contact = _fakers.Contact.Generate();
+        contact.AddressBook = addressBook;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            await dbContext.ClearTableAsync<AddressBook>();
+            dbContext.AddressBooks.Add(addressBook);
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/addressBooks/{addressBook.StringId}/contacts?fields[contacts]=content.name.lastName";
+
+        // Act
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        JsonElement data = responseElement.GetProperty("data");
+        data.GetArrayLength().Should().Be(1);
+
+        JsonElement attributes = data[0].GetProperty("attributes");
+        attributes.TryGetProperty("remarks", out _).Should().BeFalse();
+
+        JsonElement content = attributes.GetProperty("content");
+        content.TryGetProperty("name", out JsonElement nameElement).Should().BeTrue();
+        nameElement.GetProperty("lastName").GetString().Should().Be(contact.Content.Name.LastName);
+        nameElement.TryGetProperty("firstName", out _).Should().BeFalse();
+        content.TryGetProperty("company", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Can_get_relationship_linkage_for_resource_with_compound_attribute()
+    {
+        // Arrange
+        AddressBook addressBook = _fakers.AddressBook.Generate();
+        Contact contact = _fakers.Contact.Generate();
+        contact.AddressBook = addressBook;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Contact>();
+            await dbContext.ClearTableAsync<AddressBook>();
+            dbContext.AddressBooks.Add(addressBook);
+            dbContext.Contacts.Add(contact);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/addressBooks/{addressBook.StringId}/relationships/contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        JsonElement data = responseElement.GetProperty("data");
+        data.GetArrayLength().Should().Be(1);
+
+        JsonElement identifier = data[0];
+        identifier.GetProperty("type").GetString().Should().Be("contacts");
+        identifier.GetProperty("id").GetString().Should().Be(contact.StringId);
+        identifier.TryGetProperty("attributes", out _).Should().BeFalse();
+        identifier.TryGetProperty("relationships", out _).Should().BeFalse();
     }
 }
