@@ -193,13 +193,13 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         if (_filtersInGlobalScope.Count > 0)
         {
             FilterExpression filter = MergeFilters(_filtersInGlobalScope.ToImmutable());
-            yield return new ExpressionInScope(null, filter);
+            yield return new RelationshipChainExpressionInScope(null, filter);
         }
 
         foreach ((ResourceFieldChainExpression scope, ImmutableArray<FilterExpression>.Builder filtersBuilder) in _filtersPerScope)
         {
             FilterExpression filter = MergeFilters(filtersBuilder.ToImmutable());
-            yield return new ExpressionInScope(scope, filter);
+            yield return new RelationshipChainExpressionInScope(scope, filter);
         }
     }
 

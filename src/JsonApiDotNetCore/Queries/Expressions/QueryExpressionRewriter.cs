@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources.Annotations;
 
 #pragma warning disable IDE0019 // Use pattern matching
 
@@ -180,31 +180,20 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return null;
     }
 
-    public override QueryExpression? VisitSparseFieldTable(SparseFieldTableExpression expression, TArgument argument)
-    {
-        ImmutableDictionary<ResourceType, SparseFieldSetExpression>.Builder newTable =
-            ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
-
-        foreach ((ResourceType resourceType, SparseFieldSetExpression sparseFieldSet) in expression.Table)
-        {
-            if (Visit(sparseFieldSet, argument) is SparseFieldSetExpression newSparseFieldSet)
-            {
-                newTable[resourceType] = newSparseFieldSet;
-            }
-        }
-
-        if (newTable.Count > 0)
-        {
-            var newExpression = new SparseFieldTableExpression(newTable.ToImmutable());
-            return newExpression.Equals(expression) ? expression : newExpression;
-        }
-
-        return null;
-    }
-
     public override QueryExpression VisitSparseFieldSet(SparseFieldSetExpression expression, TArgument argument)
     {
-        return expression;
+        IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> newElements = VisitDictionary(expression.Elements, argument);
+
+        var newExpression = SparseFieldSetExpression.Create(newElements);
+        return newExpression.Equals(expression) ? expression : newExpression;
+    }
+
+    public override QueryExpression VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, TArgument argument)
+    {
+        IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> newChildren = VisitDictionary(expression.Children, argument);
+
+        var newExpression = new SparseFieldSetElementExpression(expression.Field, newChildren);
+        return newExpression.Equals(expression) ? expression : newExpression;
     }
 
     public override QueryExpression? VisitQueryStringParameterScope(QueryStringParameterScopeExpression expression, TArgument argument)
@@ -241,12 +230,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
     {
         IImmutableSet<IncludeElementExpression> newElements = VisitSet(expression.Elements, argument);
 
-        if (newElements.Count == 0)
-        {
-            return IncludeExpression.Empty;
-        }
-
-        var newExpression = new IncludeExpression(newElements);
+        var newExpression = IncludeExpression.Create(newElements);
         return newExpression.Equals(expression) ? expression : newExpression;
     }
 
@@ -293,5 +277,23 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         }
 
         return setBuilder.ToImmutable();
+    }
+
+    protected virtual IImmutableDictionary<TKey, TExpression> VisitDictionary<TKey, TExpression>(IImmutableDictionary<TKey, TExpression> elements,
+        TArgument argument)
+        where TKey : notnull
+        where TExpression : QueryExpression
+    {
+        ImmutableDictionary<TKey, TExpression>.Builder builder = ImmutableDictionary.CreateBuilder<TKey, TExpression>();
+
+        foreach ((TKey key, TExpression value) in elements)
+        {
+            if (Visit(value, argument) is TExpression newValue)
+            {
+                builder[key] = newValue;
+            }
+        }
+
+        return builder.ToImmutable();
     }
 }

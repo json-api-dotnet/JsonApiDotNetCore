@@ -225,11 +225,11 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
         private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()
         {
-            yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber!, _globalScope.PageSize));
+            yield return new RelationshipChainExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber!, _globalScope.PageSize));
 
             foreach ((ResourceFieldChainExpression scope, MutablePaginationEntry entry) in _nestedScopes)
             {
-                yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber!, entry.PageSize));
+                yield return new RelationshipChainExpressionInScope(scope, new PaginationExpression(entry.PageNumber!, entry.PageSize));
             }
         }
     }

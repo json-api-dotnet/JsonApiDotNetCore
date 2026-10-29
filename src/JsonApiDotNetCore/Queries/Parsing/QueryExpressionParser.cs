@@ -496,7 +496,7 @@ public abstract class QueryExpressionParser
 
             if (element.Relationship is HiddenRootRelationshipAttribute)
             {
-                return element.Children.Count > 0 ? new IncludeExpression(element.Children) : IncludeExpression.Empty;
+                return IncludeExpression.Create(element.Children);
             }
 
             return new IncludeExpression(ImmutableHashSet.Create(element));

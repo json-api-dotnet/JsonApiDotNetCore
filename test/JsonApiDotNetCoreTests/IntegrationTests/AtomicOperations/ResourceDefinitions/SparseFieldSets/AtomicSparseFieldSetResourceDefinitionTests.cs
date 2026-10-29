@@ -103,8 +103,6 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
             (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
         }, options => options.WithStrictOrdering());
     }
@@ -181,8 +179,6 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
         }, options => options.WithStrictOrdering());

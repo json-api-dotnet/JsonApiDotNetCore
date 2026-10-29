@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
@@ -59,7 +60,7 @@ internal static class CollectionExtensions
         }
     }
 
-    public static bool DictionaryEqual<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue>? first, IReadOnlyDictionary<TKey, TValue>? second,
+    public static bool DictionaryEquals<TKey, TValue>(this IImmutableDictionary<TKey, TValue>? first, IImmutableDictionary<TKey, TValue>? second,
         IEqualityComparer<TValue>? valueComparer = null)
     {
         if (ReferenceEquals(first, second))

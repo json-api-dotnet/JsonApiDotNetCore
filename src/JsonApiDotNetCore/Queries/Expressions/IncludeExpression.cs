@@ -32,6 +32,13 @@ public class IncludeExpression : QueryExpression
         Elements = ImmutableHashSet<IncludeElementExpression>.Empty;
     }
 
+    internal static IncludeExpression Create(IImmutableSet<IncludeElementExpression> elements)
+    {
+        ArgumentNullException.ThrowIfNull(elements);
+
+        return elements.Count > 0 ? new IncludeExpression(elements) : Empty;
+    }
+
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
         return visitor.VisitInclude(this, argument);

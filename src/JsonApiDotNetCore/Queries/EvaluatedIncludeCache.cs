@@ -38,6 +38,7 @@ internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
 
             _include = _constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
+                .OfType<RelationshipChainExpressionInScope>()
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<IncludeExpression>()

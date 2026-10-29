@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -59,15 +58,15 @@ public sealed class QueryExpressionRewriterTests
     }
 
     [Theory]
-    [InlineData("title", "SparseFieldSet")]
-    [InlineData("title,posts", "SparseFieldSet")]
+    [InlineData("title", "SparseFieldSet,SparseFieldSetElement")]
+    [InlineData("title,posts", "SparseFieldSet,SparseFieldSetElement,SparseFieldSetElement")]
     public void VisitSparseFieldSet(string expressionText, string expectedTypes)
     {
         // Arrange
         var parser = new SparseFieldSetParser();
         ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
 
-        QueryExpression expression = parser.Parse(expressionText, blogType)!;
+        QueryExpression expression = parser.Parse(expressionText, blogType);
         var rewriter = new TestableQueryExpressionRewriter();
 
         // Act
@@ -79,36 +78,6 @@ public sealed class QueryExpressionRewriterTests
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
         visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
-    }
-
-    [Fact]
-    public void VisitSparseFieldTable()
-    {
-        // Arrange
-        var parser = new SparseFieldSetParser();
-
-        ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
-        ResourceType commentType = ResourceGraph.GetResourceType<Comment>();
-
-        var sparseFieldTable = new Dictionary<ResourceType, SparseFieldSetExpression>
-        {
-            [blogType] = parser.Parse("title,owner", blogType)!,
-            [commentType] = parser.Parse("text,createdAt", commentType)!
-        };
-
-        var expression = new SparseFieldTableExpression(sparseFieldTable.ToImmutableDictionary());
-        var rewriter = new TestableQueryExpressionRewriter();
-
-        // Act
-        rewriter.Visit(expression, null);
-
-        // Assert
-        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
-
-        visitedTypeNames.Should().HaveCount(3);
-        visitedTypeNames[0].Should().Be("SparseFieldTableExpression");
-        visitedTypeNames[1].Should().Be("SparseFieldSetExpression");
-        visitedTypeNames[2].Should().Be("SparseFieldSetExpression");
     }
 
     [Theory]

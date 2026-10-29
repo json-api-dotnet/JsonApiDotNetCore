@@ -125,6 +125,10 @@ public sealed class ContactName
     // Restricted capability: AllowChange blocked (POST allowed, PATCH returns 422)
     [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
     public string? MaidenName { get; set; }
+
+    // Restricted capability: AllowView blocked (never returned in responses)
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowView)]
+    public string? SecretAlias { get; set; }
 }
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
