@@ -72,13 +72,12 @@ public sealed partial class QueryStringReader : IQueryStringReader
             if (!reader.AllowEmptyValue && string.IsNullOrEmpty(parameterValue))
             {
                 throw new InvalidQueryStringParameterException(parameterName, "Missing query string parameter value.",
-                    $"Missing value for '{parameterName}' query string parameter.");
+                    $"Parameter '{parameterName}' cannot have an empty value.");
             }
 
             if (!reader.IsEnabled(disableQueryStringAttribute))
             {
-                throw new InvalidQueryStringParameterException(parameterName,
-                    "Usage of one or more query string parameters is not allowed at the requested endpoint.",
+                throw new InvalidQueryStringParameterException(parameterName, "Usage of query string parameter is not allowed.",
                     $"The parameter '{parameterName}' cannot be used at this endpoint.");
             }
 

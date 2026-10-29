@@ -10,7 +10,7 @@ using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
 
-// ReSharper disable InconsistentNaming
+// ReSharper disable StringLiteralTypo
 
 namespace JsonApiDotNetCoreTests.UnitTests.FieldChains;
 
@@ -21,6 +21,13 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     private const string A = "name";
     private const string O = "parent";
     private const string M = "children";
+    private const string C = "details";
+    private const string L = "tags";
+    private const string Q = "items";
+    private const string A2 = "title";
+    private const string C2 = "nested";
+    private const string A3 = "description";
+    private const string L2 = "numbers";
 
     private readonly LoggerFactory _loggerFactory;
     private readonly ResourceType _resourceType;
@@ -46,7 +53,11 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("O", O)]
     [InlineData("R", O)]
     [InlineData("R", M)]
+    [InlineData("S", A)]
     [InlineData("A", A)]
+    [InlineData("A", C)]
+    [InlineData("A", L)]
+    [InlineData("A", Q)]
     [InlineData("F", A)]
     [InlineData("F", O)]
     [InlineData("F", M)]
@@ -91,6 +102,43 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     // Field chains
     [InlineData("MA", $"{M}.{A}")]
     [InlineData("MOA", $"{M}.{O}.{A}")]
+    // Compound and collection field types
+    [InlineData("C", C)]
+    [InlineData("L", L)]
+    [InlineData("Q", Q)]
+    [InlineData("F", C)]
+    [InlineData("F", L)]
+    [InlineData("F", Q)]
+    [InlineData("CA", $"{C}.{A2}")]
+    [InlineData("CCA", $"{C}.{C2}.{A3}")]
+    [InlineData("OCA", $"{O}.{C}.{A2}")]
+    [InlineData("OCCA", $"{O}.{C}.{C2}.{A3}")]
+    [InlineData("CL", $"{C}.{L2}")]
+    [InlineData("CQ", $"{C}.{Q}")]
+    // Compound character classes and quantifiers
+    [InlineData("[OC]", O)]
+    [InlineData("[OC]", C)]
+    [InlineData("[OC]*A", A)]
+    [InlineData("[OC]*A", $"{O}.{A}")]
+    [InlineData("[OC]*A", $"{C}.{A2}")]
+    [InlineData("[OC]*A", $"{C}.{C2}.{A3}")]
+    [InlineData("[OC]*A", $"{O}.{C}.{C2}.{A3}")]
+    [InlineData("[MLQ]", M)]
+    [InlineData("[MLQ]", L)]
+    [InlineData("[MLQ]", Q)]
+    [InlineData("[OC]*[MLQ]", M)]
+    [InlineData("[OC]*[MLQ]", L)]
+    [InlineData("[OC]*[MLQ]", Q)]
+    [InlineData("[OC]*[MLQ]", $"{C}.{L2}")]
+    [InlineData("[OC]*[MLQ]", $"{C}.{Q}")]
+    [InlineData("[OC]*[MLQ]", $"{O}.{M}")]
+    [InlineData("[OC]*[MLQ]", $"{O}.{C}.{Q}")]
+    [InlineData("[OC]*[OAC]", O)]
+    [InlineData("[OC]*[OAC]", C)]
+    [InlineData("[OC]*[OAC]", A)]
+    [InlineData("[OC]*[OAC]", $"{C}.{A2}")]
+    [InlineData("[OC]*[OAC]", $"{C}.{C2}")]
+    [InlineData("[OC]*[OAC]", $"{O}.{C}.{C2}")]
     // Backtracking multiple times
     [InlineData("F*M+O+", $"{M}.{M}.{M}.{M}.{M}.{O}.{O}.{O}.{O}.{O}")]
     [InlineData("F+OF*A?", $"{M}.{M}.{M}.{O}.{M}.{M}.{M}.{A}")]
@@ -137,6 +185,8 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("RRR", $"{M}.{O}^", $"Relationship on resource type '{T}' expected.")]
     [InlineData("A", "^", $"Attribute on resource type '{T}' expected.")]
     [InlineData("AA", $"{A}^", "Attribute expected.")]
+    [InlineData("S", "^", $"Scalar non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("SS", $"{A}^", "Scalar non-collection attribute expected.")]
     [InlineData("F", "^", $"Field on resource type '{T}' expected.")]
     [InlineData("FF", $"{M}^", $"Field on resource type '{T}' expected.")]
     [InlineData("FFF", $"{O}.{M}^", $"Field on resource type '{T}' expected.")]
@@ -387,6 +437,23 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("M+O+", $"{M}.{M}.{O}.{O}.^{A}", $"End of field chain or to-one relationship on resource type '{T}' expected.")]
     [InlineData("F*M+O+", $"{M}.{M}.{O}.{O}.{A}^", "Field expected.")]
     [InlineData("F+R*A", $"{M}.{M}.{M}.{O}.{M}.{M}.{M}.{O}^", $"Field on resource type '{T}' expected.")]
+    // Compound & collection mismatch
+    [InlineData("S", $"^{C}", $"Scalar non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("S", $"^{L}", $"Scalar non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("S", $"^{Q}", $"Scalar non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("C", $"^{A}", $"Compound non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("C", $"^{L}", $"Compound non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("L", $"^{A}", $"Scalar collection attribute on resource type '{T}' expected.")]
+    [InlineData("L", $"^{Q}", $"Scalar collection attribute on resource type '{T}' expected.")]
+    [InlineData("Q", $"^{L}", $"Compound collection attribute on resource type '{T}' expected.")]
+    // Navigation on compound type
+    [InlineData("CS", $"{C}.^{C2}", "Scalar non-collection attribute on compound type 'RootCompound' expected.")]
+    [InlineData("CS", $"{C}.^{X}", "Field 'unknown' does not exist on compound type 'RootCompound'.")]
+    [InlineData("CCS", $"{C}.{C2}.^{X}", "Field 'unknown' does not exist on compound type 'NestedCompound'.")]
+    // Too much input on compound type
+    [InlineData("C", $"{C}.^{A2}", "End of field chain expected.")]
+    // Direct navigation into collection rejected
+    [InlineData("[OC]*S", $"{C}.^{Q}", "Non-collection attribute on compound type 'RootCompound' expected.")]
     public void MatchFails(string patternText, string fieldChainText, string failureMessage)
     {
         // Arrange
@@ -419,5 +486,44 @@ public sealed class FieldChainPatternMatchTests : IDisposable
 
         [HasMany]
         public ISet<Resource> Children { get; set; } = new HashSet<Resource>();
+
+        [Attr(IsCompound = true)]
+        public RootCompound? Details { get; set; }
+
+        [Attr]
+        public List<string> Tags { get; set; } = [];
+
+        [Attr(IsCompound = true)]
+        public List<ItemCompound> Items { get; set; } = [];
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class RootCompound
+    {
+        [Attr]
+        public string? Title { get; set; }
+
+        [Attr(IsCompound = true)]
+        public NestedCompound? Nested { get; set; }
+
+        [Attr]
+        public List<int> Numbers { get; set; } = [];
+
+        [Attr(IsCompound = true)]
+        public List<ItemCompound> Items { get; set; } = [];
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class NestedCompound
+    {
+        [Attr]
+        public string? Description { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ItemCompound
+    {
+        [Attr]
+        public string? Label { get; set; }
     }
 }

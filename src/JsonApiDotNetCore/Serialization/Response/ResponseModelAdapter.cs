@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -25,13 +26,13 @@ public class ResponseModelAdapter : IResponseModelAdapter
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
     private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
     private readonly IRequestQueryStringAccessor _requestQueryStringAccessor;
-    private readonly ISparseFieldSetCache _sparseFieldSetCache;
+    private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
 
     // Ensures that at most one ResourceObject (and one tree node) is produced per resource instance.
     private readonly Dictionary<IIdentifiable, ResourceObjectTreeNode> _resourceToTreeNodeCache = new(IdentifiableComparer.Instance);
 
     public ResponseModelAdapter(IJsonApiRequest request, IJsonApiOptions options, ILinkBuilder linkBuilder, IMetaBuilder metaBuilder,
-        IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache,
+        IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetEvaluator sparseFieldSetEvaluator,
         IRequestQueryStringAccessor requestQueryStringAccessor)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -40,7 +41,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         ArgumentNullException.ThrowIfNull(metaBuilder);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
         ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
-        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
         ArgumentNullException.ThrowIfNull(requestQueryStringAccessor);
 
         _request = request;
@@ -49,14 +50,14 @@ public class ResponseModelAdapter : IResponseModelAdapter
         _metaBuilder = metaBuilder;
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _evaluatedIncludeCache = evaluatedIncludeCache;
-        _sparseFieldSetCache = sparseFieldSetCache;
+        _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
         _requestQueryStringAccessor = requestQueryStringAccessor;
     }
 
     /// <inheritdoc />
     public Document Convert(object? model)
     {
-        _sparseFieldSetCache.Reset();
+        _sparseFieldSetEvaluator.Reset();
         _resourceToTreeNodeCache.Clear();
 
         var document = new Document();
@@ -139,7 +140,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
             resourceObject = rootNode.GetResponseData().Single();
 
-            _sparseFieldSetCache.Reset();
+            _sparseFieldSetEvaluator.Reset();
             _resourceToTreeNodeCache.Clear();
         }
 
@@ -224,9 +225,9 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         if (!isRelationship)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
+            SparseFieldSetExpression fieldSetExpression = _sparseFieldSetEvaluator.GetSparseFieldSetForSerializer(resourceType);
 
-            resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSet);
+            resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSetExpression);
             resourceObject.Links = _linkBuilder.GetResourceLinks(resourceType, resource);
             resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resourceType, resource);
         }
@@ -234,8 +235,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return resourceObject;
     }
 
-    protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
-        IImmutableSet<ResourceFieldAttribute> fieldSet)
+    protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType, SparseFieldSetExpression fieldSet)
     {
         ArgumentNullException.ThrowIfNull(resource);
         ArgumentNullException.ThrowIfNull(resourceType);
@@ -245,7 +245,12 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         foreach (AttrAttribute attr in resourceType.Attributes)
         {
-            if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<>.Id))
+            if (attr.IsViewBlocked())
+            {
+                continue;
+            }
+
+            if (!fieldSet.Elements.TryGetValue(attr, out SparseFieldSetElementExpression? element) || attr.Property.Name == nameof(Identifiable<>.Id))
             {
                 continue;
             }
@@ -263,10 +268,92 @@ public class ResponseModelAdapter : IResponseModelAdapter
                 continue;
             }
 
+            if (value != null && attr.IsCompound)
+            {
+                IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>? requestedChildren =
+                    element.Children.Count > 0 ? element.Children : null;
+
+                if (attr.IsCollection && value is IEnumerable collection)
+                {
+                    var prunedList = new List<object?>();
+
+                    foreach (object? item in collection)
+                    {
+                        prunedList.Add(item == null ? null : ConvertCompoundObject(item, attr.CompoundType!, requestedChildren));
+                    }
+
+                    value = prunedList;
+                }
+                else
+                {
+                    value = ConvertCompoundObject(value, attr.CompoundType!, requestedChildren);
+                }
+            }
+
             attrMap.Add(attr.PublicName, value);
         }
 
         return attrMap.Count > 0 ? attrMap : null;
+    }
+
+    private Dictionary<string, object?> ConvertCompoundObject(object compoundInstance, CompoundType compoundType,
+        IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>? childLookup)
+    {
+        var prunedMap = new Dictionary<string, object?>();
+
+        foreach (AttrAttribute childAttr in compoundType.Attributes)
+        {
+            if (childAttr.IsViewBlocked())
+            {
+                continue;
+            }
+
+            SparseFieldSetElementExpression? childElement = null;
+
+            if (childLookup != null && !childLookup.TryGetValue(childAttr, out childElement))
+            {
+                continue;
+            }
+
+            object? childValue = childAttr.GetValue(compoundInstance);
+
+            if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingNull && childValue == null)
+            {
+                continue;
+            }
+
+            if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault &&
+                Equals(childValue, RuntimeTypeConverter.GetDefaultValue(childAttr.Property.PropertyType)))
+            {
+                continue;
+            }
+
+            if (childValue != null && childAttr.IsCompound)
+            {
+                IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>? deeperChildren =
+                    childElement is { Children.Count: > 0 } ? childElement.Children : null;
+
+                if (childAttr.IsCollection && childValue is IEnumerable collection)
+                {
+                    var prunedList = new List<object?>();
+
+                    foreach (object? item in collection)
+                    {
+                        prunedList.Add(item == null ? null : ConvertCompoundObject(item, childAttr.CompoundType!, deeperChildren));
+                    }
+
+                    childValue = prunedList;
+                }
+                else
+                {
+                    childValue = ConvertCompoundObject(childValue, childAttr.CompoundType!, deeperChildren);
+                }
+            }
+
+            prunedMap[childAttr.PublicName] = childValue;
+        }
+
+        return prunedMap;
     }
 
     private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,
@@ -323,11 +410,11 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     private void PopulateRelationshipsInResourceObject(ResourceObjectTreeNode treeNode)
     {
-        IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(treeNode.ResourceType);
+        SparseFieldSetExpression fieldSet = _sparseFieldSetEvaluator.GetSparseFieldSetForSerializer(treeNode.ResourceType);
 
         foreach (RelationshipAttribute relationship in treeNode.ResourceType.Relationships)
         {
-            if (fieldSet.Contains(relationship))
+            if (fieldSet.Elements.ContainsKey(relationship))
             {
                 PopulateRelationshipInResourceObject(treeNode, relationship);
             }

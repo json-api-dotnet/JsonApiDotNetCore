@@ -1,9 +1,9 @@
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -70,24 +70,34 @@ public abstract class QueryExpressionParser
     }
 
     /// <summary>
+    /// Indicates whether the specified token represents the 'null' constant keyword.
+    /// </summary>
+    protected static bool IsNullConstantToken([NotNullWhen(true)] Token? token)
+    {
+        return token is { Kind: TokenKind.Text, Value: Keywords.Null };
+    }
+
+    /// <summary>
     /// Parses a dot-separated path of field names into a chain of resource fields, while matching it against the specified pattern.
     /// </summary>
-    protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ResourceType resourceType,
-        string? alternativeErrorMessage)
+    protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, IAttributeContainer container,
+        FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None)
     {
         ArgumentNullException.ThrowIfNull(pattern);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(container);
 
         int startPosition = GetNextTokenPositionOrEnd();
 
-        string path = EatFieldChain(alternativeErrorMessage);
-        PatternMatchResult result = pattern.Match(path, resourceType, options);
+        string path = EatFieldChain();
+        PatternMatchResult result = pattern.Match(path, container, options);
 
         if (!result.IsSuccess)
         {
+            string containerDescription = container is ResourceType resourceType ? $"resource type '{resourceType}'" : $"compound type '{container}'";
+
             string message = result.IsFieldChainError
                 ? result.FailureMessage
-                : $"Field chain on resource type '{resourceType}' failed to match the pattern: {pattern.GetDescription()}. {result.FailureMessage}";
+                : $"Field chain on {containerDescription} failed to match the pattern: {pattern.GetDescription()}. {result.FailureMessage}";
 
             throw new QueryParseException(message, startPosition + result.FailurePosition);
         }
@@ -104,7 +114,7 @@ public abstract class QueryExpressionParser
         return new ResourceFieldChainExpression(result.FieldChain.ToImmutableArray());
     }
 
-    private string EatFieldChain(string? alternativeErrorMessage)
+    private string EatFieldChain()
     {
         var pathBuilder = new StringBuilder();
 
@@ -112,13 +122,12 @@ public abstract class QueryExpressionParser
         {
             int position = GetNextTokenPositionOrEnd();
 
-            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text && token.Value != Keywords.Null)
+            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text && !IsNullConstantToken(token))
             {
                 pathBuilder.Append(token.Value);
 
-                if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
+                if (TryEatSingleCharacterToken(TokenKind.Period))
                 {
-                    EatSingleCharacterToken(TokenKind.Period);
                     pathBuilder.Append('.');
                 }
                 else
@@ -128,7 +137,7 @@ public abstract class QueryExpressionParser
             }
             else
             {
-                throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.", position);
+                throw new QueryParseException(QueryParseChoices.FieldName, position);
             }
         }
     }
@@ -137,7 +146,7 @@ public abstract class QueryExpressionParser
     /// Consumes a token containing the expected text from the top of <see cref="TokenStack" />. Throws a <see cref="QueryParseException" /> if a different
     /// token kind is at the top, it contains a different text, or if there are no more tokens available.
     /// </summary>
-    protected void EatText(string text)
+    protected virtual void EatText(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -149,8 +158,24 @@ public abstract class QueryExpressionParser
     }
 
     /// <summary>
-    /// Consumes the expected token kind from the top of <see cref="TokenStack" />. Throws a <see cref="QueryParseException" /> if a different token kind is
-    /// at the top, or if there are no more tokens available.
+    /// Consumes a token containing the expected text from the top of <see cref="TokenStack" /> if present.
+    /// </summary>
+    protected virtual bool TryEatText(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text && nextToken.Value == text)
+        {
+            TokenStack.Pop();
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Consumes the expected single-character token kind from the top of <see cref="TokenStack" />. Throws a <see cref="QueryParseException" /> if a
+    /// different token kind is at the top, or if there are no more tokens available.
     /// </summary>
     protected virtual void EatSingleCharacterToken(TokenKind kind)
     {
@@ -164,6 +189,25 @@ public abstract class QueryExpressionParser
             int position = token?.Position ?? GetNextTokenPositionOrEnd();
             throw new QueryParseException($"{ch} expected.", position);
         }
+    }
+
+    /// <summary>
+    /// Consumes the expected single-character token kind from the top of <see cref="TokenStack" /> if present.
+    /// </summary>
+    protected virtual bool TryEatSingleCharacterToken(TokenKind kind)
+    {
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == kind)
+        {
+            if (!QueryTokenizer.TokenKindToSingleCharacterLookup.TryGetValue(kind, out _))
+            {
+                throw new InvalidOperationException($"Token kind '{kind}' is not a single-character token.");
+            }
+
+            TokenStack.Pop();
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -206,7 +250,7 @@ public abstract class QueryExpressionParser
         if (TokenStack.Count > 0)
         {
             int position = GetNextTokenPositionOrEnd();
-            throw new QueryParseException("End of expression expected.", position);
+            throw new QueryParseException(QueryParseChoices.EndOfExpression, position);
         }
     }
 
@@ -231,7 +275,7 @@ public abstract class QueryExpressionParser
                 isAtStart = false;
             }
 
-            ParseRelationshipChain(treeRoot, false, null);
+            ParseRelationshipChain(treeRoot, false, true);
         }
 
         return treeRoot.ToExpression();
@@ -240,17 +284,17 @@ public abstract class QueryExpressionParser
     /// <summary>
     /// Parses a relationship chain that ends in a to-many relationship, taking relationships on derived types into account.
     /// </summary>
-    protected IncludeExpression ParseRelationshipChainEndingInToMany(ResourceType resourceType, string? alternativeErrorMessage)
+    protected IncludeExpression ParseRelationshipChainEndingInToMany(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
         var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
-        ParseRelationshipChain(treeRoot, true, alternativeErrorMessage);
+        ParseRelationshipChain(treeRoot, true, false);
 
         return treeRoot.ToExpression();
     }
 
-    private void ParseRelationshipChain(IncludeTreeNode treeRoot, bool requireChainEndsInToMany, string? alternativeErrorMessage)
+    private void ParseRelationshipChain(IncludeTreeNode treeRoot, bool requireChainEndsInToMany, bool validateCanInclude)
     {
         // A relationship name usually matches a single relationship, even when overridden in derived types.
         // But in the following case, two relationships are matched on GET /shoppingBaskets?include=items:
@@ -278,18 +322,16 @@ public abstract class QueryExpressionParser
         // that there's currently no way to include Products without Articles. We could add such optional upcast syntax
         // in the future, if desired.
 
-        ReadOnlyCollection<IncludeTreeNode> children = ParseRelationshipName([treeRoot], requireChainEndsInToMany, alternativeErrorMessage);
+        ReadOnlyCollection<IncludeTreeNode> children = ParseRelationshipName([treeRoot], requireChainEndsInToMany, validateCanInclude);
 
-        while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
+        while (TryEatSingleCharacterToken(TokenKind.Period))
         {
-            EatSingleCharacterToken(TokenKind.Period);
-
-            children = ParseRelationshipName(children, requireChainEndsInToMany, null);
+            children = ParseRelationshipName(children, requireChainEndsInToMany, validateCanInclude);
         }
     }
 
     private ReadOnlyCollection<IncludeTreeNode> ParseRelationshipName(IReadOnlyCollection<IncludeTreeNode> parents, bool requireChainEndsInToMany,
-        string? alternativeErrorMessage)
+        bool validateCanInclude)
     {
         int position = GetNextTokenPositionOrEnd();
 
@@ -298,15 +340,15 @@ public abstract class QueryExpressionParser
             bool isAtEndOfChain = !TokenStack.TryPeek(out Token? nextToken) || nextToken.Kind != TokenKind.Period;
             bool requireToMany = requireChainEndsInToMany && isAtEndOfChain;
 
-            return LookupRelationshipName(token.Value!, parents, requireToMany, position);
+            return LookupRelationshipName(token.Value!, parents, requireToMany, validateCanInclude, position);
         }
 
-        string message = alternativeErrorMessage ?? (requireChainEndsInToMany ? "To-many relationship name expected." : "Relationship name expected.");
-        throw new QueryParseException(message, position);
+        QueryParseChoices choices = requireChainEndsInToMany ? QueryParseChoices.ToManyRelationshipName : QueryParseChoices.RelationshipName;
+        throw new QueryParseException(choices, position);
     }
 
     private ReadOnlyCollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, IReadOnlyCollection<IncludeTreeNode> parents,
-        bool requireToMany, int position)
+        bool requireToMany, bool validateCanInclude, int position)
     {
         List<IncludeTreeNode> children = [];
         HashSet<RelationshipAttribute> relationshipsFound = [];
@@ -321,14 +363,21 @@ public abstract class QueryExpressionParser
             {
                 relationshipsFound.UnionWith(relationships);
 
-                RelationshipAttribute[] relationshipsToInclude = relationships.Where(relationship => !relationship.IsIncludeBlocked()).ToArray();
-                ReadOnlyCollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
+                RelationshipAttribute[] relationshipsToAttach = validateCanInclude
+                    ? relationships.Where(relationship => !relationship.IsIncludeBlocked()).ToArray()
+                    : relationships.ToArray();
+
+                ReadOnlyCollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToAttach);
                 children.AddRange(affectedChildren);
             }
         }
 
         AssertRelationshipsFound(relationshipsFound, relationshipName, requireToMany, parents, position);
-        AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, position);
+
+        if (validateCanInclude)
+        {
+            AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, position);
+        }
 
         return children.AsReadOnly();
     }
@@ -396,22 +445,17 @@ public abstract class QueryExpressionParser
             builder.Append($" does not exist on any of the resource types {typeNames}");
         }
 
-        builder.Append(hasDerivedTypes ? " or any of its derived types." : ".");
+        builder.Append(hasDerivedTypes ? parentResourceTypes.Length == 1 ? " or any of its derived types." : " or any of their derived types." : ".");
 
         return builder.ToString();
     }
 
-    private void AssertAtLeastOneCanBeIncluded(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, int position)
+    private static void AssertAtLeastOneCanBeIncluded(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, int position)
     {
         if (relationshipsFound.All(relationship => relationship.IsIncludeBlocked()))
         {
             ResourceType resourceType = relationshipsFound.First().LeftType;
-            string message = $"Including the relationship '{relationshipName}' on '{resourceType}' is not allowed.";
-
-            var exception = new QueryParseException(message, position);
-            string specificMessage = exception.GetMessageWithPosition(Source);
-
-            throw new InvalidQueryStringParameterException("include", "The specified include is invalid.", specificMessage);
+            throw new QueryParseException($"Including relationship '{relationshipName}' on '{resourceType}' is not allowed.", position);
         }
     }
 
@@ -452,7 +496,7 @@ public abstract class QueryExpressionParser
 
             if (element.Relationship is HiddenRootRelationshipAttribute)
             {
-                return element.Children.Count > 0 ? new IncludeExpression(element.Children) : IncludeExpression.Empty;
+                return IncludeExpression.Create(element.Children);
             }
 
             return new IncludeExpression(ImmutableHashSet.Create(element));

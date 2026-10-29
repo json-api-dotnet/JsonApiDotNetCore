@@ -29,7 +29,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         ArgumentNullException.ThrowIfNull(selection);
 
-        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, false, context);
+        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType!, false, context);
 
         LambdaExpression lambda = Expression.Lambda(bodyInitializer, context.LambdaScope.Parameter);
 
@@ -154,6 +154,12 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
 
+        foreach (IReadOnlyComplexProperty complexProperty in entityType.GetComplexProperties())
+        {
+            var propertySelector = new PropertySelector(complexProperty.PropertyInfo!);
+            IncludeWritableProperty(propertySelector, propertySelectors);
+        }
+
         foreach (IReadOnlyNavigation navigation in entityType.GetNavigations()
             .Where(navigation => navigation.ForeignKey.IsOwnership && !navigation.IsShadowProperty()))
         {
@@ -166,7 +172,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         foreach ((ResourceFieldAttribute resourceField, QueryLayer? nextLayer) in fieldSelectors)
         {
-            var propertySelector = new PropertySelector(resourceField.Property, nextLayer);
+            FieldSelectors? childSelectors = resourceField is AttrAttribute attr ? fieldSelectors.GetChildSelectors(attr) : null;
+            var propertySelector = new PropertySelector(resourceField.Property, nextLayer, childSelectors);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }
@@ -212,8 +219,77 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             assignmentRightHandSide = CreateAssignmentRightHandSideForLayer(propertySelector.NextLayer, propertyAccess,
                 propertySelector.Property, rightHandSideContext);
         }
+        else if (propertySelector.ChildSelectors is { IsEmpty: false })
+        {
+            if (CollectionConverter.Instance.FindCollectionElementType(propertySelector.Property.PropertyType) == null)
+            {
+                assignmentRightHandSide = CreateCompoundMemberInit(propertySelector.ChildSelectors, propertyAccess, context);
+            }
+        }
 
-        return Expression.Bind(propertySelector.Property, assignmentRightHandSide);
+        MemberAssignment assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
+        return assignment;
+    }
+
+    private ConditionalExpression CreateCompoundMemberInit(FieldSelectors childSelectors, MemberExpression propertyAccess, QueryClauseBuilderContext context)
+    {
+        // Direct projection of compound types via MemberInitExpression is constructed here for compound sparse fieldsets,
+        // but bypassed at the root entity level due to EF Core complex type limitations (https://github.com/dotnet/efcore/issues/39322).
+        Type compoundClrType = propertyAccess.Type;
+        var assignments = new List<MemberBinding>();
+
+        if (childSelectors.ContainsReadOnlyAttribute)
+        {
+            // If a read-only attribute is selected within this compound type, its calculated value likely depends on another property,
+            // so fetch all writable properties of this compound type.
+            foreach (PropertyInfo property in compoundClrType.GetProperties().Where(p => p.SetMethod != null))
+            {
+                MemberExpression childPropertyAccess = Expression.Property(propertyAccess, property);
+                AttrAttribute? childAttr = childSelectors.Keys.OfType<AttrAttribute>().FirstOrDefault(a => a.Property == property);
+                FieldSelectors? grandchildSelectors = childAttr != null ? childSelectors.GetChildSelectors(childAttr) : null;
+
+                Expression childRightHandSide;
+
+                if (grandchildSelectors is { IsEmpty: false } && childAttr is not { IsCollection: true })
+                {
+                    childRightHandSide = CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, context);
+                }
+                else
+                {
+                    childRightHandSide = childPropertyAccess;
+                }
+
+                assignments.Add(Expression.Bind(property, childRightHandSide));
+            }
+        }
+        else
+        {
+            foreach ((ResourceFieldAttribute resourceField, _) in childSelectors)
+            {
+                if (resourceField is AttrAttribute childAttr && childAttr.Property.SetMethod != null)
+                {
+                    MemberExpression childPropertyAccess = Expression.Property(propertyAccess, childAttr.Property);
+                    FieldSelectors? grandchildSelectors = childSelectors.GetChildSelectors(childAttr);
+
+                    Expression childRightHandSide;
+
+                    if (grandchildSelectors is { IsEmpty: false } && !childAttr.IsCollection)
+                    {
+                        childRightHandSide = CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, context);
+                    }
+                    else
+                    {
+                        childRightHandSide = childPropertyAccess;
+                    }
+
+                    assignments.Add(Expression.Bind(childAttr.Property, childRightHandSide));
+                }
+            }
+        }
+
+        NewExpression createInstance = _resourceFactory.CreateNewExpression(compoundClrType);
+        MemberInitExpression memberInit = Expression.MemberInit(createInstance, assignments);
+        return TestForNull(propertyAccess, memberInit);
     }
 
     private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, MemberExpression propertyAccess, PropertyInfo selectorPropertyInfo,
@@ -227,7 +303,10 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             return CreateCollectionInitializer(selectorPropertyInfo, bodyElementType, layer, context);
         }
 
-        if (layer.Selection == null || layer.Selection.IsEmpty)
+        // Direct projection of entities containing compound attributes or collections is bypassed by EF Core queryable building
+        // due to an EF Core 10 complex type projection limitation (see https://github.com/dotnet/efcore/issues/39322).
+        if (layer.Selection == null || layer.Selection.IsEmpty || layer.ResourceType.Attributes.Any(attr => attr.IsCompound) ||
+            layer.Selection.GetResourceTypes().Any(type => type.Attributes.Any(attr => attr.IsCompound)))
         {
             return propertyAccess;
         }
@@ -277,13 +356,15 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         public PropertyInfo Property { get; }
         public QueryLayer? NextLayer { get; }
+        public FieldSelectors? ChildSelectors { get; }
 
-        public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null)
+        public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null, FieldSelectors? childSelectors = null)
         {
             ArgumentNullException.ThrowIfNull(property);
 
             Property = property;
             NextLayer = nextLayer;
+            ChildSelectors = childSelectors;
         }
 
         public override string ToString()

@@ -7,6 +7,8 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings;
@@ -51,8 +53,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     {
         ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
-        bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith(']');
-        return parameterName == "filter" || isNested;
+        return parameterName == "filter" || IsFilterParameterScoped(parameterName);
     }
 
     /// <inheritdoc />
@@ -93,6 +94,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
             if (_options.EnableLegacyFilterNotation)
             {
+                ValidateLegacyRelationshipFilter(name, value);
                 (name, value) = LegacyConverter.Convert(name, value);
             }
 
@@ -117,13 +119,40 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         }
     }
 
+    private void ValidateLegacyRelationshipFilter(string parameterName, string parameterValue)
+    {
+        if (IsFilterParameterScoped(parameterName))
+        {
+            string fieldChain = parameterName["filter[".Length..^1];
+
+            if (fieldChain.Length > 0 && parameterValue != LegacyFilterNotationConverter.ParameterValuePrefix.IsNull &&
+                parameterValue != LegacyFilterNotationConverter.ParameterValuePrefix.IsNotNull)
+            {
+                PatternMatchResult result = BuiltInPatterns.ToOneOrCompoundChainEndingInToOneOrAttribute.Match(fieldChain, RequestResourceType);
+
+                if (result is { IsSuccess: true, FieldChain.Count: > 0 } && result.FieldChain[^1] is RelationshipAttribute relationship)
+                {
+                    throw new QueryParseException(
+                        $"Filtering on relationship '{relationship.PublicName}' is only supported using '{LegacyFilterNotationConverter.ParameterValuePrefix.IsNull}' " +
+                        $"or '{LegacyFilterNotationConverter.ParameterValuePrefix.IsNotNull}'. To filter by related attributes, " +
+                        $"use 'filter[{relationship.PublicName}.id]=123' or use expression syntax.", -1);
+                }
+            }
+        }
+    }
+
+    private static bool IsFilterParameterScoped(string parameterName)
+    {
+        return parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith(']');
+    }
+
     private IncludeExpression? GetScope(string parameterName)
     {
         QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
 
         if (parameterScope.Scope == null)
         {
-            AssertIsCollectionRequest();
+            AssertIsCollectionRequest(parameterName);
         }
 
         return parameterScope.Scope;
@@ -164,13 +193,13 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         if (_filtersInGlobalScope.Count > 0)
         {
             FilterExpression filter = MergeFilters(_filtersInGlobalScope.ToImmutable());
-            yield return new ExpressionInScope(null, filter);
+            yield return new RelationshipChainExpressionInScope(null, filter);
         }
 
         foreach ((ResourceFieldChainExpression scope, ImmutableArray<FilterExpression>.Builder filtersBuilder) in _filtersPerScope)
         {
             FilterExpression filter = MergeFilters(filtersBuilder.ToImmutable());
-            yield return new ExpressionInScope(scope, filter);
+            yield return new RelationshipChainExpressionInScope(scope, filter);
         }
     }
 

@@ -30,6 +30,10 @@ public sealed class QueryExpressionTests
                 TestExpressionFactory.Instance.Count()
             ],
             [
+                TestExpressionFactory.Instance.ScalarCollectionElementValue(),
+                TestExpressionFactory.Instance.ScalarCollectionElementValue()
+            ],
+            [
                 TestExpressionFactory.Instance.Has(),
                 TestExpressionFactory.Instance.Has()
             ],
@@ -110,8 +114,8 @@ public sealed class QueryExpressionTests
                 TestExpressionFactory.Instance.SparseFieldSet()
             ],
             [
-                TestExpressionFactory.Instance.SparseFieldTable(),
-                TestExpressionFactory.Instance.SparseFieldTable()
+                TestExpressionFactory.Instance.SparseFieldSetElement(),
+                TestExpressionFactory.Instance.SparseFieldSetElement()
             ]
         };
 
@@ -162,12 +166,23 @@ public sealed class QueryExpressionTests
 
     [Theory]
     [MemberData(nameof(ExpressionTestData))]
-    public void Expressions_have_same_return_type(QueryExpression left, QueryExpression right)
+    public void Function_expressions_have_same_return_type(QueryExpression left, QueryExpression right)
     {
         if (left is FunctionExpression leftFunction && right is FunctionExpression rightFunction)
         {
             // Assert
             leftFunction.ReturnType.Should().Be(rightFunction.ReturnType);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ExpressionTestData))]
+    public void Scalar_collection_expressions_have_same_return_type(QueryExpression left, QueryExpression right)
+    {
+        if (left is ScalarCollectionElementValueExpression leftElement && right is ScalarCollectionElementValueExpression rightElement)
+        {
+            // Assert
+            leftElement.ElementType.Should().Be(rightElement.ElementType);
         }
     }
 
@@ -296,7 +311,6 @@ public sealed class QueryExpressionTests
 
     private sealed class TestExpressionFactory
     {
-        private readonly ResourceType _baseTestResourceType;
         private readonly ResourceType _derivedTestResourceType;
         private readonly AttrAttribute _textAttribute;
         private readonly RelationshipAttribute _parentRelationship;
@@ -313,11 +327,11 @@ public sealed class QueryExpressionTests
             builder.Add<DerivedTestResource, Guid>();
             IResourceGraph resourceGraph = builder.Build();
 
-            _baseTestResourceType = resourceGraph.GetResourceType<BaseTestResource>();
+            ResourceType baseTestResourceType = resourceGraph.GetResourceType<BaseTestResource>();
             _derivedTestResourceType = resourceGraph.GetResourceType<DerivedTestResource>();
-            _textAttribute = _baseTestResourceType.GetAttributeByPropertyName(nameof(BaseTestResource.Text));
-            _parentRelationship = _baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Parent));
-            _childrenRelationship = _baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Children));
+            _textAttribute = baseTestResourceType.GetAttributeByPropertyName(nameof(BaseTestResource.Text));
+            _parentRelationship = baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Parent));
+            _childrenRelationship = baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Children));
         }
 
         public AnyExpression Any()
@@ -333,6 +347,11 @@ public sealed class QueryExpressionTests
         public CountExpression Count()
         {
             return new CountExpression(ResourceFieldChainForChildren());
+        }
+
+        public ScalarCollectionElementValueExpression ScalarCollectionElementValue()
+        {
+            return new ScalarCollectionElementValueExpression(typeof(string));
         }
 
         public HasExpression Has()
@@ -435,19 +454,14 @@ public sealed class QueryExpressionTests
 
         public SparseFieldSetExpression SparseFieldSet()
         {
-            return new SparseFieldSetExpression([
-                _textAttribute,
-                _childrenRelationship
-            ]);
+            return new SparseFieldSetExpression(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty
+                .Add(_textAttribute, new SparseFieldSetElementExpression(_textAttribute))
+                .Add(_childrenRelationship, new SparseFieldSetElementExpression(_childrenRelationship)));
         }
 
-        public SparseFieldTableExpression SparseFieldTable()
+        public SparseFieldSetElementExpression SparseFieldSetElement()
         {
-            return new SparseFieldTableExpression(new Dictionary<ResourceType, SparseFieldSetExpression>
-            {
-                [_baseTestResourceType] = SparseFieldSet(),
-                [_derivedTestResourceType] = SparseFieldSet()
-            }.ToImmutableDictionary());
+            return new SparseFieldSetElementExpression(_textAttribute);
         }
 
         private static IQueryable<BaseTestResource> TestQueryableHandler(IQueryable<BaseTestResource> source, StringValues parameterValue)

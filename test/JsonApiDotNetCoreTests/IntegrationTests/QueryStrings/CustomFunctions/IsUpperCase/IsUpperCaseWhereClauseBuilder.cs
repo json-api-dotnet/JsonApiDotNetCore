@@ -9,6 +9,13 @@ internal sealed class IsUpperCaseWhereClauseBuilder : WhereClauseBuilder
 {
     private static readonly MethodInfo ToUpperMethod = typeof(string).GetMethod("ToUpper", Type.EmptyTypes)!;
 
+    private static readonly MethodInfo CompareMethod = typeof(string).GetMethod("Compare", [
+        typeof(string),
+        typeof(string)
+    ])!;
+
+    private static readonly ConstantExpression ZeroConstantExpression = Expression.Constant(0);
+
     public override Expression DefaultVisit(QueryExpression expression, QueryClauseBuilderContext context)
     {
         if (expression is IsUpperCaseExpression isUpperCaseExpression)
@@ -21,8 +28,15 @@ internal sealed class IsUpperCaseWhereClauseBuilder : WhereClauseBuilder
 
     private BinaryExpression VisitIsUpperCase(IsUpperCaseExpression expression, QueryClauseBuilderContext context)
     {
-        Expression propertyAccess = Visit(expression.TargetAttribute, context);
+        Expression propertyAccess = Visit(expression.Target, context);
         MethodCallExpression toUpperMethodCall = Expression.Call(propertyAccess, ToUpperMethod);
+
+        if (expression.Target is ScalarCollectionElementValueExpression)
+        {
+            // Workaround for https://github.com/dotnet/efcore/issues/39351.
+            MethodCallExpression compareCall = Expression.Call(CompareMethod, propertyAccess, toUpperMethodCall);
+            return Expression.Equal(compareCall, ZeroConstantExpression);
+        }
 
         return Expression.Equal(propertyAccess, toUpperMethodCall);
     }

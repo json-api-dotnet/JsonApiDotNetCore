@@ -716,7 +716,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
+        error.Detail.Should().Be($"Attribute 'someInt32' is of type 'Int32' while type 'String' was expected. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -739,7 +739,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
+        error.Detail.Should().Be($"Attribute 'someInt32' is of type 'Int32' while type 'String' was expected. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -945,7 +945,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Failed to convert 'ABC' of type 'String' to type 'Int32'. {parameterValue}");
+        error.Detail.Should().Be($"Failed to convert 'ABC' to type 'Int32'. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

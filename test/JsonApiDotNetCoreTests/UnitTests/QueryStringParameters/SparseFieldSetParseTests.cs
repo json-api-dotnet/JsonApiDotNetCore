@@ -3,7 +3,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -90,7 +89,8 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     [InlineData("fields[blogPosts]", "id^(", ", expected.")]
     [InlineData("fields[blogPosts]", "id,^", "Field name expected.")]
     [InlineData("fields[blogPosts]", "author.^id,",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: a field. End of field chain expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more compound attributes, followed by a field. " +
+        "End of field chain expected.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -114,22 +114,18 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(author,caption,url)")]
-    [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
-    [InlineData("fields[blogs]", "id", "blogs(id)")]
-    [InlineData("fields[blogs]", "", "blogs(id)")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
+    [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts", "author,caption,url")]
+    [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts", "author,comments,labels")]
+    [InlineData("fields[blogs]", "id", "blogs", "id")]
+    [InlineData("fields[blogs]", "", "blogs", "")]
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string resourceTypeExpected, string valueExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
-        ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
-        scope.Should().BeNull();
-
-        QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
-        value.ToString().Should().Be(valueExpected);
+        ResourceTypeExpressionInScope constraint = _reader.GetConstraints().Cast<ResourceTypeExpressionInScope>().ToArray().Single();
+        constraint.ResourceType.PublicName.Should().Be(resourceTypeExpected);
+        constraint.Expression.ToString().Should().Be(valueExpected);
     }
 }

@@ -12,9 +12,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.D
 /// <c>
 /// decrypt(owner.lastName)
 /// </c>
+/// , or:
+/// <c>
+/// decrypt(_)
+/// </c>
 /// .
 /// </summary>
-internal sealed class DecryptExpression(ResourceFieldChainExpression targetAttribute) : FunctionExpression
+internal sealed class DecryptExpression(QueryExpression target) : FunctionExpression
 {
     public const string Keyword = "decrypt";
 
@@ -24,9 +28,9 @@ internal sealed class DecryptExpression(ResourceFieldChainExpression targetAttri
     public override Type ReturnType { get; } = typeof(string);
 
     /// <summary>
-    /// The string attribute to decrypt. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// The string attribute or scalar collection element to decrypt.
     /// </summary>
-    public ResourceFieldChainExpression TargetAttribute { get; } = targetAttribute;
+    public QueryExpression Target { get; } = target;
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
@@ -49,7 +53,7 @@ internal sealed class DecryptExpression(ResourceFieldChainExpression targetAttri
 
         builder.Append(Keyword);
         builder.Append('(');
-        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute.ToString());
+        builder.Append(toFullString ? Target.ToFullString() : Target.ToString());
         builder.Append(')');
 
         return builder.ToString();
@@ -69,11 +73,11 @@ internal sealed class DecryptExpression(ResourceFieldChainExpression targetAttri
 
         var other = (DecryptExpression)obj;
 
-        return TargetAttribute.Equals(other.TargetAttribute);
+        return Target.Equals(other.Target);
     }
 
     public override int GetHashCode()
     {
-        return TargetAttribute.GetHashCode();
+        return Target.GetHashCode();
     }
 }

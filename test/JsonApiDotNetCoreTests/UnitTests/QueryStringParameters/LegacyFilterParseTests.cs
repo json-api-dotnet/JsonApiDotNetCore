@@ -31,12 +31,12 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[]", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter", "Field name between brackets expected in filter parameter name.")]
+    [InlineData("filter[", "Field name between brackets expected in filter parameter name.")]
+    [InlineData("filter[]", "Field name between brackets expected in filter parameter name.")]
     [InlineData("filter[some]", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[author.posts]",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-one relationship or an attribute. " +
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or an attribute. " +
         "To-one relationship or attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter[some.id]", "Field 'some' does not exist on resource type 'blogPosts'.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
@@ -59,15 +59,18 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter[author]", "some", "null expected.")]
+    [InlineData("filter[author]", "some",
+        "Filtering on relationship 'author' is only supported using 'isnull:' or 'isnotnull:'. To filter by related attributes, use 'filter[author.id]=123' or use expression syntax.")]
+    [InlineData("filter[author]", "eq:some",
+        "Filtering on relationship 'author' is only supported using 'isnull:' or 'isnotnull:'. To filter by related attributes, use 'filter[author.id]=123' or use expression syntax.")]
     [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter", "expr:equals(author,'Joe')", "null expected.")]
+    [InlineData("filter", "expr:equals(author,'Joe')", "To-one relationship name or null expected.")]
     [InlineData("filter", "expr:has(author)",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "expr:equals(count(author),'1')",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'webAccounts' expected.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Act
@@ -118,9 +121,8 @@ public sealed class LegacyFilterParseTests : BaseParseTests
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
         scope.Should().BeNull();
 

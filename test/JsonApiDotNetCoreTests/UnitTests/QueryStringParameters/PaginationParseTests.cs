@@ -54,18 +54,18 @@ public sealed class PaginationParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("^", "Number or relationship name expected.")]
-    [InlineData("^.", "Number or relationship name expected.")]
-    [InlineData("1,^", "Number or relationship name expected.")]
-    [InlineData("^(", "Number or relationship name expected.")]
+    [InlineData("^", "Number or to-many relationship name expected.")]
+    [InlineData("^.", "Number or to-many relationship name expected.")]
+    [InlineData("1,^", "Number or to-many relationship name expected.")]
+    [InlineData("^(", "Number or to-many relationship name expected.")]
     [InlineData("^ ", "Unexpected whitespace.")]
-    [InlineData("-^", "Digits expected.")]
+    [InlineData("-^", "Number expected.")]
     [InlineData("^-1", "Page number cannot be negative or zero.")]
     [InlineData("posts^", ": expected.")]
     [InlineData("posts:^", "Number expected.")]
     [InlineData("posts:^abc", "Number expected.")]
     [InlineData("1^(", ", expected.")]
-    [InlineData("posts:-^abc", "Digits expected.")]
+    [InlineData("posts:-^abc", "Number expected.")]
     [InlineData("posts:^-1", "Page number cannot be negative or zero.")]
     [InlineData("^unknown", "To-many relationship 'unknown' does not exist on resource type 'blogs'.")]
     [InlineData("^unknown.other", "Relationship 'unknown' does not exist on resource type 'blogs'.")]
@@ -102,18 +102,18 @@ public sealed class PaginationParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("^", "Number or relationship name expected.")]
-    [InlineData("^.", "Number or relationship name expected.")]
-    [InlineData("1,^", "Number or relationship name expected.")]
-    [InlineData("^(", "Number or relationship name expected.")]
+    [InlineData("^", "Number or to-many relationship name expected.")]
+    [InlineData("^.", "Number or to-many relationship name expected.")]
+    [InlineData("1,^", "Number or to-many relationship name expected.")]
+    [InlineData("^(", "Number or to-many relationship name expected.")]
     [InlineData("^ ", "Unexpected whitespace.")]
-    [InlineData("-^", "Digits expected.")]
+    [InlineData("-^", "Number expected.")]
     [InlineData("^-1", "Page size cannot be negative.")]
     [InlineData("posts^", ": expected.")]
     [InlineData("posts:^", "Number expected.")]
     [InlineData("posts:^abc", "Number expected.")]
     [InlineData("1^(", ", expected.")]
-    [InlineData("posts:-^abc", "Digits expected.")]
+    [InlineData("posts:-^abc", "Number expected.")]
     [InlineData("posts:^-1", "Page size cannot be negative.")]
     [InlineData("^unknown", "To-many relationship 'unknown' does not exist on resource type 'blogs'.")]
     [InlineData("^unknown.other", "Relationship 'unknown' does not exist on resource type 'blogs'.")]
@@ -175,9 +175,8 @@ public sealed class PaginationParseTests : BaseParseTests
             _reader.Read("page[size]", pageSize);
         }
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         string[] scopeTreesExpectedArray = scopeTreesExpected.Split("|");
         ResourceFieldChainExpression?[] scopeTrees = constraints.Select(expressionInScope => expressionInScope.Scope).ToArray();
 

@@ -1,6 +1,5 @@
 using System.Net;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -94,17 +93,33 @@ public sealed class InvalidModelStateException(
 
     private static string? ResolveSourcePointerInComplexType(PropertySegment segment, IResourceGraph resourceGraph)
     {
-        PropertyInfo? property = segment.ModelType.GetProperty(segment.PropertyName);
+        CompoundType? compoundType = resourceGraph.FindCompoundType(segment.ModelType);
+        AttrAttribute? attribute = compoundType?.FindAttributeByPropertyName(segment.PropertyName);
 
-        if (property == null)
+        string publicName;
+        Type propertyType;
+
+        if (attribute != null)
         {
-            return null;
+            publicName = attribute.PublicName;
+            propertyType = attribute.Property.PropertyType;
+        }
+        else
+        {
+            PropertyInfo? property = segment.ModelType.GetProperty(segment.PropertyName);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            publicName = property.Name;
+            propertyType = property.PropertyType;
         }
 
-        string publicName = PropertySegment.GetPublicNameForProperty(property);
         string? sourcePointer = segment.SourcePointer != null ? $"{segment.SourcePointer}/{publicName}" : null;
 
-        ModelStateKeySegment? nextSegment = segment.GetNextSegment(property.PropertyType, true, sourcePointer);
+        ModelStateKeySegment? nextSegment = segment.GetNextSegment(propertyType, true, sourcePointer);
         return nextSegment != null ? ResolveSourcePointer(nextSegment, resourceGraph) : sourcePointer;
     }
 
@@ -213,7 +228,9 @@ public sealed class InvalidModelStateException(
         // In case of a property, its declaring type. In case of an indexer, the collection type or collection element type (in case the parent is a relationship).
         public Type ModelType { get; }
 
-        // Indicates we're in a complex object, so to determine public name, inspect [JsonPropertyName] instead of [Attr], [HasOne] etc.
+        // Note: System.Text.Json attributes (such as [JsonPropertyName] and [JsonIgnore]) are not supported on JSON:API
+        // resource and compound models and are never taken into account when reading request bodies, rendering responses,
+        // or generating error source pointers. Schema names and capabilities are governed exclusively by [Attr(PublicName)] and [Attr(Capabilities)].
         public bool IsInComplexType { get; }
 
         // The source pointer we've built up, so far. This is null whenever input is not recognized.
@@ -351,14 +368,6 @@ public sealed class InvalidModelStateException(
             ArgumentNullException.ThrowIfNull(propertyName);
 
             PropertyName = propertyName;
-        }
-
-        public static string GetPublicNameForProperty(PropertyInfo property)
-        {
-            ArgumentNullException.ThrowIfNull(property);
-
-            var jsonNameAttribute = property.GetCustomAttribute<JsonPropertyNameAttribute>(true);
-            return jsonNameAttribute?.Name ?? property.Name;
         }
     }
 }

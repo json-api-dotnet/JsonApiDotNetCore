@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -17,25 +16,47 @@ public static class SparseFieldSetExpressionExtensions
         ArgumentNullException.ThrowIfNull(fieldSelector);
         ArgumentNullException.ThrowIfNull(resourceGraph);
 
-        SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
-
-        foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
+        if (sparseFieldSet == null)
         {
-            newSparseFieldSet = IncludeField(newSparseFieldSet, field);
+            return null;
         }
 
-        return newSparseFieldSet;
+        SparseFieldTreeBuilder builder = SparseFieldTreeBuilder.FromExpression(sparseFieldSet);
+
+        foreach (ResourceFieldChainExpression chain in resourceGraph.GetFieldChains(fieldSelector))
+        {
+            builder.IncludeChain(chain.Fields);
+        }
+
+        return builder.ToExpression();
     }
 
-    private static SparseFieldSetExpression? IncludeField(SparseFieldSetExpression? sparseFieldSet, ResourceFieldAttribute fieldToInclude)
+    public static SparseFieldSetExpression? Including(this SparseFieldSetExpression? sparseFieldSet, ResourceFieldAttribute field)
     {
-        if (sparseFieldSet == null || sparseFieldSet.Fields.Contains(fieldToInclude))
+        ArgumentNullException.ThrowIfNull(field);
+
+        if (sparseFieldSet == null)
         {
-            return sparseFieldSet;
+            return null;
         }
 
-        IImmutableSet<ResourceFieldAttribute> newSparseFieldSet = sparseFieldSet.Fields.Add(fieldToInclude);
-        return new SparseFieldSetExpression(newSparseFieldSet);
+        SparseFieldTreeBuilder builder = SparseFieldTreeBuilder.FromExpression(sparseFieldSet);
+        builder.IncludeChain([field]);
+        return builder.ToExpression();
+    }
+
+    public static SparseFieldSetExpression? Including(this SparseFieldSetExpression? sparseFieldSet, ResourceFieldChainExpression fieldChain)
+    {
+        ArgumentNullException.ThrowIfNull(fieldChain);
+
+        if (sparseFieldSet == null)
+        {
+            return null;
+        }
+
+        SparseFieldTreeBuilder builder = SparseFieldTreeBuilder.FromExpression(sparseFieldSet);
+        builder.IncludeChain(fieldChain.Fields);
+        return builder.ToExpression();
     }
 
     public static SparseFieldSetExpression? Excluding<TResource>(this SparseFieldSetExpression? sparseFieldSet,
@@ -45,29 +66,50 @@ public static class SparseFieldSetExpressionExtensions
         ArgumentNullException.ThrowIfNull(fieldSelector);
         ArgumentNullException.ThrowIfNull(resourceGraph);
 
-        SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
-
-        foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
-        {
-            newSparseFieldSet = ExcludeField(newSparseFieldSet, field);
-        }
-
-        return newSparseFieldSet;
-    }
-
-    private static SparseFieldSetExpression? ExcludeField(SparseFieldSetExpression? sparseFieldSet, ResourceFieldAttribute fieldToExclude)
-    {
-        // Design tradeoff: When the sparse fieldset is empty, it means all fields will be selected.
+        // Design tradeoff: When the sparse fieldset is null, it means all fields will be selected.
         // Adding an exclusion in that case is a no-op, which results in still retrieving the excluded field from data store.
         // But later, when serializing the response, the sparse fieldset is first populated with all fields,
         // so then the exclusion will actually be applied and the excluded field is not returned to the client.
-
-        if (sparseFieldSet == null || !sparseFieldSet.Fields.Contains(fieldToExclude))
+        if (sparseFieldSet == null)
         {
-            return sparseFieldSet;
+            return null;
         }
 
-        IImmutableSet<ResourceFieldAttribute> newSparseFieldSet = sparseFieldSet.Fields.Remove(fieldToExclude);
-        return new SparseFieldSetExpression(newSparseFieldSet);
+        SparseFieldTreeBuilder builder = SparseFieldTreeBuilder.FromExpression(sparseFieldSet);
+
+        foreach (ResourceFieldChainExpression chain in resourceGraph.GetFieldChains(fieldSelector))
+        {
+            builder.ExcludeChain(chain.Fields);
+        }
+
+        return builder.ToExpression();
+    }
+
+    public static SparseFieldSetExpression? Excluding(this SparseFieldSetExpression? sparseFieldSet, ResourceFieldAttribute field)
+    {
+        ArgumentNullException.ThrowIfNull(field);
+
+        if (sparseFieldSet == null)
+        {
+            return null;
+        }
+
+        SparseFieldTreeBuilder builder = SparseFieldTreeBuilder.FromExpression(sparseFieldSet);
+        builder.ExcludeChain([field]);
+        return builder.ToExpression();
+    }
+
+    public static SparseFieldSetExpression? Excluding(this SparseFieldSetExpression? sparseFieldSet, ResourceFieldChainExpression fieldChain)
+    {
+        ArgumentNullException.ThrowIfNull(fieldChain);
+
+        if (sparseFieldSet == null)
+        {
+            return null;
+        }
+
+        SparseFieldTreeBuilder builder = SparseFieldTreeBuilder.FromExpression(sparseFieldSet);
+        builder.ExcludeChain(fieldChain.Fields);
+        return builder.ToExpression();
     }
 }

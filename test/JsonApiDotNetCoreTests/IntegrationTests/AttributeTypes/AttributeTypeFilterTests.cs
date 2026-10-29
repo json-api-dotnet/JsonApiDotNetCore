@@ -146,16 +146,16 @@ public sealed class AttributeTypeFilterTests : IClassFixture<IntegrationTestCont
     [InlineData(nameof(TypeContainer.TestNullableIPAddress))]
     [InlineData(nameof(TypeContainer.TestNullableIPNetwork))]
     [InlineData(nameof(TypeContainer.TestNullableVersion))]
-    public async Task Can_filter_equality_with_null_value(string propertyName)
+    public async Task Can_filter_equality_with_null_value_on_nullable_type(string propertyName)
     {
         // Arrange
-        TypeContainer existingContainer = _fakers.TypeContainer.GenerateOne();
-        SetResourcePropertyValueToNull(existingContainer, propertyName);
+        List<TypeContainer> existingContainers = _fakers.TypeContainer.GenerateList(2);
+        SetResourcePropertyValueToNull(existingContainers[0], propertyName);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             await dbContext.ClearTableAsync<TypeContainer>();
-            dbContext.TypeContainers.Add(existingContainer);
+            dbContext.TypeContainers.AddRange(existingContainers);
             await dbContext.SaveChangesAsync();
         });
 
@@ -168,7 +168,7 @@ public sealed class AttributeTypeFilterTests : IClassFixture<IntegrationTestCont
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Id.Should().Be(existingContainer.StringId);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(existingContainers[0].StringId);
     }
 
     [Theory]
@@ -190,6 +190,7 @@ public sealed class AttributeTypeFilterTests : IClassFixture<IntegrationTestCont
     [InlineData(nameof(TypeContainer.TestDecimal))]
     [InlineData(nameof(TypeContainer.TestComplex))]
     [InlineData(nameof(TypeContainer.TestChar))]
+    [InlineData(nameof(TypeContainer.TestString))]
     [InlineData(nameof(TypeContainer.TestRune))]
     [InlineData(nameof(TypeContainer.TestDateTimeOffset))]
     [InlineData(nameof(TypeContainer.TestDateTime))]
@@ -198,26 +199,31 @@ public sealed class AttributeTypeFilterTests : IClassFixture<IntegrationTestCont
     [InlineData(nameof(TypeContainer.TestTimeSpan))]
     [InlineData(nameof(TypeContainer.TestEnum))]
     [InlineData(nameof(TypeContainer.TestGuid))]
+    [InlineData(nameof(TypeContainer.TestUri))]
+    [InlineData(nameof(TypeContainer.TestIPAddress))]
     [InlineData(nameof(TypeContainer.TestIPNetwork))]
-    public async Task Cannot_filter_equality_with_null_value(string propertyName)
+    [InlineData(nameof(TypeContainer.TestVersion))]
+    public async Task Can_filter_equality_with_null_on_non_nullable_type(string propertyName)
     {
         // Arrange
+        TypeContainer existingContainer = _fakers.TypeContainer.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<TypeContainer>();
+            dbContext.TypeContainers.Add(existingContainer);
+            await dbContext.SaveChangesAsync();
+        });
+
         string route = $"/typeContainers?filter=equals({propertyName.Camelize()},null)";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Errors.Should().HaveCount(1);
-
-        ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().StartWith("Function, field name or value between quotes expected. Failed at position");
-        error.Source.Should().NotBeNull();
-        error.Source.Parameter.Should().Be("filter");
+        responseDocument.Data.ManyValue.Should().BeEmpty();
     }
 
     [Theory]
@@ -346,6 +352,6 @@ public sealed class AttributeTypeFilterTests : IClassFixture<IntegrationTestCont
         }
 
         string propertyType = RuntimeTypeConverter.GetFriendlyTypeName(property.PropertyType);
-        return $"Failed to convert '{actualValue}' of type 'String' to type '{propertyType}'.";
+        return $"Failed to convert '{actualValue}' to type '{propertyType}'.";
     }
 }

@@ -15,7 +15,8 @@ public sealed class QueryTokenizer
         ['.'] = TokenKind.Period,
         [','] = TokenKind.Comma,
         [':'] = TokenKind.Colon,
-        ['-'] = TokenKind.Minus
+        ['-'] = TokenKind.Minus,
+        ['_'] = TokenKind.Underscore
     }.AsReadOnly();
 
     internal static readonly IReadOnlyDictionary<TokenKind, char> TokenKindToSingleCharacterLookup =
@@ -69,7 +70,7 @@ public sealed class QueryTokenizer
                 {
                     if (_textBuffer.Length > 0)
                     {
-                        throw new QueryParseException("Unexpected ' outside text.", _sourceOffset);
+                        throw new QueryParseException("Unexpected ' outside quoted text.", _sourceOffset);
                     }
 
                     _isInQuotedSection = true;
@@ -79,7 +80,7 @@ public sealed class QueryTokenizer
             {
                 TokenKind? singleCharacterTokenKind = _isInQuotedSection ? null : TryGetSingleCharacterTokenKind(ch);
 
-                if (singleCharacterTokenKind != null && !IsMinusInsideText(singleCharacterTokenKind.Value))
+                if (singleCharacterTokenKind != null && !IsPunctuationInsideText(singleCharacterTokenKind.Value))
                 {
                     Token? identifierToken = ProduceTokenFromTextBuffer(false);
 
@@ -108,7 +109,7 @@ public sealed class QueryTokenizer
 
         if (_isInQuotedSection)
         {
-            throw new QueryParseException("' expected.", _sourceOffset - 1);
+            throw new QueryParseException("Closing ' expected.", _sourceOffset - 1);
         }
 
         Token? lastToken = ProduceTokenFromTextBuffer(false);
@@ -119,9 +120,9 @@ public sealed class QueryTokenizer
         }
     }
 
-    private bool IsMinusInsideText(TokenKind kind)
+    private bool IsPunctuationInsideText(TokenKind kind)
     {
-        return kind == TokenKind.Minus && _textBuffer.Length > 0;
+        return kind is TokenKind.Minus or TokenKind.Underscore && _textBuffer.Length > 0;
     }
 
     private char? PeekChar()

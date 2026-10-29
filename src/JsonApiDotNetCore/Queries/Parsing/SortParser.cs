@@ -49,12 +49,11 @@ public class SortParser : QueryExpressionParser, ISortParser
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        bool isAscending = true;
+        QueryParseChoices choices = QueryParseChoices.Minus | QueryParseChoices.CountFunction | QueryParseChoices.FieldName;
 
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Minus)
+        if (TryEatSingleCharacterToken(TokenKind.Minus))
         {
-            TokenStack.Pop();
-            isAscending = false;
+            choices &= ~QueryParseChoices.Minus;
         }
 
         // An attribute or relationship name usually matches a single field, even when overridden in derived types.
@@ -82,19 +81,27 @@ public class SortParser : QueryExpressionParser, ISortParser
         // Because there is no syntax to pick one, ParseFieldChain() fails with an error. We could add optional upcast syntax
         // (which would be required in this case) in the future to make it work, if desired.
 
-        QueryExpression target;
-
-        if (TokenStack.TryPeek(out nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text })
         {
-            target = ParseFunction(resourceType);
-        }
-        else
-        {
-            string errorMessage = !isAscending ? "Count function or field name expected." : "-, count function or field name expected.";
-            target = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, errorMessage);
+            bool isAscending = choices.HasFlag(QueryParseChoices.Minus);
+
+            if (IsFunction(nextToken.Value!))
+            {
+                QueryExpression functionTarget = ParseFunction(resourceType);
+                return new SortElementExpression(functionTarget, isAscending);
+            }
+
+            if (!IsNullConstantToken(nextToken))
+            {
+                QueryExpression fieldChainTarget = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInScalarAttribute, resourceType,
+                    FieldChainPatternMatchOptions.AllowDerivedTypes);
+
+                return new SortElementExpression(fieldChainTarget, isAscending);
+            }
         }
 
-        return new SortElementExpression(target, isAscending);
+        int position = GetNextTokenPositionOrEnd();
+        throw new QueryParseException(choices, position);
     }
 
     protected virtual bool IsFunction(string name)
@@ -120,16 +127,16 @@ public class SortParser : QueryExpressionParser, ISortParser
         }
 
         int position = GetNextTokenPositionOrEnd();
-        throw new QueryParseException("Count function expected.", position);
+        throw new QueryParseException(QueryParseChoices.CountFunction, position);
     }
 
-    private CountExpression ParseCount(ResourceType resourceType)
+    protected virtual CountExpression ParseCount(ResourceType resourceType)
     {
         EatText(Keywords.Count);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetCollection =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, null);
+        ResourceFieldChainExpression targetCollection = ParseFieldChain(BuiltInPatterns.ToOneOrCompoundChainEndingInCollection, resourceType,
+            FieldChainPatternMatchOptions.AllowDerivedTypes);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
@@ -140,7 +147,9 @@ public class SortParser : QueryExpressionParser, ISortParser
     {
         ArgumentNullException.ThrowIfNull(field);
 
-        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
+        // Intermediate compound attributes are skipped during capability checks because AllowSort was stripped at startup
+        // to prevent sorting by whole compound objects, while built-in sort pattern '[OC]*S' ensures only leaf scalar attributes are evaluated.
+        if (field is AttrAttribute { IsCompound: false, IsCollection: false } attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
             throw new QueryParseException($"Sorting on attribute '{attribute}' is not allowed.", position);
         }

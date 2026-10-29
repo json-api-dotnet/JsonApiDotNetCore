@@ -38,7 +38,9 @@ public sealed class DecryptFilterParseTests : BaseParseTests
     [InlineData("filter", "equals(decrypt(^caption)", "Field 'caption' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "equals(decrypt(^null)", "Field name expected.")]
     [InlineData("filter", "equals(decrypt(title)^)", ", expected.")]
-    [InlineData("filter", "equals(decrypt(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("filter", "equals(decrypt(owner.preferences.^useDarkTheme)", "Attribute 'useDarkTheme' is of type 'Boolean' while type 'String' was expected.")]
+    [InlineData("filter", "has(tags,equals(decrypt(^some),'secret'))", "_ expected.")]
+    [InlineData("filter", "has(tags,equals(decrypt(^),'secret'))", "_ expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -68,15 +70,16 @@ public sealed class DecryptFilterParseTests : BaseParseTests
     [InlineData("filter", "any(decrypt(title),'x','y')", null)]
     [InlineData("filter", "contains(decrypt(owner.userName),'secret')", null)]
     [InlineData("filter", "or(equals(decrypt(title),'one'),equals(decrypt(platformName),'two'))", null)]
+    [InlineData("filter", "has(tags,equals(decrypt(_),'secret'))", null)]
+    [InlineData("filter", "has(tags,startsWith(decrypt(_),'sec'))", null)]
     [InlineData("filter[posts]", "equals(decrypt(author.userName),'secret')", "posts")]
     public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
         scope?.ToString().Should().Be(scopeExpected);
 

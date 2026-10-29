@@ -20,6 +20,11 @@ public sealed class QueryParseException : Exception
         Position = position;
     }
 
+    public QueryParseException(QueryParseChoices choices, int position, params ReadOnlySpan<string> customChoices)
+        : this(QueryParseChoiceFormatter.Format(choices, customChoices), position)
+    {
+    }
+
     public QueryParseException(string message, int position, Exception innerException)
         : base(message, innerException)
     {

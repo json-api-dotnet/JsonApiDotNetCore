@@ -64,16 +64,16 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
         blog.Posts = _fakers.BlogPost.GenerateList(4);
 
         blog.Posts[0].Caption = blog.Posts[0].Caption.ToUpperInvariant();
-        blog.Posts[0].Url = blog.Posts[0].Url.ToUpperInvariant();
+        blog.Posts[0].Url = blog.Posts[0].Url!.ToUpperInvariant();
 
         blog.Posts[1].Caption = blog.Posts[1].Caption.ToUpperInvariant();
-        blog.Posts[1].Url = blog.Posts[1].Url.ToLowerInvariant();
+        blog.Posts[1].Url = blog.Posts[1].Url!.ToLowerInvariant();
 
         blog.Posts[2].Caption = blog.Posts[1].Caption.ToLowerInvariant();
-        blog.Posts[2].Url = blog.Posts[1].Url.ToUpperInvariant();
+        blog.Posts[2].Url = blog.Posts[1].Url!.ToUpperInvariant();
 
         blog.Posts[3].Caption = blog.Posts[2].Caption.ToLowerInvariant();
-        blog.Posts[3].Url = blog.Posts[2].Url.ToLowerInvariant();
+        blog.Posts[3].Url = blog.Posts[2].Url!.ToLowerInvariant();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -128,5 +128,43 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Posts[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_casing_in_scalar_collection_elements()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+
+        blogs[0].Tags =
+        [
+            "csharp",
+            "dotnet"
+        ];
+
+        blogs[1].Tags =
+        [
+            "csharp",
+            "DOTNET"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=has(tags,isUpperCase(_))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
     }
 }

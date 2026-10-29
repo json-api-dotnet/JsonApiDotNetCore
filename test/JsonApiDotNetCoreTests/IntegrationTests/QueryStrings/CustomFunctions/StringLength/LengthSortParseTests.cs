@@ -34,7 +34,7 @@ public sealed class LengthSortParseTests : BaseParseTests
     [InlineData("sort", "length(^caption)", "Field 'caption' does not exist on resource type 'blogs'.")]
     [InlineData("sort", "length(^null)", "Field name expected.")]
     [InlineData("sort", "length(title)^)", ", expected.")]
-    [InlineData("sort", "length(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("sort", "length(owner.preferences.^useDarkTheme)", "Attribute 'useDarkTheme' is of type 'Boolean' while type 'String' was expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -67,9 +67,8 @@ public sealed class LengthSortParseTests : BaseParseTests
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
         scope?.ToString().Should().Be(scopeExpected);
 
