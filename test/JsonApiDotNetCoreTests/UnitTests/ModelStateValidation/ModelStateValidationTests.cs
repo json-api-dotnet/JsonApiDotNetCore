@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -31,6 +32,10 @@ public sealed class ModelStateValidationTests
     [InlineData("GenericList[1].Value", "/data/attributes/publicNameOfGenericList/1/jsonValue")]
     [InlineData("PlainObject", "/data/attributes/publicNameOfPlainObject")]
     [InlineData("PlainObject.Value", "/data/attributes/publicNameOfPlainObject/Value")]
+    [InlineData("PlainObject.Renamed", "/data/attributes/publicNameOfPlainObject/Renamed")]
+    [InlineData("Escaped", "/data/attributes/tilde~0slash~1name")]
+    [InlineData("ComplexObject.Weird", "/data/attributes/publicNameOfComplexObject/json~0A~1B")]
+    [InlineData("ComplexObject.Elements[2].Weird", "/data/attributes/publicNameOfComplexObject/jsonElements/2/json~0A~1B")]
     [InlineData("PlainObject.NoSuchMember", null)]
     [InlineData("PrimaryChild", "/data/relationships/publicNameOfPrimaryChild/data")]
     [InlineData("PrimaryChild.NotMappedInChild", null)]
@@ -81,6 +86,8 @@ public sealed class ModelStateValidationTests
     [InlineData("[1].Resource.GenericObject.Value", "/atomic:operations/1/data/attributes/publicNameOfGenericObject/jsonValue")]
     [InlineData("[0].Resource.GenericList[1].Value", "/atomic:operations/0/data/attributes/publicNameOfGenericList/1/jsonValue")]
     [InlineData("[0].Resource.PlainObject.Value", "/atomic:operations/0/data/attributes/publicNameOfPlainObject/Value")]
+    [InlineData("[0].Resource.Escaped", "/atomic:operations/0/data/attributes/tilde~0slash~1name")]
+    [InlineData("[0].Resource.ComplexObject.Weird", "/atomic:operations/0/data/attributes/publicNameOfComplexObject/json~0A~1B")]
     [InlineData("[0].Resource.PrimaryChild", "/atomic:operations/0/data/relationships/publicNameOfPrimaryChild/data")]
     [InlineData("[0].Resource.PrimaryChild.NotMappedInChild", null)]
     [InlineData("[0].Resource.PrimaryChild.Id", "/atomic:operations/0/data/relationships/publicNameOfPrimaryChild/data/id")]
@@ -140,6 +147,10 @@ public sealed class ModelStateValidationTests
         [Attr(PublicName = "publicNameOfOne")]
         public string? One { get; set; }
 
+        // Characters that must be escaped in a JSON Pointer (RFC 6901).
+        [Attr(PublicName = "tilde~slash/name")]
+        public string? Escaped { get; set; }
+
         [Attr(PublicName = "publicNameOfComplexObject", IsCompound = true)]
         public ComplexRootObject? ComplexObject { get; set; }
 
@@ -185,6 +196,9 @@ public sealed class ModelStateValidationTests
 
         [Attr(PublicName = "jsonElements", IsCompound = true)]
         public IList<ComplexElementObject> Elements { get; set; } = null!;
+
+        [Attr(PublicName = "json~A/B")]
+        public string? Weird { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -199,6 +213,9 @@ public sealed class ModelStateValidationTests
     {
         [Attr(PublicName = "jsonFirst")]
         public string? First { get; set; }
+
+        [Attr(PublicName = "json~A/B")]
+        public string? Weird { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -212,6 +229,10 @@ public sealed class ModelStateValidationTests
     private sealed class PlainComplexObject
     {
         public string? Value { get; set; }
+
+        // System.Text.Json attributes are intentionally not considered, so the pointer uses the CLR name.
+        [JsonPropertyName("jsonRenamed")]
+        public string? Renamed { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

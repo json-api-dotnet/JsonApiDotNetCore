@@ -344,6 +344,25 @@ public sealed class CompoundObjectAdapterTests
         exception.SourcePointer.Should().Be(expectedPointer);
     }
 
+    [Theory]
+    [InlineData("""{"a~b/c":1}""", "/data/attributes/a~0b~1c")]
+    [InlineData("""{"content":{"a~b/c":1}}""", "/data/attributes/content/a~0b~1c")]
+    [InlineData("""{"content":{"phoneNumbers":[{"~1":"x"}]}}""", "/data/attributes/content/phoneNumbers/0/~01")]
+    public void Can_escape_member_names_in_error_pointer(string attributesJson, string expectedPointer)
+    {
+        // Arrange
+        using var harness = new RequestAdapterHarness(options => options.AllowUnknownFieldsInRequestBody = false, ResourceTypes);
+        string body = harness.CreateResourceDocument(typeof(Page), attributesJson, false);
+
+        // Act
+        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+
+        // Assert
+        ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
+        exception.GenericMessage.Should().Be("Unknown attribute found.");
+        exception.SourcePointer.Should().Be(expectedPointer);
+    }
+
     [Fact]
     public void Can_prefix_pointer_with_operation_position_in_atomic_request()
     {
