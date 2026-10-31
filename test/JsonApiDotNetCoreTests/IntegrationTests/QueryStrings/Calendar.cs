@@ -31,4 +31,7 @@ public sealed class Calendar : Identifiable<long>
 
     [HasMany(Capabilities = HasManyCapabilities.All & ~(HasManyCapabilities.AllowView | HasManyCapabilities.AllowFilter))]
     public ISet<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
+
+    [HasMany]
+    public ISet<Appointment> PinnedAppointments { get; set; } = new HashSet<Appointment>();
 }

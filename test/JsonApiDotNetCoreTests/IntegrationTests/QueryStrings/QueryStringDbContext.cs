@@ -62,5 +62,9 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
         builder.Entity<Calendar>()
             .HasMany(calendar => calendar.Appointments)
             .WithOne(appointment => appointment.Calendar);
+
+        builder.Entity<Calendar>()
+            .HasMany(calendar => calendar.PinnedAppointments)
+            .WithMany();
     }
 }
