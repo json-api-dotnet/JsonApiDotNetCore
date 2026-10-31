@@ -1205,6 +1205,9 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData("has(someEnums,equals(_,'Monday'))", "0")]
     [InlineData("has(someBooleans,equals(_,'true'))", "1")]
     [InlineData("has(someStrings,startsWith(_,'al'))", "0")]
+    [InlineData("has(someStrings,contains(_,'amm'))", "1")]
+    [InlineData("has(someStrings,endsWith(_,'ta'))", "01")]
+    [InlineData("has(someStrings,equals(_,'gamma'))", "1")]
     [InlineData("has(someStrings,any(_,'beta','delta'))", "01")]
     public async Task Can_filter_scalar_collection_elements_with_operator(string filterExpression, string expectedRows)
     {

@@ -36,6 +36,9 @@ public sealed class FilterableNested
     [Attr]
     public List<string> SomeStrings { get; set; } = [];
 
+    [Attr]
+    public List<int?> SomeNullableInt32s { get; set; } = [];
+
     [Attr(IsCompound = true)]
     public FilterableLeaf? Child { get; set; }
 }

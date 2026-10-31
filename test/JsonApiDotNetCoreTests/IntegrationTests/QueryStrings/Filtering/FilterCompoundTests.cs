@@ -150,6 +150,203 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
         AssertRows(responseDocument, resources, expectedRows);
     }
 
+    [Theory]
+    [InlineData("has(someCompound.someNullableInt32s)", "01")]
+    [InlineData("has(someCompound.someNullableInt32s,equals(_,'5'))", "0")]
+    [InlineData("has(someCompound.someNullableInt32s,equals(_,null))", "0",
+        Skip = "EF Core 10: Comparing an element of a JSON collection with null fails in PostgreSQL (42804: could not determine polymorphic type because input has type unknown).")]
+    [InlineData("has(someCompound.child.someTimeSpans,equals(_,'09:00:00'))", "0")]
+    [InlineData("has(someCompound.child.someTimeSpans,equals(_,'16:00:00'))", "1")]
+    public async Task Can_filter_scalar_collection_nested_in_compound(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    SomeNullableInt32s =
+                    [
+                        5,
+                        null,
+                        4
+                    ],
+                    Child = new FilterableLeaf
+                    {
+                        SomeTimeSpans =
+                        [
+                            TimeSpan.FromHours(9),
+                            TimeSpan.FromHours(17)
+                        ]
+                    }
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    SomeNullableInt32s =
+                    [
+                        1,
+                        2,
+                        3
+                    ],
+                    Child = new FilterableLeaf
+                    {
+                        SomeTimeSpans =
+                        [
+                            TimeSpan.FromHours(8),
+                            TimeSpan.FromHours(16)
+                        ]
+                    }
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested()
+            },
+            new()
+        ];
+
+        await SeedAsync(resources);
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        AssertRows(responseDocument, resources, expectedRows);
+    }
+
+    [Theory]
+    [InlineData("has(someLabeledDates,equals(value,'2020-05-15'))", "0")]
+    [InlineData("has(someLabeledDates,equals(value,null))", "")]
+    [InlineData("has(someLabeledDates,equals(label,'hired'))", "1")]
+    [InlineData("has(someLabeledDates,equals(label,null))", "2")]
+    public async Task Can_filter_collection_of_generic_compound(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeLabeledDates =
+                [
+                    new FilterableLabeled<DateOnly>
+                    {
+                        Value = new DateOnly(2020, 5, 15),
+                        Label = "anniversary"
+                    }
+                ]
+            },
+            new()
+            {
+                SomeLabeledDates =
+                [
+                    new FilterableLabeled<DateOnly>
+                    {
+                        Value = new DateOnly(2018, 1, 1),
+                        Label = "hired"
+                    }
+                ]
+            },
+            new()
+            {
+                SomeLabeledDates =
+                [
+                    new FilterableLabeled<DateOnly>
+                    {
+                        Value = new DateOnly(2019, 3, 3)
+                    }
+                ]
+            }
+        ];
+
+        await SeedAsync(resources);
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        AssertRows(responseDocument, resources, expectedRows);
+    }
+
+    [Theory]
+    [InlineData("equals(someCompound.child.someString,'Smith')", "0")]
+    [InlineData("startsWith(someCompound.child.someString,'Smi')", "02")]
+    [InlineData("contains(someCompound.child.someString,'ones')", "1")]
+    public async Task Can_filter_on_text_in_nested_compound(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    Child = new FilterableLeaf
+                    {
+                        SomeString = "Smith"
+                    }
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    Child = new FilterableLeaf
+                    {
+                        SomeString = "Jones"
+                    }
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    Child = new FilterableLeaf
+                    {
+                        SomeString = "Smithson"
+                    }
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested()
+            }
+        ];
+
+        await SeedAsync(resources);
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        AssertRows(responseDocument, resources, expectedRows);
+    }
+
+    private async Task SeedAsync(List<FilterableResource> resources)
+    {
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+    }
+
     private async Task<List<FilterableResource>> SeedAsync()
     {
         List<FilterableResource> resources =
