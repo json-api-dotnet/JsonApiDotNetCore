@@ -22,7 +22,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         testContext.ConfigureServices(services => services.AddResourceDefinition<BookDefinition>());
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Can_filter_included_collection()
     {
         // Arrange
@@ -41,7 +41,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Included[0].Attributes.Should().ContainKey("details");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Can_sort_included_collection()
     {
         // Arrange
@@ -61,7 +61,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Included[2].Attributes.Should().ContainKey("title").WhoseValue.Should().Be("A");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Can_paginate_included_collection()
     {
         // Arrange
@@ -80,7 +80,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Included[1].Attributes.Should().ContainKey("title").WhoseValue.Should().Be("B");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Can_filter_sort_and_paginate_included_collection_at_primary_collection()
     {
         // Arrange
@@ -102,7 +102,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Included[1].Attributes.Should().ContainKey("title").WhoseValue.Should().Be("C");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Can_filter_sort_and_paginate_secondary_endpoint()
     {
         // Arrange
@@ -121,7 +121,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("title").WhoseValue.Should().Be("C");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Can_filter_sort_and_paginate_relationship_endpoint()
     {
         // Arrange
@@ -140,7 +140,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Data.ManyValue[1].Id.Should().Be(author.Books[2].StringId);
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Applies_resource_definition_filter_to_included_collection()
     {
         // Arrange
@@ -166,7 +166,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Included[1].Attributes.Should().ContainKey("title").WhoseValue.Should().Be("C");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D2: Query constraints on included collections, secondary and relationship endpoints are dropped when a compound attribute is involved.")]
+    [Fact]
     public async Task Applies_resource_definition_filter_to_secondary_endpoint()
     {
         // Arrange
@@ -211,7 +211,7 @@ public sealed class CompoundConstraintsTests : IClassFixture<IntegrationTestCont
         responseDocument.Included[0].Attributes.Should().NotContainKey("title");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE NEW-cyclic-include: Cyclic include chain on resource types with compound attributes returns 500 NavigationBaseIncludeIgnored.")]
+    [Fact]
     public async Task Can_include_chain_with_cyclic_dependency()
     {
         // Arrange
