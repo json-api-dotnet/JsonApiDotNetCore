@@ -48,9 +48,12 @@ jobs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
-          8.0.*
-          9.0.*
           10.0.*
+    - name: Setup .NET 11 Preview
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 11.0.*
+        dotnet-quality: preview
     - name: Show installed versions
       shell: pwsh
       run: |
@@ -154,9 +157,12 @@ jobs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
-          8.0.*
-          9.0.*
           10.0.*
+    - name: Setup .NET 11 Preview
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 11.0.*
+        dotnet-quality: preview
     - name: Git checkout
       uses: actions/checkout@v7
       with:
@@ -212,9 +218,12 @@ jobs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
-          8.0.*
-          9.0.*
           10.0.*
+    - name: Setup .NET 11 Preview
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 11.0.*
+        dotnet-quality: preview
     - name: Git checkout
       uses: actions/checkout@v7
       with:
