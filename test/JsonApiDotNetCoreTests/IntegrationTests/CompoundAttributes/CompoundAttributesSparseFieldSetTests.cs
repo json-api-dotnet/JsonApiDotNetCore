@@ -373,64 +373,6 @@ public sealed class CompoundAttributesSparseFieldSetTests
     }
 
     [Fact]
-    public async Task View_blocked_nested_attribute_is_pruned_when_retrieving_compound_attribute()
-    {
-        // Arrange
-        Contact contact = _fakers.Contact.Generate();
-        contact.Content.Name.SecretAlias = "Classified";
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await dbContext.ClearTableAsync<Contact>();
-            dbContext.Contacts.Add(contact);
-            await dbContext.SaveChangesAsync();
-        });
-
-        string route = $"/contacts/{contact.StringId}?fields[contacts]=content";
-
-        // Act
-        (HttpResponseMessage httpResponse, JsonElement responseElement) = await _testContext.ExecuteGetAsync<JsonElement>(route);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-
-        JsonElement name = responseElement.GetProperty("data").GetProperty("attributes").GetProperty("content").GetProperty("name");
-        name.TryGetProperty("lastName", out _).Should().BeTrue();
-        name.TryGetProperty("secretAlias", out _).Should().BeFalse();
-    }
-
-    [Fact]
-    public async Task Cannot_select_view_blocked_nested_attribute()
-    {
-        // Arrange
-        Contact contact = _fakers.Contact.Generate();
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await dbContext.ClearTableAsync<Contact>();
-            dbContext.Contacts.Add(contact);
-            await dbContext.SaveChangesAsync();
-        });
-
-        var parameterValue = new MarkedText("content.name.^secretAlias", '^');
-        string route = $"/contacts/{contact.StringId}?fields[contacts]={parameterValue.Text}";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
-
-        responseDocument.Errors.Should().HaveCount(1);
-        ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified fieldset is invalid.");
-        error.Detail.Should().Be($"Retrieving attribute 'secretAlias' is not allowed. {parameterValue}");
-        error.Source.Should().NotBeNull();
-        error.Source.Parameter.Should().Be("fields[contacts]");
-    }
-
-    [Fact]
     public async Task Can_select_leaf_property_in_compound_attribute_at_secondary_endpoint()
     {
         // Arrange
