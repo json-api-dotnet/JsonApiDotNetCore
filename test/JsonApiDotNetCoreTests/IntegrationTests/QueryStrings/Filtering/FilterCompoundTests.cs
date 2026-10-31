@@ -154,7 +154,8 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
     [InlineData("has(someCompound.someNullableInt32s)", "01")]
     [InlineData("has(someCompound.someNullableInt32s,equals(_,'5'))", "0")]
     [InlineData("has(someCompound.someNullableInt32s,equals(_,null))", "0",
-        Skip = "EF Core 10: Comparing an element of a JSON collection with null fails in PostgreSQL (42804: could not determine polymorphic type because input has type unknown).")]
+        Skip =
+            "EF Core 10: Comparing an element of a JSON collection with null fails in PostgreSQL (42804: could not determine polymorphic type because input has type unknown).")]
     [InlineData("has(someCompound.child.someTimeSpans,equals(_,'09:00:00'))", "0")]
     [InlineData("has(someCompound.child.someTimeSpans,equals(_,'16:00:00'))", "1")]
     public async Task Can_filter_scalar_collection_nested_in_compound(string filterExpression, string expectedRows)

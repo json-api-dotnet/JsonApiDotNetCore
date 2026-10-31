@@ -430,7 +430,8 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("appointments", "has(attendees,startsWith(^_.name,'x'))", "Function or field name expected.")]
     [InlineData("appointments", "has(attendees,contains(^_,'x'))", "Function or field name expected.")]
     [InlineData("appointments", "has(attendees,endsWith(^null,'x'))", "Function or field name expected.")]
-    [InlineData("appointments", "has(attendees,startsWith(^response,'x'))", "Attribute 'response' is of type 'Nullable<AttendeeResponse>' while type 'String' was expected.")]
+    [InlineData("appointments", "has(attendees,startsWith(^response,'x'))",
+        "Attribute 'response' is of type 'Nullable<AttendeeResponse>' while type 'String' was expected.")]
     [InlineData("appointments", "has(attendees,contains(contact.^unknown,'x'))", "Field 'unknown' does not exist on compound type 'AttendeeContact'.")]
     // Element scope of a scalar collection
     [InlineData("appointments", "equals(^_,'x')", "Function or field name expected.")]
