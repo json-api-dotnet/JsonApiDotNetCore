@@ -226,7 +226,7 @@ public sealed class ResourceChangeTrackerTests
     }
 
     [Fact]
-    public void Byte_array_is_compared_by_reference_and_always_a_change()
+    public void Byte_array_is_compared_by_content()
     {
         // Arrange
         var request = new TrackedResource
@@ -260,12 +260,12 @@ public sealed class ResourceChangeTrackerTests
         };
 
         // Act
-        bool equal = HasImplicitChanges(nameof(TrackedResource.Data), request, equalStored);
-        bool changed = HasImplicitChanges(nameof(TrackedResource.Data), request, changedStored);
+        bool hasChangesForEqualContent = HasImplicitChanges(nameof(TrackedResource.Data), request, equalStored);
+        bool hasChangesForChangedContent = HasImplicitChanges(nameof(TrackedResource.Data), request, changedStored);
 
         // Assert
-        equal.Should().BeTrue();
-        changed.Should().BeTrue();
+        hasChangesForEqualContent.Should().BeFalse();
+        hasChangesForChangedContent.Should().BeTrue();
     }
 
     [Fact]
