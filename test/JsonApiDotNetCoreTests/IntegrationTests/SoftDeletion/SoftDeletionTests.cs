@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
@@ -129,6 +130,48 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("departments");
         responseDocument.Included[0].Id.Should().Be(companies[1].Departments.ElementAt(0).StringId);
+    }
+
+    [Fact]
+    public async Task Excludes_soft_deleted_departments_from_include_with_compound_company()
+    {
+        // Arrange
+        Company company = _fakers.Company.GenerateOne();
+
+        company.Headquarters = new CompanyAddress
+        {
+            Street = "Main Street 1",
+            City = "Springfield"
+        };
+
+        company.Departments = _fakers.Department.GenerateList(3);
+        company.Departments.ElementAt(2).SoftDeletedAt = SoftDeletionTime;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Company>();
+            dbContext.Companies.Add(company);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/companies?include=departments";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(company.StringId);
+
+        JsonElement headquarters = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("headquarters").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        headquarters.GetProperty("city").GetString().Should().Be("Springfield");
+
+        responseDocument.Included.Should().HaveCount(2);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Type == "departments");
+
+        responseDocument.Included.Select(resource => resource.Id).Should().BeEquivalentTo(company.Departments.Take(2).Select(department => department.StringId));
     }
 
     [Fact]

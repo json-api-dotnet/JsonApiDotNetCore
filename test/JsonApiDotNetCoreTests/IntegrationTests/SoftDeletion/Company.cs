@@ -11,6 +11,9 @@ public sealed class Company : Identifiable<long>, ISoftDeletable
     [Attr]
     public string Name { get; set; } = null!;
 
+    [Attr(IsCompound = true)]
+    public CompanyAddress? Headquarters { get; set; }
+
     public DateTimeOffset? SoftDeletedAt { get; set; }
 
     [HasMany]
