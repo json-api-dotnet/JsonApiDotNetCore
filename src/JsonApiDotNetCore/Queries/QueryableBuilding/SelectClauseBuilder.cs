@@ -239,10 +239,36 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             {
                 assignmentRightHandSide = CreateComplexValueCopy(propertyAccess, complexProperty.ComplexType);
             }
+            else if (complexProperty is { IsCollection: true })
+            {
+                assignmentRightHandSide = CreateComplexCollectionCopy(propertyAccess);
+            }
         }
 
         MemberAssignment assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
         return assignment;
+    }
+
+    private static Expression CreateComplexCollectionCopy(MemberExpression propertyAccess)
+    {
+        // Assigning a complex collection directly inside a projection on a related resource makes EF Core 10 fail when identity resolution is used
+        // ("Projecting queryable operations on JSON collection is not supported"). Materializing it through ToList/ToArray avoids that.
+        Type? elementType = CollectionConverter.Instance.FindCollectionElementType(propertyAccess.Type);
+
+        if (elementType != null)
+        {
+            if (propertyAccess.Type.IsArray)
+            {
+                return Expression.Call(typeof(Enumerable), "ToArray", [elementType], propertyAccess);
+            }
+
+            if (propertyAccess.Type.IsAssignableFrom(typeof(List<>).MakeGenericType(elementType)))
+            {
+                return Expression.Call(typeof(Enumerable), "ToList", [elementType], propertyAccess);
+            }
+        }
+
+        return propertyAccess;
     }
 
     private Expression CreateComplexValueCopy(MemberExpression propertyAccess, IReadOnlyComplexType complexType)

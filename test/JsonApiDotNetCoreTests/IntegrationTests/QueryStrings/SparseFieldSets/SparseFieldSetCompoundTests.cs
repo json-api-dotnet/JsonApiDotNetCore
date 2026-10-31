@@ -1018,6 +1018,69 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
     }
 
     [Theory]
+    [InlineData("attendees")]
+    [InlineData("attendees.name")]
+    public async Task Can_select_compound_collection_at_secondary_endpoint(string fieldChain)
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+
+        calendar.PinnedAppointments = new[]
+        {
+            CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne())
+        }.ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}/pinnedAppointments?fields[appointments]={fieldChain}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].GetAttribute("attendees").GetArrayLength().Should().Be(2);
+    }
+
+    [Fact(Skip = "EF Core 10: Selecting a JSON collection of an included resource fails while reading the JSON column (Invalid token type: 'Null') " +
+        "when the collection is projected without its compound parent.")]
+    public async Task Can_select_compound_collection_in_included_resources()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+
+        calendar.PinnedAppointments = new[]
+        {
+            CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne())
+        }.ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?include=pinnedAppointments&fields[appointments]=attendees";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
+        responseDocument.Included[0].GetAttribute("attendees").GetArrayLength().Should().Be(2);
+    }
+
+    [Theory]
     [InlineData("meetingPoint", "latitude,longitude,nearestAddress")]
     [InlineData("meetingPoint.latitude", "latitude")]
     [InlineData("meetingPoint.nearestAddress", "nearestAddress")]
