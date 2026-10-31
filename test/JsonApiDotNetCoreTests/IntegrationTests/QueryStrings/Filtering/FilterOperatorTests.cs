@@ -1233,6 +1233,19 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData("has(someStrings,endsWith(_,'ta'))", "01")]
     [InlineData("has(someStrings,equals(_,'gamma'))", "1")]
     [InlineData("has(someStrings,any(_,'beta','delta'))", "01")]
+    [InlineData("has(someGuids,any(_,'" + NestedGuidLowerBound + "','" + NestedGuidUpperBound + "'))", "01")]
+    [InlineData("has(someGuids,any(_,'" + NestedGuidInTheRange + "'))", "0")]
+    [InlineData("has(someDecimals,any(_,'1.5','10.5'))", "01")]
+    [InlineData("has(someDecimals,any(_,'2.5'))", "0")]
+    [InlineData("has(someDateTimes,any(_,'2001-01-01T00:00:00Z'))", "1")]
+    [InlineData("has(someTimeSpans,any(_,'0:01:00:00','0:10:00:00'))", "01")]
+    [InlineData("has(someTimeSpans,any(_,'0:05:00:00'))", "0")]
+    [InlineData("has(someDateOnlys,any(_,'2000-01-01','2001-01-01'))", "01")]
+    [InlineData("has(someDateOnlys,any(_,'2000-06-01'))", "0")]
+    [InlineData("has(someEnums,any(_,'Monday','Friday'))", "01")]
+    [InlineData("has(someEnums,any(_,'Friday'))", "1")]
+    [InlineData("has(someBooleans,any(_,'true'))", "1")]
+    [InlineData("has(someBooleans,any(_,'false'))", "0")]
     public async Task Can_filter_scalar_collection_elements_with_operator(string filterExpression, string expectedRows)
     {
         // Arrange
@@ -1287,6 +1300,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData("has(someNullableInt32s,equals(_,null))", "02")]
     [InlineData("not(has(someNullableInt32s,equals(_,null)))", "1")]
     [InlineData("has(someNullableInt32s,greaterThan(_,'1'))", "1")]
+    [InlineData("has(someNullableInt32s,any(_,'1','3'))", "01")]
+    [InlineData("has(someNullableInt32s,any(_,'2'))", "1")]
     public async Task Can_filter_nullable_scalar_collection_elements(string filterExpression, string expectedRows)
     {
         // Arrange
@@ -1523,6 +1538,66 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         {
             await dbContext.ClearTableAsync<FilterableResource>();
             dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Theory]
+    [InlineData("equals(parent,parent.parent)", "034")]
+    [InlineData("not(equals(parent,parent.parent))", "12")]
+    [InlineData("equals(parent,null)", "0")]
+    [InlineData("equals(parent.parent,null)", "01")]
+    public async Task Can_filter_equality_on_to_one_relationship_chain(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        var root = new FilterableResource();
+
+        var child = new FilterableResource
+        {
+            Parent = root
+        };
+
+        var grandChild = new FilterableResource
+        {
+            Parent = child
+        };
+
+        var loopedParent = new FilterableResource();
+
+        var looped = new FilterableResource
+        {
+            Parent = loopedParent
+        };
+
+        List<FilterableResource> resources =
+        [
+            root,
+            child,
+            grandChild,
+            looped,
+            loopedParent
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+
+            // A resource that is its own parent cannot be inserted in a single step.
+            loopedParent.Parent = loopedParent;
             await dbContext.SaveChangesAsync();
         });
 

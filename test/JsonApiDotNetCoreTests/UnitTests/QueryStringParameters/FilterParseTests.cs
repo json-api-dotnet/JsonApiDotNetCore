@@ -173,6 +173,8 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "isType(,^", "Resource type expected.")]
     [InlineData("filter[posts.contributors]", "isType(,^some)", "Resource type 'some' does not exist or does not derive from 'humans'.")]
     [InlineData("filter[posts.contributors]", "isType(,^humans)", "Resource type 'humans' does not exist or does not derive from 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(father,^men)", "Resource type 'men' does not exist or does not derive from 'men'.")]
+    [InlineData("filter[posts.contributors]", "isType(mother,^men)", "Resource type 'men' does not exist or does not derive from 'women'.")]
     [InlineData("filter[posts.contributors]", "isType(^some,men)", "Field 'some' does not exist on resource type 'humans'.")]
     [InlineData("filter[posts.contributors]", "isType(father.^some,women)", "Field 'some' does not exist on resource type 'men'.")]
     [InlineData("filter[posts.contributors]", "isType(^children,men)",
