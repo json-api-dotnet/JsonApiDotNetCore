@@ -134,7 +134,7 @@ public sealed class CompoundObjectAdapterTests
     }
 
     [Fact]
-    public void Uses_default_or_initializer_for_missing_members()
+    public void Can_use_default_or_initializer_for_missing_members()
     {
         // Arrange
         using var harness = new RequestAdapterHarness(null, ResourceTypes);
@@ -173,7 +173,7 @@ public sealed class CompoundObjectAdapterTests
     }
 
     [Fact]
-    public void Ignores_unknown_nested_members_when_allowed()
+    public void Can_ignore_unknown_nested_members_when_allowed()
     {
         // Arrange
         using var harness = new RequestAdapterHarness(options => options.AllowUnknownFieldsInRequestBody = true, ResourceTypes);
@@ -203,7 +203,7 @@ public sealed class CompoundObjectAdapterTests
     }
 
     [Fact]
-    public void Member_names_are_case_sensitive()
+    public void Cannot_match_member_names_case_insensitively()
     {
         // Arrange
         using var harness = new RequestAdapterHarness(null, ResourceTypes);
@@ -219,7 +219,7 @@ public sealed class CompoundObjectAdapterTests
     }
 
     [Fact]
-    public void Maps_members_by_public_name_including_hyphen()
+    public void Can_map_members_by_public_name_including_hyphen()
     {
         // Arrange
         using var harness = new RequestAdapterHarness(null, ResourceTypes);
@@ -281,7 +281,7 @@ public sealed class CompoundObjectAdapterTests
     }
 
     [Fact]
-    public void Reports_same_error_for_member_blocked_by_two_rules_at_every_depth()
+    public void Can_report_same_error_for_member_blocked_by_two_rules_at_every_depth()
     {
         // Arrange
         using var harness = new RequestAdapterHarness(null, ResourceTypes);
@@ -345,7 +345,7 @@ public sealed class CompoundObjectAdapterTests
     }
 
     [Fact]
-    public void Prefixes_pointer_with_operation_position_in_atomic_request()
+    public void Can_prefix_pointer_with_operation_position_in_atomic_request()
     {
         // Arrange
         using var harness = new RequestAdapterHarness(null, ResourceTypes);
@@ -400,7 +400,7 @@ public sealed class CompoundObjectAdapterTests
     [InlineData(nameof(CollectionTypes.AsICollection))]
     [InlineData(nameof(CollectionTypes.AsEnumerable))]
     [InlineData(nameof(CollectionTypes.AsHashSet))]
-    public void Creates_target_collection_type(string propertyName)
+    public void Can_create_target_collection_type(string propertyName)
     {
         // Arrange
         using var harness = new RequestAdapterHarness(null, ResourceTypes);

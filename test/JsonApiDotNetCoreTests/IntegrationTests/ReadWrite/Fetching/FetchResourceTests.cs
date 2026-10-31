@@ -22,7 +22,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Applies_constraints_to_secondary_collection_of_resource_with_compounds()
+    public async Task Can_apply_constraints_to_secondary_collection_of_resource_with_compounds()
     {
         // Arrange
         WorkItem workItem = _fakers.WorkItem.GenerateOne().WithCompounds();
@@ -52,7 +52,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Applies_constraints_to_included_children_of_resource_with_compounds()
+    public async Task Can_apply_constraints_to_included_children_of_resource_with_compounds()
     {
         // Arrange
         WorkItem parent = _fakers.WorkItem.GenerateOne().WithCompounds();

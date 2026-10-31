@@ -53,7 +53,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_null_for_null_compound()
+    public async Task Can_render_null_for_null_compound()
     {
         // Arrange
         AddressBook addressBook = _fakers.AddressBook.Generate();
@@ -80,7 +80,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_null_and_empty_for_collections_distinctly()
+    public async Task Can_render_null_and_empty_for_collections_distinctly()
     {
         // Arrange
         AddressBook addressBook = _fakers.AddressBook.Generate();
@@ -120,7 +120,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_null_nested_compound_inside_non_null_compound()
+    public async Task Can_render_null_nested_compound_inside_non_null_compound()
     {
         // Arrange
         Contact contact = _fakers.Contact.Generate();
@@ -153,7 +153,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact(Skip = "EF Core 10: Cannot materialize a null element in a JSON complex collection (InvalidOperationException 'Invalid token type: Null').")]
-    public async Task Renders_null_element_in_compound_collection()
+    public async Task Can_render_null_element_in_compound_collection()
     {
         // Arrange
         AddressBook addressBook = _fakers.AddressBook.Generate();
@@ -189,7 +189,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Omits_view_blocked_nested_members_at_every_depth()
+    public async Task Can_omit_view_blocked_nested_members_at_every_depth()
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();
@@ -256,7 +256,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Uses_public_names_for_nested_members()
+    public async Task Can_use_public_names_for_nested_members()
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();
@@ -290,7 +290,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_generic_compound_types()
+    public async Task Can_render_generic_compound_types()
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();
@@ -328,7 +328,7 @@ public sealed class CompoundAttributesFetchTests
     [InlineData("preferredContactMethods", """[ 1, 0 ]""")]
     [InlineData("creditLimits", """[ 100.5, 2000 ]""")]
     [InlineData("anniversaries", """[ "2020-01-02T00:00:00Z" ]""")]
-    public async Task Renders_scalar_collection_element_types(string path, string expectedJson)
+    public async Task Can_render_scalar_collection_element_types(string path, string expectedJson)
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();
@@ -353,7 +353,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_guid_scalar_collection()
+    public async Task Can_render_guid_scalar_collection()
     {
         // Arrange
         AddressBook addressBook = _fakers.AddressBook.Generate();
@@ -380,7 +380,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_calculated_read_only_member()
+    public async Task Can_render_calculated_read_only_member()
     {
         // Arrange
         Contact contact = _fakers.Contact.Generate();
@@ -458,7 +458,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Fetches_all_scalar_properties_when_fieldset_selects_read_only_nested_member()
+    public async Task Can_fetch_all_scalar_properties_when_fieldset_selects_read_only_nested_member()
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();
@@ -487,7 +487,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_nullable_struct_compound()
+    public async Task Can_render_nullable_struct_compound()
     {
         // Arrange
         Contact contact = _fakers.Contact.Generate();
@@ -520,7 +520,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_same_shape_after_write()
+    public async Task Can_render_same_shape_after_write()
     {
         // Arrange
         JsonObject content = CompoundAttributesSamples.CreateIdenticalPatchContent();

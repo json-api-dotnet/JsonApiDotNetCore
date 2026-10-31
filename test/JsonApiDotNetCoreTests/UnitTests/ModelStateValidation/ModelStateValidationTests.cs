@@ -38,7 +38,7 @@ public sealed class ModelStateValidationTests
     [InlineData("Children[0]", "/data/relationships/publicNameOfChildren/data/0")]
     [InlineData("Children[0].NotMappedInChild", null)]
     [InlineData("Children[0].Id", "/data/relationships/publicNameOfChildren/data/0/id")]
-    public void Renders_JSON_path_for_ModelState_key_in_resource_request(string modelStateKey, string? expectedJsonPath)
+    public void Can_render_JSON_path_for_ModelState_key_in_resource_request(string modelStateKey, string? expectedJsonPath)
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -87,7 +87,7 @@ public sealed class ModelStateValidationTests
     [InlineData("[0].Resource.Children[0]", "/atomic:operations/0/data/relationships/publicNameOfChildren/data/0")]
     [InlineData("[0].Resource.Children[0].NotMappedInChild", null)]
     [InlineData("[0].Resource.Children[0].Id", "/atomic:operations/0/data/relationships/publicNameOfChildren/data/0/id")]
-    public void Renders_JSON_path_for_ModelState_key_in_operations_request(string modelStateKey, string? expectedJsonPath)
+    public void Can_render_JSON_path_for_ModelState_key_in_operations_request(string modelStateKey, string? expectedJsonPath)
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -115,7 +115,7 @@ public sealed class ModelStateValidationTests
     }
 
     [Fact]
-    public void Renders_JSON_path_for_ModelState_key_in_nullable_struct_compound()
+    public void Can_render_JSON_path_for_ModelState_key_in_nullable_struct_compound()
     {
         // Arrange
         var options = new JsonApiOptions();

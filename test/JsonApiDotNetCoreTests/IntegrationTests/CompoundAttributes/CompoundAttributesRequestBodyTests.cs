@@ -294,7 +294,7 @@ public sealed class CompoundAttributesRequestBodyTests
     }
 
     [Fact]
-    public async Task Last_duplicate_key_wins()
+    public async Task Can_use_last_duplicate_key()
     {
         // Arrange
         using JsonDocument document = JsonDocument.Parse("""

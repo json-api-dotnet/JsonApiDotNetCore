@@ -99,7 +99,7 @@ public sealed class JsonApiValidationFilterTests
     }
 
     [Fact]
-    public void Validates_collection_element_entries_in_compound_collection()
+    public void Validates_element_of_compound_collection_because_it_is_a_type_entry_and_validates_its_members()
     {
         // Arrange
         JsonApiValidationFilter filter = CreateFilter(WriteOperationKind.CreateResource, EndpointKind.Primary);

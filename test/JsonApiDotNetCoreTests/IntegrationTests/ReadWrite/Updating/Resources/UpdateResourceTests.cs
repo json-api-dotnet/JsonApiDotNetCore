@@ -40,7 +40,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task PATCH_leaves_compounds_untouched_when_omitted()
+    public async Task Can_leave_compounds_untouched_when_omitted()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
@@ -158,7 +158,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task PATCH_clears_checklist()
+    public async Task Can_clear_checklist()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
@@ -203,7 +203,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Returns_200_when_definition_changes_compound()
+    public async Task Can_return_200_when_definition_changes_compound()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
@@ -252,7 +252,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Returns_204_when_nothing_changes()
+    public async Task Can_return_204_when_nothing_changes()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
