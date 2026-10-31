@@ -181,8 +181,9 @@ public sealed class ContactCompany
     [Attr]
     public List<TimeSpan> BusinessHours { get; set; } = [];
 
-    // Scalar collection of strings, next to another scalar collection
+    // Scalar collection of strings, next to another scalar collection. The collection-level MaxLength rule applies to the number of elements.
     [Attr]
+    [MaxLength(3)]
     public List<string> Departments { get; set; } = [];
 
     // Private setter
@@ -196,8 +197,10 @@ public sealed class ContactCompany
 }
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ContactAddress
+public sealed class ContactAddress : IValidatableObject
 {
+    public const string UnknownCity = "Atlantis";
+
     // Init-only setter
     [Attr]
     public string IsoCountryCode { get; init; } = null!;
@@ -218,6 +221,14 @@ public sealed class ContactAddress
 
     [Attr]
     public string? Label { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (City == UnknownCity)
+        {
+            yield return new ValidationResult("The city does not exist.", [nameof(City)]);
+        }
+    }
 }
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
