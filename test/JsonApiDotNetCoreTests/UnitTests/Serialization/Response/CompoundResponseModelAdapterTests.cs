@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response;
 public sealed class CompoundResponseModelAdapterTests
 {
     [Fact]
-    public void Renders_full_nested_structure_in_declared_order_without_fieldset()
+    public void Can_render_full_nested_structure_in_declared_order_without_fieldset()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -63,7 +63,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Prunes_to_selected_nested_leaf()
+    public void Can_prune_to_selected_nested_leaf()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -84,7 +84,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Renders_whole_compound_except_view_blocked_members()
+    public void Can_render_whole_compound_except_view_blocked_members()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -110,7 +110,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Prunes_each_element_of_compound_collection_the_same_way()
+    public void Can_prune_each_element_of_compound_collection_the_same_way()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -138,7 +138,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Renders_null_element_in_compound_collection_as_null()
+    public void Can_render_null_element_in_compound_collection_as_null()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -164,7 +164,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Keeps_empty_collections()
+    public void Can_keep_empty_collections()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -187,7 +187,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Renders_empty_object_when_fieldset_prunes_every_child()
+    public void Can_render_empty_object_when_fieldset_prunes_every_child()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -204,7 +204,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Omits_view_blocked_members_at_every_level()
+    public void Can_omit_view_blocked_members_at_every_level()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -224,7 +224,7 @@ public sealed class CompoundResponseModelAdapterTests
     [InlineData(JsonIgnoreCondition.Never, """{"deep":null,"count":0,"flag":null}""")]
     [InlineData(JsonIgnoreCondition.WhenWritingNull, """{"count":0}""")]
     [InlineData(JsonIgnoreCondition.WhenWritingDefault, "{}")]
-    public void Applies_ignore_condition_to_nested_members(JsonIgnoreCondition condition, string expectedNested)
+    public void Can_apply_ignore_condition_to_nested_members(JsonIgnoreCondition condition, string expectedNested)
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -240,7 +240,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Passes_scalar_collections_through_unchanged()
+    public void Can_pass_scalar_collections_through_unchanged()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -266,7 +266,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Intersects_query_fieldset_with_resource_definition_fieldset()
+    public void Can_intersect_query_fieldset_with_resource_definition_fieldset()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -285,7 +285,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Resource_definition_fieldset_narrows_compound()
+    public void Can_narrow_compound_by_resource_definition_fieldset()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -304,7 +304,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Omits_attributes_when_every_attribute_is_pruned()
+    public void Can_omit_attributes_when_every_attribute_is_pruned()
     {
         // Arrange
         Profile profile = CreateProfile();
@@ -317,7 +317,7 @@ public sealed class CompoundResponseModelAdapterTests
     }
 
     [Fact]
-    public void Uses_public_name_of_nested_member_as_key()
+    public void Can_use_public_name_of_nested_member_as_key()
     {
         // Arrange
         Profile profile = CreateProfile();

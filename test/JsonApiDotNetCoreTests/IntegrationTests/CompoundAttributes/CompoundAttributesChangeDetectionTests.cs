@@ -27,7 +27,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_compound_sends_no_update()
+    public async Task Can_patch_identical_compound_without_update()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -50,7 +50,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_changed_nested_leaf_updates()
+    public async Task Can_patch_changed_nested_leaf()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -83,7 +83,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_same_members_in_different_json_order_sends_no_update()
+    public async Task Can_patch_same_members_in_different_json_order_without_update()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -109,7 +109,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_reordered_collection_updates()
+    public async Task Can_patch_reordered_collection()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -145,7 +145,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_changing_null_to_empty_collection_updates()
+    public async Task Can_patch_null_to_empty_collection()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -179,7 +179,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_scalar_collections_sends_no_update()
+    public async Task Can_patch_identical_scalar_collections_without_update()
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
@@ -213,7 +213,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_time_span_collection_sends_no_update()
+    public async Task Can_patch_identical_time_span_collection_without_update()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -238,7 +238,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_generic_compound_collection_sends_no_update()
+    public async Task Can_patch_identical_generic_compound_collection_without_update()
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
@@ -275,7 +275,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task Atomic_update_with_identical_compound_returns_empty_result()
+    public async Task Can_update_atomically_with_identical_compound_and_get_empty_result()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();

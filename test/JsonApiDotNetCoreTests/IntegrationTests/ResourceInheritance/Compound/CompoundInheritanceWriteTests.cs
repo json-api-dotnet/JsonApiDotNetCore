@@ -348,7 +348,7 @@ public abstract class CompoundInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task PATCH_with_identical_inherited_compound_returns_204()
+    public async Task Can_patch_identical_inherited_compound_and_get_204()
     {
         // Arrange
         Apartment existingApartment = _fakers.Apartment.GenerateOne();

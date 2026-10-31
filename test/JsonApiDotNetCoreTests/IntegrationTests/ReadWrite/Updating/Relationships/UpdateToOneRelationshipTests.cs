@@ -24,7 +24,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     }
 
     [Fact]
-    public async Task Relationship_updates_leave_compounds_intact()
+    public async Task Can_update_relationship_and_leave_compounds_intact()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();

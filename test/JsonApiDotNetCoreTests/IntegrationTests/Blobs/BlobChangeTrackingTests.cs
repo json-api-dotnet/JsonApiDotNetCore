@@ -19,7 +19,7 @@ public sealed class BlobChangeTrackingTests : IClassFixture<IntegrationTestConte
     }
 
     [Fact]
-    public async Task PATCH_with_identical_binary_content_returns_204()
+    public async Task Can_patch_identical_binary_content_and_get_204()
     {
         // Arrange
         ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();

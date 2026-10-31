@@ -35,7 +35,7 @@ public sealed class CompoundAttributesUnknownFieldTests
     [InlineData(true, "name")]
     [InlineData(true, "phoneNumbers")]
     [InlineData(true, "company")]
-    public async Task Ignores_unknown_nested_member_when_allowed(bool isPatch, string depth)
+    public async Task Can_ignore_unknown_nested_member_when_allowed(bool isPatch, string depth)
     {
         // Arrange
         JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
@@ -105,7 +105,7 @@ public sealed class CompoundAttributesUnknownFieldTests
     }
 
     [Fact]
-    public async Task Ignores_unknown_member_inside_compound_collection_element()
+    public async Task Can_ignore_unknown_member_inside_compound_collection_element()
     {
         // Arrange
         JsonObject content = CompoundAttributesSamples.CreateMinimalContent();

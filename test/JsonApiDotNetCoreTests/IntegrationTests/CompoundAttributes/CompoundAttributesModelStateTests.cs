@@ -83,7 +83,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task PATCH_validates_the_whole_replaced_compound()
+    public async Task Can_validate_whole_replaced_compound_in_patch()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -106,7 +106,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task PATCH_does_not_validate_untargeted_compound()
+    public async Task Can_skip_validation_of_untargeted_compound_in_patch()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -177,7 +177,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task Reports_multiple_errors_with_stable_order_and_limit()
+    public async Task Can_report_multiple_errors_with_stable_order_and_limit()
     {
         // Arrange
         JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
@@ -279,7 +279,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task Validates_struct_compound()
+    public async Task Can_validate_struct_compound()
     {
         // Arrange
         var requestBody = new

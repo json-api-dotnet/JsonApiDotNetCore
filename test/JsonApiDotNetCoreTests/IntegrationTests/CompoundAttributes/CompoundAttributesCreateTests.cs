@@ -638,7 +638,7 @@ public sealed class CompoundAttributesCreateTests
     }
 
     [Fact]
-    public async Task Returns_Location_and_self_link()
+    public async Task Can_return_Location_and_self_link()
     {
         // Arrange
         object requestBody = CompoundAttributesSamples.CreateContactPostBody(CompoundAttributesSamples.CreateMinimalContent());

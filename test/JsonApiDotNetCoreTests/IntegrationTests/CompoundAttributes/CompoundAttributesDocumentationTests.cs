@@ -25,7 +25,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Filter_on_nested_attribute()
+    public async Task Can_filter_on_nested_attribute()
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
@@ -47,7 +47,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Filter_on_deep_nested_attribute()
+    public async Task Can_filter_on_deep_nested_attribute()
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
@@ -69,7 +69,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Filter_compound_collection_with_has()
+    public async Task Can_filter_compound_collection_with_has()
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
@@ -91,7 +91,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Filter_scalar_collection_with_has_and_underscore()
+    public async Task Can_filter_scalar_collection_with_has_and_underscore()
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
@@ -124,7 +124,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Filter_by_count()
+    public async Task Can_filter_by_count()
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(2);
@@ -145,7 +145,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Sort_by_nested_attribute()
+    public async Task Can_sort_by_nested_attribute()
     {
         // Arrange
         List<Contact> contacts = _fakers.Contact.GenerateList(3);
@@ -170,7 +170,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Select_nested_attributes()
+    public async Task Can_select_nested_attributes()
     {
         // Arrange
         Contact contact = _fakers.Contact.Generate();
@@ -197,7 +197,7 @@ public sealed class CompoundAttributesDocumentationTests
     }
 
     [Fact]
-    public async Task Filter_through_relationship()
+    public async Task Can_filter_through_relationship()
     {
         // Arrange
         AddressBook addressBookSmith = _fakers.AddressBook.Generate();
