@@ -19,7 +19,7 @@ public sealed class BlobChangeTrackingTests : IClassFixture<IntegrationTestConte
     }
 
     [Fact]
-    public async Task PATCH_with_identical_binary_content_has_defined_status()
+    public async Task PATCH_with_identical_binary_content_returns_200()
     {
         // Arrange
         ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();
@@ -50,10 +50,10 @@ public sealed class BlobChangeTrackingTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, string responseText) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        // byte[] is classified as a collection, so its content is compared structurally and identical content means no change.
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+        // byte[] is not classified as a collection, so it is compared by reference, which always counts as a change.
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseText.Should().BeEmpty();
+        responseText.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -120,7 +120,7 @@ public sealed class CompoundShapeParseTests
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D8: The type name of a generic compound type is reported as its CLR name (LabeledValue`1) instead of with its type argument")]
+    [Fact]
     public void Filter_Reports_Generic_Compound_Type_Name_With_Type_Argument()
     {
         // Arrange
