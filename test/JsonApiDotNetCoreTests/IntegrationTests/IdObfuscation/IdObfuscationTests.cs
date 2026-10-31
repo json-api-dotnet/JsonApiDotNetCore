@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -691,5 +692,93 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
             cardInDatabase.Account.Id.Should().Be(newAccountId);
             cardInDatabase.Account.Iban.Should().Be(newAccount.Iban);
         });
+    }
+
+    [Fact]
+    public async Task Can_select_compounds_at_secondary_endpoint_with_obfuscated_ids()
+    {
+        // Arrange
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(2);
+
+        account.Cards[0].Limits = new CardLimits
+        {
+            DailyLimit = 500,
+            Currency = "EUR"
+        };
+
+        account.Cards[0].Notes =
+        [
+            new CardNote
+            {
+                Text = "first",
+                Priority = 1
+            }
+        ];
+
+        account.Cards[1].Limits = null;
+        account.Cards[1].Notes = [];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.BankAccounts.Add(account);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/bankAccounts/{account.StringId}/cards?fields[debitCards]=limits.dailyLimit,notes";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+
+        ResourceObject first = responseDocument.Data.ManyValue.Single(resource => resource.Id == account.Cards[0].StringId);
+        first.Attributes.Should().HaveCount(2);
+        first.Attributes.Should().ContainKey("limits").WhoseValue.Should().BeOfType<JsonElement>().Subject.With(limits =>
+        {
+            limits.EnumerateObject().Select(property => property.Name).Should().Equal("dailyLimit");
+            limits.GetProperty("dailyLimit").GetInt32().Should().Be(500);
+        });
+
+        first.Attributes.Should().ContainKey("notes");
+
+        ResourceObject second = responseDocument.Data.ManyValue.Single(resource => resource.Id == account.Cards[1].StringId);
+        second.Attributes.Should().ContainKey("limits").WhoseValue.Should().BeOfType<JsonElement>().Subject.ValueKind.Should().Be(JsonValueKind.Null);
+    }
+
+    [Fact]
+    public async Task Can_include_resources_with_compounds_and_obfuscated_ids()
+    {
+        // Arrange
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(1);
+
+        account.Cards[0].Limits = new CardLimits
+        {
+            DailyLimit = 250,
+            Currency = "USD"
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.BankAccounts.Add(account);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/bankAccounts/{account.StringId}?include=cards&fields[debitCards]=limits";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
+        responseDocument.Included[0].Attributes.Should().ContainKey("limits");
+        responseDocument.Included[0].Attributes.Should().NotContainKey("ownerName");
     }
 }

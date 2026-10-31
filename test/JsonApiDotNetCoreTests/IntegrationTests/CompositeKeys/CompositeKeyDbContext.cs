@@ -24,6 +24,9 @@ public sealed class CompositeKeyDbContext(DbContextOptions<CompositeKeyDbContext
                 car.LicensePlate
             });
 
+        builder.Entity<Car>()
+            .ComplexProperty(car => car.Paint, complexBuilder => complexBuilder.ToJson());
+
         builder.Entity<Engine>()
             .HasOne(engine => engine.Car)
             .WithOne(car => car.Engine)
