@@ -15,8 +15,6 @@ public sealed class ResourceGraph : IResourceGraph
 {
     private static readonly Type? ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
-    private static readonly IReadOnlySet<CompoundType> EmptyCompoundTypeSet = new HashSet<CompoundType>().AsReadOnly();
-
     private readonly IReadOnlySet<ResourceType> _resourceTypeSet;
     private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
     private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = [];
@@ -265,7 +263,11 @@ public sealed class ResourceGraph : IResourceGraph
 
             if (current is MemberExpression memberExpr)
             {
-                members.Add(memberExpr.Member);
+                if (!IsNullableValueAccess(memberExpr))
+                {
+                    members.Add(memberExpr.Member);
+                }
+
                 current = memberExpr.Expression;
             }
             else
@@ -277,6 +279,14 @@ public sealed class ResourceGraph : IResourceGraph
         }
 
         throw new ArgumentException($"The expression '{selector}' does not originate from parameter '{parameter.Name}'.", nameof(selector));
+    }
+
+    private static bool IsNullableValueAccess(MemberExpression memberExpression)
+    {
+        // Allows selecting through nullable structs, such as: resource => resource.Location!.Value.Latitude
+
+        return memberExpression.Member is { Name: nameof(Nullable<>.Value) } member && member.DeclaringType is { IsGenericType: true } declaringType &&
+            declaringType.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
     private static ResourceFieldChainExpression ResolveSingleFieldChain(List<MemberInfo> members, ResourceType resourceType, Expression selector)

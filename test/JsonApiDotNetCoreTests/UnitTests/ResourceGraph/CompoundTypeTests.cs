@@ -139,7 +139,57 @@ public sealed class CompoundTypeTests
         string date = resourceGraph.GetCompoundType<Labeled<DateOnly>>().ToString();
 
         // Assert
-        text.Should().NotBe(date);
+        text.Should().Be("Labeled<String>");
+        date.Should().Be("Labeled<DateOnly>");
+    }
+
+    [Fact]
+    public void ToFullString_includes_containing_type_for_nested_and_top_level_attributes()
+    {
+        // Arrange
+        IResourceGraph resourceGraph = BuildGraph();
+
+        AttrAttribute topLevel = resourceGraph.GetResourceType<Customer>().GetAttributeByPropertyName(nameof(Customer.Address));
+        AttrAttribute nested = resourceGraph.GetCompoundType<ShippingAddress>().GetAttributeByPropertyName(nameof(ShippingAddress.ZipCode));
+        AttrAttribute nestedInGeneric = resourceGraph.GetCompoundType<Labeled<string>>().GetAttributeByPropertyName(nameof(Labeled<>.Value));
+
+        // Act & Assert
+        topLevel.ToFullString().Should().Be("customers:address");
+        nested.ToFullString().Should().Be("ShippingAddress:zip-code");
+        nestedInGeneric.ToFullString().Should().Be("Labeled<String>:value");
+    }
+
+    [Fact]
+    public void Equality_distinguishes_attribute_sets_for_same_clr_type()
+    {
+        // Arrange
+        PropertyInfo streetProperty = typeof(ShippingAddress).GetProperty(nameof(ShippingAddress.Street))!;
+        PropertyInfo zipCodeProperty = typeof(ShippingAddress).GetProperty(nameof(ShippingAddress.ZipCode))!;
+
+        static AttrAttribute CreateAttribute(string publicName, PropertyInfo property)
+        {
+            return new AttrAttribute
+            {
+                PublicName = publicName,
+                Property = property
+            };
+        }
+
+        var withStreet = new CompoundType(typeof(ShippingAddress), [CreateAttribute("street", streetProperty)]);
+        var withStreetAgain = new CompoundType(typeof(ShippingAddress), [CreateAttribute("street", streetProperty)]);
+        var withZipCode = new CompoundType(typeof(ShippingAddress), [CreateAttribute("zip-code", zipCodeProperty)]);
+
+        var withBoth = new CompoundType(typeof(ShippingAddress), [
+            CreateAttribute("street", streetProperty),
+            CreateAttribute("zip-code", zipCodeProperty)
+        ]);
+
+        // Act & Assert
+        withStreet.Equals(withStreetAgain).Should().BeTrue();
+        withStreet.GetHashCode().Should().Be(withStreetAgain.GetHashCode());
+        withStreet.Equals(withZipCode).Should().BeFalse();
+        withStreet.Equals(withBoth).Should().BeFalse();
+        withBoth.Equals(withStreet).Should().BeFalse();
     }
 
     [Fact]

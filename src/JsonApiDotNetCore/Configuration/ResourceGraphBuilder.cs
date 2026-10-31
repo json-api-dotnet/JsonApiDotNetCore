@@ -154,14 +154,35 @@ public sealed partial class ResourceGraphBuilder
 
     private static void ValidateAttributesInDerivedType(ResourceType resourceType)
     {
-        foreach (AttrAttribute attribute in resourceType.BaseType!.Attributes)
+        foreach (AttrAttribute baseAttribute in resourceType.BaseType!.Attributes)
         {
-            if (resourceType.FindAttributeByPublicName(attribute.PublicName) == null)
+            AttrAttribute? derivedAttribute = resourceType.FindAttributeByPublicName(baseAttribute.PublicName);
+
+            if (derivedAttribute == null)
             {
                 throw new InvalidConfigurationException(
-                    $"Attribute '{attribute}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                    $"Attribute '{baseAttribute}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+            }
+
+            if (derivedAttribute.IsCompound != baseAttribute.IsCompound || derivedAttribute.IsCollection != baseAttribute.IsCollection ||
+                !Equals(derivedAttribute.CompoundType, baseAttribute.CompoundType))
+            {
+                throw new InvalidConfigurationException(
+                    $"Attribute '{baseAttribute}' in derived type '{RuntimeTypeConverter.GetFriendlyTypeName(resourceType.ClrType)}' cannot change the shape of the attribute inherited from base type '{RuntimeTypeConverter.GetFriendlyTypeName(resourceType.BaseType.ClrType)}'. " +
+                    $"The base type declares {DescribeShape(baseAttribute)}, but the derived type declares {DescribeShape(derivedAttribute)}.");
             }
         }
+    }
+
+    private static string DescribeShape(AttrAttribute attribute)
+    {
+        if (attribute.IsCompound)
+        {
+            string compoundTypeName = attribute.CompoundType?.ToString() ?? RuntimeTypeConverter.GetFriendlyTypeName(attribute.Property.PropertyType);
+            return attribute.IsCollection ? $"a collection of compound type '{compoundTypeName}'" : $"a compound type '{compoundTypeName}'";
+        }
+
+        return attribute.IsCollection ? "a collection of scalar values" : "a scalar value";
     }
 
     private static void ValidateRelationshipsInDerivedType(ResourceType resourceType)
@@ -414,11 +435,6 @@ public sealed partial class ResourceGraphBuilder
 
         compoundAttribute.Capabilities &= ~AttrCapabilities.AllowSort;
 
-        if (_resourceTypesByClrType.ContainsKey(compoundClrType))
-        {
-            throw new InvalidConfigurationException($"Type '{compoundClrType}' cannot be both a resource type and a compound type.");
-        }
-
         _nonIdentifiableTypes.Remove(compoundClrType);
 
         if (_compoundTypesByClrType.TryGetValue(compoundClrType, out CompoundType? existingCompoundType))
@@ -428,7 +444,7 @@ public sealed partial class ResourceGraphBuilder
 
         if (compoundClrType.GetCustomAttribute<ResourceAttribute>(true) != null)
         {
-            throw new InvalidConfigurationException($"Type '{compoundClrType}' is a compound type and cannot be annotated with [Resource].");
+            throw new InvalidConfigurationException($"Type '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}' is a compound type and cannot be annotated with [Resource].");
         }
 
         var attributesByName = new Dictionary<string, AttrAttribute>();
@@ -477,7 +493,7 @@ public sealed partial class ResourceGraphBuilder
 
         if (attributesByName.Count == 0)
         {
-            LogResourceTypeHasNoAttributes(compoundClrType);
+            LogCompoundTypeHasNoAttributes(RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType));
         }
 
         var newCompoundType = new CompoundType(compoundClrType, attributesByName.Values);
@@ -512,15 +528,6 @@ public sealed partial class ResourceGraphBuilder
     {
         string typeName = RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType);
         string propertyName = $"{property.DeclaringType!.Name}.{property.Name}";
-
-        if (compoundClrType == typeof(string) || compoundClrType.IsPrimitive || compoundClrType.IsEnum || compoundClrType == typeof(decimal) ||
-            compoundClrType == typeof(DateTime) || compoundClrType == typeof(DateTimeOffset) || compoundClrType == typeof(DateOnly) ||
-            compoundClrType == typeof(TimeOnly) || compoundClrType == typeof(TimeSpan) || compoundClrType == typeof(Guid) ||
-            compoundClrType == typeof(byte[]) || IsDictionaryType(compoundClrType))
-        {
-            throw new InvalidConfigurationException(
-                $"Property '{propertyName}' of type '{typeName}' cannot be a compound attribute. Compound attributes require a class with [Attr] properties, not a scalar type.");
-        }
 
         if (compoundClrType.IsInterface)
         {
@@ -558,7 +565,7 @@ public sealed partial class ResourceGraphBuilder
     {
         if (inPath.Contains(currentType))
         {
-            throw new InvalidConfigurationException($"Circular reference detected: compound type '{currentType}' references itself directly or indirectly.");
+            throw new InvalidConfigurationException($"Circular reference detected: compound type '{RuntimeTypeConverter.GetFriendlyTypeName(currentType)}' references itself directly or indirectly.");
         }
 
         if (!visited.Add(currentType))
@@ -583,10 +590,23 @@ public sealed partial class ResourceGraphBuilder
 
     private static Type GetCompoundClrType(PropertyInfo property, bool isCollection)
     {
-        Type propertyType = property.PropertyType;
-        Type? elementType = isCollection ? CollectionConverter.Instance.FindCollectionElementType(propertyType) : null;
-        Type targetType = elementType ?? Nullable.GetUnderlyingType(propertyType) ?? propertyType;
-        return targetType;
+        Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+        if (!isCollection)
+        {
+            return propertyType;
+        }
+
+        Type elementType = CollectionConverter.Instance.FindCollectionElementType(propertyType) ?? propertyType;
+        Type compoundClrType = Nullable.GetUnderlyingType(elementType) ?? elementType;
+
+        if (IsCollectionType(compoundClrType))
+        {
+            throw new InvalidConfigurationException(
+                $"Property '{property.DeclaringType!.Name}.{property.Name}' of type '{RuntimeTypeConverter.GetFriendlyTypeName(property.PropertyType)}' cannot be a compound attribute, because its element type '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}' is itself a collection. Nested collections are not supported.");
+        }
+
+        return compoundClrType;
     }
 
     private Dictionary<string, RelationshipAttribute>.ValueCollection GetRelationships(Type resourceClrType)
@@ -765,4 +785,7 @@ public sealed partial class ResourceGraphBuilder
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{ResourceType}' does not contain any attributes.")]
     private partial void LogResourceTypeHasNoAttributes(Type resourceType);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{CompoundType}' does not contain any attributes.")]
+    private partial void LogCompoundTypeHasNoAttributes(string compoundType);
 }

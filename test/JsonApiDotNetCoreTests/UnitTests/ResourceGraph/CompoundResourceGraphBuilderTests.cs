@@ -16,6 +16,48 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
 
 public sealed class CompoundResourceGraphBuilderTests
 {
+    public static TheoryData<Expression<Func<ChainResource, object?>>, string> ValidFieldChains =>
+        new()
+        {
+            { resource => resource.Compound!.Child!.Scalar, "compound.child.scalar" },
+            { resource => resource.Related!.Compound!.Number, "related.compound.number" },
+            { resource => resource.Compound!.Number, "compound.number" },
+            { resource => resource.Compound!.Children, "compound.children" },
+            { resource => resource.Id, "id" },
+            { resource => resource.Other!.Title, "other.title" },
+            { resource => resource.Other!.Details!.Scalar, "other.details.scalar" },
+            { resource => resource.Related!.Other!.Details!.Scalar, "related.other.details.scalar" },
+            { resource => resource.NullablePoint!.Value.Latitude, "nullablePoint.latitude" },
+            { resource => resource.Compound!.Point!.Value.Longitude, "compound.point.longitude" },
+            { resource => resource.Related!.NullablePoint!.Value.Latitude, "related.nullablePoint.latitude" },
+            { resource => resource.NullablePoints, "nullablePoints" },
+            { resource => resource.Compound!.Number!.Value, "compound.number" }
+        };
+
+    public static TheoryData<Expression<Func<ChainResource, object?>>, string> InvalidFieldChains =>
+        new()
+        {
+            {
+                resource => new
+                {
+                    resource.Compound!.Number,
+                    resource.Compound.Text
+                },
+                "must select a single property or chain"
+            },
+            { resource => resource.Compound!.Number.ToString(), "should select a single property or chain, or select multiple properties" },
+            {
+                resource => new
+                {
+                    Value = resource.Compound!.Number.ToString()
+                },
+                "contains an invalid member selection. Expected member access expression"
+            },
+            { resource => resource.Compound!.Children![0].Scalar, "contains an invalid expression" },
+            { resource => resource.NotExposed, "is not exposed as a JSON:API field on" },
+            { resource => resource.Compound!.Text!.Length, "cannot have nested fields because it is neither a compound attribute nor a relationship" }
+        };
+
     [Fact]
     public void Shares_one_CompoundType_across_attributes_and_resources()
     {
@@ -271,9 +313,11 @@ public sealed class CompoundResourceGraphBuilderTests
     }
 
     [Theory]
-    [InlineData(typeof(ResourceWithSelfCollectionCycle), typeof(SelfCollectionCycleCompound))]
-    [InlineData(typeof(ResourceWithIndirectCollectionCycle), typeof(IndirectCollectionCycleCompoundA))]
-    public void Detects_circular_references_in_compound_types_via_collection(Type resourceClrType, Type expectedCompoundClrType)
+    [InlineData(typeof(ResourceWithSelfCollectionCycle), nameof(SelfCollectionCycleCompound))]
+    [InlineData(typeof(ResourceWithIndirectCollectionCycle), nameof(IndirectCollectionCycleCompoundA))]
+    [InlineData(typeof(ResourceWithDirectCycle), nameof(DirectCycleCompound))]
+    [InlineData(typeof(ResourceWithGenericCycle), "GenericCycleCompound<String>")]
+    public void Detects_circular_references_in_compound_types(Type resourceClrType, string expectedCompoundTypeName)
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -285,7 +329,30 @@ public sealed class CompoundResourceGraphBuilderTests
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
-            $"Circular reference detected: compound type '{expectedCompoundClrType}' references itself directly or indirectly.");
+            $"Circular reference detected: compound type '{expectedCompoundTypeName}' references itself directly or indirectly.");
+    }
+
+    [Fact]
+    public void Accepts_diamond_of_compound_types()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<ResourceWithDiamond, long>();
+
+        // Act
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Assert
+        CompoundType top = resourceGraph.GetCompoundType<DiamondTop>();
+        CompoundType left = top.GetAttributeByPropertyName(nameof(DiamondTop.Left)).CompoundType!;
+        CompoundType right = top.GetAttributeByPropertyName(nameof(DiamondTop.Right)).CompoundType!;
+        CompoundType bottomViaLeft = left.GetAttributeByPropertyName(nameof(DiamondLeft.Bottom)).CompoundType!;
+        CompoundType bottomViaRight = right.GetAttributeByPropertyName(nameof(DiamondRight.Bottom)).CompoundType!;
+
+        bottomViaLeft.Should().BeSameAs(bottomViaRight);
+        bottomViaLeft.ClrType.Should().Be<DiamondBottom>();
+        resourceGraph.GetCompoundTypes().Should().HaveCount(4);
     }
 
     [Fact]
@@ -300,7 +367,8 @@ public sealed class CompoundResourceGraphBuilderTests
         Action action = () => builder.Build();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(IInterfaceCompound)}*");
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{nameof(ResourceWithInterfaceCompound)}.{nameof(ResourceWithInterfaceCompound.Compound)}' uses interface '{nameof(IInterfaceCompound)}' as compound type, which cannot be instantiated.");
     }
 
     [Theory]
@@ -334,7 +402,8 @@ public sealed class CompoundResourceGraphBuilderTests
         Action action = () => builder.Build();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(AbstractCompound)}*");
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{nameof(ResourceWithAbstractCompound)}.{nameof(ResourceWithAbstractCompound.Compound)}' uses abstract class '{nameof(AbstractCompound)}' as compound type, which cannot be instantiated.");
     }
 
     [Fact]
@@ -349,15 +418,79 @@ public sealed class CompoundResourceGraphBuilderTests
         Action action = () => builder.Build();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(PositionalCompound)}*parameterless constructor*");
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Compound type '{nameof(PositionalCompound)}' (used by property '{nameof(ResourceWithPositionalCompound)}.{nameof(ResourceWithPositionalCompound.Compound)}') must have a parameterless constructor (can be non-public) to support deserialization.");
+    }
+
+    [Fact]
+    public void Rejects_IsCompound_on_string_because_it_cannot_be_instantiated()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<ResourceWithStringCompound, long>();
+
+        // Act
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Compound type 'String' (used by property '{nameof(ResourceWithStringCompound)}.{nameof(ResourceWithStringCompound.Value)}') must have a parameterless constructor (can be non-public) to support deserialization.");
     }
 
     [Theory]
-    [InlineData(typeof(ResourceWithStringCompound))]
-    [InlineData(typeof(ResourceWithInt32Compound))]
-    [InlineData(typeof(ResourceWithDateTimeCompound))]
-    [InlineData(typeof(ResourceWithGuidCompound))]
-    public void Rejects_IsCompound_on_scalar_types(Type resourceClrType)
+    [InlineData(typeof(ResourceWithInt32Compound), "Int32")]
+    [InlineData(typeof(ResourceWithDateTimeCompound), "DateTime")]
+    [InlineData(typeof(ResourceWithGuidCompound), "Guid")]
+    [InlineData(typeof(ResourceWithByteArrayCompound), "Byte")]
+    [InlineData(typeof(ResourceWithIntListCompound), "Int32")]
+    [InlineData(typeof(ResourceWithDictionaryCompound), "Dictionary<String, String>")]
+    [InlineData(typeof(ResourceWithObjectCompound), "Object")]
+    public void Logs_warning_when_IsCompound_is_used_on_type_without_attributes(Type resourceClrType, string expectedTypeName)
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        using var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+        using var loggerFactory = new LoggerFactory([loggerProvider]);
+        var builder = new ResourceGraphBuilder(options, loggerFactory);
+        builder.Add(resourceClrType, typeof(long));
+
+        // Act
+        builder.Build();
+
+        // Assert
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
+        logLines.Should().ContainSingle().Which.Should().Be($"[WARNING] Type '{expectedTypeName}' does not contain any attributes.");
+    }
+
+    [Theory]
+    [InlineData(typeof(ResourceWithNullableElementList), nameof(ResourceWithNullableElementList.Points))]
+    [InlineData(typeof(ResourceWithNullableElementArray), nameof(ResourceWithNullableElementArray.Points))]
+    [InlineData(typeof(ResourceWithNullableCollectionOfStructs), nameof(ResourceWithNullableCollectionOfStructs.Points))]
+    [InlineData(typeof(ResourceWithNullableStructCompound), nameof(ResourceWithNullableStructCompound.Location))]
+    public void Unwraps_Nullable_for_property_and_element_type(Type resourceClrType, string propertyName)
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add(resourceClrType, typeof(long));
+
+        // Act
+        IResourceGraph resourceGraph = builder.Build();
+
+        // Assert
+        AttrAttribute attribute = resourceGraph.GetResourceType(resourceClrType).GetAttributeByPropertyName(propertyName);
+        attribute.CompoundType.Should().BeSameAs(resourceGraph.GetCompoundType<GeoPoint>());
+        attribute.CompoundType!.ClrType.Should().Be<GeoPoint>();
+        resourceGraph.GetCompoundTypes().Should().ContainSingle();
+    }
+
+    [Theory]
+    [InlineData(typeof(ResourceWithNestedListCompound), "List<List<InnerCompound>>", "List<InnerCompound>")]
+    [InlineData(typeof(ResourceWithJaggedArrayCompound), "InnerCompound[][]", "InnerCompound[]")]
+    [InlineData(typeof(ResourceWithListOfArraysCompound), "List<InnerCompound[]>", "InnerCompound[]")]
+    [InlineData(typeof(ResourceWithNestedListOfNullableCompound), "List<List<Nullable<GeoPoint>>>", "List<Nullable<GeoPoint>>")]
+    public void Rejects_nested_collections_as_compound_type(Type resourceClrType, string expectedPropertyType, string expectedElementType)
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -368,7 +501,8 @@ public sealed class CompoundResourceGraphBuilderTests
         Action action = () => builder.Build();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>();
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Property '{resourceClrType.Name}.Value' of type '{expectedPropertyType}' cannot be a compound attribute, because its element type '{expectedElementType}' is itself a collection. Nested collections are not supported.");
     }
 
     [Fact]
@@ -386,52 +520,68 @@ public sealed class CompoundResourceGraphBuilderTests
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
-        logLines.Should().ContainSingle().Which.Should().Be($"[WARNING] Type '{typeof(EmptyCompound)}' does not contain any attributes.");
+        logLines.Should().ContainSingle().Which.Should().Be($"[WARNING] Type '{nameof(EmptyCompound)}' does not contain any attributes.");
+    }
+
+    [Theory]
+    [InlineData(typeof(DerivedRedeclaringCompoundAsScalar))]
+    [InlineData(typeof(DerivedRedeclaringCompoundWithOtherType))]
+    [InlineData(typeof(DerivedRedeclaringCompoundAsCollection))]
+    public void Cannot_hide_inherited_compound_attribute_with_same_public_name(Type derivedClrType)
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        Action action = () => builder.Add(derivedClrType, typeof(long));
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("Properties '*.Shape' and '*.Shape' both use public name 'shape'.");
+    }
+
+    [Theory]
+    [InlineData(typeof(DerivedOverridingCompoundAsScalar), "a compound type 'InnerCompound'", "a scalar value")]
+    [InlineData(typeof(DerivedOverridingCompoundCollectionAsScalarCollection), "a collection of compound type 'InnerCompound'",
+        "a collection of scalar values")]
+    [InlineData(typeof(DerivedOverridingScalarAsCompound), "a scalar value", "a compound type 'InnerCompound'")]
+    [InlineData(typeof(DerivedOverridingScalarCollectionAsCompoundCollection), "a collection of scalar values",
+        "a collection of compound type 'InnerCompound'")]
+    public void Cannot_change_shape_of_inherited_attribute_in_derived_type(Type derivedClrType, string expectedBaseShape, string expectedDerivedShape)
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add(derivedClrType.BaseType!, typeof(long));
+        builder.Add(derivedClrType, typeof(long));
+
+        // Act
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Attribute 'shape' in derived type '{derivedClrType.Name}' cannot change the shape of the attribute inherited from base type '{derivedClrType.BaseType!.Name}'. " +
+            $"The base type declares {expectedBaseShape}, but the derived type declares {expectedDerivedShape}.");
     }
 
     [Fact]
-    public void Cannot_build_graph_when_derived_type_redeclares_compound_as_scalar()
+    public void Can_inherit_compound_attribute_unchanged_through_override()
     {
         // Arrange
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         builder.Add<BaseWithCompound, long>();
+        builder.Add<DerivedOverridingCompoundUnchanged, long>();
 
         // Act
-        Action action = () => builder.Add<DerivedRedeclaringCompoundAsScalar, long>();
+        IResourceGraph resourceGraph = builder.Build();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>();
-    }
+        AttrAttribute baseAttribute = resourceGraph.GetResourceType<BaseWithCompound>().GetAttributeByPropertyName(nameof(BaseWithCompound.Shape));
+        AttrAttribute derivedAttribute = resourceGraph.GetResourceType<DerivedOverridingCompoundUnchanged>()
+            .GetAttributeByPropertyName(nameof(BaseWithCompound.Shape));
 
-    [Fact]
-    public void Cannot_build_graph_when_derived_type_redeclares_compound_with_different_type()
-    {
-        // Arrange
-        var options = new JsonApiOptions();
-        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<BaseWithCompound, long>();
-
-        // Act
-        Action action = () => builder.Add<DerivedRedeclaringCompoundWithOtherType, long>();
-
-        // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>();
-    }
-
-    [Fact]
-    public void Cannot_build_graph_when_derived_type_redeclares_compound_as_collection()
-    {
-        // Arrange
-        var options = new JsonApiOptions();
-        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<BaseWithCompound, long>();
-
-        // Act
-        Action action = () => builder.Add<DerivedRedeclaringCompoundAsCollection, long>();
-
-        // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>();
+        derivedAttribute.CompoundType.Should().BeSameAs(baseAttribute.CompoundType);
     }
 
     [Fact]
@@ -594,6 +744,7 @@ public sealed class CompoundResourceGraphBuilderTests
         var options = new JsonApiOptions();
         var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         builder.Add<ChainResource, long>();
+        builder.Add<ChainOther, long>();
         return builder.Build();
     }
 
@@ -894,6 +1045,152 @@ public sealed class CompoundResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithByteArrayCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public byte[]? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithIntListCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public List<int>? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithDictionaryCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public Dictionary<string, string>? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithObjectCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public object? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithNullableElementList : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public List<GeoPoint?>? Points { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithNullableElementArray : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public GeoPoint?[]? Points { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithNullableCollectionOfStructs : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public List<GeoPoint>? Points { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithNestedListCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public List<List<InnerCompound>>? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithJaggedArrayCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public InnerCompound[][]? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithListOfArraysCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public List<InnerCompound[]>? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithNestedListOfNullableCompound : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public List<List<GeoPoint?>>? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DirectCycleCompound
+    {
+        [Attr(IsCompound = true)]
+        public DirectCycleCompound? Self { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithDirectCycle : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public DirectCycleCompound? Compound { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class GenericCycleCompound<T>
+    {
+        [Attr]
+        public T? Value { get; set; }
+
+        [Attr(IsCompound = true)]
+        public GenericCycleCompound<T>? Next { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithGenericCycle : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public GenericCycleCompound<string>? Compound { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DiamondBottom
+    {
+        [Attr]
+        public string? Name { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DiamondLeft
+    {
+        [Attr(IsCompound = true)]
+        public DiamondBottom? Bottom { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DiamondRight
+    {
+        [Attr(IsCompound = true)]
+        public List<DiamondBottom>? Bottom { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DiamondTop
+    {
+        [Attr(IsCompound = true)]
+        public DiamondLeft? Left { get; set; }
+
+        [Attr(IsCompound = true)]
+        public DiamondRight? Right { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithDiamond : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public DiamondTop? Top { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class EmptyCompound
     {
         public string? NotExposed { get; set; }
@@ -910,7 +1207,63 @@ public sealed class CompoundResourceGraphBuilderTests
     private abstract class BaseWithCompound : Identifiable<long>
     {
         [Attr(PublicName = "shape", IsCompound = true)]
-        public InnerCompound? Shape { get; set; }
+        public virtual InnerCompound? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DerivedOverridingCompoundUnchanged : BaseWithCompound
+    {
+        [Attr(PublicName = "shape", IsCompound = true)]
+        public override InnerCompound? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DerivedOverridingCompoundAsScalar : BaseWithCompound
+    {
+        [Attr(PublicName = "shape")]
+        public override InnerCompound? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private abstract class BaseWithCompoundCollection : Identifiable<long>
+    {
+        [Attr(PublicName = "shape", IsCompound = true)]
+        public virtual List<InnerCompound>? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DerivedOverridingCompoundCollectionAsScalarCollection : BaseWithCompoundCollection
+    {
+        [Attr(PublicName = "shape")]
+        public override List<InnerCompound>? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private abstract class BaseWithScalar : Identifiable<long>
+    {
+        [Attr(PublicName = "shape")]
+        public virtual InnerCompound? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DerivedOverridingScalarAsCompound : BaseWithScalar
+    {
+        [Attr(PublicName = "shape", IsCompound = true)]
+        public override InnerCompound? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private abstract class BaseWithScalarCollection : Identifiable<long>
+    {
+        [Attr(PublicName = "shape")]
+        public virtual List<InnerCompound>? Shape { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class DerivedOverridingScalarCollectionAsCompoundCollection : BaseWithScalarCollection
+    {
+        [Attr(PublicName = "shape", IsCompound = true)]
+        public override List<InnerCompound>? Shape { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -1020,6 +1373,19 @@ public sealed class CompoundResourceGraphBuilderTests
 
         [Attr]
         public string? Text { get; set; }
+
+        [Attr(IsCompound = true)]
+        public GeoPoint? Point { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ChainOther : Identifiable<long>
+    {
+        [Attr]
+        public string? Title { get; set; }
+
+        [Attr(IsCompound = true)]
+        public ChainChild? Details { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -1028,8 +1394,17 @@ public sealed class CompoundResourceGraphBuilderTests
         [Attr(IsCompound = true)]
         public ChainCompound? Compound { get; set; }
 
+        [Attr(IsCompound = true)]
+        public GeoPoint? NullablePoint { get; set; }
+
+        [Attr(IsCompound = true)]
+        public List<GeoPoint?>? NullablePoints { get; set; }
+
         [HasOne]
         public ChainResource? Related { get; set; }
+
+        [HasOne]
+        public ChainOther? Other { get; set; }
 
         public string? NotExposed { get; set; }
     }
