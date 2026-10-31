@@ -151,6 +151,103 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
     }
 
     [Fact]
+    public async Task Can_select_nested_leaf_with_top_level_attribute()
+    {
+        // Arrange
+        Appointment appointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.Add(appointment);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/appointments/{appointment.StringId}?fields[appointments]=cost.amount,title";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(appointment.Title);
+        responseDocument.Data.SingleValue.GetAttribute("cost").GetMemberNames().Should().Equal("amount");
+    }
+
+    [Fact]
+    public async Task Can_select_multiple_members_of_same_nested_compound()
+    {
+        // Arrange
+        Appointment appointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.Add(appointment);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/appointments/{appointment.StringId}?fields[appointments]=location.address.street,location.address.city";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+
+        JsonElement location = responseDocument.Data.SingleValue.GetAttribute("location");
+        location.GetMemberNames().Should().Equal("address");
+        location.GetProperty("address").GetMemberNames().Should().BeEquivalentTo("street", "city");
+        location.GetProperty("address").GetProperty("street").GetString().Should().Be("Main Street");
+        location.GetProperty("address").GetProperty("city").GetString().Should().Be("Rotterdam");
+    }
+
+    [Fact]
+    public async Task Can_select_nested_leaf_and_relationship_with_include()
+    {
+        // Arrange
+        Appointment appointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
+        appointment.Calendar = _fakers.Calendar.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.Add(appointment);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?include=calendar&fields[appointments]=cost.amount,calendar&fields[calendars]=timeZone";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].GetAttribute("cost").GetMemberNames().Should().Equal("amount");
+
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("calendar").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
+            value.Data.SingleValue.Id.Should().Be(appointment.Calendar.StringId);
+        });
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(appointment.Calendar.StringId);
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
+        responseDocument.Included[0].Attributes.Should().ContainKey("timeZone");
+    }
+
+    [Fact]
     public async Task Can_select_member_of_compound_collection()
     {
         // Arrange
@@ -182,6 +279,129 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         {
             "name"
         }));
+    }
+
+    [Fact]
+    public async Task Can_select_whole_compound_collection()
+    {
+        // Arrange
+        Appointment appointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.Add(appointment);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?fields[appointments]=attendees";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        ResourceObject resource = responseDocument.Data.ManyValue[0];
+
+        resource.Attributes.Should().HaveCount(1);
+        JsonElement attendees = resource.GetAttribute("attendees");
+        attendees.GetArrayLength().Should().Be(2);
+
+        attendees.EnumerateArray().Should().OnlyContain(element => element.GetMemberNames().SequenceEqual(new[]
+        {
+            "name",
+            "email",
+            "response",
+            "contact"
+        }));
+
+        attendees[0].GetProperty("name").GetString().Should().Be("Alice");
+        attendees[0].GetProperty("contact").GetMemberNames().Should().Equal("phone", "organization", "title");
+        attendees[1].GetProperty("name").GetString().Should().Be("Bob");
+        attendees[1].GetProperty("contact").ValueKind.Should().Be(JsonValueKind.Null);
+    }
+
+    [Fact]
+    public async Task Can_select_leaf_of_nested_compound_in_compound_collection()
+    {
+        // Arrange
+        var store = _testContext.App.Services.GetRequiredService<ResourceCaptureStore>();
+        store.Clear();
+
+        Appointment appointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.Add(appointment);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/appointments/{appointment.StringId}?fields[appointments]=attendees.contact.title";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+
+        JsonElement attendees = responseDocument.Data.SingleValue.GetAttribute("attendees");
+        attendees.GetArrayLength().Should().Be(2);
+
+        // The element that has the nested compound only exposes the selected leaf.
+        attendees[0].GetMemberNames().Should().Equal("contact");
+        attendees[0].GetProperty("contact").GetMemberNames().Should().Equal("title");
+        attendees[0].GetProperty("contact").GetProperty("title").GetString().Should().Be("Manager");
+
+        // The element without the nested compound still exposes the selected member as null.
+        attendees[1].GetMemberNames().Should().Equal("contact");
+        attendees[1].GetProperty("contact").ValueKind.Should().Be(JsonValueKind.Null);
+
+        var appointmentCaptured = (Appointment)store.Resources.Should().ContainSingle(resource => resource is Appointment).Which;
+        appointmentCaptured.Attendees.Should().HaveCount(2);
+        appointmentCaptured.Attendees[0].Contact.Should().NotBeNull();
+        appointmentCaptured.Attendees[0].Contact!.Title.Should().Be("Manager");
+        appointmentCaptured.Attendees[1].Contact.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Can_select_whole_nested_compound_in_compound_collection()
+    {
+        // Arrange
+        Appointment appointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.Add(appointment);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/appointments/{appointment.StringId}?fields[appointments]=attendees.contact";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        JsonElement attendees = responseDocument.Data.SingleValue.GetAttribute("attendees");
+        attendees.GetArrayLength().Should().Be(2);
+
+        attendees[0].GetMemberNames().Should().Equal("contact");
+        attendees[0].GetProperty("contact").GetMemberNames().Should().Equal("phone", "organization", "title");
+        attendees[0].GetProperty("contact").GetProperty("phone").GetString().Should().Be("555-1234");
+        attendees[0].GetProperty("contact").GetProperty("organization").GetString().Should().Be("Contoso");
+        attendees[0].GetProperty("contact").GetProperty("title").GetString().Should().Be("Manager");
+
+        attendees[1].GetMemberNames().Should().Equal("contact");
+        attendees[1].GetProperty("contact").ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Fact]
@@ -462,6 +682,38 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
     }
 
     [Fact]
+    public async Task Can_get_to_many_relationship_endpoint_of_type_with_compound()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+
+        calendar.PinnedAppointments = new[]
+        {
+            CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne())
+        }.ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}/relationships/pinnedAppointments";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(calendar.PinnedAppointments.ElementAt(0).StringId);
+        responseDocument.Data.ManyValue[0].Attributes.Should().BeNull();
+        responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
+    }
+
+    [Fact]
     public async Task Can_select_in_create_response()
     {
         // Arrange
@@ -610,7 +862,13 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
             {
                 Name = "Alice",
                 Email = "alice@company.com",
-                Response = AttendeeResponse.Accepted
+                Response = AttendeeResponse.Accepted,
+                Contact = new AttendeeContact
+                {
+                    Phone = "555-1234",
+                    Organization = "Contoso",
+                    Title = "Manager"
+                }
             },
             new Attendee
             {

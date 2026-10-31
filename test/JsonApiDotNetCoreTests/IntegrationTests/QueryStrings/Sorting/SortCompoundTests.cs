@@ -64,6 +64,64 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
         descendingDocument.Data.ManyValue[3].Id.Should().Be(appointments[3].StringId);
     }
 
+    [Theory]
+    [InlineData("/appointments?sort=location.address.city,location.address.street", "2,0,1,3")]
+    [InlineData("/appointments?sort=location.address.city,-location.address.street", "2,1,0,3")]
+    [InlineData("/appointments?sort=-location.address.city,location.address.street", "3,0,1,2")]
+    public async Task Can_sort_on_multiple_attributes_of_nested_compound(string route, string expectedOrder)
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(4);
+
+        appointments[0].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Smith",
+                Street = "A"
+            }
+        };
+
+        appointments[1].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Smith",
+                Street = "Z"
+            }
+        };
+
+        appointments[2].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Adams",
+                Street = "M"
+            }
+        };
+
+        appointments[3].Location = new AppointmentLocation
+        {
+            Address = null
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedOrder.Split(',').Select(index => appointments[int.Parse(index)].StringId!).ToArray();
+        responseDocument.GetPrimaryIds().Should().Equal(expectedIds);
+    }
+
     [Fact]
     public async Task Can_sort_through_to_one_and_compound()
     {
@@ -199,6 +257,8 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
     [InlineData("/calendars?sort=-count(holidays),id", "0,1,2")]
     [InlineData("/calendars?sort=count(workweek.workDays),id", "1,2,0")]
     [InlineData("/calendars?sort=-count(workweek.workDays),id", "0,2,1")]
+    [InlineData("/calendars?sort=count(workweek.breaks),id", "2,0,1")]
+    [InlineData("/calendars?sort=-count(workweek.breaks),id", "1,0,2")]
     [InlineData("/calendars?sort=count(pinnedAppointments),id", "2,0,1")]
     [InlineData("/calendars?sort=-count(pinnedAppointments),id", "1,0,2")]
     public async Task Can_sort_calendars_by_count_of_collection(string route, string expectedOrder)
@@ -235,17 +295,24 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
                 DayOfWeek.Monday,
                 DayOfWeek.Tuesday,
                 DayOfWeek.Friday
-            ]
+            ],
+            Breaks = [new OfficeHours()]
         };
 
         calendars[1].Workweek = new Workweek
         {
-            WorkDays = []
+            WorkDays = [],
+            Breaks =
+            [
+                new OfficeHours(),
+                new OfficeHours()
+            ]
         };
 
         calendars[2].Workweek = new Workweek
         {
-            WorkDays = [DayOfWeek.Monday]
+            WorkDays = [DayOfWeek.Monday],
+            Breaks = []
         };
 
         calendars[0].PinnedAppointments = _fakers.Appointment.GenerateSet(1);

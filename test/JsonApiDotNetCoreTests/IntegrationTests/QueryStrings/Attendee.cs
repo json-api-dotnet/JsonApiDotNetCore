@@ -14,4 +14,7 @@ public sealed class Attendee
 
     [Attr]
     public AttendeeResponse? Response { get; set; }
+
+    [Attr(IsCompound = true)]
+    public AttendeeContact? Contact { get; set; }
 }
