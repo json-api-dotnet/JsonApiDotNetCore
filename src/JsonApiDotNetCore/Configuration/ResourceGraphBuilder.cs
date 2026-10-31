@@ -531,7 +531,8 @@ public sealed partial class ResourceGraphBuilder
         {
             if (compoundClrType.IsAbstract)
             {
-                throw new InvalidConfigurationException($"Property '{propertyName}' uses abstract class '{typeName}' as compound type, which cannot be instantiated.");
+                throw new InvalidConfigurationException(
+                    $"Property '{propertyName}' uses abstract class '{typeName}' as compound type, which cannot be instantiated.");
             }
 
             if (compoundClrType.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, Type.EmptyTypes) == null)

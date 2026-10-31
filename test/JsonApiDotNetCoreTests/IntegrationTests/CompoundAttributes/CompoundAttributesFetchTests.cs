@@ -152,7 +152,7 @@ public sealed class CompoundAttributesFetchTests
         contentObject.Should().ContainKey("name").WhoseValue.Should().NotBeNull();
     }
 
-    [Fact(Skip = "KNOWN-ISSUE NEW-ef-null-element: EF Core cannot materialize a null element in a JSON complex collection (InvalidOperationException 'Invalid token type: Null').")]
+    [Fact(Skip = "EF Core 10: Cannot materialize a null element in a JSON complex collection (InvalidOperationException 'Invalid token type: Null').")]
     public async Task Renders_null_element_in_compound_collection()
     {
         // Arrange

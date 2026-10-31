@@ -42,7 +42,7 @@ public sealed class Contact : Identifiable<long>
     [Attr]
     public string? Remarks { get; set; }
 
-    // Nullable struct as compound type (see KNOWN-ISSUE D5)
+    // Nullable struct as compound type
     [Attr(IsCompound = true)]
     public GeoPoint? LastKnownLocation { get; set; }
 

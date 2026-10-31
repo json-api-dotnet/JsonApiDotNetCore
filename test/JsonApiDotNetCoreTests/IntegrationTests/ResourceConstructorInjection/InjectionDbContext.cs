@@ -12,7 +12,6 @@ public sealed class InjectionDbContext : TestableDbContext
     public DbSet<PostOffice> PostOffices => Set<PostOffice>();
     public DbSet<GiftCertificate> GiftCertificates => Set<GiftCertificate>();
 
-
     public InjectionDbContext(DbContextOptions<InjectionDbContext> options, TimeProvider timeProvider)
         : base(options)
     {
