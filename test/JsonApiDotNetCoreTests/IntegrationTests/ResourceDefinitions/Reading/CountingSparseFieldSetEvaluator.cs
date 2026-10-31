@@ -21,7 +21,9 @@ public sealed class CountingSparseFieldSetEvaluator(
     public SparseFieldSetExpression? GetSparseFieldSetForQuery(ResourceType resourceType)
     {
         _hitCounter.Calls.Add($"{resourceType.PublicName}:ForQuery");
-        return _inner.GetSparseFieldSetForQuery(resourceType);
+        SparseFieldSetExpression? result = _inner.GetSparseFieldSetForQuery(resourceType);
+        _hitCounter.QueryResults.Add($"{resourceType.PublicName}:{result?.ToString() ?? "null"}");
+        return result;
     }
 
     public SparseFieldSetExpression GetSparseFieldSetForSerializer(ResourceType resourceType)
