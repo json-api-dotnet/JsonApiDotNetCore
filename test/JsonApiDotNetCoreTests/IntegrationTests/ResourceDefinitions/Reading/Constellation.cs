@@ -16,6 +16,9 @@ public sealed class Constellation : Identifiable<long>
     [Required]
     public Season? VisibleDuring { get; set; }
 
+    [Attr(IsCompound = true)]
+    public ConstellationOrigin? Origin { get; set; }
+
     [HasMany]
     public ISet<Star> Stars { get; set; } = new HashSet<Star>();
 }

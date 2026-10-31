@@ -12,4 +12,15 @@ public sealed class UniverseDbContext(DbContextOptions<UniverseDbContext> option
     public DbSet<Star> Stars => Set<Star>();
     public DbSet<Planet> Planets => Set<Planet>();
     public DbSet<Moon> Moons => Set<Moon>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Constellation>()
+            .ComplexProperty(constellation => constellation.Origin, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Planet>()
+            .ComplexProperty(planet => planet.Atmosphere, complexBuilder => complexBuilder.ToJson());
+
+        base.OnModelCreating(builder);
+    }
 }
