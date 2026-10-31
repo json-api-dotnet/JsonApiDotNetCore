@@ -907,6 +907,279 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         calendarCaptured.TimeZone.Should().BeNull();
     }
 
+
+
+    [Fact]
+    public async Task Can_select_nested_leaf_when_compound_is_null()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(2);
+        calendars[0].Workweek = null;
+
+        calendars[1].Workweek = new Workweek
+        {
+            FirstDay = DayOfWeek.Tuesday,
+            WorkDays = [DayOfWeek.Tuesday]
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?fields[calendars]=workweek.firstDay&sort=id";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].GetAttribute("workweek").ValueKind.Should().Be(JsonValueKind.Null);
+
+        responseDocument.Data.ManyValue[1].Attributes.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[1].GetAttribute("workweek").GetMemberNames().Should().Equal("firstDay");
+    }
+
+    [Fact]
+    public async Task Can_select_deeply_nested_leaf_when_nested_compound_is_null()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(2);
+
+        calendars[0].Workweek = new Workweek
+        {
+            FirstDay = DayOfWeek.Monday,
+            OfficeHours = null
+        };
+
+        calendars[1].Workweek = new Workweek
+        {
+            FirstDay = DayOfWeek.Tuesday,
+            OfficeHours = new OfficeHours
+            {
+                OpensAt = new TimeOnly(9, 0),
+                ClosesAt = new TimeOnly(17, 0)
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?fields[calendars]=workweek.officeHours.opensAt&sort=id";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+
+        JsonElement firstWorkweek = responseDocument.Data.ManyValue[0].GetAttribute("workweek");
+        firstWorkweek.GetMemberNames().Should().Equal("officeHours");
+        firstWorkweek.GetProperty("officeHours").ValueKind.Should().Be(JsonValueKind.Null);
+
+        JsonElement secondWorkweek = responseDocument.Data.ManyValue[1].GetAttribute("workweek");
+        secondWorkweek.GetMemberNames().Should().Equal("officeHours");
+        secondWorkweek.GetProperty("officeHours").GetMemberNames().Should().Equal("opensAt");
+    }
+
+    [Fact]
+    public async Task Can_select_scalar_collection_inside_compound_whole()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+
+        calendar.Workweek = new Workweek
+        {
+            FirstDay = DayOfWeek.Monday,
+            WorkDays =
+            [
+                DayOfWeek.Monday,
+                DayOfWeek.Wednesday
+            ]
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?fields[calendars]=workweek.workDays";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+
+        JsonElement workweek = responseDocument.Data.ManyValue[0].GetAttribute("workweek");
+        workweek.GetMemberNames().Should().Equal("workDays");
+        workweek.GetProperty("workDays").GetArrayLength().Should().Be(2);
+    }
+
+    [Theory]
+    [InlineData("meetingPoint", "latitude,longitude,nearestAddress")]
+    [InlineData("meetingPoint.latitude", "latitude")]
+    [InlineData("meetingPoint.nearestAddress", "nearestAddress")]
+    [InlineData("meetingPoint.nearestAddress.city", "nearestAddress")]
+    public async Task Can_select_nullable_struct_compound_in_collection(string fieldChain, string expectedMembers)
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+        appointments[0].MeetingPoint = null;
+
+        appointments[1].MeetingPoint = new AppointmentCoordinates
+        {
+            Latitude = 52.5,
+            Longitude = 4.25,
+            NearestAddress = new AppointmentAddress
+            {
+                City = "Rotterdam",
+                Street = "Main Street"
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/appointments?fields[appointments]={fieldChain}&sort=id";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].GetAttribute("meetingPoint").ValueKind.Should().Be(JsonValueKind.Null);
+
+        responseDocument.Data.ManyValue[1].Attributes.Should().HaveCount(1);
+        JsonElement meetingPoint = responseDocument.Data.ManyValue[1].GetAttribute("meetingPoint");
+        meetingPoint.GetMemberNames().Should().BeEquivalentTo(expectedMembers.Split(','));
+
+        if (fieldChain == "meetingPoint.latitude")
+        {
+            meetingPoint.GetProperty("latitude").GetDouble().Should().Be(52.5);
+        }
+
+        if (fieldChain == "meetingPoint.nearestAddress.city")
+        {
+            meetingPoint.GetProperty("nearestAddress").GetMemberNames().Should().Equal("city");
+        }
+    }
+
+    [Theory]
+    [InlineData("timing", "bufferMinutes,note")]
+    [InlineData("timing.note", "note")]
+    public async Task Can_select_non_nullable_struct_compound_in_collection(string fieldChain, string expectedMembers)
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Timing = new AppointmentTiming
+        {
+            BufferMinutes = 10,
+            Note = "first"
+        };
+
+        appointments[1].Timing = new AppointmentTiming
+        {
+            BufferMinutes = 20,
+            Note = null
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/appointments?fields[appointments]={fieldChain}&sort=id";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+
+        foreach (ResourceObject resource in responseDocument.Data.ManyValue)
+        {
+            resource.Attributes.Should().HaveCount(1);
+            resource.GetAttribute("timing").GetMemberNames().Should().BeEquivalentTo(expectedMembers.Split(','));
+        }
+
+        responseDocument.Data.ManyValue[0].GetAttribute("timing").GetProperty("note").GetString().Should().Be("first");
+        responseDocument.Data.ManyValue[1].GetAttribute("timing").GetProperty("note").ValueKind.Should().Be(JsonValueKind.Null);
+    }
+
+    [Fact]
+    public async Task Can_select_struct_compounds_at_secondary_endpoint()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        Appointment appointment = _fakers.Appointment.GenerateOne();
+
+        appointment.MeetingPoint = new AppointmentCoordinates
+        {
+            Latitude = 1.5,
+            Longitude = 2.5
+        };
+
+        appointment.Timing = new AppointmentTiming
+        {
+            BufferMinutes = 15,
+            Note = "note"
+        };
+
+        calendar.PinnedAppointments = new[]
+        {
+            appointment
+        }.ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}/pinnedAppointments?fields[appointments]=meetingPoint.longitude,timing.bufferMinutes";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(2);
+        responseDocument.Data.ManyValue[0].GetAttribute("meetingPoint").GetMemberNames().Should().Equal("longitude");
+        responseDocument.Data.ManyValue[0].GetAttribute("timing").GetMemberNames().Should().Equal("bufferMinutes");
+    }
+
     private static Appointment CreateAppointmentWithAllCompounds(Appointment appointment)
     {
         appointment.Cost = new AppointmentCost

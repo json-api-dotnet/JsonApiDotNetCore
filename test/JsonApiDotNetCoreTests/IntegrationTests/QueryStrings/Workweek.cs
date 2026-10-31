@@ -18,6 +18,15 @@ public sealed class Workweek
     [Attr(IsCompound = true)]
     public List<OfficeHours> Breaks { get; set; } = [];
 
+    [Attr]
+    public List<DayOfWeek>? ExtraDays { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<OfficeHours>? ExtraBreaks { get; set; }
+
+    [Attr(IsCompound = true)]
+    public OvertimePolicy? Overtime { get; set; }
+
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
     public string? InternalNote { get; set; }
 
