@@ -493,7 +493,7 @@ public sealed partial class ResourceGraphBuilder
 
     private static bool IsCollectionType(Type type)
     {
-        if (type == typeof(string) || type == typeof(byte[]) || IsDictionaryType(type))
+        if (type == typeof(string) || IsDictionaryType(type))
         {
             return false;
         }

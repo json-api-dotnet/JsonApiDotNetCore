@@ -116,7 +116,7 @@ public sealed class CompoundResourceGraphBuilderTests
     }
 
     [Fact]
-    public void Does_not_classify_byte_array_as_collection()
+    public void Classifies_byte_array_as_collection()
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -127,8 +127,10 @@ public sealed class CompoundResourceGraphBuilderTests
         IResourceGraph resourceGraph = builder.Build();
 
         // Assert
-        AttrAttribute attribute = resourceGraph.GetResourceType<ResourceWithCollectionKinds>().GetAttributeByPropertyName(nameof(ResourceWithCollectionKinds.Bytes));
-        attribute.IsCollection.Should().BeFalse();
+        AttrAttribute attribute = resourceGraph.GetResourceType<ResourceWithCollectionKinds>()
+            .GetAttributeByPropertyName(nameof(ResourceWithCollectionKinds.Bytes));
+
+        attribute.IsCollection.Should().BeTrue();
     }
 
     [Fact]
