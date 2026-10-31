@@ -147,6 +147,33 @@ public sealed class FilterCompoundNullTests : IClassFixture<IntegrationTestConte
         responseDocument.GetPrimaryIds().Should().BeEquivalentTo(expectedIds);
     }
 
+    [Fact]
+    public async Task Can_filter_on_nested_attribute_through_relationship()
+    {
+        // Arrange
+        List<Calendar> calendars = NullPathTestData.CreateCalendars(_fakers);
+        calendars[1].Workweek!.FirstDay = DayOfWeek.Wednesday;
+
+        List<Appointment> appointments = NullPathTestData.CreateAppointments(_fakers, calendars);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=equals(calendar.workweek.firstDay,'Wednesday')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.GetPrimaryIds().Should().Equal(appointments[1].StringId);
+    }
     [Theory]
     [InlineData("has(keywords)", "3")]
     [InlineData("not(has(keywords))", "012")]
