@@ -26,6 +26,12 @@ public sealed class ModelStateValidationTests
     [InlineData("[ComplexObject][Elements][0][First]", "/data/attributes/publicNameOfComplexObject/jsonElements/0/jsonFirst")]
     [InlineData("ComplexList", "/data/attributes/publicNameOfComplexList")]
     [InlineData("ComplexList[0].First", "/data/attributes/publicNameOfComplexList/0/jsonFirst")]
+    [InlineData("ComplexObject.NoSuchMember", null)]
+    [InlineData("GenericObject.Value", "/data/attributes/publicNameOfGenericObject/jsonValue")]
+    [InlineData("GenericList[1].Value", "/data/attributes/publicNameOfGenericList/1/jsonValue")]
+    [InlineData("PlainObject", "/data/attributes/publicNameOfPlainObject")]
+    [InlineData("PlainObject.Value", "/data/attributes/publicNameOfPlainObject/Value")]
+    [InlineData("PlainObject.NoSuchMember", null)]
     [InlineData("PrimaryChild", "/data/relationships/publicNameOfPrimaryChild/data")]
     [InlineData("PrimaryChild.NotMappedInChild", null)]
     [InlineData("PrimaryChild.Id", "/data/relationships/publicNameOfPrimaryChild/data/id")]
@@ -71,6 +77,10 @@ public sealed class ModelStateValidationTests
     [InlineData("[0][Resource][ComplexObject][Elements][0][First]", "/atomic:operations/0/data/attributes/publicNameOfComplexObject/jsonElements/0/jsonFirst")]
     [InlineData("[0].Resource.ComplexList", "/atomic:operations/0/data/attributes/publicNameOfComplexList")]
     [InlineData("[0].Resource.ComplexList[0].First", "/atomic:operations/0/data/attributes/publicNameOfComplexList/0/jsonFirst")]
+    [InlineData("[0].Resource.ComplexObject.NoSuchMember", null)]
+    [InlineData("[1].Resource.GenericObject.Value", "/atomic:operations/1/data/attributes/publicNameOfGenericObject/jsonValue")]
+    [InlineData("[0].Resource.GenericList[1].Value", "/atomic:operations/0/data/attributes/publicNameOfGenericList/1/jsonValue")]
+    [InlineData("[0].Resource.PlainObject.Value", "/atomic:operations/0/data/attributes/publicNameOfPlainObject/Value")]
     [InlineData("[0].Resource.PrimaryChild", "/atomic:operations/0/data/relationships/publicNameOfPrimaryChild/data")]
     [InlineData("[0].Resource.PrimaryChild.NotMappedInChild", null)]
     [InlineData("[0].Resource.PrimaryChild.Id", "/atomic:operations/0/data/relationships/publicNameOfPrimaryChild/data/id")]
@@ -104,6 +114,24 @@ public sealed class ModelStateValidationTests
         }
     }
 
+    [Fact(Skip = "KNOWN-ISSUE D5: FindCompoundType(Nullable<T>) returns null, so no source pointer is produced for members of a nullable struct compound")]
+    public void Renders_JSON_path_for_ModelState_key_in_nullable_struct_compound()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<StructParent, long>().Build();
+
+        var modelState = new ModelStateDictionary();
+        modelState.AddModelError("Location.Latitude", "(ignored error message)");
+
+        // Act
+        var exception = new InvalidModelStateException(modelState, typeof(StructParent), false, resourceGraph);
+
+        // Assert
+        exception.Errors.Should().HaveCount(1);
+        exception.Errors[0].Source.RefShould().NotBeNull().And.Subject.Pointer.Should().Be("/data/attributes/publicNameOfLocation/jsonLatitude");
+    }
+
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class Parent : Identifiable<long>
     {
@@ -117,6 +145,15 @@ public sealed class ModelStateValidationTests
 
         [Attr(PublicName = "publicNameOfComplexList", IsCompound = true)]
         public IList<ComplexElementObject> ComplexList { get; set; } = null!;
+
+        [Attr(PublicName = "publicNameOfGenericObject", IsCompound = true)]
+        public GenericCompound<string>? GenericObject { get; set; }
+
+        [Attr(PublicName = "publicNameOfGenericList", IsCompound = true)]
+        public IList<GenericCompound<DateOnly>> GenericList { get; set; } = null!;
+
+        [Attr(PublicName = "publicNameOfPlainObject")]
+        public PlainComplexObject? PlainObject { get; set; }
 
         [HasOne(PublicName = "publicNameOfPrimaryChild")]
         public Child? PrimaryChild { get; set; }
@@ -162,5 +199,32 @@ public sealed class ModelStateValidationTests
     {
         [Attr(PublicName = "jsonFirst")]
         public string? First { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class GenericCompound<T>
+    {
+        [Attr(PublicName = "jsonValue")]
+        public T? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class PlainComplexObject
+    {
+        public string? Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class StructParent : Identifiable<long>
+    {
+        [Attr(PublicName = "publicNameOfLocation", IsCompound = true)]
+        public GeoPoint? Location { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private struct GeoPoint
+    {
+        [Attr(PublicName = "jsonLatitude")]
+        public double Latitude { get; set; }
     }
 }
