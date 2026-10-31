@@ -227,14 +227,53 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             }
         }
 
+        if (ReferenceEquals(assignmentRightHandSide, propertyAccess))
+        {
+            IReadOnlyEntityType? declaringEntityType = context.EntityModel.FindEntityType(propertySelector.Property.DeclaringType!);
+            IReadOnlyComplexProperty? complexProperty = declaringEntityType?.FindComplexProperty(propertySelector.Property);
+
+            if (complexProperty is { IsCollection: false })
+            {
+                assignmentRightHandSide = CreateComplexValueCopy(propertyAccess, complexProperty.ComplexType);
+            }
+        }
+
         MemberAssignment assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
         return assignment;
     }
 
+    private ConditionalExpression CreateComplexValueCopy(MemberExpression propertyAccess, IReadOnlyComplexType complexType)
+    {
+        // Assigning a complex property as a whole inside a projection makes EF Core 10 fail when identity resolution is used
+        // (https://github.com/dotnet/efcore/issues/39322). Copying its members individually avoids that.
+        var assignments = new List<MemberBinding>();
+
+        foreach (IReadOnlyProperty property in complexType.GetProperties().Where(property => !property.IsShadowProperty()))
+        {
+            if (property.PropertyInfo is { SetMethod: not null })
+            {
+                assignments.Add(Expression.Bind(property.PropertyInfo, Expression.Property(propertyAccess, property.PropertyInfo)));
+            }
+        }
+
+        foreach (IReadOnlyComplexProperty nestedProperty in complexType.GetComplexProperties())
+        {
+            if (nestedProperty.PropertyInfo is { SetMethod: not null })
+            {
+                MemberExpression nestedAccess = Expression.Property(propertyAccess, nestedProperty.PropertyInfo);
+
+                Expression nestedValue = nestedProperty.IsCollection ? nestedAccess : CreateComplexValueCopy(nestedAccess, nestedProperty.ComplexType);
+                assignments.Add(Expression.Bind(nestedProperty.PropertyInfo, nestedValue));
+            }
+        }
+
+        NewExpression createInstance = _resourceFactory.CreateNewExpression(propertyAccess.Type);
+        MemberInitExpression memberInit = Expression.MemberInit(createInstance, assignments);
+        return TestForNull(propertyAccess, memberInit);
+    }
+
     private ConditionalExpression CreateCompoundMemberInit(FieldSelectors childSelectors, MemberExpression propertyAccess, QueryClauseBuilderContext context)
     {
-        // Direct projection of compound types via MemberInitExpression is constructed here for compound sparse fieldsets,
-        // but bypassed at the root entity level due to EF Core complex type limitations (https://github.com/dotnet/efcore/issues/39322).
         Type compoundClrType = propertyAccess.Type;
         var assignments = new List<MemberBinding>();
 
@@ -303,10 +342,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             return CreateCollectionInitializer(selectorPropertyInfo, bodyElementType, layer, context);
         }
 
-        // Direct projection of entities containing compound attributes or collections is bypassed by EF Core queryable building
-        // due to an EF Core 10 complex type projection limitation (see https://github.com/dotnet/efcore/issues/39322).
-        if (layer.Selection == null || layer.Selection.IsEmpty || layer.ResourceType.Attributes.Any(attr => attr.IsCompound) ||
-            layer.Selection.GetResourceTypes().Any(type => type.Attributes.Any(attr => attr.IsCompound)))
+        if (layer.Selection == null || layer.Selection.IsEmpty)
         {
             return propertyAccess;
         }
