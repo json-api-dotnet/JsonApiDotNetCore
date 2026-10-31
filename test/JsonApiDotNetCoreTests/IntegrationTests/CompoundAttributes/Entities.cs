@@ -25,8 +25,7 @@ public sealed class AddressBook : Identifiable<long>
     public List<string>? Categories { get; set; }
 
     // Scalar collection of Guid value types for count, has, and sort=count tests
-    // Restricted capability: AllowSort blocked
-    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    [Attr]
     public List<Guid>? SyncDeviceIds { get; set; }
 
     [HasMany]
