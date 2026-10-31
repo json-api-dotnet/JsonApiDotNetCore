@@ -220,12 +220,13 @@ public sealed class CompoundClauseBuilderTests : IDisposable
     }
 
     [Theory]
-    [InlineData(BypassCase.CompoundOnTop, false)]
-    [InlineData(BypassCase.CompoundOnChildToOne, true)]
-    [InlineData(BypassCase.CompoundOnChildToMany, true)]
-    [InlineData(BypassCase.CompoundOnDerivedTypeInSelection, false)]
-    [InlineData(BypassCase.NoCompound, true)]
-    public void ApplySelection_skips_select_only_when_selection_has_type_with_compound(BypassCase bypassCase, bool expectedSelectApplied)
+    [InlineData(BypassCase.CompoundOnTop)]
+    [InlineData(BypassCase.CompoundOnChildToOne)]
+    [InlineData(BypassCase.CompoundOnChildToMany)]
+    [InlineData(BypassCase.CompoundOnDerivedTypeInSelection)]
+    [InlineData(BypassCase.CompoundOnDerivedTypeNotInSelection)]
+    [InlineData(BypassCase.NoCompound)]
+    public void ApplySelection_always_applies_select_regardless_of_compound_attributes(BypassCase bypassCase)
     {
         // Arrange
         (ResourceType resourceType, FieldSelection selection) = CreateBypassSelection(bypassCase);
@@ -234,22 +235,8 @@ public sealed class CompoundClauseBuilderTests : IDisposable
         (bool selectApplied, bool sourceReturnedUnchanged) = ApplySelection(resourceType, selection);
 
         // Assert
-        selectApplied.Should().Be(expectedSelectApplied);
-        sourceReturnedUnchanged.Should().Be(!expectedSelectApplied);
-    }
-
-    [Fact(Skip = "KNOWN-ISSUE D15: A derived type with compound attributes that is absent from the selection does not cause the Select to be skipped")]
-    public void ApplySelection_skips_select_when_only_derived_type_not_in_selection_has_compound()
-    {
-        // Arrange
-        (ResourceType resourceType, FieldSelection selection) = CreateBypassSelection(BypassCase.CompoundOnDerivedTypeNotInSelection);
-
-        // Act
-        (bool selectApplied, bool sourceReturnedUnchanged) = ApplySelection(resourceType, selection);
-
-        // Assert
-        selectApplied.Should().BeFalse();
-        sourceReturnedUnchanged.Should().BeTrue();
+        selectApplied.Should().BeTrue();
+        sourceReturnedUnchanged.Should().BeFalse();
     }
 
     private (ResourceType ResourceType, FieldSelection Selection) CreateBypassSelection(BypassCase bypassCase)
