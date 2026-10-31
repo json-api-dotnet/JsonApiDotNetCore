@@ -13,4 +13,11 @@ public sealed class DivingBoard : Identifiable<long>
     [Attr]
     [Range(1, 20)]
     public decimal HeightInMeters { get; set; }
+
+    // Compounds live on DivingBoard instead of SwimmingPool: a compound on the top resource triggers defect D2 in existing tests.
+    [Attr(IsCompound = true)]
+    public PoolSchedule? Schedule { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<LaneReservation> Reservations { get; set; } = [];
 }
