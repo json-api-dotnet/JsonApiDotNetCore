@@ -54,21 +54,8 @@ internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
 
     private static bool IsInCompoundType(ValidationEntry parentEntry, IResourceGraph resourceGraph)
     {
-        Type modelType = parentEntry.Metadata.ModelType;
-
-        if (resourceGraph.FindCompoundType(modelType) != null)
-        {
-            return true;
-        }
-
-        Type? elementType = CollectionConverter.Instance.FindCollectionElementType(modelType);
-
-        if (elementType != null && resourceGraph.FindCompoundType(elementType) != null)
-        {
-            return true;
-        }
-
-        return false;
+        // Elements of a compound collection are Type-kind entries, which are always validated (see above). Only members of a compound type get here.
+        return resourceGraph.FindCompoundType(parentEntry.Metadata.ModelType) != null;
     }
 
     private IServiceProvider GetScopedServiceProvider()

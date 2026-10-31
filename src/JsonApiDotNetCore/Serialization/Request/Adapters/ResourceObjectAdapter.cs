@@ -68,44 +68,12 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         AssertSetAttributeInUpdateResourceNotBlocked(attr, resourceType, state);
         AssertNotReadOnly(attr, resourceType, state);
 
-        if (attr.IsCompound)
+        // The request converter produces a JsonElement for compound attributes and a value of the exact property type for all other attributes.
+        if (attr.IsCompound && attributeValue is JsonElement jsonElement)
         {
-            if (attributeValue is JsonElement jsonElement)
-            {
-                attributeValue = attr.IsCollection
-                    ? ConvertCompoundCollection(jsonElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state)
-                    : ConvertCompoundObject(jsonElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state);
-            }
-            else if (attributeValue != null && !attr.Property.PropertyType.IsInstanceOfType(attributeValue))
-            {
-                JsonElement serializedElement = JsonSerializer.SerializeToElement(attributeValue, _options.SerializerReadOptions);
-
-                attributeValue = attr.IsCollection
-                    ? ConvertCompoundCollection(serializedElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state)
-                    : ConvertCompoundObject(serializedElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state);
-            }
-        }
-        else if (attributeValue != null && !attr.Property.PropertyType.IsInstanceOfType(attributeValue))
-        {
-            try
-            {
-                if (attributeValue is JsonElement jsonElement)
-                {
-                    attributeValue = jsonElement.Deserialize(attr.Property.PropertyType, _options.SerializerReadOptions);
-                }
-                else if (attr.IsCollection)
-                {
-                    JsonElement serializedElement = JsonSerializer.SerializeToElement(attributeValue, _options.SerializerReadOptions);
-                    attributeValue = serializedElement.Deserialize(attr.Property.PropertyType, _options.SerializerReadOptions);
-                }
-            }
-            catch (JsonException exception)
-            {
-                string typeName = RuntimeTypeConverter.GetFriendlyTypeName(attr.Property.PropertyType);
-
-                throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
-                    $"Failed to convert attribute '{attributeName}' with value '{attributeValue}' to type '{typeName}'.", innerException: exception);
-            }
+            attributeValue = attr.IsCollection
+                ? ConvertCompoundCollection(jsonElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state)
+                : ConvertCompoundObject(jsonElement, attr.CompoundType!, attr.Property.PropertyType, attributeName, state);
         }
 
         attr.SetValue(resource, attributeValue);
@@ -132,9 +100,16 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
         object instance = CreateCompoundInstance(targetType);
 
-        foreach (JsonProperty jsonProperty in element.EnumerateObject())
+        // When a member occurs multiple times, the last occurrence wins (the same as for attributes of a resource), so an earlier invalid value is ignored.
+        Dictionary<string, JsonElement> jsonProperties = [];
+
+        foreach (JsonProperty property in element.EnumerateObject())
         {
-            string childMemberName = jsonProperty.Name;
+            jsonProperties[property.Name] = property.Value;
+        }
+
+        foreach ((string childMemberName, JsonElement childElement) in jsonProperties)
+        {
             AttrAttribute? childAttr = compoundType.FindAttributeByPublicName(childMemberName);
 
             if (childAttr == null)
@@ -161,21 +136,21 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
                 if (childAttr.IsCompound)
                 {
                     childValue = childAttr.IsCollection
-                        ? ConvertCompoundCollection(jsonProperty.Value, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state)
-                        : ConvertCompoundObject(jsonProperty.Value, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state);
+                        ? ConvertCompoundCollection(childElement, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state)
+                        : ConvertCompoundObject(childElement, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state);
                 }
                 else
                 {
                     try
                     {
-                        childValue = jsonProperty.Value.Deserialize(childAttr.Property.PropertyType, _options.SerializerReadOptions);
+                        childValue = childElement.Deserialize(childAttr.Property.PropertyType, _options.SerializerReadOptions);
                     }
                     catch (JsonException exception)
                     {
                         string typeName = RuntimeTypeConverter.GetFriendlyTypeName(childAttr.Property.PropertyType);
 
                         throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
-                            $"Failed to convert attribute '{childAttr.PublicName}' with value '{jsonProperty.Value}' of type '{jsonProperty.Value.ValueKind}' to type '{typeName}'.",
+                            $"Failed to convert attribute '{childAttr.PublicName}' with value '{childElement}' of type '{childElement.ValueKind}' to type '{typeName}'.",
                             innerException: exception);
                     }
                 }
@@ -206,8 +181,8 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
             throw new ModelConversionException(state.Position, "Incompatible attribute value found.", message);
         }
 
-        Type elementType = CollectionConverter.Instance.FindCollectionElementType(collectionType) ??
-            (collectionType.IsArray ? collectionType.GetElementType() : null) ?? elementCompoundType.ClrType;
+        // Startup validation guarantees that the element type of a compound collection can be determined (this includes arrays).
+        Type elementType = CollectionConverter.Instance.FindCollectionElementType(collectionType)!;
 
         var items = new List<object?>();
         int index = 0;

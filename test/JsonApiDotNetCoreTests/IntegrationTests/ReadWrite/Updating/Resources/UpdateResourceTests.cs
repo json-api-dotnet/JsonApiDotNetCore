@@ -40,7 +40,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task PATCH_leaves_compounds_untouched_when_omitted()
+    public async Task Can_leave_compounds_untouched_when_omitted()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
@@ -158,7 +158,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task PATCH_clears_checklist()
+    public async Task Can_clear_checklist()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
@@ -203,7 +203,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Returns_200_when_definition_changes_compound()
+    public async Task Can_return_200_when_definition_changes_compound()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
@@ -254,7 +254,102 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Returns_204_when_nothing_changes()
+    public async Task Can_return_200_when_definition_changes_compound_collection()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                attributes = new
+                {
+                    description = ImplicitlyChangingWorkItemDefinition.ChangeChecklistMarker
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+
+        object? checklist = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("checklist").WhoseValue;
+        JsonElement checklistElement = JsonSerializer.SerializeToElement(checklist);
+        checklistElement.GetArrayLength().Should().Be(1);
+        checklistElement[0].GetProperty("text").GetString().Should().Be("Changed by definition");
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Checklist.Should().HaveCount(1);
+            workItemInDatabase.Estimate.Should().NotBeNull();
+        });
+    }
+
+    [Fact]
+    public async Task Can_return_200_when_definition_clears_compound()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                attributes = new
+                {
+                    description = ImplicitlyChangingWorkItemDefinition.ClearEstimateMarker
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("estimate");
+        JsonSerializer.SerializeToElement(responseDocument.Data.SingleValue.Attributes["estimate"]).ValueKind.Should().Be(JsonValueKind.Null);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Estimate.Should().BeNull();
+            workItemInDatabase.Checklist.Should().HaveCount(2);
+        });
+    }
+
+    [Fact]
+    public async Task Can_return_204_when_nothing_changes()
     {
         // Arrange
         WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();

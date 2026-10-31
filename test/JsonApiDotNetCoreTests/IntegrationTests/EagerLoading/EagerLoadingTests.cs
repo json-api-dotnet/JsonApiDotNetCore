@@ -338,7 +338,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     }
 
     [Fact]
-    public async Task PATCH_building_with_identical_compound_returns_204()
+    public async Task Can_patch_building_with_identical_compound_and_get_204()
     {
         // Arrange
         Building existingBuilding = _fakers.Building.GenerateOne();

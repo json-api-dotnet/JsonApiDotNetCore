@@ -27,7 +27,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_compound_sends_no_update()
+    public async Task Can_patch_identical_compound_without_update()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -50,7 +50,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_changed_nested_leaf_updates()
+    public async Task Can_patch_changed_nested_leaf()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -83,7 +83,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_same_members_in_different_json_order_sends_no_update()
+    public async Task Can_patch_same_members_in_different_json_order_without_update()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -109,7 +109,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_reordered_collection_updates()
+    public async Task Can_patch_reordered_collection()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -145,7 +145,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_changing_null_to_empty_collection_updates()
+    public async Task Can_patch_null_to_empty_collection()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -179,7 +179,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_scalar_collections_sends_no_update()
+    public async Task Can_patch_identical_scalar_collections_without_update()
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
@@ -213,7 +213,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_time_span_collection_sends_no_update()
+    public async Task Can_patch_identical_time_span_collection_without_update()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -238,7 +238,7 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task PATCH_with_identical_generic_compound_collection_sends_no_update()
+    public async Task Can_patch_identical_generic_compound_collection_without_update()
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
@@ -275,7 +275,189 @@ public sealed class CompoundAttributesChangeDetectionTests
     }
 
     [Fact]
-    public async Task Atomic_update_with_identical_compound_returns_empty_result()
+    public async Task Can_patch_identical_nullable_struct_compound_without_update()
+    {
+        // Arrange
+        Contact existingContact = CompoundAttributesSamples.CreateContact();
+
+        existingContact.LastKnownLocation = new GeoPoint
+        {
+            Latitude = 52.09,
+            Longitude = 5.12
+        };
+
+        await SeedAsync(existingContact);
+
+        object requestBody = CreateLocationPatchBody(existingContact.StringId!, new
+        {
+            latitude = 52.09,
+            longitude = 5.12
+        });
+
+        string route = $"/contacts/{existingContact.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        CommandCounter.UpdateCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Can_patch_changed_nullable_struct_compound()
+    {
+        // Arrange
+        Contact existingContact = CompoundAttributesSamples.CreateContact();
+
+        existingContact.LastKnownLocation = new GeoPoint
+        {
+            Latitude = 52.09,
+            Longitude = 5.12
+        };
+
+        await SeedAsync(existingContact);
+
+        object requestBody = CreateLocationPatchBody(existingContact.StringId!, new
+        {
+            latitude = 52.09,
+            longitude = 6.0
+        });
+
+        string route = $"/contacts/{existingContact.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        CommandCounter.UpdateCount.Should().Be(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Contact contactInDatabase = await dbContext.Contacts.FirstWithIdAsync(existingContact.Id);
+
+            contactInDatabase.LastKnownLocation.Should().NotBeNull();
+            contactInDatabase.LastKnownLocation.Value.Longitude.Should().Be(6.0);
+        });
+    }
+
+    [Fact]
+    public async Task Can_patch_null_to_nullable_struct_compound()
+    {
+        // Arrange
+        Contact existingContact = CompoundAttributesSamples.CreateContact();
+        existingContact.LastKnownLocation = null;
+        await SeedAsync(existingContact);
+
+        object requestBody = CreateLocationPatchBody(existingContact.StringId!, new
+        {
+            latitude = 0.0,
+            longitude = 0.0
+        });
+
+        string route = $"/contacts/{existingContact.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        CommandCounter.UpdateCount.Should().Be(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Contact contactInDatabase = await dbContext.Contacts.FirstWithIdAsync(existingContact.Id);
+
+            contactInDatabase.LastKnownLocation.Should().NotBeNull();
+        });
+    }
+
+    [Fact]
+    public async Task Can_patch_null_to_compound()
+    {
+        // Arrange
+        AddressBook existingAddressBook = _fakers.AddressBook.Generate();
+        existingAddressBook.EmergencyContact = null;
+        await SeedAsync(existingAddressBook);
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "addressBooks",
+                id = existingAddressBook.StringId,
+                attributes = new
+                {
+                    emergencyContact = CompoundAttributesSamples.CreateIdenticalPatchContent()
+                }
+            }
+        };
+
+        string route = $"/addressBooks/{existingAddressBook.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        CommandCounter.UpdateCount.Should().Be(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            AddressBook addressBookInDatabase = await dbContext.AddressBooks.FirstWithIdAsync(existingAddressBook.Id);
+
+            addressBookInDatabase.EmergencyContact.Should().NotBeNull();
+            addressBookInDatabase.EmergencyContact.Name.LastName.Should().Be("Lovelace");
+        });
+    }
+
+    [Fact]
+    public async Task Can_patch_changed_element_in_compound_collection()
+    {
+        // Arrange
+        Contact existingContact = CompoundAttributesSamples.CreateContact();
+        await SeedAsync(existingContact);
+
+        JsonObject content = CompoundAttributesSamples.CreateIdenticalPatchContent();
+        content["phoneNumbers"]![1]!["number"] = "555-3";
+
+        object requestBody = CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, content);
+
+        string route = $"/contacts/{existingContact.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        CommandCounter.UpdateCount.Should().Be(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Contact contactInDatabase = await dbContext.Contacts.FirstWithIdAsync(existingContact.Id);
+
+            contactInDatabase.Content.PhoneNumbers.Select(phone => phone.Number).Should().Equal("555-1", "555-3");
+        });
+    }
+
+    [Fact]
+    public async Task Can_update_atomically_with_identical_compound_and_get_empty_result()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -336,6 +518,22 @@ public sealed class CompoundAttributesChangeDetectionTests
         });
 
         CommandCounter.Reset();
+    }
+
+    private static object CreateLocationPatchBody(string id, object lastKnownLocation)
+    {
+        return new
+        {
+            data = new
+            {
+                type = "contacts",
+                id,
+                attributes = new
+                {
+                    lastKnownLocation
+                }
+            }
+        };
     }
 
     private static JsonObject Reorder(JsonObject source)

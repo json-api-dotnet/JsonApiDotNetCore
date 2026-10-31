@@ -272,6 +272,92 @@ public abstract class CompoundInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
+    public async Task Cannot_create_derived_resource_with_invalid_member_in_own_compound()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "apartments",
+                attributes = new
+                {
+                    title = "Some apartment",
+                    building = new
+                    {
+                        name = "Tower",
+                        floor = 0
+                    }
+                }
+            }
+        };
+
+        const string route = "/apartments";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The field Floor must be between 1 and 100.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/building/floor");
+    }
+
+    [Fact]
+    public async Task Cannot_update_derived_resource_with_invalid_member_in_own_compound()
+    {
+        // Arrange
+        Apartment existingApartment = _fakers.Apartment.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Listings.Add(existingApartment);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "apartments",
+                id = existingApartment.StringId,
+                attributes = new
+                {
+                    building = new
+                    {
+                        name = "Tower",
+                        floor = 101
+                    }
+                }
+            }
+        };
+
+        string route = $"/apartments/{existingApartment.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The field Floor must be between 1 and 100.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/building/floor");
+    }
+
+    [Fact]
     public async Task Cannot_set_sibling_type_compound()
     {
         // Arrange
@@ -348,7 +434,7 @@ public abstract class CompoundInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task PATCH_with_identical_inherited_compound_returns_204()
+    public async Task Can_patch_identical_inherited_compound_and_get_204()
     {
         // Arrange
         Apartment existingApartment = _fakers.Apartment.GenerateOne();

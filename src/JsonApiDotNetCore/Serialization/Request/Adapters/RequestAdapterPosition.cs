@@ -23,8 +23,16 @@ public sealed class RequestAdapterPosition
     {
         ArgumentNullException.ThrowIfNull(name);
 
-        _stack.Push($"/{name}");
+        _stack.Push($"/{EscapeSegment(name)}");
         return _disposable;
+    }
+
+    /// <summary>
+    /// Escapes a member name for use in a JSON Pointer (RFC 6901): '~' becomes '~0' and '/' becomes '~1'.
+    /// </summary>
+    internal static string EscapeSegment(string name)
+    {
+        return name.Replace("~", "~0", StringComparison.Ordinal).Replace("/", "~1", StringComparison.Ordinal);
     }
 
     public IDisposable PushArrayIndex(int index)

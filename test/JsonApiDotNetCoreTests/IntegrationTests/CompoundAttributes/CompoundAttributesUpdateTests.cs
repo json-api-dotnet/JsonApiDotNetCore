@@ -24,7 +24,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_replaces_compound_wholesale()
+    public async Task Can_replace_compound_wholesale()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -73,7 +73,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_leaves_omitted_attributes_untouched()
+    public async Task Can_leave_omitted_attributes_untouched()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -121,7 +121,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_sets_nullable_compound_to_null()
+    public async Task Can_set_nullable_compound_to_null()
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
@@ -176,7 +176,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_replaces_compound_collection()
+    public async Task Can_replace_compound_collection()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -222,7 +222,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_clears_compound_collection()
+    public async Task Can_clear_compound_collection()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -259,7 +259,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_replaces_scalar_collection()
+    public async Task Can_replace_scalar_collection()
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
@@ -315,7 +315,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_changes_compound_and_scalar_together()
+    public async Task Can_change_compound_and_scalar_together()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -365,7 +365,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_changes_relationship_and_leaves_compound_intact()
+    public async Task Can_change_relationship_and_leave_compound_intact()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -424,7 +424,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_with_struct_compound()
+    public async Task Can_patch_struct_compound()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -480,7 +480,7 @@ public sealed class CompoundAttributesUpdateTests
     }
 
     [Fact]
-    public async Task PATCH_setting_non_nullable_compound_to_null_fails()
+    public async Task Cannot_set_non_nullable_compound_to_null()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();

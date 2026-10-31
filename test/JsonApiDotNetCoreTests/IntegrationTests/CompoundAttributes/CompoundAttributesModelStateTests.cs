@@ -83,7 +83,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task PATCH_validates_the_whole_replaced_compound()
+    public async Task Can_validate_whole_replaced_compound_in_patch()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -106,7 +106,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task PATCH_does_not_validate_untargeted_compound()
+    public async Task Can_skip_validation_of_untargeted_compound_in_patch()
     {
         // Arrange
         Contact existingContact = CompoundAttributesSamples.CreateContact();
@@ -177,7 +177,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task Reports_multiple_errors_with_stable_order_and_limit()
+    public async Task Can_report_multiple_errors_with_stable_order_and_limit()
     {
         // Arrange
         JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
@@ -246,6 +246,81 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
+    public async Task Cannot_create_with_invalid_element_through_IValidatableObject_in_compound_collection()
+    {
+        // Arrange
+        JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
+
+        content["addresses"] = JsonNode.Parse("""
+            [
+              { "isoCountryCode": "NL", "city": "Utrecht" },
+              { "isoCountryCode": "GR", "city": "Atlantis" }
+            ]
+            """);
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await PostAsync(content);
+
+        // Assert
+        AssertSingleModelError(httpResponse, responseDocument, "The city does not exist.", "/data/attributes/content/addresses/1/city");
+    }
+
+    [Fact]
+    public async Task Cannot_create_with_too_many_elements_in_scalar_collection_inside_compound()
+    {
+        // Arrange
+        JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
+
+        content["company"] = JsonNode.Parse("""
+            { "name": "Contoso", "departments": [ "1", "2", "3", "4" ] }
+            """);
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await PostAsync(content);
+
+        // Assert
+        AssertSingleModelError(httpResponse, responseDocument, "The field Departments must be a string or array type with a maximum length of '3'.",
+            "/data/attributes/content/company/departments");
+    }
+
+    [Fact]
+    public async Task Cannot_create_with_null_scalar_collection_inside_compound()
+    {
+        // Arrange
+        JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
+
+        content["company"] = JsonNode.Parse("""
+            { "name": "Contoso", "departments": null }
+            """);
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await PostAsync(content);
+
+        // Assert
+        AssertSingleModelError(httpResponse, responseDocument, "The Departments field is required.", "/data/attributes/content/company/departments");
+    }
+
+    [Fact]
+    public async Task Cannot_update_with_invalid_element_through_IValidatableObject_in_compound_collection()
+    {
+        // Arrange
+        Contact existingContact = CompoundAttributesSamples.CreateContact();
+        await SeedAsync(existingContact);
+
+        JsonObject content = CompoundAttributesSamples.CreateIdenticalPatchContent();
+        content["addresses"]![0]!["city"] = ContactAddress.UnknownCity;
+
+        object requestBody = CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, content);
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) =
+            await _testContext.ExecutePatchAsync<Document>($"/contacts/{existingContact.StringId}", requestBody);
+
+        // Assert
+        AssertSingleModelError(httpResponse, responseDocument, "The city does not exist.", "/data/attributes/content/addresses/0/city");
+    }
+
+    [Fact]
     public async Task Cannot_create_with_too_many_scalar_collection_elements()
     {
         // Arrange
@@ -279,7 +354,7 @@ public sealed class CompoundAttributesModelStateTests
     }
 
     [Fact]
-    public async Task Validates_struct_compound()
+    public async Task Can_validate_struct_compound()
     {
         // Arrange
         var requestBody = new

@@ -294,7 +294,7 @@ public sealed class CompoundAttributesRequestBodyTests
     }
 
     [Fact]
-    public async Task Last_duplicate_key_wins()
+    public async Task Can_use_last_duplicate_key()
     {
         // Arrange
         using JsonDocument document = JsonDocument.Parse("""
@@ -321,6 +321,65 @@ public sealed class CompoundAttributesRequestBodyTests
 
         responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.GetAttribute("content", "name.lastName").ShouldBeJson("\"Second\"");
+    }
+
+    [Theory]
+    [InlineData("""{ "name": null, "name": { "lastName": "Second" } }""")]
+    [InlineData("""{ "name": 5, "name": { "lastName": "Second" } }""")]
+    [InlineData("""{ "name": { "nope": 1 }, "name": { "lastName": "Second" } }""")]
+    public async Task Can_use_last_duplicate_key_when_first_value_is_null_or_invalid(string contentJson)
+    {
+        // Arrange
+        using JsonDocument document = JsonDocument.Parse(contentJson);
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = document.RootElement.Clone()
+                }
+            }
+        };
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>("/contacts", requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.GetAttribute("content", "name.lastName").ShouldBeJson("\"Second\"");
+    }
+
+    [Fact]
+    public async Task Cannot_use_last_duplicate_key_when_it_is_invalid()
+    {
+        // Arrange
+        using JsonDocument document = JsonDocument.Parse("""
+            { "name": { "lastName": "First" }, "name": 5 }
+            """);
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "contacts",
+                attributes = new
+                {
+                    content = document.RootElement.Clone()
+                }
+            }
+        };
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>("/contacts", requestBody);
+
+        // Assert
+        AssertSingleError(httpResponse, responseDocument, "Failed to deserialize request body: Incompatible attribute value found.",
+            "/data/attributes/content/name");
     }
 
     [Fact]

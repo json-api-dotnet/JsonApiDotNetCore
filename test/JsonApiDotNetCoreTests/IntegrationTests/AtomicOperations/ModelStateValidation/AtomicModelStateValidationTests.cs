@@ -21,7 +21,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     }
 
     [Fact]
-    public async Task Reports_nested_pointer_with_operation_index_and_rolls_back()
+    public async Task Can_report_nested_pointer_with_operation_index_and_roll_back()
     {
         // Arrange
         string validName = _fakers.Playlist.GenerateOne().Name;
