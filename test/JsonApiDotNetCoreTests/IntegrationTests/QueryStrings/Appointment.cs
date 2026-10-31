@@ -20,6 +20,18 @@ public sealed class Appointment : Identifiable<long>
     [Attr]
     public DateTimeOffset EndTime { get; set; }
 
+    [Attr(IsCompound = true)]
+    public AppointmentLocation? Location { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<Attendee> Attendees { get; set; } = [];
+
+    [Attr(IsCompound = true)]
+    public AppointmentCost Cost { get; set; } = new();
+
+    [Attr]
+    public List<string>? Keywords { get; set; }
+
     [HasOne]
     public Calendar? Calendar { get; set; }
 
