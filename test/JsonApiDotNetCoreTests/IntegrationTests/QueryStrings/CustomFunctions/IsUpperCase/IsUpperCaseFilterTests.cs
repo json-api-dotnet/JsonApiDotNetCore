@@ -19,6 +19,7 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
         _testContext = testContext;
 
         testContext.UseController<BlogsController>();
+        testContext.UseController<AppointmentsController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -166,5 +167,116 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_casing_of_nested_attribute()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                CountryCode = "nl"
+            }
+        };
+
+        appointments[1].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                CountryCode = "NL"
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=isUpperCase(location.address.countryCode)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_casing_in_scalar_collection_elements_of_compound_resource()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+        appointments[0].Keywords = ["csharp", "dotnet"];
+        appointments[1].Keywords = ["csharp", "DOTNET"];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=has(keywords,isUpperCase(_))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_casing_in_compound_collection_scope()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Attendees =
+        [
+            new Attendee
+            {
+                Name = "alice"
+            }
+        ];
+
+        appointments[1].Attendees =
+        [
+            new Attendee
+            {
+                Name = "ALICE"
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=has(attendees,isUpperCase(name))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
     }
 }
