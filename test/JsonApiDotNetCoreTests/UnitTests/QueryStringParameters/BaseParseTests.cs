@@ -29,6 +29,9 @@ public abstract class BaseParseTests
             .Add<Woman, long>()
             .Add<AccountPreferences, long>()
             .Add<LoginAttempt, long>()
+            .Add<Calendar, long>()
+            .Add<Appointment, long>()
+            .Add<Reminder, long>()
             .Build();
 
         // @formatter:wrap_chained_method_calls restore
