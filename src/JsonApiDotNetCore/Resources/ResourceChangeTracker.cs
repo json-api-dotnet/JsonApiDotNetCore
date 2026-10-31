@@ -92,5 +92,4 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
 
         return false;
     }
-
 }

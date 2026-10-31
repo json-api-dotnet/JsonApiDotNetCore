@@ -343,8 +343,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
                 AttrAttribute? childAttr = childSelectors.Keys.OfType<AttrAttribute>().FirstOrDefault(a => a.Property == property);
                 FieldSelectors? grandchildSelectors = childAttr != null ? childSelectors.GetChildSelectors(childAttr) : null;
 
-                Expression childRightHandSide = CreateChildRightHandSide(grandchildSelectors, childAttr is { IsCollection: true }, childPropertyAccess, property,
-                    complexType, context);
+                Expression childRightHandSide = CreateChildRightHandSide(grandchildSelectors, childAttr is { IsCollection: true }, childPropertyAccess,
+                    property, complexType, context);
 
                 assignments.Add(Expression.Bind(property, childRightHandSide));
             }
@@ -358,8 +358,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
                     MemberExpression childPropertyAccess = Expression.Property(valueAccess, childAttr.Property);
                     FieldSelectors? grandchildSelectors = childSelectors.GetChildSelectors(childAttr);
 
-                    Expression childRightHandSide = CreateChildRightHandSide(grandchildSelectors, childAttr.IsCollection, childPropertyAccess, childAttr.Property,
-                        complexType, context);
+                    Expression childRightHandSide = CreateChildRightHandSide(grandchildSelectors, childAttr.IsCollection, childPropertyAccess,
+                        childAttr.Property, complexType, context);
 
                     assignments.Add(Expression.Bind(childAttr.Property, childRightHandSide));
                 }

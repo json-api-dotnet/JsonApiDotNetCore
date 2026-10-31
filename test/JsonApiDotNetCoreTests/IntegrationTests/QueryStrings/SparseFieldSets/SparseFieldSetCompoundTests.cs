@@ -892,8 +892,6 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         calendarCaptured.TimeZone.Should().BeNull();
     }
 
-
-
     [Fact]
     public async Task Can_select_nested_leaf_when_compound_is_null()
     {
@@ -1271,12 +1269,14 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         calendarCaptured.Workweek.OfficeHours.OpensAt.Should().Be(new TimeOnly(9, 0));
         calendarCaptured.Workweek.OfficeHours.ClosesAt.Should().Be(TimeOnly.MinValue);
     }
+
     [Fact]
     public async Task Can_select_nested_leaf_and_include_in_update_response()
     {
         // Arrange
         Appointment existingAppointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
         existingAppointment.Calendar = _fakers.Calendar.GenerateOne();
+
         existingAppointment.Calendar.Workweek = new Workweek
         {
             FirstDay = DayOfWeek.Friday
@@ -1302,7 +1302,8 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
             }
         };
 
-        string route = $"/appointments/{existingAppointment.StringId}?include=calendar&fields[appointments]=location.address.city,title&fields[calendars]=workweek.firstDay";
+        string route =
+            $"/appointments/{existingAppointment.StringId}?include=calendar&fields[appointments]=location.address.city,title&fields[calendars]=workweek.firstDay";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -1393,6 +1394,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
 
         Appointment appointment = CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne());
         appointment.Calendar = calendar;
+
         calendar.PinnedAppointments = new[]
         {
             appointment
@@ -1424,6 +1426,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         responseDocument.Included[0].Attributes.Should().HaveCount(1);
         responseDocument.Included[0].GetAttribute("cost").GetMemberNames().Should().Equal("amount");
     }
+
     [Fact]
     public async Task Cannot_sort_at_to_one_secondary_endpoint()
     {
@@ -1454,6 +1457,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be("Query string parameter 'sort' can only be used on a collection of resources. Failed at position 1: ^sort");
     }
+
     private static Appointment CreateAppointmentWithAllCompounds(Appointment appointment)
     {
         appointment.Cost = new AppointmentCost

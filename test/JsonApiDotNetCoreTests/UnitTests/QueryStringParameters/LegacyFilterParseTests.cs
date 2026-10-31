@@ -196,7 +196,8 @@ public sealed class LegacyFilterParseTests : BaseParseTests
         "Filtering on relationship 'wife' is only supported using 'isnull:' or 'isnotnull:'. To filter by related attributes, use 'filter[wife.id]=123' or use expression syntax.")]
     [InlineData("humans", "filter[wife]", "x", "Field 'wife' does not exist on resource type 'humans'.")]
     // Expression values on a to-one relationship or compound chain are not a comparison, so the scope must be a to-many relationship
-    [InlineData("appointments", "filter[calendar]", "expr:equals(timeZone,'UTC')", "To-many relationship 'calendar' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "filter[calendar]", "expr:equals(timeZone,'UTC')",
+        "To-many relationship 'calendar' does not exist on resource type 'appointments'.")]
     [InlineData("appointments", "filter[calendar.workweek]", "expr:equals(firstDay,'Monday')",
         "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
     [InlineData("men", "filter[wife]", "expr:equals(maidenName,'x')", "To-many relationship 'wife' does not exist on resource type 'men'.")]

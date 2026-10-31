@@ -838,6 +838,7 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
 
         appointments[0].MeetingPoint = null;
+
         appointments[0].Timing = new AppointmentTiming
         {
             BufferMinutes = 5,
@@ -899,6 +900,7 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
 
         appointments[0].MeetingPoint = null;
+
         appointments[1].MeetingPoint = new AppointmentCoordinates
         {
             Latitude = 52.5,

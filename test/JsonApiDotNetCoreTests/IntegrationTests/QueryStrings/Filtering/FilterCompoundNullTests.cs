@@ -15,55 +15,32 @@ public sealed class FilterCompoundNullTests : IClassFixture<IntegrationTestConte
     private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();
 
+    public static TheoryData<string, string> CalendarScalarCollectionExpressions =>
+        CreateExpressions([
+            ("workweek.extraDays", "equals(_,'Tuesday')", "equals(_,'Friday')"),
+            ("workweek.overtime.days", "equals(_,'Monday')", "equals(_,'Friday')")
+        ]);
+
+    public static TheoryData<string, string> CalendarCompoundCollectionExpressions =>
+        CreateExpressions([
+            ("workweek.extraBreaks", "equals(opensAt,'09:00:00')", "equals(opensAt,'10:00:00')"),
+            ("workweek.overtime.windows", "equals(opensAt,'09:00:00')", "equals(opensAt,'10:00:00')")
+        ]);
+
+    public static TheoryData<string, string> AppointmentCollectionExpressions =>
+        CreateExpressions([
+            ("keywords", "equals(_,'x')", "equals(_,'y')"),
+            ("waitingList", "equals(name,'Alice')", "equals(name,'Bob')"),
+            ("calendar.workweek.extraDays", "equals(_,'Tuesday')", "equals(_,'Friday')"),
+            ("calendar.workweek.overtime.windows", "equals(opensAt,'09:00:00')", "equals(opensAt,'10:00:00')")
+        ]);
+
     public FilterCompoundNullTests(IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
     {
         _testContext = testContext;
 
         testContext.UseController<CalendarsController>();
         testContext.UseController<AppointmentsController>();
-    }
-
-    public static TheoryData<string, string> CalendarScalarCollectionExpressions => CreateExpressions(
-    [
-        ("workweek.extraDays", "equals(_,'Tuesday')", "equals(_,'Friday')"),
-        ("workweek.overtime.days", "equals(_,'Monday')", "equals(_,'Friday')")
-    ]);
-
-    public static TheoryData<string, string> CalendarCompoundCollectionExpressions => CreateExpressions(
-    [
-        ("workweek.extraBreaks", "equals(opensAt,'09:00:00')", "equals(opensAt,'10:00:00')"),
-        ("workweek.overtime.windows", "equals(opensAt,'09:00:00')", "equals(opensAt,'10:00:00')")
-    ]);
-
-    public static TheoryData<string, string> AppointmentCollectionExpressions => CreateExpressions(
-    [
-        ("keywords", "equals(_,'x')", "equals(_,'y')"),
-        ("waitingList", "equals(name,'Alice')", "equals(name,'Bob')"),
-        ("calendar.workweek.extraDays", "equals(_,'Tuesday')", "equals(_,'Friday')"),
-        ("calendar.workweek.overtime.windows", "equals(opensAt,'09:00:00')", "equals(opensAt,'10:00:00')")
-    ]);
-
-    private static TheoryData<string, string> CreateExpressions((string Path, string Matching, string NonMatching)[] paths)
-    {
-        var data = new TheoryData<string, string>();
-
-        foreach ((string path, string matching, string nonMatching) in paths)
-        {
-            data.Add($"has({path})", "3");
-            data.Add($"not(has({path}))", "012");
-            data.Add($"has({path},{matching})", "3");
-            data.Add($"not(has({path},{matching}))", "012");
-            data.Add($"has({path},{nonMatching})", "");
-            data.Add($"not(has({path},{nonMatching}))", "0123");
-            data.Add($"equals(count({path}),'0')", "012");
-            data.Add($"not(equals(count({path}),'0'))", "3");
-            data.Add($"greaterThan(count({path}),'0')", "3");
-            data.Add($"lessThan(count({path}),'1')", "012");
-            data.Add($"and(not(has({path})),not(has({path},{nonMatching})))", "012");
-            data.Add($"or(has({path}),equals(count({path}),'0'))", "0123");
-        }
-
-        return data;
     }
 
     [Theory]
@@ -99,26 +76,6 @@ public sealed class FilterCompoundNullTests : IClassFixture<IntegrationTestConte
         await AssertCalendarFilterAsync(calendars, "not(has(workweek.extraDays))", "012");
     }
 
-    private async Task AssertCalendarFilterAsync(List<Calendar> calendars, string filterExpression, string expectedRows)
-    {
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await dbContext.ClearTableAsync<Calendar>();
-            dbContext.Calendars.AddRange(calendars);
-            await dbContext.SaveChangesAsync();
-        });
-
-        string route = $"/calendars?filter={filterExpression}";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-
-        string[] expectedIds = expectedRows.Select(row => calendars[row - '0'].StringId!).ToArray();
-        responseDocument.GetPrimaryIds().Should().BeEquivalentTo(expectedIds);
-    }
     [Theory]
     [MemberData(nameof(AppointmentCollectionExpressions))]
     public async Task Null_collections_count_as_empty_in_appointment_filter(string filterExpression, string expectedRows)
@@ -174,6 +131,7 @@ public sealed class FilterCompoundNullTests : IClassFixture<IntegrationTestConte
 
         responseDocument.GetPrimaryIds().Should().Equal(appointments[1].StringId);
     }
+
     [Theory]
     [InlineData("has(keywords)", "3")]
     [InlineData("not(has(keywords))", "012")]
@@ -236,6 +194,50 @@ public sealed class FilterCompoundNullTests : IClassFixture<IntegrationTestConte
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         string[] expectedIds = expectedRows.Select(row => appointments[row - '0'].StringId!).ToArray();
+        responseDocument.GetPrimaryIds().Should().BeEquivalentTo(expectedIds);
+    }
+
+    private static TheoryData<string, string> CreateExpressions((string Path, string Matching, string NonMatching)[] paths)
+    {
+        var data = new TheoryData<string, string>();
+
+        foreach ((string path, string matching, string nonMatching) in paths)
+        {
+            data.Add($"has({path})", "3");
+            data.Add($"not(has({path}))", "012");
+            data.Add($"has({path},{matching})", "3");
+            data.Add($"not(has({path},{matching}))", "012");
+            data.Add($"has({path},{nonMatching})", "");
+            data.Add($"not(has({path},{nonMatching}))", "0123");
+            data.Add($"equals(count({path}),'0')", "012");
+            data.Add($"not(equals(count({path}),'0'))", "3");
+            data.Add($"greaterThan(count({path}),'0')", "3");
+            data.Add($"lessThan(count({path}),'1')", "012");
+            data.Add($"and(not(has({path})),not(has({path},{nonMatching})))", "012");
+            data.Add($"or(has({path}),equals(count({path}),'0'))", "0123");
+        }
+
+        return data;
+    }
+
+    private async Task AssertCalendarFilterAsync(List<Calendar> calendars, string filterExpression, string expectedRows)
+    {
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => calendars[row - '0'].StringId!).ToArray();
         responseDocument.GetPrimaryIds().Should().BeEquivalentTo(expectedIds);
     }
 }

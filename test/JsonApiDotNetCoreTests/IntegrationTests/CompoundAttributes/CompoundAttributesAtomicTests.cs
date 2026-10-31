@@ -42,14 +42,14 @@ public sealed class CompoundAttributesAtomicTests
         Contact existingContact = CompoundAttributesSamples.CreateContact();
         await SeedAsync(existingContact);
 
-        var requestBody = CreateOperationsBody(CreateOperation(op, existingContact, JsonNode.Parse(contentJson)));
+        object requestBody = CreateOperationsBody(CreateOperation(op, existingContact, JsonNode.Parse(contentJson)));
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
 
         // Assert
-        AssertSingleError(httpResponse, responseDocument, HttpStatusCode.UnprocessableEntity, "Failed to deserialize request body: Incompatible attribute value found.",
-            null, "/atomic:operations/0/data/attributes/content");
+        AssertSingleError(httpResponse, responseDocument, HttpStatusCode.UnprocessableEntity,
+            "Failed to deserialize request body: Incompatible attribute value found.", null, "/atomic:operations/0/data/attributes/content");
     }
 
     [Theory]
@@ -70,7 +70,7 @@ public sealed class CompoundAttributesAtomicTests
         JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
         ((JsonObject)content["name"]!)[member] = "value";
 
-        var requestBody = CreateOperationsBody(CreateOperation(op, existingContact, content));
+        object requestBody = CreateOperationsBody(CreateOperation(op, existingContact, content));
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
@@ -93,7 +93,8 @@ public sealed class CompoundAttributesAtomicTests
         JsonObject updateContent = CompoundAttributesSamples.CreateMinimalContent();
         ((JsonObject)updateContent["name"]!)["nickName"] = "Countess";
 
-        var requestBody = CreateOperationsBody(CreateOperation("add", existingContact, addContent), CreateOperation("update", existingContact, updateContent));
+        object requestBody =
+            CreateOperationsBody(CreateOperation("add", existingContact, addContent), CreateOperation("update", existingContact, updateContent));
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
@@ -154,7 +155,7 @@ public sealed class CompoundAttributesAtomicTests
         Contact existingContact = CompoundAttributesSamples.CreateContact();
         await SeedAsync(existingContact);
 
-        var requestBody = CreateOperationsBody(CreateOperation("update", existingContact, null));
+        object requestBody = CreateOperationsBody(CreateOperation("update", existingContact, null));
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
@@ -180,7 +181,7 @@ public sealed class CompoundAttributesAtomicTests
             ]
             """);
 
-        var requestBody = CreateOperationsBody(CreateOperation("update", existingContact, content));
+        object requestBody = CreateOperationsBody(CreateOperation("update", existingContact, content));
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
@@ -200,7 +201,7 @@ public sealed class CompoundAttributesAtomicTests
         JsonObject content = CompoundAttributesSamples.CreateIdenticalPatchContent();
         content["company"]!["departments"] = new JsonArray("1", "2", "3", "4");
 
-        var requestBody = CreateOperationsBody(CreateOperation("update", existingContact, content));
+        object requestBody = CreateOperationsBody(CreateOperation("update", existingContact, content));
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
@@ -351,8 +352,8 @@ public sealed class CompoundAttributesAtomicTests
         });
     }
 
-    private static void AssertSingleError(HttpResponseMessage httpResponse, Document responseDocument, HttpStatusCode expectedStatusCode,
-        string expectedTitle, string? expectedDetail, string expectedPointer)
+    private static void AssertSingleError(HttpResponseMessage httpResponse, Document responseDocument, HttpStatusCode expectedStatusCode, string expectedTitle,
+        string? expectedDetail, string expectedPointer)
     {
         httpResponse.ShouldHaveStatusCode(expectedStatusCode);
 

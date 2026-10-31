@@ -107,10 +107,14 @@ public sealed class SortCompoundNullTests : IClassFixture<IntegrationTestContext
 
         // Assert
         ascendingResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-        ascendingDocument.GetPrimaryIds().Should().Equal(appointments[0].StringId, appointments[1].StringId, appointments[2].StringId, appointments[3].StringId);
+
+        ascendingDocument.GetPrimaryIds().Should()
+            .Equal(appointments[0].StringId, appointments[1].StringId, appointments[2].StringId, appointments[3].StringId);
 
         descendingResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-        descendingDocument.GetPrimaryIds().Should().Equal(appointments[3].StringId, appointments[0].StringId, appointments[1].StringId, appointments[2].StringId);
+
+        descendingDocument.GetPrimaryIds().Should()
+            .Equal(appointments[3].StringId, appointments[0].StringId, appointments[1].StringId, appointments[2].StringId);
     }
 
     [Fact]

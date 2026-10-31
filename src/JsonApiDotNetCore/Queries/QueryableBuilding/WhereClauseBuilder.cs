@@ -203,7 +203,11 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         if (type == typeof(string))
         {
-            MethodInfo compareMethod = typeof(string).GetMethod(nameof(string.Compare), [typeof(string), typeof(string)])!;
+            MethodInfo compareMethod = typeof(string).GetMethod(nameof(string.Compare), [
+                typeof(string),
+                typeof(string)
+            ])!;
+
             ConstantExpression zero = Expression.Constant(0);
 
             return (Expression.Call(compareMethod, left, right), zero);

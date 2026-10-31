@@ -81,15 +81,36 @@ public sealed class ResourceChangeTrackerTests
     {
         // Arrange
         TrackedResource request = CreateResource();
-        request.Doubles = [double.NaN, double.PositiveInfinity, double.NegativeInfinity];
+
+        request.Doubles =
+        [
+            double.NaN,
+            double.PositiveInfinity,
+            double.NegativeInfinity
+        ];
+
         request.Profile!.Ratio = double.NaN;
 
         TrackedResource stored = CreateResource();
-        stored.Doubles = [double.NaN, double.PositiveInfinity, double.NegativeInfinity];
+
+        stored.Doubles =
+        [
+            double.NaN,
+            double.PositiveInfinity,
+            double.NegativeInfinity
+        ];
+
         stored.Profile!.Ratio = double.NaN;
 
         TrackedResource changed = CreateResource();
-        changed.Doubles = [double.NaN, double.PositiveInfinity, 1];
+
+        changed.Doubles =
+        [
+            double.NaN,
+            double.PositiveInfinity,
+            1
+        ];
+
         changed.Profile!.Ratio = double.NaN;
 
         // Act
@@ -276,22 +297,37 @@ public sealed class ResourceChangeTrackerTests
         // Arrange
         var request = new TrackedResource
         {
-            Set = new HashSet<int>([1, 2, 3])
+            Set = new HashSet<int>([
+                1,
+                2,
+                3
+            ])
         };
 
         var reorderedStored = new TrackedResource
         {
-            Set = new HashSet<int>([3, 2, 1])
+            Set = new HashSet<int>([
+                3,
+                2,
+                1
+            ])
         };
 
         var changedStored = new TrackedResource
         {
-            Set = new HashSet<int>([3, 2, 4])
+            Set = new HashSet<int>([
+                3,
+                2,
+                4
+            ])
         };
 
         var smallerStored = new TrackedResource
         {
-            Set = new HashSet<int>([1, 2])
+            Set = new HashSet<int>([
+                1,
+                2
+            ])
         };
 
         // Act
@@ -311,12 +347,22 @@ public sealed class ResourceChangeTrackerTests
         // Arrange
         var request = new TrackedResource
         {
-            Numbers = [1, 2, 3]
+            Numbers =
+            [
+                1,
+                2,
+                3
+            ]
         };
 
         var stored = new TrackedResource
         {
-            Numbers = [3, 2, 1]
+            Numbers =
+            [
+                3,
+                2,
+                1
+            ]
         };
 
         // Act
@@ -332,12 +378,22 @@ public sealed class ResourceChangeTrackerTests
         // Arrange
         var request = new TrackedResource
         {
-            Numbers = [1, 2, 3]
+            Numbers =
+            [
+                1,
+                2,
+                3
+            ]
         };
 
         var stored = new TrackedResource
         {
-            Numbers = [1, 2, 3]
+            Numbers =
+            [
+                1,
+                2,
+                3
+            ]
         };
 
         // Act
@@ -352,13 +408,31 @@ public sealed class ResourceChangeTrackerTests
     {
         // Arrange
         TrackedResource request = CreateResource();
-        request.Profile!.Blob = [1, 2, 3];
+
+        request.Profile!.Blob =
+        [
+            1,
+            2,
+            3
+        ];
 
         TrackedResource equalStored = CreateResource();
-        equalStored.Profile!.Blob = [1, 2, 3];
+
+        equalStored.Profile!.Blob =
+        [
+            1,
+            2,
+            3
+        ];
 
         TrackedResource changedStored = CreateResource();
-        changedStored.Profile!.Blob = [1, 2, 4];
+
+        changedStored.Profile!.Blob =
+        [
+            1,
+            2,
+            4
+        ];
 
         // Act
         bool equal = HasImplicitChanges(nameof(TrackedResource.Profile), request, equalStored);
@@ -377,7 +451,8 @@ public sealed class ResourceChangeTrackerTests
         TrackedResource stored = CreateResource();
 
         // Act
-        bool hasChanges = HasImplicitChangesAfterMutation(nameof(TrackedResource.Plain), request, stored, resource => resource.Profile!.Address!.City = "Other");
+        bool hasChanges =
+            HasImplicitChangesAfterMutation(nameof(TrackedResource.Plain), request, stored, resource => resource.Profile!.Address!.City = "Other");
 
         // Assert
         hasChanges.Should().BeTrue();
@@ -417,12 +492,20 @@ public sealed class ResourceChangeTrackerTests
         // Arrange
         var request = new TrackedResource
         {
-            Numbers = [1, 2]
+            Numbers =
+            [
+                1,
+                2
+            ]
         };
 
         var stored = new TrackedResource
         {
-            Numbers = [1, 2]
+            Numbers =
+            [
+                1,
+                2
+            ]
         };
 
         // Act
@@ -440,7 +523,12 @@ public sealed class ResourceChangeTrackerTests
 
         var stored = new TrackedResource
         {
-            Data = [1, 2, 3]
+            Data =
+            [
+                1,
+                2,
+                3
+            ]
         };
 
         // Act
@@ -473,11 +561,12 @@ public sealed class ResourceChangeTrackerTests
         };
 
         // Act
-        bool hasChanges = HasImplicitChangesAfterMutation(nameof(TrackedResource.NullablePosition), request, stored, resource => resource.NullablePosition = new GeoStruct
-        {
-            X = 5,
-            Y = 2
-        });
+        bool hasChanges = HasImplicitChangesAfterMutation(nameof(TrackedResource.NullablePosition), request, stored, resource => resource.NullablePosition =
+            new GeoStruct
+            {
+                X = 5,
+                Y = 2
+            });
 
         // Assert
         hasChanges.Should().BeTrue();
@@ -489,12 +578,18 @@ public sealed class ResourceChangeTrackerTests
         // Arrange
         var request = new TrackedResource
         {
-            Set = new HashSet<int>([1, 2])
+            Set = new HashSet<int>([
+                1,
+                2
+            ])
         };
 
         var stored = new TrackedResource
         {
-            Set = new HashSet<int>([1, 2])
+            Set = new HashSet<int>([
+                1,
+                2
+            ])
         };
 
         // Act

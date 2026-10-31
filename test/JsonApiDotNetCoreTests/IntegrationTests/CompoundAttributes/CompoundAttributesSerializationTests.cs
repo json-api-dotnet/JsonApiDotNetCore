@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -106,12 +105,6 @@ public sealed class CompoundAttributesSerializationTests : IntegrationTestContex
         JsonNode? location = resource.GetAttribute("lastKnownLocation");
         HasMember(location, "latitude").Should().Be(writesDefault);
         HasMember(location, "longitude").Should().BeTrue();
-    }
-
-    private static bool HasMember(JsonNode? node, string name)
-    {
-        node.Should().BeOfType<JsonObject>();
-        return ((JsonObject)node).ContainsKey(name);
     }
 
     [Theory]
@@ -390,5 +383,11 @@ public sealed class CompoundAttributesSerializationTests : IntegrationTestContex
         responseDocument.Data.ManyValue[0].GetAttribute("content").ShouldBeJson("""
             { "company": { "registrationNumber": "REG-8" }, "addresses": [ { "isoCountryCode": "NL" } ] }
             """);
+    }
+
+    private static bool HasMember(JsonNode? node, string name)
+    {
+        node.Should().BeOfType<JsonObject>();
+        return ((JsonObject)node).ContainsKey(name);
     }
 }

@@ -16,7 +16,8 @@ internal static class NullPathTestData
 
     /// <summary>
     /// Creates four calendars: 0 has no workweek, 1 has a workweek without nested compound and with null collections, 2 has a nested compound and empty
-    /// collections (null in the nested compound), 3 has populated collections. Scalar collections nested in compounds are only null when requested, because\r\n    /// a stored JSON null cannot be queried for them.
+    /// collections (null in the nested compound), 3 has populated collections. Scalar collections nested in compounds are only null when requested,
+    /// because\r\n    /// a stored JSON null cannot be queried for them.
     /// </summary>
     public static List<Calendar> CreateCalendars(QueryStringFakers fakers, bool nullScalarCollections = false)
     {
@@ -47,24 +48,12 @@ internal static class NullPathTestData
         calendars[3].Workweek = new Workweek
         {
             FirstDay = DayOfWeek.Monday,
-            ExtraDays =
-            [
-                DayOfWeek.Tuesday
-            ],
-            ExtraBreaks =
-            [
-                SampleHours
-            ],
+            ExtraDays = [DayOfWeek.Tuesday],
+            ExtraBreaks = [SampleHours],
             Overtime = new OvertimePolicy
             {
-                Days =
-                [
-                    DayOfWeek.Monday
-                ],
-                Windows =
-                [
-                    SampleHours
-                ]
+                Days = [DayOfWeek.Monday],
+                Windows = [SampleHours]
             }
         };
 
@@ -88,10 +77,7 @@ internal static class NullPathTestData
         appointments[2].Keywords = [];
         appointments[2].WaitingList = [];
 
-        appointments[3].Keywords =
-        [
-            "x"
-        ];
+        appointments[3].Keywords = ["x"];
 
         appointments[3].WaitingList =
         [

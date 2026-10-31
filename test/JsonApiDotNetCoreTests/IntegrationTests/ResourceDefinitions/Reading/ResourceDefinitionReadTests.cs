@@ -1218,6 +1218,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         sparseFieldSetHits.Count(name => name == nameof(Moon)).Should().Be(2);
         sparseFieldSetHits.Count(name => name == nameof(Planet)).Should().Be(2);
     }
+
     [Fact]
     public async Task Reports_right_side_resource_hidden_by_definition_filter_as_missing_when_assignment_fails()
     {
@@ -1262,13 +1263,15 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.Should().HaveCount(2);
-        responseDocument.Errors.Should().OnlyContain(error => error.StatusCode == HttpStatusCode.NotFound && error.Title == "A related resource does not exist.");
-        responseDocument.Errors.Select(error => error.Detail).Should().BeEquivalentTo(new[]
-        {
+
+        responseDocument.Errors.Should()
+            .OnlyContain(error => error.StatusCode == HttpStatusCode.NotFound && error.Title == "A related resource does not exist.");
+
+        responseDocument.Errors.Select(error => error.Detail).Should().BeEquivalentTo(
             $"Related resource of type 'planets' with ID '{hiddenPlanet.StringId}' in relationship 'planets' does not exist.",
-            $"Related resource of type 'planets' with ID '{Unknown.StringId.Int64}' in relationship 'planets' does not exist."
-        });
+            $"Related resource of type 'planets' with ID '{Unknown.StringId.Int64}' in relationship 'planets' does not exist.");
     }
+
     [Fact]
     public async Task Can_include_nested_chain_in_sparse_fieldset_from_hook()
     {

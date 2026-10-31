@@ -580,6 +580,7 @@ public sealed class CompoundResourceGraphBuilderTests
 
         // Assert
         AttrAttribute baseAttribute = resourceGraph.GetResourceType<BaseWithCompound>().GetAttributeByPropertyName(nameof(BaseWithCompound.Shape));
+
         AttrAttribute derivedAttribute = resourceGraph.GetResourceType<DerivedOverridingCompoundUnchanged>()
             .GetAttributeByPropertyName(nameof(BaseWithCompound.Shape));
 

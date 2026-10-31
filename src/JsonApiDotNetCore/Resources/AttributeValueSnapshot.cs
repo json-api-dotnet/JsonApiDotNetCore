@@ -6,9 +6,9 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Resources;
 
 /// <summary>
-/// Captures the value of an attribute at a point in time, in a form that can be compared later using <see cref="object.Equals(object)" />. The structure of
-/// compound attributes is taken from the resource graph metadata, so only members that are exposed as attributes take part in the comparison. Values that
-/// are not compound and not a collection are captured as-is, so they keep their own equality semantics.
+/// Captures the value of an attribute at a point in time, in a form that can be compared later using <see cref="object.Equals(object)" />. The structure
+/// of compound attributes is taken from the resource graph metadata, so only members that are exposed as attributes take part in the comparison. Values
+/// that are not compound and not a collection are captured as-is, so they keep their own equality semantics.
 /// </summary>
 internal static class AttributeValueSnapshot
 {

@@ -11,8 +11,8 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets;
 
 /// <summary>
-/// Performs a query that honors the sparse fieldset of the resource definition after each update, so the query side of the evaluator is used while atomic
-/// operations are being processed.
+/// Performs a query that honors the sparse fieldset of the resource definition after each update, so the query side of the evaluator is used while
+/// atomic operations are being processed.
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class PlaylistQueryService(

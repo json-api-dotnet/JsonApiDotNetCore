@@ -437,7 +437,8 @@ public sealed partial class ResourceGraphBuilder
 
         if (compoundClrType.GetCustomAttribute<ResourceAttribute>(true) != null)
         {
-            throw new InvalidConfigurationException($"Type '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}' is a compound type and cannot be annotated with [Resource].");
+            throw new InvalidConfigurationException(
+                $"Type '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}' is a compound type and cannot be annotated with [Resource].");
         }
 
         var attributesByName = new Dictionary<string, AttrAttribute>();
@@ -557,7 +558,8 @@ public sealed partial class ResourceGraphBuilder
     {
         if (inPath.Contains(currentType))
         {
-            throw new InvalidConfigurationException($"Circular reference detected: compound type '{RuntimeTypeConverter.GetFriendlyTypeName(currentType)}' references itself directly or indirectly.");
+            throw new InvalidConfigurationException(
+                $"Circular reference detected: compound type '{RuntimeTypeConverter.GetFriendlyTypeName(currentType)}' references itself directly or indirectly.");
         }
 
         if (!visited.Add(currentType))
