@@ -17,6 +17,15 @@ public sealed class Calendar : Identifiable<long>
     [Attr]
     public int DefaultAppointmentDurationInMinutes { get; set; }
 
+    [Attr(IsCompound = true)]
+    public Workweek? Workweek { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<Holiday> Holidays { get; set; } = [];
+
+    [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowFilter)]
+    public CalendarAudit? Audit { get; set; }
+
     [HasOne]
     public Appointment? MostRecentAppointment { get; set; }
 

@@ -32,6 +32,24 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
 
     internal static void ConfigureModel(ModelBuilder builder)
     {
+        builder.Entity<Calendar>()
+            .ComplexProperty(calendar => calendar.Workweek, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Calendar>()
+            .ComplexCollection(calendar => calendar.Holidays, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Calendar>()
+            .ComplexProperty(calendar => calendar.Audit, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexProperty(appointment => appointment.Location, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexCollection(appointment => appointment.Attendees, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexProperty(appointment => appointment.Cost, complexBuilder => complexBuilder.ToJson());
+
         builder.Entity<WebAccount>()
             .HasMany(webAccount => webAccount.Posts)
             .WithOne(blogPost => blogPost.Author);
