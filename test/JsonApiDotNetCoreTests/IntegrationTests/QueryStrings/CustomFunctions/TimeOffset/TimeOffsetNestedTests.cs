@@ -79,6 +79,52 @@ public sealed class TimeOffsetNestedTests : IClassFixture<IntegrationTestContext
     }
 
     [Fact]
+    public async Task Can_filter_on_date_with_offset_on_scalar_collection_elements()
+    {
+        // Arrange
+        var timeProvider = _testContext.App.Services.GetRequiredService<TimeProvider>();
+        DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
+
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeDateTimes =
+                [
+                    utcNow.AddMinutes(-15),
+                    utcNow.AddMinutes(5)
+                ]
+            },
+            new()
+            {
+                SomeDateTimes =
+                [
+                    utcNow.AddMinutes(-5),
+                    utcNow.AddMinutes(10)
+                ]
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/filterableResources?filter=has(someDateTimes,lessThan(_,timeOffset('-0:10:00')))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(resources[1].StringId);
+    }
+
+    [Fact]
     public async Task Can_filter_on_date_with_offset_in_compound_collection_scope()
     {
         // Arrange

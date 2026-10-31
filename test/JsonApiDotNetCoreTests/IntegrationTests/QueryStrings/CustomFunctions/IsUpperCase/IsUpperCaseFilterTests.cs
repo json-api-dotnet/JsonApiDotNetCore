@@ -20,6 +20,7 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
 
         testContext.UseController<BlogsController>();
         testContext.UseController<AppointmentsController>();
+        testContext.UseController<CalendarsController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -288,5 +289,50 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_casing_in_scope_of_included_resources_with_compounds()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        calendar.PinnedAppointments = _fakers.Appointment.GenerateSet(2);
+
+        calendar.PinnedAppointments.ElementAt(0).Attendees =
+        [
+            new Attendee
+            {
+                Name = "alice"
+            }
+        ];
+
+        calendar.PinnedAppointments.ElementAt(1).Attendees =
+        [
+            new Attendee
+            {
+                Name = "ALICE"
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?include=pinnedAppointments&filter[pinnedAppointments]=has(attendees,isUpperCase(name))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(calendar.StringId);
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(calendar.PinnedAppointments.ElementAt(1).StringId);
     }
 }
