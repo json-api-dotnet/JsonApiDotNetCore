@@ -560,7 +560,7 @@ public sealed class ResourceGraphBuilderTests
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
-            $"Type '{typeof(CompoundWithResourceAnnotation)}' is a compound type and cannot be annotated with [Resource].");
+            $"Type '{nameof(CompoundWithResourceAnnotation)}' is a compound type and cannot be annotated with [Resource].");
     }
 
     [Fact]
@@ -624,7 +624,7 @@ public sealed class ResourceGraphBuilderTests
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
-            $"Circular reference detected: compound type '{typeof(DirectCycleCompound)}' references itself directly or indirectly.");
+            $"Circular reference detected: compound type '{nameof(DirectCycleCompound)}' references itself directly or indirectly.");
     }
 
     [Fact]
@@ -640,7 +640,7 @@ public sealed class ResourceGraphBuilderTests
 
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
-            $"Circular reference detected: compound type '{typeof(IndirectCycleCompoundA)}' references itself directly or indirectly.");
+            $"Circular reference detected: compound type '{nameof(IndirectCycleCompoundA)}' references itself directly or indirectly.");
     }
 
     [Fact]
