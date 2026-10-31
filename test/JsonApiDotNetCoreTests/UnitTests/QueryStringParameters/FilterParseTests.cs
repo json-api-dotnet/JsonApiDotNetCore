@@ -315,6 +315,7 @@ public sealed class FilterParseTests : BaseParseTests
     // Predicates inside the scope of a compound collection
     [InlineData("appointments", "filter", "has(attendees,equals(name,'x'))", null)]
     [InlineData("appointments", "filter", "has(attendees,contains(name,'x'))", null)]
+    [InlineData("appointments", "filter", "has(attendees,startsWith(contact.title,'x'))", null)]
     [InlineData("appointments", "filter", "has(attendees,any(name,'a','b'))", null)]
     [InlineData("appointments", "filter", "has(attendees,not(equals(name,'x')))", null)]
     [InlineData("appointments", "filter", "has(attendees,equals(response,'Accepted'))", null)]
@@ -426,6 +427,11 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("appointments", "has(attendees,^count(name))", "Filter function expected.")]
     [InlineData("appointments", "has(attendees,equals(^_,'x'))", "Function or field name expected.")]
     [InlineData("appointments", "has(attendees,equals(response,^'Bogus'))", "Failed to convert 'Bogus' to type 'Nullable<AttendeeResponse>'.")]
+    [InlineData("appointments", "has(attendees,startsWith(^_.name,'x'))", "Function or field name expected.")]
+    [InlineData("appointments", "has(attendees,contains(^_,'x'))", "Function or field name expected.")]
+    [InlineData("appointments", "has(attendees,endsWith(^null,'x'))", "Function or field name expected.")]
+    [InlineData("appointments", "has(attendees,startsWith(^response,'x'))", "Attribute 'response' is of type 'Nullable<AttendeeResponse>' while type 'String' was expected.")]
+    [InlineData("appointments", "has(attendees,contains(contact.^unknown,'x'))", "Field 'unknown' does not exist on compound type 'AttendeeContact'.")]
     // Element scope of a scalar collection
     [InlineData("appointments", "equals(^_,'x')", "Function or field name expected.")]
     [InlineData("appointments", "has(keywords,equals(^x,'1'))", "Function or _ expected.")]
