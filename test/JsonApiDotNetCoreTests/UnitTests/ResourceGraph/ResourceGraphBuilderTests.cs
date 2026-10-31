@@ -514,7 +514,7 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
-    public void Automatically_strips_AllowSort_from_compound_attributes()
+    public void Keeps_AllowSort_on_compound_attributes()
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -527,7 +527,7 @@ public sealed class ResourceGraphBuilderTests
         // Assert
         ResourceType resourceType = resourceGraph.GetResourceType<ResourceWithSortableCompound>();
         AttrAttribute attr = resourceType.GetAttributeByPropertyName(nameof(ResourceWithSortableCompound.Compound));
-        attr.Capabilities.HasFlag(AttrCapabilities.AllowSort).Should().BeFalse();
+        attr.Capabilities.Should().HaveFlag(AttrCapabilities.AllowSort);
     }
 
     [Fact]
