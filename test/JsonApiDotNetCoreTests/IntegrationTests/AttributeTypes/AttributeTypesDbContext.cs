@@ -16,6 +16,14 @@ public sealed class AttributeTypesDbContext(DbContextOptions<AttributeTypesDbCon
 {
     public DbSet<TypeContainer> TypeContainers => Set<TypeContainer>();
 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<TypeContainer>()
+            .ComplexProperty(container => container.Nested, complexBuilder => complexBuilder.ToJson());
+
+        base.OnModelCreating(builder);
+    }
+
     protected override void ConfigureConventions(ModelConfigurationBuilder builder)
     {
         builder.Properties<Int128>()
