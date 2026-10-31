@@ -122,7 +122,7 @@ public sealed class ResourceGraph : IResourceGraph
     {
         ArgumentNullException.ThrowIfNull(clrType);
 
-        return _compoundTypesByClrType.GetValueOrDefault(clrType);
+        return _compoundTypesByClrType.GetValueOrDefault(Nullable.GetUnderlyingType(clrType) ?? clrType);
     }
 
     /// <inheritdoc />

@@ -277,7 +277,7 @@ public sealed class CompoundAttributesModelStateTests
             "/data/attributes/categories");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D5: Nullable<struct> compound fails with 500 'Failed to instantiate compound type Nullable`1' on write, so nested validation cannot be reached.")]
+    [Fact]
     public async Task Validates_struct_compound()
     {
         // Arrange

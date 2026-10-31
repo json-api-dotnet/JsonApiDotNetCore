@@ -114,7 +114,7 @@ public sealed class ModelStateValidationTests
         }
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D5: FindCompoundType(Nullable<T>) returns null, so no source pointer is produced for members of a nullable struct compound")]
+    [Fact]
     public void Renders_JSON_path_for_ModelState_key_in_nullable_struct_compound()
     {
         // Arrange
