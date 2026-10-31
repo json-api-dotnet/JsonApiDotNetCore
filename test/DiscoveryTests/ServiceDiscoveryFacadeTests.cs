@@ -61,6 +61,30 @@ public sealed class ServiceDiscoveryFacadeTests
     }
 
     [Fact]
+    public void Compound_types_are_not_registered_as_resources_or_controllers()
+    {
+        // Arrange
+        Action<ServiceDiscoveryFacade> addAction = facade => facade.AddCurrentAssembly();
+
+        // Act
+        _services.AddJsonApi(discovery: addAction);
+
+        // Assert
+        ServiceProvider serviceProvider = _services.BuildServiceProvider();
+        var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
+
+        resourceGraph.FindCompoundType<PrivateCompound>().Should().NotBeNull();
+        resourceGraph.GetResourceTypes().Should().NotContain(resourceType => resourceType.ClrType == typeof(PrivateCompound));
+
+        _services.Should().NotContain(descriptor => IsRelatedTo(descriptor.ServiceType) || IsRelatedTo(descriptor.ImplementationType));
+    }
+
+    private static bool IsRelatedTo(Type? type)
+    {
+        return type != null && (type == typeof(PrivateCompound) || type.GenericTypeArguments.Contains(typeof(PrivateCompound)));
+    }
+
+    [Fact]
     public void Can_add_resource_service_from_current_assembly_to_container()
     {
         // Arrange
