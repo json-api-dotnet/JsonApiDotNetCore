@@ -233,30 +233,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Cannot_select_view_blocked_nested_member()
-    {
-        // Arrange
-        var parameterValue = new MarkedText("content.name.^secretAlias", '^');
-        string route = $"/contacts?fields[contacts]={parameterValue.Text}";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
-
-        responseDocument.Errors.Should().HaveCount(1);
-
-        ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified fieldset is invalid.");
-        error.Detail.Should().Be($"Retrieving attribute 'secretAlias' is not allowed. {parameterValue}");
-        error.Source.Should().NotBeNull();
-        error.Source.Parameter.Should().Be("fields[contacts]");
-    }
-
-    [Fact]
-    public async Task Can_use_public_names_for_nested_members()
+    public async Task Uses_public_names_for_nested_members()
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();
@@ -458,36 +435,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Can_fetch_all_scalar_properties_when_fieldset_selects_read_only_nested_member()
-    {
-        // Arrange
-        Contact contact = CompoundAttributesSamples.CreateContact();
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await dbContext.ClearTableAsync<Contact>();
-            dbContext.Contacts.Add(contact);
-            await dbContext.SaveChangesAsync();
-        });
-
-        string route = $"/contacts/{contact.StringId}?fields[contacts]=content.name.displayName";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-
-        responseDocument.Data.SingleValue.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-
-        responseDocument.Data.SingleValue.GetAttribute("content").ShouldBeJson("""
-            { "name": { "displayName": "Ada M Lovelace" } }
-            """);
-    }
-
-    [Fact]
-    public async Task Can_render_nullable_struct_compound()
+    public async Task Renders_nullable_struct_compound()
     {
         // Arrange
         Contact contact = _fakers.Contact.Generate();

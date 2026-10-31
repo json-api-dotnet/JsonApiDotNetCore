@@ -222,7 +222,7 @@ public sealed class NestedAttributeTypeTests : IClassFixture<IntegrationTestCont
         elements[2].ToString().Should().Be(last);
     }
 
-    // Outcome list (I-AT-06): collections of these element types cannot be mapped inside a JSON column, because EF Core does not apply the value converter
+    // Collections of these element types cannot be mapped inside a JSON column, because EF Core does not apply the value converter
     // to the elements of a primitive collection and instead treats the collection property as a navigation. The model fails to build at startup with the
     // message in the skip reasons, so the members are not part of TypeContainerNested. Scalar properties of the same types do work inside JSON.
     [Theory]
