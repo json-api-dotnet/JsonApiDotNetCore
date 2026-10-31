@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
@@ -265,6 +266,172 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:genres read:movies.");
+        error.Source.Should().NotBeNull();
+        error.Source.Header.Should().Be(ScopeHeaderName);
+    }
+
+    [Fact]
+    public async Task Can_select_nested_attribute_with_read_scope()
+    {
+        // Arrange
+        Movie movie = _fakers.Movie.GenerateOne();
+        movie.Genre = _fakers.Genre.GenerateOne();
+
+        movie.Production = new MovieProduction
+        {
+            Budget = 1500000.50m,
+            StudioName = "Acme",
+            Locations = ["Paris", "Rome"]
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Movie>();
+            dbContext.Movies.Add(movie);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/movies?fields[movies]=production.budget";
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Add(ScopeHeaderName, "read:movies");
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+
+        JsonElement production = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("production").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        production.EnumerateObject().Should().ContainSingle().Which.Name.Should().Be("budget");
+        production.GetProperty("budget").GetDecimal().Should().Be(1500000.50m);
+    }
+
+    [Fact]
+    public async Task Cannot_select_nested_attribute_without_scope()
+    {
+        // Arrange
+        const string route = "/movies?fields[movies]=production.budget";
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Add(ScopeHeaderName, "read:actors");
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        error.Title.Should().Be("Insufficient permissions to perform this request.");
+        error.Detail.Should().Be("Performing this request requires the following scopes: read:movies.");
+        error.Source.Should().NotBeNull();
+        error.Source.Header.Should().Be(ScopeHeaderName);
+    }
+
+    [Fact]
+    public async Task Can_filter_nested_attribute_with_scope()
+    {
+        // Arrange
+        List<Movie> movies = _fakers.Movie.GenerateList(2);
+
+        movies[0].Genre = _fakers.Genre.GenerateOne();
+        movies[0].Production = new MovieProduction
+        {
+            Locations = ["Paris", "Rome"]
+        };
+
+        movies[1].Genre = _fakers.Genre.GenerateOne();
+        movies[1].Production = new MovieProduction
+        {
+            Locations = ["Berlin"]
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Movie>();
+            dbContext.Movies.AddRange(movies);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/movies?filter=has(production.locations,equals(_,'Rome'))";
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Add(ScopeHeaderName, "read:movies");
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(movies[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_by_nested_attribute_with_scope()
+    {
+        // Arrange
+        List<Movie> movies = _fakers.Movie.GenerateList(2);
+
+        movies[0].Genre = _fakers.Genre.GenerateOne();
+        movies[0].Production = new MovieProduction
+        {
+            Budget = 200
+        };
+
+        movies[1].Genre = _fakers.Genre.GenerateOne();
+        movies[1].Production = new MovieProduction
+        {
+            Budget = 100
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Movie>();
+            dbContext.Movies.AddRange(movies);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/movies?sort=production.budget";
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Add(ScopeHeaderName, "read:movies");
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(movies[1].StringId);
+        responseDocument.Data.ManyValue[1].Id.Should().Be(movies[0].StringId);
+    }
+
+    [Fact]
+    public async Task Cannot_include_related_without_scope_when_fieldset_selects_compound()
+    {
+        // Arrange
+        const string route = "/movies?include=cast&fields[movies]=production.budget&fields[actors]=name";
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Add(ScopeHeaderName, "read:movies");
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        error.Title.Should().Be("Insufficient permissions to perform this request.");
+        error.Detail.Should().Be("Performing this request requires the following scopes: read:actors read:movies.");
         error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }

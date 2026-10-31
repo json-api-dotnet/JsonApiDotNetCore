@@ -18,6 +18,15 @@ public sealed class FilterDbContext(DbContextOptions<FilterDbContext> options)
             .Property(resource => resource.SomeDateTimeInLocalZone)
             .HasColumnType("timestamp without time zone");
 
+        builder.Entity<FilterableResource>()
+            .ComplexProperty(resource => resource.SomeCompound, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<FilterableResource>()
+            .ComplexProperty(resource => resource.SomeRequiredCompound, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<FilterableResource>()
+            .ComplexCollection(resource => resource.SomeCompounds, complexBuilder => complexBuilder.ToJson());
+
         base.OnModelCreating(builder);
     }
 }
