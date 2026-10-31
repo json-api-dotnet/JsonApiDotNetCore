@@ -32,6 +32,22 @@ public sealed class MoonDefinition(IResourceGraph resourceGraph, IClientSettings
         return existingIncludes.Add(new IncludeElementExpression(isGivenLightByRelationship));
     }
 
+    public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
+    {
+        base.OnApplyFilter(existingFilter);
+
+        if (_clientSettingsProvider.AreSmallMoonsHidden)
+        {
+            AttrAttribute solarRadiusAttribute = ResourceType.GetAttributeByPropertyName(nameof(Moon.SolarRadius));
+            var solarRadiusChain = new ResourceFieldChainExpression(solarRadiusAttribute);
+            var isLargeEnough = new ComparisonExpression(ComparisonOperator.GreaterOrEqual, solarRadiusChain, new LiteralConstantExpression(1M));
+
+            return LogicalExpression.Compose(LogicalOperator.And, existingFilter, isLargeEnough);
+        }
+
+        return existingFilter;
+    }
+
     public override QueryStringParameterHandlers<Moon> OnRegisterQueryableHandlersForQueryStringParameters()
     {
         base.OnRegisterQueryableHandlersForQueryStringParameters();

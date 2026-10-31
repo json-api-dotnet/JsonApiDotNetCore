@@ -1,8 +1,11 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -31,6 +34,12 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
             services.AddSingleton<IClientSettingsProvider, TestClientSettingsProvider>();
             services.AddSingleton<ResourceDefinitionHitCounter>();
+
+            services.AddSingleton<SparseFieldSetEvaluatorHitCounter>();
+            services.Replace(ServiceDescriptor.Scoped<ISparseFieldSetEvaluator, CountingSparseFieldSetEvaluator>());
+
+            services.AddSingleton<CustomConstraintSettings>();
+            services.AddScoped<IQueryConstraintProvider, CustomConstraintProvider>();
         });
 
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
@@ -41,6 +50,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
+
+        _testContext.App.Services.GetRequiredService<SparseFieldSetEvaluatorHitCounter>().Reset();
+        _testContext.App.Services.GetRequiredService<CustomConstraintSettings>().IsEnabled = false;
     }
 
     [Fact]
@@ -1050,5 +1062,126 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         {
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnRegisterQueryableHandlersForQueryStringParameters)
         }, options => options.WithStrictOrdering());
+    }
+
+    private const string StarCollectionHits = "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes " +
+        "Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string StarSingleHits = "Star.OnApplyFilter Star.OnApplySparseFieldSet Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string PlanetSecondaryHits = "Planet.OnApplyPagination Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplySparseFieldSet " +
+        "Planet.OnApplyIncludes Star.OnApplyFilter Star.OnApplyFilter Planet.OnApplyFilter Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta";
+
+    private const string PlanetRelationshipHits = "Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplyPagination Star.OnApplyFilter Star.OnApplyFilter " +
+        "Planet.OnApplyFilter";
+
+    public static TheoryData<string, string, string> HookOrderData => new()
+    {
+        { "GET", "/stars", StarCollectionHits },
+        { "GET", "/stars?fields[stars]=name", StarCollectionHits },
+        { "GET", "/stars?filter=equals(name,'Sun')", StarCollectionHits },
+        { "GET", "/stars?sort=name", StarCollectionHits },
+        { "GET", "/stars?page[size]=2", StarCollectionHits },
+        {
+            "GET", "/stars?include=planets",
+            "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes Planet.OnApplyFilter " +
+            "Planet.OnApplySort Planet.OnApplyPagination Planet.OnApplySparseFieldSet Planet.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta " +
+            "Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta"
+        },
+        { "GET", "/stars/{id}", StarSingleHits },
+        { "GET", "/stars/{id}?fields[stars]=name", StarSingleHits },
+        { "GET", "/stars/{id}/planets", PlanetSecondaryHits },
+        { "GET", "/stars/{id}/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2&fields[planets]=publicName", PlanetSecondaryHits },
+        { "GET", "/stars/{id}/relationships/planets", PlanetRelationshipHits },
+        { "GET", "/stars/{id}/relationships/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2", PlanetRelationshipHits },
+        { "POST", "/stars", "Star.OnApplyFilter Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta" },
+        { "PATCH", "/stars/{id}", "Star.OnApplyFilter Star.OnApplyFilter Star.OnApplyIncludes" },
+        { "DELETE", "/stars/{id}", "" }
+    };
+
+    [Theory]
+    [MemberData(nameof(HookOrderData))]
+    public async Task Invokes_hooks_in_documented_order(string method, string routeTemplate, string expectedHits)
+    {
+        // Arrange
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Name = "Sun";
+        star.Planets = _fakers.Planet.GenerateSet(2);
+
+        foreach (Planet planet in star.Planets)
+        {
+            planet.HasRingSystem = true;
+        }
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = routeTemplate.Replace("{id}", star.StringId);
+
+        // Act
+        HttpResponseMessage httpResponse;
+
+        switch (method)
+        {
+            case "GET":
+            {
+                (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
+                break;
+            }
+            case "POST":
+            {
+                var requestBody = new
+                {
+                    data = new
+                    {
+                        type = "stars",
+                        attributes = new
+                        {
+                            name = "New star",
+                            solarRadius = 1,
+                            solarMass = 1
+                        }
+                    }
+                };
+
+                (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+                break;
+            }
+            case "PATCH":
+            {
+                var requestBody = new
+                {
+                    data = new
+                    {
+                        type = "stars",
+                        id = star.StringId,
+                        attributes = new
+                        {
+                            name = "Changed star"
+                        }
+                    }
+                };
+
+                (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+                break;
+            }
+            default:
+            {
+                (httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
+                break;
+            }
+        }
+
+        // Assert
+        httpResponse.IsSuccessStatusCode.Should().BeTrue();
+
+        string actualHits = string.Join(' ', hitCounter.HitExtensibilityPoints.Select(hit => $"{hit.Item1.Name}.{hit.Item2}"));
+        actualHits.Should().Be(expectedHits);
     }
 }
