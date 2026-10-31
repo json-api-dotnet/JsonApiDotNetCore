@@ -36,7 +36,8 @@ internal sealed class CompoundAttributesFakers
             .RuleFor(name => name.LastName, faker => faker.Name.LastName())
             .RuleFor(name => name.NickName, faker => faker.Internet.UserName())
             .RuleFor(name => name.MaidenName, faker => faker.Name.LastName())
-            .RuleFor(name => name.SecretAlias, faker => faker.Name.FindName()));
+            .RuleFor(name => name.SecretAlias, faker => faker.Name.FindName())
+            .RuleFor(name => name.PhoneticName, faker => faker.Name.LastName()));
 
         _lazyContactCompanyFaker = new Lazy<Faker<ContactCompany>>(() => new Faker<ContactCompany>()
             .MakeDeterministic()
@@ -46,13 +47,20 @@ internal sealed class CompoundAttributesFakers
             [
                 TimeSpan.FromHours(9),
                 TimeSpan.FromHours(17)
-            ]));
+            ])
+            .RuleFor(company => company.Departments, faker =>
+            [
+                faker.Commerce.Department(),
+                faker.Commerce.Department()
+            ])
+            .FinishWith((faker, company) => company.SetRegistrationNumber(faker.Random.Replace("REG-####"))));
 
         _lazyContactAddressFaker = new Lazy<Faker<ContactAddress>>(() => new Faker<ContactAddress>()
             .MakeDeterministic()
             .RuleFor(address => address.IsoCountryCode, faker => faker.Address.CountryCode())
             .RuleFor(address => address.City, faker => faker.Address.City())
             .RuleFor(address => address.Line1, faker => faker.Address.StreetAddress())
+            .RuleFor(address => address.Line2, faker => faker.Address.SecondaryAddress())
             .RuleFor(address => address.PostalCode, faker => faker.Address.ZipCode())
             .RuleFor(address => address.Label, faker => faker.PickRandom("home", "work", "other")));
 
@@ -60,7 +68,8 @@ internal sealed class CompoundAttributesFakers
             .MakeDeterministic()
             .RuleFor(phone => phone.CountryPrefix, faker => $"+{faker.Random.Number(1, 99)}")
             .RuleFor(phone => phone.Number, faker => faker.Phone.PhoneNumber("###-###-####"))
-            .RuleFor(phone => phone.Label, faker => faker.PickRandom("mobile", "home", "work")));
+            .RuleFor(phone => phone.Label, faker => faker.PickRandom("mobile", "home", "work"))
+            .RuleFor(phone => phone.Kind, faker => faker.PickRandom<PhoneKind>()));
 
         _lazyContactDateFaker = new Lazy<Faker<ContactDate>>(() => new Faker<ContactDate>()
             .MakeDeterministic()
@@ -98,6 +107,25 @@ internal sealed class CompoundAttributesFakers
                     Label = "friend"
                 }
             ])
+            .RuleFor(root => root.PreferredContactMethods, _ =>
+            [
+                ContactMethod.Email,
+                ContactMethod.Phone
+            ])
+            .RuleFor(root => root.CreditLimits, faker =>
+            [
+                faker.Random.Decimal(100, 1000),
+                faker.Random.Decimal(1000, 5000)
+            ])
+            .RuleFor(root => root.Anniversaries, faker =>
+            [
+                DateTime.SpecifyKind(faker.Date.Past().Date, DateTimeKind.Utc)
+            ])
+            .RuleFor(root => root.InternalNotes, faker => faker.Lorem.Sentence())
+            .RuleFor(root => root.Audit, faker => new ContactAudit
+            {
+                CreatedBy = faker.Internet.UserName()
+            })
             .RuleFor(root => root.ImportantDates, faker =>
             [
                 new LabeledValue<DateOnly>
