@@ -1,9 +1,11 @@
+using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -28,6 +30,9 @@ public sealed class QueryExpressionRewriterTests
         .Add<Woman, long>()
         .Add<AccountPreferences, long>()
         .Add<LoginAttempt, long>()
+        .Add<Calendar, long>()
+        .Add<Appointment, long>()
+        .Add<Reminder, long>()
         .Build();
 
     // @formatter:wrap_chained_method_calls restore
@@ -78,6 +83,70 @@ public sealed class QueryExpressionRewriterTests
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
         visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
+    }
+
+    [Theory]
+    [InlineData("location", "SparseFieldSet,SparseFieldSetElement")]
+    [InlineData("location.name,location.room", "SparseFieldSet,SparseFieldSetElement,SparseFieldSetElement,SparseFieldSetElement")]
+    [InlineData("location.address.city,title", "SparseFieldSet,SparseFieldSetElement,SparseFieldSetElement,SparseFieldSetElement,SparseFieldSetElement")]
+    public void VisitSparseFieldSetElement_with_children(string expressionText, string expectedTypes)
+    {
+        // Arrange
+        var parser = new SparseFieldSetParser();
+        ResourceType appointmentType = ResourceGraph.GetResourceType<Appointment>();
+
+        QueryExpression expression = parser.Parse(expressionText, appointmentType);
+        var rewriter = new TestableQueryExpressionRewriter();
+
+        // Act
+        rewriter.Visit(expression, null);
+
+        // Assert
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
+
+        visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
+    }
+
+    [Fact]
+    public void VisitScalarCollectionElementValue()
+    {
+        // Arrange
+        var parser = new FilterParser(ResourceFactory);
+        ResourceType appointmentType = ResourceGraph.GetResourceType<Appointment>();
+
+        QueryExpression expression = parser.Parse("has(keywords,equals(_,'x'))", appointmentType);
+        var rewriter = new TestableQueryExpressionRewriter();
+
+        // Act
+        rewriter.Visit(expression, null);
+
+        // Assert
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+
+        visitedTypeNames.Should().ContainInOrder("HasExpression", "ResourceFieldChainExpression", "ComparisonExpression",
+            "ScalarCollectionElementValueExpression", "LiteralConstantExpression");
+
+        visitedTypeNames.Should().HaveCount(5);
+    }
+
+    [Fact(Skip = "KNOWN-ISSUE D13: A rewriter that removes all children of a compound element widens the selection to the whole compound")]
+    public void Rewriter_removing_all_children_does_not_widen_selection()
+    {
+        // Arrange
+        var parser = new SparseFieldSetParser();
+        ResourceType appointmentType = ResourceGraph.GetResourceType<Appointment>();
+
+        QueryExpression expression = parser.Parse("location.name,location.room,title", appointmentType);
+        var rewriter = new RemoveLocationChildrenRewriter();
+
+        // Act
+        QueryExpression? result = rewriter.Visit(expression, null);
+
+        // Assert
+        var sparseFieldSet = result.Should().BeOfType<SparseFieldSetExpression>().Subject;
+        sparseFieldSet.ToString().Should().Be("title");
     }
 
     [Theory]
@@ -179,5 +248,18 @@ public sealed class QueryExpressionRewriterTests
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
         visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
+    }
+
+    private sealed class RemoveLocationChildrenRewriter : QueryExpressionRewriter<object?>
+    {
+        protected override IImmutableDictionary<TKey, TExpression> VisitDictionary<TKey, TExpression>(IImmutableDictionary<TKey, TExpression> elements,
+            object? argument)
+        {
+            // Removes all children of the compound attribute, but leaves the top-level fields alone.
+            IImmutableDictionary<TKey, TExpression> remaining = elements.RemoveRange(elements.Keys.Where(key =>
+                key is AttrAttribute { Property.DeclaringType: { } declaringType } && declaringType == typeof(AppointmentLocation)));
+
+            return base.VisitDictionary(remaining, argument);
+        }
     }
 }
