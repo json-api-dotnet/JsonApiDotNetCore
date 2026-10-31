@@ -19,6 +19,7 @@ public sealed class DecryptFilterTests : IClassFixture<IntegrationTestContext<Te
         _testContext = testContext;
 
         testContext.UseController<BlogsController>();
+        testContext.UseController<AppointmentsController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -170,5 +171,94 @@ public sealed class DecryptFilterTests : IClassFixture<IntegrationTestContext<Te
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_encrypted_nested_attribute()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                Street = Convert.ToBase64String("something-else"u8)
+            }
+        };
+
+        appointments[1].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                Street = Convert.ToBase64String("x"u8)
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.DeclareDecryptFunctionAsync();
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Set<Appointment>().AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=equals(decrypt(location.address.street),'x')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_encrypted_attribute_in_compound_collection_scope()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Attendees =
+        [
+            new Attendee
+            {
+                Name = Convert.ToBase64String("alice"u8)
+            }
+        ];
+
+        appointments[1].Attendees =
+        [
+            new Attendee
+            {
+                Name = Convert.ToBase64String("alice"u8)
+            },
+            new Attendee
+            {
+                Name = Convert.ToBase64String("bob"u8)
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.DeclareDecryptFunctionAsync();
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Set<Appointment>().AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=has(attendees,equals(decrypt(name),'bob'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
     }
 }
