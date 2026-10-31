@@ -34,7 +34,8 @@ internal static class AttributeValueSnapshot
                 : new CompoundSnapshot(attribute.CompoundType!, value);
         }
 
-        if (attribute.IsCollection && value is IEnumerable)
+        // A byte array is a collection according to the metadata, but is compared by content as a whole.
+        if (attribute.IsCollection && value is IEnumerable and not byte[])
         {
             return CreateCollection(value, CreateScalar);
         }
