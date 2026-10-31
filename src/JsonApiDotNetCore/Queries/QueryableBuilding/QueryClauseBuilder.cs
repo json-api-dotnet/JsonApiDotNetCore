@@ -19,18 +19,25 @@ public abstract class QueryClauseBuilder : QueryExpressionVisitor<QueryClauseBui
     {
         Expression collectionExpression = Visit(expression.TargetCollection, context);
 
-        MemberExpression? propertyExpression = GetCollectionCount(collectionExpression);
+        Expression? countExpression = GetCollectionCount(collectionExpression);
 
-        if (propertyExpression == null)
+        if (countExpression == null)
         {
             throw new InvalidOperationException($"Field '{expression.TargetCollection}' must be a collection.");
         }
 
-        return propertyExpression;
+        return countExpression;
     }
 
-    private static MemberExpression? GetCollectionCount(Expression? collectionExpression)
+    private static Expression? GetCollectionCount(Expression? collectionExpression)
     {
+        if (collectionExpression is { Type.IsArray: true })
+        {
+            // Matches what the C# compiler emits for 'array.Length'. Query providers recognize this node type (for example, Npgsql
+            // translates it to length(bytea) for byte[]), but not a member access on the Array.Length property.
+            return Expression.ArrayLength(collectionExpression);
+        }
+
         if (collectionExpression != null)
         {
             var properties = new HashSet<PropertyInfo>(collectionExpression.Type.GetProperties());
