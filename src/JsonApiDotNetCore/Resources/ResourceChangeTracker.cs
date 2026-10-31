@@ -1,4 +1,3 @@
-using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -56,14 +55,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
 
         foreach (AttrAttribute attribute in attributes)
         {
-            object? value = attribute.GetValue(resource);
-
-            if (value != null && (attribute.IsCompound || attribute.IsCollection))
-            {
-                value = JsonSerializer.SerializeToElement(value);
-            }
-
-            result.Add(attribute.PublicName, value);
+            result.Add(attribute.PublicName, AttributeValueSnapshot.Create(attribute, resource));
         }
 
         return result;
@@ -80,7 +72,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
                 {
                     object? actualValue = _finallyStoredAttributeValues[key];
 
-                    if (!AreValuesEqual(requestValue, actualValue))
+                    if (!Equals(requestValue, actualValue))
                     {
                         return true;
                     }
@@ -90,7 +82,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
                     object? initiallyStoredValue = _initiallyStoredAttributeValues[key];
                     object? finallyStoredValue = _finallyStoredAttributeValues[key];
 
-                    if (!AreValuesEqual(initiallyStoredValue, finallyStoredValue))
+                    if (!Equals(initiallyStoredValue, finallyStoredValue))
                     {
                         return true;
                     }
@@ -101,13 +93,4 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         return false;
     }
 
-    private static bool AreValuesEqual(object? left, object? right)
-    {
-        if (left is JsonElement leftElement && right is JsonElement rightElement)
-        {
-            return JsonElement.DeepEquals(leftElement, rightElement);
-        }
-
-        return Equals(left, right);
-    }
 }
