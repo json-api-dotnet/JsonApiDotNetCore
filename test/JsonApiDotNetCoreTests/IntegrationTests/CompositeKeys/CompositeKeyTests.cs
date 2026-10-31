@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -557,5 +558,83 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Com
             List<Car> carsInDatabase = await dbContext.Cars.ToListAsync();
             carsInDatabase.Should().HaveCount(2);
         });
+    }
+
+    [Fact]
+    public async Task Can_select_compound_with_composite_key()
+    {
+        // Arrange
+        Car car = _fakers.Car.GenerateOne();
+
+        car.Paint = new CarPaint
+        {
+            Color = "Red",
+            Coats =
+            [
+                "primer",
+                "gloss"
+            ]
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTablesAsync<Engine, Car>();
+            dbContext.Cars.Add(car);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/cars/{car.StringId}?fields[cars]=paint.color";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("paint").WhoseValue.Should().BeOfType<JsonElement>().Subject.With(paint =>
+        {
+            paint.EnumerateObject().Select(property => property.Name).Should().Equal("color");
+            paint.GetProperty("color").GetString().Should().Be("Red");
+        });
+    }
+
+    [Fact]
+    public async Task Can_include_resources_with_compounds_and_composite_keys()
+    {
+        // Arrange
+        Dealership dealership = _fakers.Dealership.GenerateOne();
+        dealership.Inventory = _fakers.Car.GenerateSet(2);
+
+        foreach (Car car in dealership.Inventory)
+        {
+            car.Paint = new CarPaint
+            {
+                Color = "Blue",
+                Coats = ["gloss"]
+            };
+        }
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTablesAsync<Engine, Car>();
+            await dbContext.ClearTableAsync<Dealership>();
+            dbContext.Dealerships.Add(dealership);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/dealerships/{dealership.StringId}?include=inventory&fields[cars]=paint";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(2);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Type == "cars" && resource.Attributes != null && resource.Attributes.ContainsKey("paint"));
+        responseDocument.Included.Select(resource => resource.Id).Should().BeEquivalentTo(dealership.Inventory.Select(car => car.StringId));
     }
 }

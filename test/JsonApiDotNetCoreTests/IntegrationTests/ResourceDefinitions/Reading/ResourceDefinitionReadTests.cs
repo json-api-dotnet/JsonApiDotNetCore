@@ -1187,6 +1187,38 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     }
 
     [Fact]
+    public async Task Invokes_sparse_fieldset_hook_once_per_type_per_phase_when_type_occurs_in_multiple_layers()
+    {
+        // Arrange
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Moon moon = _fakers.Moon.GenerateOne();
+        moon.OrbitsAround = _fakers.Planet.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Moon>();
+            dbContext.Moons.Add(moon);
+            await dbContext.SaveChangesAsync();
+        });
+
+        // Moon occurs in the top layer and again in the nested layer below its planet.
+        const string route = "/moons?include=orbitsAround.moons";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] sparseFieldSetHits = hitCounter.HitExtensibilityPoints.Where(hit => hit.Item2 == ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
+            .Select(hit => hit.Item1.Name).ToArray();
+
+        // One hit per type for the query, and one per type for the serializer.
+        sparseFieldSetHits.Count(name => name == nameof(Moon)).Should().Be(2);
+        sparseFieldSetHits.Count(name => name == nameof(Planet)).Should().Be(2);
+    }
+    [Fact]
     public async Task Can_include_nested_chain_in_sparse_fieldset_from_hook()
     {
         // Arrange
