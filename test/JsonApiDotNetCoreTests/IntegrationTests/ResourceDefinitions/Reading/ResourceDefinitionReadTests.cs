@@ -1219,6 +1219,57 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         sparseFieldSetHits.Count(name => name == nameof(Planet)).Should().Be(2);
     }
     [Fact]
+    public async Task Reports_right_side_resource_hidden_by_definition_filter_as_missing_when_assignment_fails()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HidePlanetsWithPrivateName();
+
+        Star existingStar = _fakers.Star.GenerateOne();
+        Planet hiddenPlanet = _fakers.Planet.GenerateOne();
+        hiddenPlanet.PrivateName = "Secret";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Stars.Add(existingStar);
+            dbContext.Planets.Add(hiddenPlanet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "planets",
+                    id = hiddenPlanet.StringId!
+                },
+                new
+                {
+                    type = "planets",
+                    id = Unknown.StringId.Int64
+                }
+            }
+        };
+
+        // The existence check only runs after the database rejects the assignment, which is forced here by an unknown planet.
+        string route = $"/stars/{existingStar.StringId}/relationships/planets";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.Should().HaveCount(2);
+        responseDocument.Errors.Should().OnlyContain(error => error.StatusCode == HttpStatusCode.NotFound && error.Title == "A related resource does not exist.");
+        responseDocument.Errors.Select(error => error.Detail).Should().BeEquivalentTo(new[]
+        {
+            $"Related resource of type 'planets' with ID '{hiddenPlanet.StringId}' in relationship 'planets' does not exist.",
+            $"Related resource of type 'planets' with ID '{Unknown.StringId.Int64}' in relationship 'planets' does not exist."
+        });
+    }
+    [Fact]
     public async Task Can_include_nested_chain_in_sparse_fieldset_from_hook()
     {
         // Arrange
