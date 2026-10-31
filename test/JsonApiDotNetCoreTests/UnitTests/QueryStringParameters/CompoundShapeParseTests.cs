@@ -62,6 +62,15 @@ public sealed class CompoundShapeParseTests
     [InlineData("containers", "filter", "has(members,greaterThan(count(phones),'1'))", null)]
     [InlineData("containers", "filter", "has(members,equals(count(nicknames),'1'))", null)]
     [InlineData("containers", "filter", "has(members,has(phones,equals(count(notes),'1')))", null)]
+    // Any on elements of typed scalar collections
+    [InlineData("containers", "filter", "has(guids,any(_,'00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000002'))", null)]
+    [InlineData("containers", "filter", "has(decimals,any(_,'1.5','2.5'))", null)]
+    [InlineData("containers", "filter", "has(flags,any(_,'true'))", null)]
+    [InlineData("containers", "filter", "has(dates,any(_,'2020-01-01','2021-01-01'))", null)]
+    [InlineData("containers", "filter", "has(spans,any(_,'01:00:00','02:00:00'))", null)]
+    [InlineData("containers", "filter", "has(nullableInts,any(_,'1','2'))", null)]
+    [InlineData("containers", "filter", "has(days,any(_,'Friday','Monday'))", null)]
+    [InlineData("containers", "filter", "has(members,has(nicknames,any(_,'a','b')))", null)]
     // Generic compound type
     [InlineData("containers", "filter", "has(emailAddresses,equals(label,'x'))", null)]
     [InlineData("containers", "filter", "has(emailAddresses,contains(value,'@'))", null)]
@@ -99,6 +108,15 @@ public sealed class CompoundShapeParseTests
     [InlineData("containers", "filter", "has(members,has(nicknames,^count(_)))", "Filter function expected.")]
     [InlineData("apartments", "filter", "equals(building.^unknown,'x')", "Field 'unknown' does not exist on compound type 'Building'.")]
     [InlineData("apartments", "filter", "equals(^unknown.premium,'x')", "Field 'unknown' does not exist on resource type 'apartments'.")]
+    // Constants of any() on typed elements are converted to the element type
+    [InlineData("containers", "filter", "has(guids,any(_,^'x'))", "Failed to convert 'x' to type 'Guid'.")]
+    [InlineData("containers", "filter", "has(guids,any(_,'00000000-0000-0000-0000-000000000001',^'x'))", "Failed to convert 'x' to type 'Guid'.")]
+    [InlineData("containers", "filter", "has(decimals,any(_,^'x'))", "Failed to convert 'x' to type 'Decimal'.")]
+    [InlineData("containers", "filter", "has(flags,any(_,^'x'))", "Failed to convert 'x' to type 'Boolean'.")]
+    [InlineData("containers", "filter", "has(dates,any(_,^'x'))", "Failed to convert 'x' to type 'DateOnly'.")]
+    [InlineData("containers", "filter", "has(spans,any(_,^'x'))", "Failed to convert 'x' to type 'TimeSpan'.")]
+    [InlineData("containers", "filter", "has(nullableInts,any(_,^'x'))", "Failed to convert 'x' to type 'Nullable<Int32>'.")]
+    [InlineData("containers", "filter", "has(days,any(_,^'x'))", "Failed to convert 'x' to type 'DayOfWeek'.")]
     // AllowFilter-blocked compound collection or scalar collection nested in a compound
     [InlineData("containers", "filter", "has(^unfilterablePhones)", "Filtering on attribute 'unfilterablePhones' is not allowed.")]
     [InlineData("containers", "filter", "has(^unfilterablePhones,equals(number,'1'))", "Filtering on attribute 'unfilterablePhones' is not allowed.")]
@@ -331,6 +349,27 @@ public sealed class CompoundShapeParseTests
 
         [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
         public List<string> SyncDeviceIds { get; set; } = [];
+
+        [Attr]
+        public List<Guid> Guids { get; set; } = [];
+
+        [Attr]
+        public List<decimal> Decimals { get; set; } = [];
+
+        [Attr]
+        public List<bool> Flags { get; set; } = [];
+
+        [Attr]
+        public List<DateOnly> Dates { get; set; } = [];
+
+        [Attr]
+        public List<TimeSpan> Spans { get; set; } = [];
+
+        [Attr]
+        public List<int?> NullableInts { get; set; } = [];
+
+        [Attr]
+        public List<DayOfWeek> Days { get; set; } = [];
 
         [Attr(IsCompound = true)]
         public Outer? Outer { get; set; }
