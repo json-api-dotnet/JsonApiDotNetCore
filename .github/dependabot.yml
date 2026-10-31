@@ -5,12 +5,18 @@ updates:
     schedule:
       interval: "weekly"
       day: "friday"
+    cooldown:
+      default-days: 3
     pull-request-branch-name:
       separator: "-"
-  - package-ecosystem: nuget
+    open-pull-requests-limit: 25
+  - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: daily
+      interval: "weekly"
+      day: "friday"
+    cooldown:
+      default-days: 3
     pull-request-branch-name:
       separator: "-"
     open-pull-requests-limit: 25
