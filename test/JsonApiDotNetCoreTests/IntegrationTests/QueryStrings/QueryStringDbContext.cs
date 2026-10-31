@@ -50,6 +50,15 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
         builder.Entity<Appointment>()
             .ComplexProperty(appointment => appointment.Cost, complexBuilder => complexBuilder.ToJson());
 
+        builder.Entity<Appointment>()
+            .ComplexProperty<AppointmentCoordinates>(appointment => appointment.MeetingPoint, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexProperty(appointment => appointment.Timing, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<Appointment>()
+            .ComplexCollection(appointment => appointment.WaitingList, complexBuilder => complexBuilder.ToJson());
+
         builder.Entity<WebAccount>()
             .HasMany(webAccount => webAccount.Posts)
             .WithOne(blogPost => blogPost.Author);

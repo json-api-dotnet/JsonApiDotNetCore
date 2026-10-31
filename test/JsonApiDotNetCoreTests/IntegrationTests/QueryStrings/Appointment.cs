@@ -29,6 +29,15 @@ public sealed class Appointment : Identifiable<long>
     [Attr(IsCompound = true)]
     public AppointmentCost Cost { get; set; } = new();
 
+    [Attr(IsCompound = true)]
+    public AppointmentCoordinates? MeetingPoint { get; set; }
+
+    [Attr(IsCompound = true)]
+    public AppointmentTiming Timing { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<Attendee>? WaitingList { get; set; }
+
     [Attr]
     public List<string>? Keywords { get; set; }
 
