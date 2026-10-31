@@ -35,6 +35,9 @@ public sealed class Appointment : Identifiable<long>
     [HasOne]
     public Calendar? Calendar { get; set; }
 
+    [HasMany]
+    public ISet<Calendar> PinnedInCalendars { get; set; } = new HashSet<Calendar>();
+
     [HasMany(DisablePagination = true)]
     public IList<Reminder> Reminders { get; set; } = new List<Reminder>();
 }
