@@ -339,10 +339,10 @@ public sealed class CompoundResourceGraphBuilderTests
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(IInterfaceCompound)}*");
     }
 
-    [Theory(Skip = "KNOWN-ISSUE D5: struct and nullable struct compound types are accepted at startup (fail at request time)")]
+    [Theory]
     [InlineData(typeof(ResourceWithStructCompound))]
     [InlineData(typeof(ResourceWithNullableStructCompound))]
-    public void Rejects_struct_compound_type(Type resourceClrType)
+    public void Accepts_struct_and_nullable_struct_compound_type(Type resourceClrType)
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -350,10 +350,12 @@ public sealed class CompoundResourceGraphBuilderTests
         builder.Add(resourceClrType, typeof(long));
 
         // Act
-        Action action = () => builder.Build();
+        IResourceGraph resourceGraph = builder.Build();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(GeoPoint)}*");
+        CompoundType compoundType = resourceGraph.GetCompoundType<GeoPoint>();
+        compoundType.ClrType.Should().Be<GeoPoint>();
+        resourceGraph.FindCompoundType<GeoPoint?>().Should().BeSameAs(compoundType);
     }
 
     [Fact]

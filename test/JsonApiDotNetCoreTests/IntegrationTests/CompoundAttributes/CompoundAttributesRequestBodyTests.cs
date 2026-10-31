@@ -251,7 +251,7 @@ public sealed class CompoundAttributesRequestBodyTests
         error.Source.Pointer.Should().Be(expectedPointer);
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D11: A null element in a compound collection ([null]) is accepted by the request converter and fails with 500.")]
+    [Fact]
     public async Task Cannot_send_null_element_in_compound_collection()
     {
         // Arrange
@@ -323,7 +323,7 @@ public sealed class CompoundAttributesRequestBodyTests
         responseDocument.Data.SingleValue.GetAttribute("content", "name.lastName").ShouldBeJson("\"Second\"");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE NEW-blank-member-name: A blank nested member name ({\"\": \"x\"}) fails with 500 instead of 422.")]
+    [Fact]
     public async Task Cannot_send_blank_member_name()
     {
         // Arrange

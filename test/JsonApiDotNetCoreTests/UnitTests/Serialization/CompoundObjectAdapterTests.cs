@@ -279,7 +279,7 @@ public sealed class CompoundObjectAdapterTests
         resource.Should().NotBeNull();
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D12: top-level reports the AllowCreate rule first, nested members report the read-only rule first")]
+    [Fact]
     public void Reports_same_error_for_member_blocked_by_two_rules_at_every_depth()
     {
         // Arrange
@@ -436,7 +436,7 @@ public sealed class CompoundObjectAdapterTests
         resource.Setters.PrivateSet.Should().Be("b");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE NEW-blank-key: a blank member name inside a compound causes ArgumentException (500) instead of a 422 error")]
+    [Fact]
     public void Cannot_convert_blank_member_name_inside_compound()
     {
         // Arrange

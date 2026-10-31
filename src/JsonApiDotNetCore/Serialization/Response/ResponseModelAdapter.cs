@@ -296,10 +296,10 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return attrMap.Count > 0 ? attrMap : null;
     }
 
-    private Dictionary<string, object?> ConvertCompoundObject(object compoundInstance, CompoundType compoundType,
+    private CompoundObjectValue ConvertCompoundObject(object compoundInstance, CompoundType compoundType,
         IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>? childLookup)
     {
-        var prunedMap = new Dictionary<string, object?>();
+        var prunedMap = new CompoundObjectValue();
 
         foreach (AttrAttribute childAttr in compoundType.Attributes)
         {
