@@ -126,13 +126,14 @@ public sealed class CompoundClauseBuilderTests : IDisposable
     }
 
     [Fact]
-    public void Count_on_array_uses_Length_property()
+    public void Count_on_array_uses_ArrayLength_node()
     {
         // Act
         string text = BuildWhere("greaterThan(count(scores),'1')");
 
         // Assert
-        text.Should().Contain("(contactModel.Scores.Length > value(");
+        // Query providers translate the ArrayLength node (what the C# compiler emits for array.Length), not a member access on Array.Length.
+        text.Should().Contain("(ArrayLength(contactModel.Scores) > value(");
     }
 
     [Fact]
