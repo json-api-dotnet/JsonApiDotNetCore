@@ -61,7 +61,15 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
             predicate = GetPredicateLambda(expression.Filter, nestedContext);
         }
 
-        return AnyExtensionMethodCall(elementType, property, predicate);
+        MethodCallExpression anyCall = AnyExtensionMethodCall(elementType, property, predicate);
+
+        if (RequiresNullGuard(expression.TargetCollection, property))
+        {
+            // A null collection (or a collection below a null compound) counts as empty.
+            return Expression.Condition(IsNotNull(property), anyCall, Expression.Constant(false));
+        }
+
+        return anyCall;
     }
 
     private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source, Expression? predicate)
