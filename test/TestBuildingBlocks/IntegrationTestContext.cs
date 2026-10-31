@@ -36,6 +36,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
     private readonly TestControllerProvider _testControllerProvider = new();
     private Action<ILoggingBuilder>? _configureLogging;
     private Action<NpgsqlDbContextOptionsBuilder>? _configureDbContextOptions;
+    private Action<DbContextOptionsBuilder>? _configureDbContext;
     private Action<IServiceCollection>? _configureServices;
     private Action<IServiceCollection>? _postConfigureServices;
     private bool _throttleAcquired;
@@ -94,6 +95,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
                 _configureDbContextOptions?.Invoke(optionsBuilder);
             });
 
+            _configureDbContext?.Invoke(options);
+
             SetDbContextDebugOptions(options);
         });
 
@@ -141,6 +144,16 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         }
 
         _configureDbContextOptions = configureDbContextOptions;
+    }
+
+    public void ConfigureDbContext(Action<DbContextOptionsBuilder> configureDbContext)
+    {
+        if (_configureDbContext != null && _configureDbContext != configureDbContext)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(ConfigureDbContext)} multiple times.");
+        }
+
+        _configureDbContext = configureDbContext;
     }
 
     public void ConfigureLogging(Action<ILoggingBuilder> configureLogging)
