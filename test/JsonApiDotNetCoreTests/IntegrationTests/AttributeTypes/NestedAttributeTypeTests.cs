@@ -11,6 +11,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AttributeTypes;
 
 public sealed class NestedAttributeTypeTests : IClassFixture<IntegrationTestContext<AttributeTypesStartup, AttributeTypesDbContext>>
 {
+    private const string SkipPrefix = "EF Core 10 (model build): Unable to configure navigation '<ComplexType>.<Member>' of type 'List<";
+
+    private const string SkipSuffix =
+        ">' as complex types don't support navigations. Ignore this property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.";
+
     // One entry per converter family: member name, JSON text of the value and whether the JSON value is a string.
     private static readonly Dictionary<string, (string Text, bool IsString)> ScalarCases = new()
     {
@@ -49,11 +54,6 @@ public sealed class NestedAttributeTypeTests : IClassFixture<IntegrationTestCont
         [nameof(TypeContainerNested.TestEnums)] = ("Tuesday", "Friday", true)
     };
 
-    private const string SkipPrefix = "EF Core 10 (model build): Unable to configure navigation '<ComplexType>.<Member>' of type 'List<";
-
-    private const string SkipSuffix =
-        ">' as complex types don't support navigations. Ignore this property using the '[NotMapped]' attribute or by using 'EntityTypeBuilder.Ignore' in 'OnModelCreating'.";
-
     private readonly IntegrationTestContext<AttributeTypesStartup, AttributeTypesDbContext> _testContext;
     private readonly AttributeTypesFakers _fakers = new();
 
@@ -61,7 +61,12 @@ public sealed class NestedAttributeTypeTests : IClassFixture<IntegrationTestCont
     public static TheoryData<string> CollectionNames => [.. CollectionCases.Keys];
 
     public static TheoryData<string> FilterableCollectionNames =>
-        [.. CollectionCases.Keys.Except([nameof(TypeContainerNested.TestBigIntegers), nameof(TypeContainerNested.TestTimeOnlys)])];
+    [
+        .. CollectionCases.Keys.Except([
+            nameof(TypeContainerNested.TestBigIntegers),
+            nameof(TypeContainerNested.TestTimeOnlys)
+        ])
+    ];
 
     public NestedAttributeTypeTests(IntegrationTestContext<AttributeTypesStartup, AttributeTypesDbContext> testContext)
     {
@@ -150,8 +155,10 @@ public sealed class NestedAttributeTypeTests : IClassFixture<IntegrationTestCont
 
     [Theory]
     [MemberData(nameof(FilterableCollectionNames))]
-    [InlineData(nameof(TypeContainerNested.TestBigIntegers), Skip = "KNOWN-ISSUE NEW-has-element-in-json: has(nested.testBigIntegers,equals(_,'42')) returns no rows.")]
-    [InlineData(nameof(TypeContainerNested.TestTimeOnlys), Skip = "KNOWN-ISSUE NEW-has-element-in-json: has(nested.testTimeOnlys,equals(_,'04:05:06')) returns no rows.")]
+    [InlineData(nameof(TypeContainerNested.TestBigIntegers),
+        Skip = "KNOWN-ISSUE NEW-has-element-in-json: has(nested.testBigIntegers,equals(_,'42')) returns no rows.")]
+    [InlineData(nameof(TypeContainerNested.TestTimeOnlys),
+        Skip = "KNOWN-ISSUE NEW-has-element-in-json: has(nested.testTimeOnlys,equals(_,'04:05:06')) returns no rows.")]
     public async Task Can_filter_scalar_collection_elements_of_type(string memberName)
     {
         // Arrange

@@ -264,7 +264,7 @@ public sealed class CompoundAttributesUpdateTests
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
 
-        Guid newDeviceId = Guid.NewGuid();
+        var newDeviceId = Guid.NewGuid();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

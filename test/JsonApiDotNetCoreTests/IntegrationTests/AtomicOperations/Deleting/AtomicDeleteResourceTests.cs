@@ -20,6 +20,52 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
     }
 
     [Fact]
+    public async Task Can_delete_playlist_with_compounds()
+    {
+        // Arrange
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne().WithCompounds();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Playlists.Add(existingPlaylist);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "remove",
+                    @ref = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylist.StringId
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Playlist? playlistInDatabase = await dbContext.Playlists.FirstWithIdOrDefaultAsync(existingPlaylist.Id);
+
+            playlistInDatabase.Should().BeNull();
+        });
+    }
+
+    [Fact]
     public async Task Can_delete_existing_resource()
     {
         // Arrange

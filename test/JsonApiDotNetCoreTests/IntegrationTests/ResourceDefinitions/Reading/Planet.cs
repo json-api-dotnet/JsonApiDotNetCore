@@ -20,6 +20,9 @@ public sealed class Planet : Identifiable<long>
     [Attr]
     public decimal SolarMass { get; set; }
 
+    [Attr(IsCompound = true)]
+    public Atmosphere? Atmosphere { get; set; }
+
     [HasMany]
     public ISet<Moon> Moons { get; set; } = new HashSet<Moon>();
 

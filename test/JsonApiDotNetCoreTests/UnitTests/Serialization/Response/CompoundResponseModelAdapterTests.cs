@@ -434,7 +434,6 @@ public sealed class CompoundResponseModelAdapterTests
         return document.Data.SingleValue!;
     }
 
-
     private static IResourceGraph CreateResourceGraph(JsonApiOptions options)
     {
         return new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Profile, long>().Build();

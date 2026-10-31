@@ -9,8 +9,8 @@ using Xunit;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination;
 
 /// <summary>
-/// Verifies pagination for types that have compound attributes (Calendar and Appointment), using Blog, BlogPost and Comment (without compound attributes) as
-/// controls.
+/// Verifies pagination for types that have compound attributes (Calendar and Appointment), using Blog, BlogPost and Comment (without compound
+/// attributes) as controls.
 /// </summary>
 public sealed class PaginationCompoundTests : IClassFixture<IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
@@ -269,7 +269,10 @@ public sealed class PaginationCompoundTests : IClassFixture<IntegrationTestConte
         responseDocument.GetPrimaryIds().Should().Equal(appointments[2].StringId);
 
         responseDocument.Links.Should().NotBeNull();
-        responseDocument.Links.Last.Should().Be($"{HostPrefix}/calendars/{calendar.StringId}/relationships/pinnedAppointments?page%5Bsize%5D=1&page%5Bnumber%5D=3");
+
+        responseDocument.Links.Last.Should()
+            .Be($"{HostPrefix}/calendars/{calendar.StringId}/relationships/pinnedAppointments?page%5Bsize%5D=1&page%5Bnumber%5D=3");
+
         responseDocument.Links.Next.Should().BeNull();
     }
 

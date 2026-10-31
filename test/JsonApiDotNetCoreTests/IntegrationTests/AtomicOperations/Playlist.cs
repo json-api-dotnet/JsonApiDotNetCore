@@ -16,6 +16,12 @@ public sealed class Playlist : Identifiable<long>
     [NotMapped]
     public bool IsArchived => false;
 
+    [Attr(IsCompound = true)]
+    public List<PlaylistCredit> Credits { get; set; } = [];
+
+    [Attr(IsCompound = true)]
+    public PlaylistRecording? Recording { get; set; }
+
     [HasMany]
     public IList<MusicTrack> Tracks { get; set; } = new List<MusicTrack>();
 }

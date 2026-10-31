@@ -79,11 +79,6 @@ public sealed class ServiceDiscoveryFacadeTests
         _services.Should().NotContain(descriptor => IsRelatedTo(descriptor.ServiceType) || IsRelatedTo(descriptor.ImplementationType));
     }
 
-    private static bool IsRelatedTo(Type? type)
-    {
-        return type != null && (type == typeof(PrivateCompound) || type.GenericTypeArguments.Contains(typeof(PrivateCompound)));
-    }
-
     [Fact]
     public void Can_add_resource_service_from_current_assembly_to_container()
     {
@@ -130,6 +125,11 @@ public sealed class ServiceDiscoveryFacadeTests
         var resourceDefinition = serviceProvider.GetRequiredService<IResourceDefinition<PrivateResource, long>>();
 
         resourceDefinition.Should().BeOfType<PrivateResourceDefinition>();
+    }
+
+    private static bool IsRelatedTo(Type? type)
+    {
+        return type != null && (type == typeof(PrivateCompound) || type.GenericTypeArguments.Contains(typeof(PrivateCompound)));
     }
 
     private sealed class FakeDbContextResolver : IDbContextResolver

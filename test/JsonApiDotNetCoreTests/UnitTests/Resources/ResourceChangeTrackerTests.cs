@@ -151,17 +151,29 @@ public sealed class ResourceChangeTrackerTests
 
         var request = new TrackedResource
         {
-            Ids = [first, second]
+            Ids =
+            [
+                first,
+                second
+            ]
         };
 
         var equalStored = new TrackedResource
         {
-            Ids = [first, second]
+            Ids =
+            [
+                first,
+                second
+            ]
         };
 
         var changedStored = new TrackedResource
         {
-            Ids = [first, Guid.NewGuid()]
+            Ids =
+            [
+                first,
+                Guid.NewGuid()
+            ]
         };
 
         // Act
@@ -219,17 +231,32 @@ public sealed class ResourceChangeTrackerTests
         // Arrange
         var request = new TrackedResource
         {
-            Data = [1, 2, 3]
+            Data =
+            [
+                1,
+                2,
+                3
+            ]
         };
 
         var equalStored = new TrackedResource
         {
-            Data = [1, 2, 3]
+            Data =
+            [
+                1,
+                2,
+                3
+            ]
         };
 
         var changedStored = new TrackedResource
         {
-            Data = [1, 2, 4]
+            Data =
+            [
+                1,
+                2,
+                4
+            ]
         };
 
         // Act

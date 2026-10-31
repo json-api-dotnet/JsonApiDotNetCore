@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -14,7 +15,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources;
 
 public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
 {
+    private const string NoSideEffectsMarker = ImplicitlyChangingWorkItemDefinition.NoSideEffectsMarker;
     private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
+
     private readonly ReadWriteFakers _fakers = new();
 
     public UpdateResourceTests(IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
@@ -34,6 +37,269 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = false;
+    }
+
+    [Fact]
+    public async Task PATCH_leaves_compounds_untouched_when_omitted()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        existingWorkItem.Description = NoSideEffectsMarker;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                attributes = new
+                {
+                    dueAt = (DateTime?)null
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.DueAt.Should().BeNull();
+            workItemInDatabase.ShouldHaveOriginalCompoundsOf(existingWorkItem);
+        });
+    }
+
+    [Fact]
+    public async Task Can_update_compound_and_replace_relationship_together()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        existingWorkItem.Description = NoSideEffectsMarker;
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(2);
+
+        WorkTag existingTag = _fakers.WorkTag.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<WorkTag>();
+            dbContext.AddInRange(existingWorkItem, existingTag);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                attributes = new
+                {
+                    estimate = new
+                    {
+                        optimistic = "00:30:00",
+                        likely = "01:00:00",
+                        pessimistic = "02:00:00"
+                    }
+                },
+                relationships = new
+                {
+                    tags = new
+                    {
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "workTags",
+                                id = existingTag.StringId
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Estimate.Should().NotBeNull();
+            workItemInDatabase.Estimate.Optimistic.Should().Be(TimeSpan.FromMinutes(30));
+            workItemInDatabase.Estimate.Likely.Should().Be(TimeSpan.FromHours(1));
+            workItemInDatabase.Estimate.Pessimistic.Should().Be(TimeSpan.FromHours(2));
+
+            workItemInDatabase.Checklist.Should().HaveCount(2);
+            workItemInDatabase.Tags.Should().ContainSingle().Which.Id.Should().Be(existingTag.Id);
+        });
+    }
+
+    [Fact]
+    public async Task PATCH_clears_checklist()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        existingWorkItem.Description = NoSideEffectsMarker;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                attributes = new
+                {
+                    checklist = Array.Empty<object>()
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Checklist.Should().BeEmpty();
+            workItemInDatabase.Estimate.Should().NotBeNull();
+        });
+    }
+
+    [Fact]
+    public async Task Returns_200_when_definition_changes_compound()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                attributes = new
+                {
+                    description = ImplicitlyChangingWorkItemDefinition.ChangeEstimateMarker
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should()
+            .Be(ImplicitlyChangingWorkItemDefinition.ChangeEstimateMarker);
+
+        object? estimate = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("estimate").WhoseValue;
+        JsonSerializer.SerializeToElement(estimate).GetProperty("likely").GetString().Should().Be("08:00:00");
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Estimate.Should().NotBeNull();
+            workItemInDatabase.Estimate.Likely.Should().Be(ImplicitlyChangingWorkItemDefinition.ChangedLikelyEstimate);
+            workItemInDatabase.Checklist.Should().HaveCount(2);
+        });
+    }
+
+    [Fact]
+    public async Task Returns_204_when_nothing_changes()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        existingWorkItem.Description = NoSideEffectsMarker;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                attributes = new
+                {
+                    estimate = new
+                    {
+                        optimistic = "02:00:00",
+                        likely = "04:00:00",
+                        pessimistic = "12:00:00"
+                    }
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.ShouldHaveOriginalCompoundsOf(existingWorkItem);
+        });
     }
 
     [Fact]

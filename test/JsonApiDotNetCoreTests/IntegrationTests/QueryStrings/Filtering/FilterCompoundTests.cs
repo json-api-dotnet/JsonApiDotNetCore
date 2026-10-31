@@ -173,7 +173,11 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
                 SomeCompound = new FilterableNested
                 {
                     SomeNullableString = "n",
-                    SomeStrings = ["a", "b"],
+                    SomeStrings =
+                    [
+                        "a",
+                        "b"
+                    ],
                     Child = new FilterableLeaf
                     {
                         SomeInt32 = 5
@@ -184,7 +188,11 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
                     new FilterableNested
                     {
                         SomeString = "a",
-                        SomeStrings = ["a", "b"]
+                        SomeStrings =
+                        [
+                            "a",
+                            "b"
+                        ]
                     },
                     new FilterableNested
                     {

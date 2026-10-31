@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -29,6 +30,157 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = false;
         options.AllowUnknownFieldsInRequestBody = false;
+    }
+
+    [Fact]
+    public async Task Can_create_resource_with_compounds_and_relationships()
+    {
+        // Arrange
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
+        List<WorkTag> existingTags = _fakers.WorkTag.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingUserAccount);
+            dbContext.WorkTags.AddRange(existingTags);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                attributes = new
+                {
+                    description = "Implement feature",
+                    estimate = new
+                    {
+                        optimistic = "01:00:00",
+                        likely = "02:30:00",
+                        pessimistic = (string?)null
+                    },
+                    checklist = new[]
+                    {
+                        new
+                        {
+                            text = "Design",
+                            isDone = true
+                        },
+                        new
+                        {
+                            text = "Build",
+                            isDone = false
+                        }
+                    }
+                },
+                relationships = new
+                {
+                    assignee = new
+                    {
+                        data = new
+                        {
+                            type = "userAccounts",
+                            id = existingUserAccount.StringId
+                        }
+                    },
+                    tags = new
+                    {
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "workTags",
+                                id = existingTags[0].StringId
+                            },
+                            new
+                            {
+                                type = "workTags",
+                                id = existingTags[1].StringId
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/workItems";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("estimate").WhoseValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("checklist").WhoseValue.Should().NotBeNull();
+
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).Include(workItem => workItem.Tags)
+                .FirstWithIdAsync(newWorkItemId);
+
+            workItemInDatabase.Description.Should().Be("Implement feature");
+            workItemInDatabase.Estimate.Should().NotBeNull();
+            workItemInDatabase.Estimate.Optimistic.Should().Be(TimeSpan.FromHours(1));
+            workItemInDatabase.Estimate.Likely.Should().Be(TimeSpan.FromMinutes(150));
+            workItemInDatabase.Estimate.Pessimistic.Should().BeNull();
+
+            workItemInDatabase.Checklist.Should().HaveCount(2);
+            workItemInDatabase.Checklist[0].Text.Should().Be("Design");
+            workItemInDatabase.Checklist[0].IsDone.Should().BeTrue();
+            workItemInDatabase.Checklist[1].Text.Should().Be("Build");
+            workItemInDatabase.Checklist[1].IsDone.Should().BeFalse();
+
+            workItemInDatabase.Assignee.Should().NotBeNull();
+            workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
+            workItemInDatabase.Tags.Should().HaveCount(2);
+        });
+    }
+
+    [Fact]
+    public async Task Can_create_resource_without_compounds()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                attributes = new
+                {
+                    description = "Without compounds"
+                }
+            }
+        };
+
+        const string route = "/workItems";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        object? estimate = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("estimate").WhoseValue;
+        JsonSerializer.SerializeToElement(estimate).ValueKind.Should().Be(JsonValueKind.Null);
+
+        object? checklist = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("checklist").WhoseValue;
+        JsonSerializer.SerializeToElement(checklist).GetArrayLength().Should().Be(0);
+
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(newWorkItemId);
+
+            workItemInDatabase.Estimate.Should().BeNull();
+            workItemInDatabase.Checklist.Should().BeEmpty();
+        });
     }
 
     [Fact]

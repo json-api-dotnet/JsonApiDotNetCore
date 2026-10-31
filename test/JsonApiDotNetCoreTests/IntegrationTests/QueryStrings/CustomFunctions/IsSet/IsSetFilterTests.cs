@@ -44,6 +44,7 @@ public sealed class IsSetFilterTests : IClassFixture<IntegrationTestContext<Test
 
         appointments[1].Description = "Some text";
         appointments[1].Keywords = ["a"];
+
         appointments[1].Location = new AppointmentLocation
         {
             Address = new AppointmentAddress

@@ -260,14 +260,18 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("appointments", "location.address^", AppointmentScalarChain + "Non-collection attribute on compound type 'AppointmentAddress' expected.")]
     [InlineData("calendars", "workweek.^workDays", CalendarScalarChain + "Non-collection attribute on compound type 'Workweek' expected.")]
     // Collection attributes are rejected
-    [InlineData("appointments", "^attendees", AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
-    [InlineData("appointments", "^attendees.name", AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
-    [InlineData("appointments", "^keywords", AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "^attendees",
+        AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "^attendees.name",
+        AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "^keywords",
+        AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
     [InlineData("calendars", "^holidays.name", CalendarScalarChain + "To-one relationship or non-collection attribute on resource type 'calendars' expected.")]
     // Count requires a collection
     [InlineData("appointments", "count(location^)",
         AppointmentCountChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentLocation' expected.")]
-    [InlineData("appointments", "count(cost.^amount)", AppointmentCountChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentCost' expected.")]
+    [InlineData("appointments", "count(cost.^amount)",
+        AppointmentCountChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentCost' expected.")]
     [InlineData("calendars", "count(workweek.officeHours^)",
         CalendarCountChain + "Scalar collection attribute or compound attribute on compound type 'OfficeHours' expected.")]
     // Unknown fields

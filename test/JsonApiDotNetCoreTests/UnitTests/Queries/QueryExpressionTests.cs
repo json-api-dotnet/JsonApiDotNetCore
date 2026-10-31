@@ -218,7 +218,7 @@ public sealed class QueryExpressionTests
     public void SparseFieldSetElement_equality_includes_children()
     {
         // Arrange
-        CompoundFixture fixture = CompoundFixture.Instance;
+        var fixture = CompoundFixture.Instance;
 
         SparseFieldSetElementExpression streetAndCity = fixture.CreateAddressElement(fixture.StreetAttribute, fixture.CityAttribute);
         SparseFieldSetElementExpression cityAndStreet = fixture.CreateAddressElement(fixture.CityAttribute, fixture.StreetAttribute);
@@ -241,13 +241,15 @@ public sealed class QueryExpressionTests
     public void SparseFieldSet_Create_and_Empty()
     {
         // Arrange
-        CompoundFixture fixture = CompoundFixture.Instance;
+        var fixture = CompoundFixture.Instance;
 
         // Act
-        SparseFieldSetExpression emptySet = SparseFieldSetExpression.Create(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty);
+        var emptySet = SparseFieldSetExpression.Create(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty);
 
-        SparseFieldSetExpression nonEmptySet = SparseFieldSetExpression.Create(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty
-            .Add(fixture.AddressAttribute, fixture.CreateAddressElement()));
+        var nonEmptySet =
+            SparseFieldSetExpression.Create(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(fixture.AddressAttribute,
+                    fixture.CreateAddressElement()));
 
         // Assert
         emptySet.Should().BeSameAs(SparseFieldSetExpression.Empty);

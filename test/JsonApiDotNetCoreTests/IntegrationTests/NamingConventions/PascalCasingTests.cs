@@ -245,7 +245,9 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         postDocument.Data.SingleValue.Should().NotBeNull();
         string newPoolId = postDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject;
 
-        JsonElement scheduleInPost = postDocument.Data.SingleValue.Attributes.Should().ContainKey("Schedule").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement scheduleInPost = postDocument.Data.SingleValue.Attributes.Should().ContainKey("Schedule").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         scheduleInPost.GetProperty("OpensAt").GetString().Should().Be("09:00:00");
 
         // Act

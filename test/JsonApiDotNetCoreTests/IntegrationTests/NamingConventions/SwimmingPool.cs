@@ -11,6 +11,7 @@ public sealed class SwimmingPool : Identifiable<long>
 {
     [Attr]
     public bool IsIndoor { get; set; }
+
     [HasMany]
     public IList<WaterSlide> WaterSlides { get; set; } = new List<WaterSlide>();
 

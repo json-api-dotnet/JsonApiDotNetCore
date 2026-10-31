@@ -22,6 +22,53 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     }
 
     [Fact]
+    public async Task Relationship_updates_leave_compounds_intact()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(1);
+
+        WorkTag existingTag = _fakers.WorkTag.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<WorkTag>();
+            dbContext.AddInRange(existingWorkItem, existingTag);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "workTags",
+                    id = existingTag.StringId
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Tags.Should().HaveCount(2);
+            workItemInDatabase.ShouldHaveOriginalCompoundsOf(existingWorkItem);
+        });
+    }
+
+    [Fact]
     public async Task Cannot_add_to_ManyToOne_relationship()
     {
         // Arrange

@@ -22,6 +22,36 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
+    public async Task Can_delete_resource_with_compounds()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem? workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Should().BeNull();
+        });
+    }
+
+    [Fact]
     public async Task Can_delete_existing_resource()
     {
         // Arrange

@@ -16,6 +16,40 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
 
 public sealed class CompoundResourceGraphBuilderTests
 {
+    public static TheoryData<Expression<Func<ChainResource, object?>>, string> ValidFieldChains =>
+        new()
+        {
+            { resource => resource.Compound!.Child!.Scalar, "compound.child.scalar" },
+            { resource => resource.Related!.Compound!.Number, "related.compound.number" },
+            { resource => resource.Compound!.Number, "compound.number" },
+            { resource => resource.Compound!.Children, "compound.children" },
+            { resource => resource.Id, "id" }
+        };
+
+    public static TheoryData<Expression<Func<ChainResource, object?>>, string> InvalidFieldChains =>
+        new()
+        {
+            {
+                resource => new
+                {
+                    resource.Compound!.Number,
+                    resource.Compound.Text
+                },
+                "must select a single property or chain"
+            },
+            { resource => resource.Compound!.Number.ToString(), "should select a single property or chain, or select multiple properties" },
+            {
+                resource => new
+                {
+                    Value = resource.Compound!.Number.ToString()
+                },
+                "contains an invalid member selection. Expected member access expression"
+            },
+            { resource => resource.Compound!.Children![0].Scalar, "contains an invalid expression" },
+            { resource => resource.NotExposed, "is not exposed as a JSON:API field on" },
+            { resource => resource.Compound!.Text!.Length, "cannot have nested fields because it is neither a compound attribute nor a relationship" }
+        };
+
     [Fact]
     public void Shares_one_CompoundType_across_attributes_and_resources()
     {
@@ -32,8 +66,8 @@ public sealed class CompoundResourceGraphBuilderTests
         CompoundType first = resourceGraph.GetResourceType<FirstSharingResource>().GetAttributeByPropertyName(nameof(FirstSharingResource.Home)).CompoundType!;
         CompoundType second = resourceGraph.GetResourceType<FirstSharingResource>().GetAttributeByPropertyName(nameof(FirstSharingResource.Work)).CompoundType!;
 
-        CompoundType third = resourceGraph.GetResourceType<SecondSharingResource>().GetAttributeByPropertyName(nameof(SecondSharingResource.Other))
-            .CompoundType!;
+        CompoundType third =
+            resourceGraph.GetResourceType<SecondSharingResource>().GetAttributeByPropertyName(nameof(SecondSharingResource.Other)).CompoundType!;
 
         second.Should().BeSameAs(first);
         third.Should().BeSameAs(first);
@@ -127,7 +161,9 @@ public sealed class CompoundResourceGraphBuilderTests
         IResourceGraph resourceGraph = builder.Build();
 
         // Assert
-        AttrAttribute attribute = resourceGraph.GetResourceType<ResourceWithCollectionKinds>().GetAttributeByPropertyName(nameof(ResourceWithCollectionKinds.Bytes));
+        AttrAttribute attribute = resourceGraph.GetResourceType<ResourceWithCollectionKinds>()
+            .GetAttributeByPropertyName(nameof(ResourceWithCollectionKinds.Bytes));
+
         attribute.IsCollection.Should().BeFalse();
     }
 
@@ -143,7 +179,9 @@ public sealed class CompoundResourceGraphBuilderTests
         IResourceGraph resourceGraph = builder.Build();
 
         // Assert
-        AttrAttribute attribute = resourceGraph.GetResourceType<ResourceWithCollectionKinds>().GetAttributeByPropertyName(nameof(ResourceWithCollectionKinds.Map));
+        AttrAttribute attribute = resourceGraph.GetResourceType<ResourceWithCollectionKinds>()
+            .GetAttributeByPropertyName(nameof(ResourceWithCollectionKinds.Map));
+
         attribute.IsCollection.Should().BeFalse();
     }
 
@@ -542,15 +580,6 @@ public sealed class CompoundResourceGraphBuilderTests
         chain.ToString().Should().Be(expectedChain);
     }
 
-    public static TheoryData<Expression<Func<ChainResource, object?>>, string> ValidFieldChains => new()
-    {
-        { resource => resource.Compound!.Child!.Scalar, "compound.child.scalar" },
-        { resource => resource.Related!.Compound!.Number, "related.compound.number" },
-        { resource => resource.Compound!.Number, "compound.number" },
-        { resource => resource.Compound!.Children, "compound.children" },
-        { resource => resource.Id, "id" }
-    };
-
     [Theory]
     [MemberData(nameof(InvalidFieldChains))]
     public void GetFieldChain_rejects_invalid_expressions(Expression<Func<ChainResource, object?>> selector, string expectedMessagePart)
@@ -564,26 +593,6 @@ public sealed class CompoundResourceGraphBuilderTests
         // Assert
         action.Should().ThrowExactly<ArgumentException>().WithMessage($"*{expectedMessagePart}*");
     }
-
-    public static TheoryData<Expression<Func<ChainResource, object?>>, string> InvalidFieldChains => new()
-    {
-        {
-            resource => new
-            {
-                resource.Compound!.Number,
-                resource.Compound.Text
-            },
-            "must select a single property or chain"
-        },
-        { resource => resource.Compound!.Number.ToString(), "should select a single property or chain, or select multiple properties" },
-        { resource => new
-        {
-            Value = resource.Compound!.Number.ToString()
-        }, "contains an invalid member selection. Expected member access expression" },
-        { resource => resource.Compound!.Children![0].Scalar, "contains an invalid expression" },
-        { resource => resource.NotExposed, "is not exposed as a JSON:API field on" },
-        { resource => resource.Compound!.Text!.Length, "cannot have nested fields because it is neither a compound attribute nor a relationship" }
-    };
 
     private static IResourceGraph CreateChainResourceGraph()
     {

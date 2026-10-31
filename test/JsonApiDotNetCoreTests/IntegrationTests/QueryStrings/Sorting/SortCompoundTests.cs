@@ -78,6 +78,7 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
         calendars[1].MostRecentAppointment!.Location = null;
 
         calendars[2].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
         calendars[2].MostRecentAppointment!.Location = new AppointmentLocation
         {
             Address = new AppointmentAddress
@@ -87,6 +88,7 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
         };
 
         calendars[3].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
         calendars[3].MostRecentAppointment!.Location = new AppointmentLocation
         {
             Address = new AppointmentAddress
@@ -97,6 +99,7 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
 
         // Location without address.
         calendars[4].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
         calendars[4].MostRecentAppointment!.Location = new AppointmentLocation
         {
             Name = "Office",
@@ -123,13 +126,11 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
         // PostgreSQL sorts null last when ascending and first when descending.
         ascendingDocument.GetPrimaryIds().Take(2).Should().Equal(calendars[3].StringId, calendars[2].StringId);
 
-        ascendingDocument.GetPrimaryIds().Skip(2).Should().Equal(calendars[0].StringId, calendars[1].StringId,
-            calendars[4].StringId);
+        ascendingDocument.GetPrimaryIds().Skip(2).Should().Equal(calendars[0].StringId, calendars[1].StringId, calendars[4].StringId);
 
         descendingResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        descendingDocument.GetPrimaryIds().Take(3).Should().Equal(calendars[0].StringId, calendars[1].StringId,
-            calendars[4].StringId);
+        descendingDocument.GetPrimaryIds().Take(3).Should().Equal(calendars[0].StringId, calendars[1].StringId, calendars[4].StringId);
 
         descendingDocument.GetPrimaryIds().Skip(3).Should().Equal(calendars[2].StringId, calendars[3].StringId);
     }
@@ -166,7 +167,13 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
             }
         ];
 
-        appointments[0].Keywords = ["a", "b", "c"];
+        appointments[0].Keywords =
+        [
+            "a",
+            "b",
+            "c"
+        ];
+
         appointments[1].Keywords = ["a"];
         appointments[2].Keywords = [];
 
@@ -223,7 +230,12 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
 
         calendars[0].Workweek = new Workweek
         {
-            WorkDays = [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Friday]
+            WorkDays =
+            [
+                DayOfWeek.Monday,
+                DayOfWeek.Tuesday,
+                DayOfWeek.Friday
+            ]
         };
 
         calendars[1].Workweek = new Workweek
@@ -265,7 +277,13 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
     {
         // Arrange
         List<Blog> blogs = _fakers.Blog.GenerateList(2);
-        blogs[0].Tags = ["a", "b"];
+
+        blogs[0].Tags =
+        [
+            "a",
+            "b"
+        ];
+
         blogs[0].Posts = _fakers.BlogPost.GenerateList(2);
         blogs[1].Tags = ["a"];
         blogs[1].Posts = _fakers.BlogPost.GenerateList(1);
@@ -345,6 +363,7 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
+
         responseDocument.Data.ManyValue[0].GetLinkageIds("pinnedAppointments").Should().Equal(appointments[1].StringId, appointments[0].StringId,
             appointments[2].StringId);
 
@@ -377,6 +396,7 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
+
         responseDocument.Data.ManyValue[0].GetLinkageIds("reminders").Should().Equal(appointment.Reminders[1].StringId, appointment.Reminders[0].StringId,
             appointment.Reminders[2].StringId);
 
@@ -436,8 +456,7 @@ public sealed class SortCompoundTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.GetPrimaryIds().Should().Equal(appointments[1].StringId, appointments[0].StringId,
-            appointments[2].StringId);
+        responseDocument.GetPrimaryIds().Should().Equal(appointments[1].StringId, appointments[0].StringId, appointments[2].StringId);
     }
 
     [Fact]

@@ -8,7 +8,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes.Constraints;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class BookDefinition(IResourceGraph resourceGraph, IJsonApiRequest request) : JsonApiResourceDefinition<Book, long>(resourceGraph)
+public sealed class BookDefinition(IResourceGraph resourceGraph, IJsonApiRequest request)
+    : JsonApiResourceDefinition<Book, long>(resourceGraph)
 {
     private readonly IJsonApiRequest _request = request;
 

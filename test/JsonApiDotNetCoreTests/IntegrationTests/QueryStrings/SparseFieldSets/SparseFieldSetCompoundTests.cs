@@ -33,47 +33,6 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         });
     }
 
-    private static Appointment CreateAppointmentWithAllCompounds(Appointment appointment)
-    {
-        appointment.Cost = new AppointmentCost
-        {
-            Amount = 12.5m,
-            Currency = "EUR"
-        };
-
-        appointment.Location = new AppointmentLocation
-        {
-            Name = "Office",
-            Room = "R1",
-            Address = new AppointmentAddress
-            {
-                Street = "Main Street",
-                City = "Rotterdam",
-                CountryCode = "NL"
-            }
-        };
-
-        appointment.Attendees =
-        [
-            new Attendee
-            {
-                Name = "Alice",
-                Email = "alice@company.com",
-                Response = AttendeeResponse.Accepted
-            },
-            new Attendee
-            {
-                Name = "Bob",
-                Email = "bob@company.com",
-                Response = AttendeeResponse.Declined
-            }
-        ];
-
-        appointment.Keywords = ["a", "b"];
-
-        return appointment;
-    }
-
     [Fact]
     public async Task Can_select_nested_leaf()
     {
@@ -218,6 +177,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         resource.Attributes.Should().HaveCount(1);
         JsonElement attendees = resource.GetAttribute("attendees");
         attendees.GetArrayLength().Should().Be(2);
+
         attendees.EnumerateArray().Should().OnlyContain(element => element.GetMemberNames().SequenceEqual(new[]
         {
             "name"
@@ -232,7 +192,12 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         store.Clear();
 
         Blog blog = _fakers.Blog.GenerateOne();
-        blog.Tags = ["a", "b"];
+
+        blog.Tags =
+        [
+            "a",
+            "b"
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -268,7 +233,12 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         store.Clear();
 
         Blog blog = _fakers.Blog.GenerateOne();
-        blog.Tags = ["a", "b"];
+
+        blog.Tags =
+        [
+            "a",
+            "b"
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -328,7 +298,11 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
     {
         // Arrange
         Calendar calendar = _fakers.Calendar.GenerateOne();
-        calendar.PinnedAppointments = new[] { CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne()) }.ToHashSet();
+
+        calendar.PinnedAppointments = new[]
+        {
+            CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne())
+        }.ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -354,13 +328,21 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
     {
         // Arrange
         Calendar calendar = _fakers.Calendar.GenerateOne();
+
         calendar.Workweek = new Workweek
         {
             FirstDay = DayOfWeek.Monday,
-            WorkDays = [DayOfWeek.Monday, DayOfWeek.Tuesday]
+            WorkDays =
+            [
+                DayOfWeek.Monday,
+                DayOfWeek.Tuesday
+            ]
         };
 
-        calendar.PinnedAppointments = new[] { CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne()) }.ToHashSet();
+        calendar.PinnedAppointments = new[]
+        {
+            CreateAppointmentWithAllCompounds(_fakers.Appointment.GenerateOne())
+        }.ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -411,6 +393,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.Should().BeNull();
+
         responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("appointment").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
@@ -442,6 +425,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.Should().BeNull();
+
         responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("calendar").WhoseValue.With(value =>
         {
             value.Should().NotBeNull();
@@ -568,6 +552,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         store.Clear();
 
         Calendar calendar = _fakers.Calendar.GenerateOne();
+
         calendar.Workweek = new Workweek
         {
             FirstDay = DayOfWeek.Tuesday,
@@ -597,5 +582,50 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
         calendarCaptured.Workweek.Should().NotBeNull();
         calendarCaptured.Workweek.FirstDay.Should().Be(DayOfWeek.Tuesday);
         calendarCaptured.TimeZone.Should().BeNull();
+    }
+
+    private static Appointment CreateAppointmentWithAllCompounds(Appointment appointment)
+    {
+        appointment.Cost = new AppointmentCost
+        {
+            Amount = 12.5m,
+            Currency = "EUR"
+        };
+
+        appointment.Location = new AppointmentLocation
+        {
+            Name = "Office",
+            Room = "R1",
+            Address = new AppointmentAddress
+            {
+                Street = "Main Street",
+                City = "Rotterdam",
+                CountryCode = "NL"
+            }
+        };
+
+        appointment.Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice",
+                Email = "alice@company.com",
+                Response = AttendeeResponse.Accepted
+            },
+            new Attendee
+            {
+                Name = "Bob",
+                Email = "bob@company.com",
+                Response = AttendeeResponse.Declined
+            }
+        ];
+
+        appointment.Keywords =
+        [
+            "a",
+            "b"
+        ];
+
+        return appointment;
     }
 }

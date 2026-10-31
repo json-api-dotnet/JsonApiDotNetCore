@@ -13,6 +13,8 @@ internal sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccess
     bool IResourceDefinitionAccessor.IsReadOnlyRequest => throw new NotImplementedException();
     public IQueryableBuilder QueryableBuilder => throw new NotImplementedException();
 
+    public Func<ResourceType, SparseFieldSetExpression?, SparseFieldSetExpression?>? SparseFieldSetCallback { get; set; }
+
     public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
     {
         return existingIncludes;
@@ -32,8 +34,6 @@ internal sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccess
     {
         return existingPagination;
     }
-
-    public Func<ResourceType, SparseFieldSetExpression?, SparseFieldSetExpression?>? SparseFieldSetCallback { get; set; }
 
     public SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet)
     {

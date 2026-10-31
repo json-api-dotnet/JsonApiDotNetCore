@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using FluentAssertions;
@@ -43,7 +42,8 @@ public sealed class CompoundAttributesRequestBodyTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>("/contacts", requestBody);
 
         // Assert
-        AssertSingleError(httpResponse, responseDocument, "Failed to deserialize request body: Incompatible attribute value found.", "/data/attributes/content");
+        AssertSingleError(httpResponse, responseDocument, "Failed to deserialize request body: Incompatible attribute value found.",
+            "/data/attributes/content");
     }
 
     [Fact]
@@ -342,12 +342,16 @@ public sealed class CompoundAttributesRequestBodyTests
     }
 
     [Theory]
-    [InlineData(false, false, "nickName", "Attribute value cannot be assigned when creating resource.", "The attribute 'nickName' on compound type 'ContactName' cannot be assigned to.")]
-    [InlineData(true, false, "maidenName", "Attribute value cannot be assigned when updating resource.", "The attribute 'maidenName' on compound type 'ContactName' cannot be assigned to.")]
+    [InlineData(false, false, "nickName", "Attribute value cannot be assigned when creating resource.",
+        "The attribute 'nickName' on compound type 'ContactName' cannot be assigned to.")]
+    [InlineData(true, false, "maidenName", "Attribute value cannot be assigned when updating resource.",
+        "The attribute 'maidenName' on compound type 'ContactName' cannot be assigned to.")]
     [InlineData(false, false, "displayName", "Attribute is read-only.", "Attribute 'displayName' on compound type 'ContactName' is read-only.")]
     [InlineData(true, false, "displayName", "Attribute is read-only.", "Attribute 'displayName' on compound type 'ContactName' is read-only.")]
-    [InlineData(false, true, "nickName", "Attribute value cannot be assigned when creating resource.", "The attribute 'nickName' on compound type 'ContactName' cannot be assigned to.")]
-    [InlineData(true, true, "maidenName", "Attribute value cannot be assigned when updating resource.", "The attribute 'maidenName' on compound type 'ContactName' cannot be assigned to.")]
+    [InlineData(false, true, "nickName", "Attribute value cannot be assigned when creating resource.",
+        "The attribute 'nickName' on compound type 'ContactName' cannot be assigned to.")]
+    [InlineData(true, true, "maidenName", "Attribute value cannot be assigned when updating resource.",
+        "The attribute 'maidenName' on compound type 'ContactName' cannot be assigned to.")]
     [InlineData(false, true, "displayName", "Attribute is read-only.", "Attribute 'displayName' on compound type 'ContactName' is read-only.")]
     [InlineData(true, true, "displayName", "Attribute is read-only.", "Attribute 'displayName' on compound type 'ContactName' is read-only.")]
     public async Task Cannot_send_blocked_nested_member(bool isPatch, bool insideCollectionElement, string member, string expectedTitle, string expectedDetail)

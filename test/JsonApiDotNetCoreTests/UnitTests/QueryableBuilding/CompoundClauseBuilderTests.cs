@@ -28,15 +28,8 @@ public sealed class CompoundClauseBuilderTests : IDisposable
 
     public CompoundClauseBuilderTests()
     {
-        _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-            .Add<ContactModel, long>()
-            .Add<PlainModel, long>()
-            .Add<ParentOfOneModel, long>()
-            .Add<ParentOfManyModel, long>()
-            .Add<ChildModel, long>()
-            .Add<ListingModel, long>()
-            .Add<ApartmentModel, long>()
-            .Build();
+        _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<ContactModel, long>().Add<PlainModel, long>()
+            .Add<ParentOfOneModel, long>().Add<ParentOfManyModel, long>().Add<ChildModel, long>().Add<ListingModel, long>().Add<ApartmentModel, long>().Build();
 
         _contactType = _resourceGraph.GetResourceType<ContactModel>();
 
@@ -145,8 +138,8 @@ public sealed class CompoundClauseBuilderTests : IDisposable
         string text = BuildOrderBy(sort);
 
         // Assert
-        text.Should().Contain(".OrderBy(contactModel => contactModel.Content.Name.LastName)" +
-            ".ThenByDescending(contactModel => contactModel.Tags.Count)" + ".ThenByDescending(contactModel => contactModel.Content.PhoneNumbers.Count)");
+        text.Should().Contain(".OrderBy(contactModel => contactModel.Content.Name.LastName)" + ".ThenByDescending(contactModel => contactModel.Tags.Count)" +
+            ".ThenByDescending(contactModel => contactModel.Content.PhoneNumbers.Count)");
     }
 
     [Fact]
@@ -159,7 +152,8 @@ public sealed class CompoundClauseBuilderTests : IDisposable
         string text = BuildSelect(selection);
 
         // Assert
-        text.Should().Contain("Content = IIF((contactModel.Content == null), Convert(null, ContactRoot), new ContactRoot() {Name = IIF((contactModel.Content.Name == null), " +
+        text.Should().Contain(
+            "Content = IIF((contactModel.Content == null), Convert(null, ContactRoot), new ContactRoot() {Name = IIF((contactModel.Content.Name == null), " +
             "Convert(null, PersonName), new PersonName() {LastName = contactModel.Content.Name.LastName})})");
     }
 
@@ -296,10 +290,13 @@ public sealed class CompoundClauseBuilderTests : IDisposable
         FieldSelectors childSelectors = childSelection.GetOrCreateSelectors(childType);
         AttrAttribute detailsAttribute = childType.GetAttributeByPropertyName(nameof(ChildModel.Details));
         childSelectors.IncludeAttribute(detailsAttribute);
-        childSelectors.GetOrCreateChildSelectors(detailsAttribute).IncludeAttribute(detailsAttribute.CompoundType!.GetAttributeByPropertyName(nameof(ChildDetails.Note)));
+
+        childSelectors.GetOrCreateChildSelectors(detailsAttribute)
+            .IncludeAttribute(detailsAttribute.CompoundType!.GetAttributeByPropertyName(nameof(ChildDetails.Note)));
 
         var parentSelection = new FieldSelection();
         FieldSelectors parentSelectors = parentSelection.GetOrCreateSelectors(parentType);
+
         parentSelectors[relationship] = new QueryLayer(childType)
         {
             Selection = childSelection

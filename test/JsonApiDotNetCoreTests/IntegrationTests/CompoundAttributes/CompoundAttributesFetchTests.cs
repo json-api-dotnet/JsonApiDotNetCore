@@ -152,7 +152,8 @@ public sealed class CompoundAttributesFetchTests
         contentObject.Should().ContainKey("name").WhoseValue.Should().NotBeNull();
     }
 
-    [Fact(Skip = "KNOWN-ISSUE NEW-ef-null-element: EF Core cannot materialize a null element in a JSON complex collection (InvalidOperationException 'Invalid token type: Null').")]
+    [Fact(Skip =
+        "KNOWN-ISSUE NEW-ef-null-element: EF Core cannot materialize a null element in a JSON complex collection (InvalidOperationException 'Invalid token type: Null').")]
     public async Task Renders_null_element_in_compound_collection()
     {
         // Arrange
@@ -514,6 +515,7 @@ public sealed class CompoundAttributesFetchTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.Should().NotBeNull();
+
         responseDocument.Data.SingleValue.GetAttribute("lastKnownLocation").ShouldBeJson("""
             { "latitude": 52.09, "longitude": 5.12 }
             """);

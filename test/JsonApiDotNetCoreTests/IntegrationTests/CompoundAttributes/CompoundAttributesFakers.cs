@@ -117,10 +117,7 @@ internal sealed class CompoundAttributesFakers
                 faker.Random.Decimal(100, 1000),
                 faker.Random.Decimal(1000, 5000)
             ])
-            .RuleFor(root => root.Anniversaries, faker =>
-            [
-                DateTime.SpecifyKind(faker.Date.Past().Date, DateTimeKind.Utc)
-            ])
+            .RuleFor(root => root.Anniversaries, faker => [DateTime.SpecifyKind(faker.Date.Past().Date, DateTimeKind.Utc)])
             .RuleFor(root => root.InternalNotes, faker => faker.Lorem.Sentence())
             .RuleFor(root => root.Audit, faker => new ContactAudit
             {

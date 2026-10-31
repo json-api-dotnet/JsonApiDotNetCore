@@ -1,6 +1,5 @@
 using FluentAssertions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -119,8 +118,7 @@ public sealed class CompoundObjectAdapterTests
         // Arrange
         using var harness = new RequestAdapterHarness(null, ResourceTypes);
 
-        string body = harness.CreateResourceDocument(typeof(Page), """{"content":{"name":null,"phoneNumbers":null,"tags":null,"title":null}}""",
-            false);
+        string body = harness.CreateResourceDocument(typeof(Page), """{"content":{"name":null,"phoneNumbers":null,"tags":null,"title":null}}""", false);
 
         // Act
         var resource = harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
@@ -153,7 +151,8 @@ public sealed class CompoundObjectAdapterTests
 
     [Theory]
     [InlineData("""{"content":{"unknown":1}}""", "/data/attributes/content/unknown", "Attribute 'unknown' does not exist on compound type 'ContentCompound'.")]
-    [InlineData("""{"content":{"name":{"middle":"x"}}}""", "/data/attributes/content/name/middle", "Attribute 'middle' does not exist on compound type 'NameCompound'.")]
+    [InlineData("""{"content":{"name":{"middle":"x"}}}""", "/data/attributes/content/name/middle",
+        "Attribute 'middle' does not exist on compound type 'NameCompound'.")]
     [InlineData("""{"content":{"phoneNumbers":[{"number":"1"},{"extra":"x"}]}}""", "/data/attributes/content/phoneNumbers/1/extra",
         "Attribute 'extra' does not exist on compound type 'PhoneCompound'.")]
     public void Cannot_convert_unknown_nested_member_when_not_allowed(string attributesJson, string expectedPointer, string expectedDetail)
@@ -179,15 +178,15 @@ public sealed class CompoundObjectAdapterTests
         using var harness = new RequestAdapterHarness(options => options.AllowUnknownFieldsInRequestBody = true, ResourceTypes);
 
         string body = harness.CreateResourceDocument(typeof(Page), """
-            {
-              "content": {
-                "unknown": 1,
-                "title": "t",
-                "name": { "first": "f", "middle": "x" },
-                "phoneNumbers": [ { "number": "1", "extra": { "a": 1 }, "detail": { "label": "l", "extra": { "note": "n", "other": 2 }, "unknown": [] } } ]
-              }
-            }
-            """, false);
+        {
+          "content": {
+            "unknown": 1,
+            "title": "t",
+            "name": { "first": "f", "middle": "x" },
+            "phoneNumbers": [ { "number": "1", "extra": { "a": 1 }, "detail": { "label": "l", "extra": { "note": "n", "other": 2 }, "unknown": [] } } ]
+          }
+        }
+        """, false);
 
         // Act
         var resource = harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
@@ -414,7 +413,11 @@ public sealed class CompoundObjectAdapterTests
         object? value = typeof(CollectionTypes).GetProperty(propertyName)!.GetValue(resource);
         value.Should().NotBeNull();
         value.Should().BeAssignableTo(typeof(CollectionTypes).GetProperty(propertyName)!.PropertyType);
-        ((IEnumerable<PhoneCompound>)value!).Select(phone => phone.Number).Should().Contain(["1", "2"]).And.HaveCount(2);
+
+        ((IEnumerable<PhoneCompound>)value!).Select(phone => phone.Number).Should().Contain([
+            "1",
+            "2"
+        ]).And.HaveCount(2);
     }
 
     [Fact]

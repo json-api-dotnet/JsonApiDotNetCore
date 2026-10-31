@@ -127,7 +127,8 @@ public sealed class CompoundAttributesModelStateTests
         };
 
         // Act
-        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>($"/contacts/{existingContact.StringId}", requestBody);
+        (HttpResponseMessage httpResponse, string responseDocument) =
+            await _testContext.ExecutePatchAsync<string>($"/contacts/{existingContact.StringId}", requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
@@ -277,7 +278,8 @@ public sealed class CompoundAttributesModelStateTests
             "/data/attributes/categories");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D5: Nullable<struct> compound fails with 500 'Failed to instantiate compound type Nullable`1' on write, so nested validation cannot be reached.")]
+    [Fact(Skip =
+        "KNOWN-ISSUE D5: Nullable<struct> compound fails with 500 'Failed to instantiate compound type Nullable`1' on write, so nested validation cannot be reached.")]
     public async Task Validates_struct_compound()
     {
         // Arrange

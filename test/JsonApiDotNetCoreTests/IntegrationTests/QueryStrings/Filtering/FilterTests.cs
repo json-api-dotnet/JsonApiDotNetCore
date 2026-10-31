@@ -600,6 +600,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         List<Calendar> calendars = _fakers.Calendar.GenerateList(3);
 
         calendars[0].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
         calendars[0].MostRecentAppointment!.Location = new AppointmentLocation
         {
             Address = new AppointmentAddress
@@ -609,6 +610,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         };
 
         calendars[1].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
         calendars[1].MostRecentAppointment!.Location = new AppointmentLocation
         {
             Address = new AppointmentAddress
@@ -643,6 +645,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         List<Calendar> calendars = _fakers.Calendar.GenerateList(3);
 
         calendars[0].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
         calendars[0].MostRecentAppointment!.Attendees =
         [
             new Attendee
@@ -656,6 +659,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         ];
 
         calendars[1].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
         calendars[1].MostRecentAppointment!.Attendees =
         [
             new Attendee
@@ -690,6 +694,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         List<Appointment> appointments = _fakers.Appointment.GenerateList(3);
 
         appointments[0].Reminders = _fakers.Reminder.GenerateList(2);
+
         appointments[0].Attendees =
         [
             new Attendee
@@ -701,6 +706,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         appointments[1].Reminders = _fakers.Reminder.GenerateList(2);
 
         appointments[2].Reminders = _fakers.Reminder.GenerateList(1);
+
         appointments[2].Attendees =
         [
             new Attendee

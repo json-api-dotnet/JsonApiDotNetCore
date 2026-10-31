@@ -139,6 +139,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         List<WebShop> shops = _fakers.WebShop.GenerateList(2);
 
         shops[0].TenantId = OtherTenantId;
+
         shops[0].Contact = new ShopContact
         {
             Email = "other@example.com"
@@ -147,6 +148,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         shops[0].Products = _fakers.WebProduct.GenerateList(2);
 
         shops[1].TenantId = ThisTenantId;
+
         shops[1].Contact = new ShopContact
         {
             Email = "this@example.com"

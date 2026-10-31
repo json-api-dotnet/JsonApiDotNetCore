@@ -396,9 +396,12 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("appointments", "lessThan(cost.amount,^null)", "Function, field name or value between quotes expected.")]
     // Compound and collection attributes are rejected where a scalar is expected
     [InlineData("appointments", "greaterThan(location^,null)", ScalarChain + "Non-collection attribute on compound type 'AppointmentLocation' expected.")]
-    [InlineData("appointments", "greaterThan(^keywords,null)", ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
-    [InlineData("appointments", "lessThan(^attendees,null)", ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
-    [InlineData("appointments", "contains(^keywords,'x')", ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "greaterThan(^keywords,null)",
+        ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "lessThan(^attendees,null)",
+        ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "contains(^keywords,'x')",
+        ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
     // Only null may be compared against compound and collection attributes
     [InlineData("appointments", "equals(location,^'x')", "null expected.")]
     [InlineData("appointments", "equals(attendees,^'x')", "null expected.")]
@@ -412,8 +415,10 @@ public sealed class FilterParseTests : BaseParseTests
         CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentLocation' expected.")]
     [InlineData("appointments", "greaterThan(count(location.address.^city),'0')",
         CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentAddress' expected.")]
-    [InlineData("appointments", "has(location^)", CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentLocation' expected.")]
-    [InlineData("appointments", "has(cost.^amount)", CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentCost' expected.")]
+    [InlineData("appointments", "has(location^)",
+        CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentLocation' expected.")]
+    [InlineData("appointments", "has(cost.^amount)",
+        CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentCost' expected.")]
     // Scope of a compound collection
     [InlineData("appointments", "has(attendees,equals(^unknown,'x'))", "Field 'unknown' does not exist on compound type 'Attendee'.")]
     [InlineData("appointments", "has(attendees,has(^keywords))", "Field 'keywords' does not exist on compound type 'Attendee'.")]
@@ -441,7 +446,8 @@ public sealed class FilterParseTests : BaseParseTests
     // Equality between to-one relationships
     [InlineData("blogPosts", "equals(author,^caption)", ToOneChain + "To-one relationship on resource type 'blogPosts' expected.")]
     [InlineData("blogPosts", "equals(author,^comments)", ToOneChain + "To-one relationship on resource type 'blogPosts' expected.")]
-    [InlineData("blogPosts", "equals(author,reviewer.^userName)", ToOneChain + "End of field chain or to-one relationship on resource type 'webAccounts' expected.")]
+    [InlineData("blogPosts", "equals(author,reviewer.^userName)",
+        ToOneChain + "End of field chain or to-one relationship on resource type 'webAccounts' expected.")]
     public void Reader_Read_ParameterValue_Fails_On_Compound_Types(string resourceTypeName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -480,17 +486,6 @@ public sealed class FilterParseTests : BaseParseTests
 
         ErrorObject error = exception.Errors.Should().ContainSingle().Which;
         error.Detail.Should().Be($"Field '_x' does not exist on resource type 'appointments'. {parameterValueSource}");
-    }
-
-    private FilterQueryStringParameterReader CreateReader(string resourceTypeName)
-    {
-        Request.PrimaryResourceType = ResourceGraph.GetResourceType(resourceTypeName);
-
-        using var serviceProvider = new ServiceContainer();
-        var resourceFactory = new ResourceFactory(serviceProvider);
-        var scopeParser = new QueryStringParameterScopeParser();
-        var valueParser = new FilterParser(resourceFactory);
-        return new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 
     [Fact]
@@ -539,6 +534,17 @@ public sealed class FilterParseTests : BaseParseTests
 
         // Assert
         action.Should().ThrowExactly<InvalidOperationException>().WithMessage("No filter scope is currently active. Call Parse() first.");
+    }
+
+    private FilterQueryStringParameterReader CreateReader(string resourceTypeName)
+    {
+        Request.PrimaryResourceType = ResourceGraph.GetResourceType(resourceTypeName);
+
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new FilterParser(resourceFactory);
+        return new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 
     private sealed class NotDisposingContainerScopeFilterParser(IResourceFactory resourceFactory)

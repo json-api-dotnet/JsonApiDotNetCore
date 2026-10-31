@@ -21,6 +21,86 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     }
 
     [Fact]
+    public async Task Reports_nested_pointer_with_operation_index_and_rolls_back()
+    {
+        // Arrange
+        string validName = _fakers.Playlist.GenerateOne().Name;
+
+        var requestBody = new
+        {
+            atomic__operations = new object[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = validName
+                        }
+                    }
+                },
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = validName,
+                            credits = new[]
+                            {
+                                new
+                                {
+                                    role = "Producer",
+                                    personName = "Alice"
+                                },
+                                new
+                                {
+                                    role = "Mixer",
+                                    personName = ""
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Playlist>();
+        });
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The PersonName field is required.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations/1/data/attributes/credits/1/personName");
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<Playlist> playlistsInDatabase = await dbContext.Playlists.ToListAsync();
+
+            playlistsInDatabase.Should().BeEmpty();
+        });
+    }
+
+    [Fact]
     public async Task Cannot_create_resource_with_multiple_violations()
     {
         // Arrange

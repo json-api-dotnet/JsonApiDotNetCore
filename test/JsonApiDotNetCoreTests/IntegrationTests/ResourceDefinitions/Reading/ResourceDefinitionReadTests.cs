@@ -1,8 +1,11 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -10,8 +13,44 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext>>
 {
+    private const string StarCollectionHits = "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes " +
+        "Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string StarSingleHits = "Star.OnApplyFilter Star.OnApplySparseFieldSet Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string PlanetSecondaryHits = "Planet.OnApplyPagination Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplySparseFieldSet " +
+        "Planet.OnApplyIncludes Star.OnApplyFilter Star.OnApplyFilter Planet.OnApplyFilter Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta";
+
+    private const string PlanetRelationshipHits = "Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplyPagination Star.OnApplyFilter Star.OnApplyFilter " +
+        "Planet.OnApplyFilter";
+
     private readonly IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
     private readonly UniverseFakers _fakers = new();
+
+    public static TheoryData<string, string, string> HookOrderData =>
+        new()
+        {
+            { "GET", "/stars", StarCollectionHits },
+            { "GET", "/stars?fields[stars]=name", StarCollectionHits },
+            { "GET", "/stars?filter=equals(name,'Sun')", StarCollectionHits },
+            { "GET", "/stars?sort=name", StarCollectionHits },
+            { "GET", "/stars?page[size]=2", StarCollectionHits },
+            {
+                "GET", "/stars?include=planets",
+                "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes Planet.OnApplyFilter " +
+                "Planet.OnApplySort Planet.OnApplyPagination Planet.OnApplySparseFieldSet Planet.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta " +
+                "Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta"
+            },
+            { "GET", "/stars/{id}", StarSingleHits },
+            { "GET", "/stars/{id}?fields[stars]=name", StarSingleHits },
+            { "GET", "/stars/{id}/planets", PlanetSecondaryHits },
+            { "GET", "/stars/{id}/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2&fields[planets]=publicName", PlanetSecondaryHits },
+            { "GET", "/stars/{id}/relationships/planets", PlanetRelationshipHits },
+            { "GET", "/stars/{id}/relationships/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2", PlanetRelationshipHits },
+            { "POST", "/stars", "Star.OnApplyFilter Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta" },
+            { "PATCH", "/stars/{id}", "Star.OnApplyFilter Star.OnApplyFilter Star.OnApplyIncludes" },
+            { "DELETE", "/stars/{id}", "" }
+        };
 
     public ResourceDefinitionReadTests(IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> testContext)
     {
@@ -31,6 +70,12 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
             services.AddSingleton<IClientSettingsProvider, TestClientSettingsProvider>();
             services.AddSingleton<ResourceDefinitionHitCounter>();
+
+            services.AddSingleton<SparseFieldSetEvaluatorHitCounter>();
+            services.Replace(ServiceDescriptor.Scoped<ISparseFieldSetEvaluator, CountingSparseFieldSetEvaluator>());
+
+            services.AddSingleton<CustomConstraintSettings>();
+            services.AddScoped<IQueryConstraintProvider, CustomConstraintProvider>();
         });
 
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
@@ -41,6 +86,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
+
+        _testContext.App.Services.GetRequiredService<SparseFieldSetEvaluatorHitCounter>().Reset();
+        _testContext.App.Services.GetRequiredService<CustomConstraintSettings>().IsEnabled = false;
     }
 
     [Fact]
@@ -1050,5 +1098,465 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         {
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnRegisterQueryableHandlersForQueryStringParameters)
         }, options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    [MemberData(nameof(HookOrderData))]
+    public async Task Invokes_hooks_in_documented_order(string method, string routeTemplate, string expectedHits)
+    {
+        // Arrange
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Name = "Sun";
+        star.Planets = _fakers.Planet.GenerateSet(2);
+
+        foreach (Planet planet in star.Planets)
+        {
+            planet.HasRingSystem = true;
+        }
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = routeTemplate.Replace("{id}", star.StringId);
+
+        // Act
+        HttpResponseMessage httpResponse;
+
+        switch (method)
+        {
+            case "GET":
+            {
+                (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
+                break;
+            }
+            case "POST":
+            {
+                var requestBody = new
+                {
+                    data = new
+                    {
+                        type = "stars",
+                        attributes = new
+                        {
+                            name = "New star",
+                            solarRadius = 1,
+                            solarMass = 1
+                        }
+                    }
+                };
+
+                (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+                break;
+            }
+            case "PATCH":
+            {
+                var requestBody = new
+                {
+                    data = new
+                    {
+                        type = "stars",
+                        id = star.StringId,
+                        attributes = new
+                        {
+                            name = "Changed star"
+                        }
+                    }
+                };
+
+                (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+                break;
+            }
+            default:
+            {
+                (httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
+                break;
+            }
+        }
+
+        // Assert
+        httpResponse.IsSuccessStatusCode.Should().BeTrue();
+
+        string actualHits = string.Join(' ', hitCounter.HitExtensibilityPoints.Select(hit => $"{hit.Item1.Name}.{hit.Item2}"));
+        actualHits.Should().Be(expectedHits);
+    }
+
+    [Fact]
+    public async Task Can_include_nested_chain_in_sparse_fieldset_from_hook()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.IncludeAtmospherePressure);
+
+        var evaluatorCounter = _testContext.App.Services.GetRequiredService<SparseFieldSetEvaluatorHitCounter>();
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}?fields[planets]=atmosphere.composition";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        // The hook adds the nested chain to the set that is queried from the database, but the response is limited to what the client requested.
+        evaluatorCounter.QueryResults.Should().ContainSingle(result => result.StartsWith("planets:", StringComparison.Ordinal));
+        evaluatorCounter.QueryResults.Single(result => result.StartsWith("planets:", StringComparison.Ordinal)).Should().Contain("pressure");
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("atmosphere").And.HaveCount(1);
+
+        JsonElement atmosphere = GetAttribute(responseDocument.Data.SingleValue, "atmosphere");
+        atmosphere.TryGetProperty("composition", out _).Should().BeTrue();
+        atmosphere.TryGetProperty("pressure", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Can_exclude_nested_chain_in_sparse_fieldset_from_hook()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.ExcludeAtmosphereComposition);
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("publicName");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasRingSystem");
+
+        JsonElement atmosphere = GetAttribute(responseDocument.Data.SingleValue, "atmosphere");
+        atmosphere.TryGetProperty("pressure", out _).Should().BeTrue();
+        atmosphere.TryGetProperty("composition", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Intersects_query_string_fieldset_with_hook_result()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.ExcludeAtmosphereComposition);
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}?fields[planets]=atmosphere.pressure,atmosphere.composition";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("atmosphere").And.HaveCount(1);
+
+        JsonElement atmosphere = GetAttribute(responseDocument.Data.SingleValue, "atmosphere");
+        atmosphere.TryGetProperty("pressure", out _).Should().BeTrue();
+        atmosphere.TryGetProperty("composition", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Ignores_query_string_fieldset_when_hook_returns_null()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.ReturnNull);
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}?fields[planets]=publicName";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        // Documents the current rule: a hook that returns null results in the full set of viewable fields being serialized.
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("publicName");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasRingSystem");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("atmosphere");
+    }
+
+    [Fact]
+    public async Task Applies_definition_filter_to_included_collection_with_compound_top()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HidePlanetsWithPrivateName();
+
+        Star star = _fakers.Star.GenerateOne();
+
+        star.Classification = new StarClassification
+        {
+            SpectralClass = "G",
+            LuminosityClass = "V"
+        };
+
+        star.Planets = _fakers.Planet.GenerateSet(3);
+        star.Planets.ElementAt(0).PrivateName = "A";
+        star.Planets.ElementAt(2).PrivateName = "B";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("planets");
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(star.Planets.ElementAt(1).StringId);
+    }
+
+    [Fact]
+    public async Task Applies_definition_filter_to_nested_include_chain()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HideSmallMoons();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(1);
+        star.Planets.ElementAt(0).Moons = _fakers.Moon.GenerateSet(3);
+        star.Planets.ElementAt(0).Moons.ElementAt(0).SolarRadius = 0.5M;
+        star.Planets.ElementAt(0).Moons.ElementAt(1).SolarRadius = 2M;
+        star.Planets.ElementAt(0).Moons.ElementAt(2).SolarRadius = 3M;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets.moons";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(3);
+        responseDocument.Included.Where(resource => resource.Type == "planets").Should().HaveCount(1);
+
+        string[] moonIds = responseDocument.Included.Where(resource => resource.Type == "moons").Select(resource => resource.Id!).ToArray();
+        moonIds.Should().BeEquivalentTo(star.Planets.ElementAt(0).Moons.ElementAt(1).StringId, star.Planets.ElementAt(0).Moons.ElementAt(2).StringId);
+    }
+
+    [Fact]
+    public async Task Applies_definition_pagination_to_included_collection()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.LimitPlanetPageSize();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(4);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Applies_OnApplyIncludes_with_compound()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.RewriteConstellationStarsInclude();
+
+        Constellation constellation = _fakers.Constellation.GenerateOne();
+
+        constellation.Origin = new ConstellationOrigin
+        {
+            Culture = "Greek",
+            CatalogedInCentury = 2
+        };
+
+        constellation.Stars = _fakers.Star.GenerateSet(1);
+        constellation.Stars.ElementAt(0).Planets = _fakers.Planet.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Constellation>();
+            dbContext.Constellations.Add(constellation);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/constellations?include=stars";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(2);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "stars");
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "planets");
+
+        JsonElement origin = GetAttribute(responseDocument.Data.ManyValue![0], "origin");
+        origin.GetProperty("culture").GetString().Should().Be("Greek");
+    }
+
+    [Fact]
+    public async Task Calls_replaced_sparse_fieldset_evaluator()
+    {
+        // Arrange
+        var evaluatorCounter = _testContext.App.Services.GetRequiredService<SparseFieldSetEvaluatorHitCounter>();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/stars/{star.StringId}?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        evaluatorCounter.Calls.Should().Equal("stars:ForQuery", "planets:ForQuery", "Reset", "stars:ForSerializer", "planets:ForSerializer",
+            "stars:ForSerializer", "planets:ForSerializer");
+    }
+
+    [Fact]
+    public async Task Applies_constraints_from_custom_provider_of_both_scoped_kinds()
+    {
+        // Arrange
+        var constraintSettings = _testContext.App.Services.GetRequiredService<CustomConstraintSettings>();
+        constraintSettings.IsEnabled = true;
+
+        List<Star> stars = _fakers.Star.GenerateList(2);
+        stars[0].IsVisibleFromEarth = true;
+        stars[0].Planets = _fakers.Planet.GenerateSet(2);
+        stars[0].Planets.ElementAt(0).HasRingSystem = true;
+        stars[0].Planets.ElementAt(1).HasRingSystem = false;
+        stars[1].IsVisibleFromEarth = false;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.AddRange(stars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(stars[0].StringId);
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(stars[0].Planets.ElementAt(0).StringId);
+        responseDocument.Included[0].Attributes.Should().ContainKey("publicName").And.HaveCount(1);
+    }
+
+    private static JsonElement GetAttribute(ResourceObject resourceObject, string name)
+    {
+        resourceObject.Attributes.Should().ContainKey(name);
+        return JsonSerializer.SerializeToElement(resourceObject.Attributes[name]);
+    }
+
+    private static Planet CreatePlanetWithAtmosphere(Planet planet)
+    {
+        planet.Atmosphere = new Atmosphere
+        {
+            Pressure = 1.5M,
+            Composition =
+            [
+                new GasFraction
+                {
+                    Gas = "Nitrogen",
+                    Fraction = 0.78M
+                },
+                new GasFraction
+                {
+                    Gas = "Oxygen",
+                    Fraction = 0.21M
+                }
+            ]
+        };
+
+        return planet;
     }
 }

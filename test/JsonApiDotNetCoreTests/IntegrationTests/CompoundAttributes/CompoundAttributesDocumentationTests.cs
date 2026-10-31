@@ -95,7 +95,13 @@ public sealed class CompoundAttributesDocumentationTests
     {
         // Arrange
         List<AddressBook> addressBooks = _fakers.AddressBook.GenerateList(2);
-        addressBooks[0].Categories = ["family", "work"];
+
+        addressBooks[0].Categories =
+        [
+            "family",
+            "work"
+        ];
+
         addressBooks[1].Categories = ["friends"];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -158,7 +164,9 @@ public sealed class CompoundAttributesDocumentationTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(3);
-        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().ContainInOrder(contacts[1].StringId, contacts[2].StringId, contacts[0].StringId);
+
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should()
+            .ContainInOrder(contacts[1].StringId, contacts[2].StringId, contacts[0].StringId);
     }
 
     [Fact]

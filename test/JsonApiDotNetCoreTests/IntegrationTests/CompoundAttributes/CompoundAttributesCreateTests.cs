@@ -165,7 +165,8 @@ public sealed class CompoundAttributesCreateTests
         JsonNode? expected = GetNodeAtPath(content, path);
         responseDocument.Data.SingleValue.GetAttribute("content", path).ShouldBeJson(expected);
 
-        (HttpResponseMessage getResponse, Document getDocument) = await _testContext.ExecuteGetAsync<Document>($"/contacts/{responseDocument.Data.SingleValue.Id}");
+        (HttpResponseMessage getResponse, Document getDocument) =
+            await _testContext.ExecuteGetAsync<Document>($"/contacts/{responseDocument.Data.SingleValue.Id}");
 
         getResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
@@ -401,7 +402,9 @@ public sealed class CompoundAttributesCreateTests
 
         // Act
         (HttpResponseMessage httpResponse1, Document responseDocument1) = await _testContext.ExecutePostAsync<Document>("/contacts", contactRequestBody);
-        (HttpResponseMessage httpResponse2, Document responseDocument2) = await _testContext.ExecutePostAsync<Document>("/addressBooks", addressBookRequestBody);
+
+        (HttpResponseMessage httpResponse2, Document responseDocument2) =
+            await _testContext.ExecutePostAsync<Document>("/addressBooks", addressBookRequestBody);
 
         // Assert
         httpResponse1.ShouldHaveStatusCode(HttpStatusCode.Created);
@@ -450,7 +453,9 @@ public sealed class CompoundAttributesCreateTests
 
         // Act
         (HttpResponseMessage httpResponse1, Document responseDocument1) = await _testContext.ExecutePostAsync<Document>("/contacts", contactRequestBody);
-        (HttpResponseMessage httpResponse2, Document responseDocument2) = await _testContext.ExecutePostAsync<Document>("/addressBooks", addressBookRequestBody);
+
+        (HttpResponseMessage httpResponse2, Document responseDocument2) =
+            await _testContext.ExecutePostAsync<Document>("/addressBooks", addressBookRequestBody);
 
         // Assert
         httpResponse1.ShouldHaveStatusCode(HttpStatusCode.Created);
@@ -484,6 +489,7 @@ public sealed class CompoundAttributesCreateTests
     {
         // Arrange
         AddressBook existingAddressBook = _fakers.AddressBook.Generate();
+
         ContactNote existingNote = new()
         {
             Text = "Remember",

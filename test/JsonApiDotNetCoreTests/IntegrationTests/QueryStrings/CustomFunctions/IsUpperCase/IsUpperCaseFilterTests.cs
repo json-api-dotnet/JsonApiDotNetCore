@@ -216,8 +216,18 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
     {
         // Arrange
         List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
-        appointments[0].Keywords = ["csharp", "dotnet"];
-        appointments[1].Keywords = ["csharp", "DOTNET"];
+
+        appointments[0].Keywords =
+        [
+            "csharp",
+            "dotnet"
+        ];
+
+        appointments[1].Keywords =
+        [
+            "csharp",
+            "DOTNET"
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
