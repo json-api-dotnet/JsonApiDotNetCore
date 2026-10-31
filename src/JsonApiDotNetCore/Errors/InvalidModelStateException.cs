@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JsonApiDotNetCore.Errors;
@@ -117,7 +118,7 @@ public sealed class InvalidModelStateException(
             propertyType = property.PropertyType;
         }
 
-        string? sourcePointer = segment.SourcePointer != null ? $"{segment.SourcePointer}/{publicName}" : null;
+        string? sourcePointer = segment.SourcePointer != null ? $"{segment.SourcePointer}/{RequestAdapterPosition.EscapeSegment(publicName)}" : null;
 
         ModelStateKeySegment? nextSegment = segment.GetNextSegment(propertyType, true, sourcePointer);
         return nextSegment != null ? ResolveSourcePointer(nextSegment, resourceGraph) : sourcePointer;
@@ -150,8 +151,8 @@ public sealed class InvalidModelStateException(
     private static string? ResolveSourcePointerInAttribute(PropertySegment segment, AttrAttribute attribute, IResourceGraph resourceGraph)
     {
         string sourcePointer = attribute.Property.Name == nameof(Identifiable<>.Id)
-            ? $"{segment.SourcePointer ?? "/data"}/{attribute.PublicName}"
-            : $"{segment.SourcePointer ?? "/data"}/attributes/{attribute.PublicName}";
+            ? $"{segment.SourcePointer ?? "/data"}/{RequestAdapterPosition.EscapeSegment(attribute.PublicName)}"
+            : $"{segment.SourcePointer ?? "/data"}/attributes/{RequestAdapterPosition.EscapeSegment(attribute.PublicName)}";
 
         ModelStateKeySegment? nextSegment = segment.GetNextSegment(attribute.Property.PropertyType, true, sourcePointer);
         return nextSegment != null ? ResolveSourcePointer(nextSegment, resourceGraph) : sourcePointer;
@@ -159,7 +160,7 @@ public sealed class InvalidModelStateException(
 
     private static string? ResolveSourcePointerInRelationship(PropertySegment segment, RelationshipAttribute relationship, IResourceGraph resourceGraph)
     {
-        string sourcePointer = $"{segment.SourcePointer ?? "/data"}/relationships/{relationship.PublicName}/data";
+        string sourcePointer = $"{segment.SourcePointer ?? "/data"}/relationships/{RequestAdapterPosition.EscapeSegment(relationship.PublicName)}/data";
 
         ModelStateKeySegment? nextSegment = segment.GetNextSegment(relationship.RightType.ClrType, false, sourcePointer);
         return nextSegment != null ? ResolveSourcePointer(nextSegment, resourceGraph) : sourcePointer;
