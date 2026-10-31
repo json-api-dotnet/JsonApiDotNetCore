@@ -12,11 +12,21 @@ public sealed class InjectionDbContext : TestableDbContext
     public DbSet<PostOffice> PostOffices => Set<PostOffice>();
     public DbSet<GiftCertificate> GiftCertificates => Set<GiftCertificate>();
 
+    public DbSet<Postcard> Postcards => Set<Postcard>();
+
     public InjectionDbContext(DbContextOptions<InjectionDbContext> options, TimeProvider timeProvider)
         : base(options)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
 
         TimeProvider = timeProvider;
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<GiftCertificate>()
+            .ComplexProperty(giftCertificate => giftCertificate.Recipient, complexBuilder => complexBuilder.ToJson());
+
+        base.OnModelCreating(builder);
     }
 }
