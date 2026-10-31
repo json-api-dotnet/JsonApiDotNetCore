@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
@@ -209,5 +210,55 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/HeightInMeters");
+    }
+
+    [Fact]
+    public async Task Uses_pascal_case_for_nested_members()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "DivingBoards",
+                attributes = new Dictionary<string, object>
+                {
+                    ["HeightInMeters"] = 5,
+                    ["Schedule"] = new Dictionary<string, object>
+                    {
+                        ["OpensAt"] = "09:00:00",
+                        ["ClosesAt"] = "17:30:00",
+                        ["IsHeated"] = true
+                    }
+                }
+            }
+        };
+
+        const string postRoute = "/PublicApi/DivingBoards";
+
+        // Act
+        (HttpResponseMessage postResponse, Document postDocument) = await _testContext.ExecutePostAsync<Document>(postRoute, requestBody);
+
+        // Assert
+        postResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        postDocument.Data.SingleValue.Should().NotBeNull();
+        string newPoolId = postDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject;
+
+        JsonElement scheduleInPost = postDocument.Data.SingleValue.Attributes.Should().ContainKey("Schedule").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        scheduleInPost.GetProperty("OpensAt").GetString().Should().Be("09:00:00");
+
+        // Act
+        (HttpResponseMessage getResponse, Document getDocument) = await _testContext.ExecuteGetAsync<Document>($"{postRoute}/{newPoolId}");
+
+        // Assert
+        getResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        getDocument.Data.SingleValue.Should().NotBeNull();
+
+        JsonElement scheduleInGet = getDocument.Data.SingleValue.Attributes.Should().ContainKey("Schedule").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        scheduleInGet.GetProperty("OpensAt").GetString().Should().Be("09:00:00");
+        scheduleInGet.GetProperty("ClosesAt").GetString().Should().Be("17:30:00");
+        scheduleInGet.GetProperty("IsHeated").GetBoolean().Should().BeTrue();
     }
 }
