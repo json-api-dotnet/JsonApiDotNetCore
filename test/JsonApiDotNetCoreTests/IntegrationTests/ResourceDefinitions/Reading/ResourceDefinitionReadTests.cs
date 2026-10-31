@@ -27,7 +27,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     private readonly IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
     private readonly UniverseFakers _fakers = new();
 
-    public static TheoryData<string, string, string> HookOrderData =>
+    public static TheoryData<string, string, string> HookInvocationSequenceData =>
         new()
         {
             { "GET", "/stars", StarCollectionHits },
@@ -1101,8 +1101,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     }
 
     [Theory]
-    [MemberData(nameof(HookOrderData))]
-    public async Task Invokes_hooks_in_documented_order(string method, string routeTemplate, string expectedHits)
+    [MemberData(nameof(HookInvocationSequenceData))]
+    public async Task Invokes_hooks_in_current_order_per_request_kind(string method, string routeTemplate, string expectedHits)
     {
         // Arrange
         var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();

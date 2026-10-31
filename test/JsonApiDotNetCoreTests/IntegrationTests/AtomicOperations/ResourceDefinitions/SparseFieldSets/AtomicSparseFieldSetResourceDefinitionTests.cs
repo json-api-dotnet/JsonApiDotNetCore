@@ -28,6 +28,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         {
             services.AddResourceDefinition<LyricTextDefinition>();
             services.AddResourceDefinition<PlaylistFieldSetDefinition>();
+            services.AddResourceService<PlaylistQueryService>();
 
             services.AddSingleton<PlaylistFieldSetProvider>();
             services.AddSingleton<LyricPermissionProvider>();
@@ -40,14 +41,39 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
     }
 
     [Fact]
-    public async Task Resets_fieldset_evaluator_between_operations()
+    public async Task Evaluates_query_side_sparse_fieldset_hook_once_per_operation()
     {
         // Arrange
         var provider = _testContext.App.Services.GetRequiredService<PlaylistFieldSetProvider>();
         provider.IsEnabled = true;
-        provider.CallCount = 0;
+        provider.QueryCallCount = 0;
 
-        string newName = _fakers.Playlist.GenerateOne().Name;
+        List<Playlist> existingPlaylists = _fakers.Playlist.GenerateList(2);
+
+        foreach (Playlist playlist in existingPlaylists)
+        {
+            playlist.Credits =
+            [
+                new PlaylistCredit
+                {
+                    Role = "Producer",
+                    PersonName = "Alice"
+                }
+            ];
+
+            playlist.Recording = new PlaylistRecording
+            {
+                Studio = "Abbey Road"
+            };
+        }
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Playlists.AddRange(existingPlaylists);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string[] newNames = _fakers.Playlist.GenerateList(2).Select(playlist => playlist.Name).ToArray();
 
         var requestBody = new
         {
@@ -55,49 +81,27 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
             {
                 new
                 {
-                    op = "add",
+                    op = "update",
                     data = new
                     {
                         type = "playlists",
+                        id = existingPlaylists[0].StringId,
                         attributes = new
                         {
-                            name = newName,
-                            credits = new[]
-                            {
-                                new
-                                {
-                                    role = "Producer",
-                                    personName = "Alice"
-                                }
-                            },
-                            recording = new
-                            {
-                                studio = "Abbey Road"
-                            }
+                            name = newNames[0]
                         }
                     }
                 },
                 new
                 {
-                    op = "add",
+                    op = "update",
                     data = new
                     {
                         type = "playlists",
+                        id = existingPlaylists[1].StringId,
                         attributes = new
                         {
-                            name = newName,
-                            credits = new[]
-                            {
-                                new
-                                {
-                                    role = "Producer",
-                                    personName = "Alice"
-                                }
-                            },
-                            recording = new
-                            {
-                                studio = "Abbey Road"
-                            }
+                            name = newNames[1]
                         }
                     }
                 }
@@ -112,25 +116,24 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
+        // The hook returns a different fieldset for the query of the first and the second operation, which only happens when the evaluator is reset
+        // between operations.
+        provider.QueryCallCount.Should().Be(2);
+
         responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            resource.Attributes.Should().ContainKey("name");
-            resource.Attributes.Should().ContainKey("recording");
-            resource.Attributes.Should().NotContainKey("credits");
+            resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(newNames[0]);
+            resource.Attributes.Should().ContainKey("recording").WhoseValue.Should().NotBeNull();
         });
 
         responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            resource.Attributes.Should().ContainKey("name");
-            resource.Attributes.Should().ContainKey("credits");
-            resource.Attributes.Should().NotContainKey("recording");
+            resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(newNames[1]);
+            resource.Attributes.Should().ContainKey("credits").WhoseValue.Should().NotBeNull();
         });
-
-        provider.CallCount.Should().Be(2);
     }
-
     [Fact]
     public async Task Hides_text_in_create_resource_with_side_effects()
     {
