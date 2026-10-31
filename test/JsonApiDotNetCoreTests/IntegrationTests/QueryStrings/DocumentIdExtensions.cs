@@ -38,6 +38,14 @@ internal static class DocumentIdExtensions
     }
 
     /// <summary>
+    /// Returns the names of the members of a JSON object, in document order.
+    /// </summary>
+    public static string[] GetMemberNames(this JsonElement element)
+    {
+        return element.EnumerateObject().Select(property => property.Name).ToArray();
+    }
+
+    /// <summary>
     /// Returns the value of an attribute as JSON, which enables navigating into compound attributes.
     /// </summary>
     public static JsonElement GetAttribute(this ResourceObject resource, string attributeName)
