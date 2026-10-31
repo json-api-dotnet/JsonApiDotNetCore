@@ -7,4 +7,8 @@ public interface IClientSettingsProvider
     bool IsIncludePlanetMoonsBlocked { get; }
     bool ArePlanetsWithPrivateNameHidden { get; }
     bool IsStarGivingLightToMoonAutoIncluded { get; }
+    PlanetFieldSetBehavior PlanetFieldSetBehavior { get; }
+    bool IsPlanetPageSizeLimited { get; }
+    bool AreSmallMoonsHidden { get; }
+    bool IsConstellationStarsIncludeRewritten { get; }
 }

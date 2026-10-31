@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -13,6 +14,22 @@ public sealed class ConstellationDefinition(
     private readonly IClientSettingsProvider _clientSettingsProvider = clientSettingsProvider;
 
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Reading;
+
+    public override IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
+    {
+        base.OnApplyIncludes(existingIncludes);
+
+        if (_clientSettingsProvider.IsConstellationStarsIncludeRewritten)
+        {
+            RelationshipAttribute planetsRelationship = ResourceGraph.GetResourceType<Star>().GetRelationshipByPropertyName(nameof(Star.Planets));
+
+            return existingIncludes.Select(include => include.Relationship.Property.Name == nameof(Constellation.Stars)
+                ? new IncludeElementExpression(include.Relationship, include.Children.Add(new IncludeElementExpression(planetsRelationship)))
+                : include).ToImmutableHashSet();
+        }
+
+        return existingIncludes;
+    }
 
     public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
     {
