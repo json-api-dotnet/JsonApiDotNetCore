@@ -47,6 +47,10 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     private const string TimeOnlyInTheRange = "15:51:42.397";
     private const string TimeOnlyUpperBound = "16:22:41.736";
 
+    private const string NestedGuidLowerBound = "00000000-0000-0000-0000-000000000001";
+    private const string NestedGuidInTheRange = "00000000-0000-0000-0000-000000000002";
+    private const string NestedGuidUpperBound = "00000000-0000-0000-0000-000000000003";
+
     private readonly IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 
     public FilterOperatorTests(IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext)
@@ -1029,5 +1033,269 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(resource1.StringId);
+    }
+
+    public static TheoryData<string, string> NestedOperatorData
+    {
+        get
+        {
+            var data = new TheoryData<string, string>();
+
+            AddComparisons(data, "someInt32", IntLowerBound, IntInTheRange, IntUpperBound);
+            AddComparisons(data, "someDateTime", $"{IsoDateTimeLowerBound}Z", $"{IsoDateTimeInTheRange}Z", $"{IsoDateTimeUpperBound}Z");
+            AddComparisons(data, "someTimeSpan", TimeSpanLowerBound, TimeSpanInTheRange, TimeSpanUpperBound);
+            AddComparisons(data, "someGuid", NestedGuidLowerBound, NestedGuidInTheRange, NestedGuidUpperBound, false);
+            AddComparisons(data, "someEnum", nameof(DayOfWeek.Monday), nameof(DayOfWeek.Tuesday), nameof(DayOfWeek.Wednesday), false);
+            AddComparisons(data, "someString", "apple", "banana", "cherry", false);
+
+            data.Add("contains(someCompound.someString,'nan')", "1");
+            data.Add("startsWith(someCompound.someString,'ch')", "2");
+            data.Add("endsWith(someCompound.someString,'ple')", "0");
+
+            data.Add("equals(someCompound.someBoolean,'true')", "12");
+            data.Add("equals(someCompound.someBoolean,'false')", "0");
+
+            return data;
+        }
+    }
+
+    private static void AddComparisons(TheoryData<string, string> data, string member, string lowerBound, string inTheRange, string upperBound,
+        bool isOrdered = true)
+    {
+        string path = $"someCompound.{member}";
+
+        data.Add($"equals({path},'{inTheRange}')", "1");
+        data.Add($"any({path},'{lowerBound}','{upperBound}')", "02");
+
+        if (isOrdered)
+        {
+            data.Add($"lessThan({path},'{inTheRange}')", "0");
+            data.Add($"lessOrEqual({path},'{inTheRange}')", "01");
+            data.Add($"greaterThan({path},'{inTheRange}')", "2");
+            data.Add($"greaterOrEqual({path},'{inTheRange}')", "12");
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(NestedOperatorData))]
+    public async Task Can_filter_on_nested_attribute_with_operator(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    SomeString = "apple",
+                    SomeInt32 = int.Parse(IntLowerBound, CultureInfo.InvariantCulture),
+                    SomeBoolean = false,
+                    SomeDateTime = DateTime.Parse(IsoDateTimeLowerBound, CultureInfo.InvariantCulture).AsUtc(),
+                    SomeGuid = Guid.Parse(NestedGuidLowerBound),
+                    SomeTimeSpan = TimeSpan.Parse(TimeSpanLowerBound, CultureInfo.InvariantCulture),
+                    SomeEnum = DayOfWeek.Monday
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    SomeString = "banana",
+                    SomeInt32 = int.Parse(IntInTheRange, CultureInfo.InvariantCulture),
+                    SomeBoolean = true,
+                    SomeDateTime = DateTime.Parse(IsoDateTimeInTheRange, CultureInfo.InvariantCulture).AsUtc(),
+                    SomeGuid = Guid.Parse(NestedGuidInTheRange),
+                    SomeTimeSpan = TimeSpan.Parse(TimeSpanInTheRange, CultureInfo.InvariantCulture),
+                    SomeEnum = DayOfWeek.Tuesday
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    SomeString = "cherry",
+                    SomeInt32 = int.Parse(IntUpperBound, CultureInfo.InvariantCulture),
+                    SomeBoolean = true,
+                    SomeDateTime = DateTime.Parse(IsoDateTimeUpperBound, CultureInfo.InvariantCulture).AsUtc(),
+                    SomeGuid = Guid.Parse(NestedGuidUpperBound),
+                    SomeTimeSpan = TimeSpan.Parse(TimeSpanUpperBound, CultureInfo.InvariantCulture),
+                    SomeEnum = DayOfWeek.Wednesday
+                }
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_depth_three()
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    Child = new FilterableLeaf
+                    {
+                        SomeInt32 = 5
+                    }
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested
+                {
+                    Child = new FilterableLeaf
+                    {
+                        SomeInt32 = 6
+                    }
+                }
+            },
+            new()
+            {
+                SomeCompound = new FilterableNested()
+            },
+            new()
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/filterableResources?filter=equals(someCompound.child.someInt32,'5')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(resources[0].StringId);
+    }
+
+    [Theory]
+    [InlineData("has(someGuids,equals(_,'" + NestedGuidUpperBound + "'))", "1")]
+    [InlineData("has(someDecimals,greaterThan(_,'5'))", "1")]
+    [InlineData("has(someDateTimes,lessThan(_,'2000-12-31T00:00:00Z'))", "0")]
+    [InlineData("has(someTimeSpans,greaterThan(_,'0:08:00:00'))", "1")]
+    [InlineData("has(someDateOnlys,equals(_,'2001-01-01'))", "1")]
+    [InlineData("has(someEnums,equals(_,'Monday'))", "0")]
+    [InlineData("has(someBooleans,equals(_,'true'))", "1")]
+    [InlineData("has(someStrings,startsWith(_,'al'))", "0")]
+    [InlineData("has(someStrings,any(_,'beta','delta'))", "01")]
+    public async Task Can_filter_scalar_collection_elements_with_operator(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeGuids = [Guid.Parse(NestedGuidLowerBound), Guid.Parse(NestedGuidInTheRange)],
+                SomeDecimals = [1.5m, 2.5m],
+                SomeDateTimes = [new DateTime(2000, 1, 1).AsUtc(), new DateTime(2000, 6, 1).AsUtc()],
+                SomeTimeSpans = [TimeSpan.FromHours(1), TimeSpan.FromHours(5)],
+                SomeDateOnlys = [new DateOnly(2000, 1, 1), new DateOnly(2000, 6, 1)],
+                SomeEnums = [DayOfWeek.Monday],
+                SomeBooleans = [false],
+                SomeStrings = ["alpha", "beta"]
+            },
+            new()
+            {
+                SomeGuids = [Guid.Parse(NestedGuidUpperBound)],
+                SomeDecimals = [10.5m],
+                SomeDateTimes = [new DateTime(2001, 1, 1).AsUtc()],
+                SomeTimeSpans = [TimeSpan.FromHours(10)],
+                SomeDateOnlys = [new DateOnly(2001, 1, 1)],
+                SomeEnums = [DayOfWeek.Friday],
+                SomeBooleans = [true],
+                SomeStrings = ["gamma", "delta"]
+            },
+            new()
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Theory]
+    [InlineData("has(someNullableInt32s,equals(_,null))", "02")]
+    [InlineData("not(has(someNullableInt32s,equals(_,null)))", "1")]
+    [InlineData("has(someNullableInt32s,greaterThan(_,'1'))", "1")]
+    public async Task Can_filter_nullable_scalar_collection_elements(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeNullableInt32s = [1, null]
+            },
+            new()
+            {
+                SomeNullableInt32s = [2, 3]
+            },
+            new()
+            {
+                SomeNullableInt32s = [null]
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
     }
 }
