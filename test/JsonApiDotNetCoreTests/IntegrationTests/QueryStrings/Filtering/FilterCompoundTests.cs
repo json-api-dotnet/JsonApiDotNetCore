@@ -47,7 +47,7 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Null_equality_on_non_nullable_returns_no_rows()
+    public async Task Can_filter_null_equality_on_non_nullable_attribute_without_matching_rows()
     {
         // Arrange
         await SeedAsync();
@@ -109,6 +109,31 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
     [InlineData("has(someCompounds,has(someStrings,equals(_,'x')))", "1")]
     [InlineData("has(someCompounds,has(someStrings,equals(_,'b')))", "2")]
     public async Task Can_filter_has_nested_in_compound_collection(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources = await SeedAsync();
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        AssertRows(responseDocument, resources, expectedRows);
+    }
+
+    [Theory]
+    [InlineData("has(someCompounds,greaterThan(count(someStrings),'1'))", "2")]
+    [InlineData("has(someCompounds,equals(count(someStrings),'0'))", "2")]
+    [InlineData("has(someCompounds,equals(count(someStrings),'1'))", "1")]
+    [InlineData("has(someCompounds,has(someStrings))", "12")]
+    [InlineData("has(someCompounds,equals(child,null))", "12")]
+    [InlineData("has(someCompounds,not(equals(child,null)))", "2")]
+    [InlineData("has(someCompounds,equals(child.someInt32,'1'))", "2")]
+    [InlineData("not(has(someCompounds,equals(child,null)))", "0")]
+    public async Task Can_filter_count_and_nested_members_in_scope_of_compound_collection(string filterExpression, string expectedRows)
     {
         // Arrange
         List<FilterableResource> resources = await SeedAsync();
@@ -395,7 +420,11 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
                     new FilterableNested
                     {
                         SomeString = "xyz",
-                        SomeNullableString = "q"
+                        SomeNullableString = "q",
+                        Child = new FilterableLeaf
+                        {
+                            SomeInt32 = 1
+                        }
                     }
                 ],
                 SomeStrings = []

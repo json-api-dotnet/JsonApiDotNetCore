@@ -149,6 +149,46 @@ public sealed class SparseFieldSetExpressionExtensionsTests
     }
 
     [Fact]
+    public void Excluding_leaf_from_whole_compound_does_not_expose_view_blocked_children()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute contentAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Content));
+        var wholeContentElement = new SparseFieldSetElementExpression(contentAttr);
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(contentAttr, wholeContentElement));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Excluding<Contact>(c => c.Content!.Name!.LastName, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().NotBeNull();
+        updatedSet.ToString().Should().NotContain("secret");
+        updatedSet.ToString().Should().Be("content.name.firstName");
+    }
+
+    [Fact]
+    public void Excluding_only_visible_child_from_whole_compound_does_not_expose_view_blocked_children()
+    {
+        // Arrange
+        ResourceType contactType = _resourceGraph.GetResourceType<Contact>();
+        AttrAttribute contentAttr = contactType.GetAttributeByPropertyName(nameof(Contact.Content));
+        var wholeContentElement = new SparseFieldSetElementExpression(contentAttr);
+
+        var initialSet =
+            new SparseFieldSetExpression(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(contentAttr, wholeContentElement));
+
+        // Act
+        SparseFieldSetExpression? updatedSet = initialSet.Excluding<Contact>(c => c.Content!.Name, _resourceGraph);
+
+        // Assert
+        updatedSet.Should().BeSameAs(SparseFieldSetExpression.Empty);
+    }
+
+    [Fact]
     public void Excluding_all_fields_returns_Empty_singleton()
     {
         // Arrange
@@ -351,6 +391,9 @@ public sealed class SparseFieldSetExpressionExtensionsTests
     {
         [Attr(IsCompound = true)]
         public PersonName? Name { get; set; }
+
+        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowView)]
+        public string? Secret { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

@@ -107,6 +107,15 @@ public sealed class FilterableResource : Identifiable<long>
     [Attr(IsCompound = true)]
     public List<FilterableLabeled<DateOnly>> SomeLabeledDates { get; set; } = [];
 
+    [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public FilterableLeaf? SomeUnsortableCompound { get; set; }
+
+    [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public List<FilterableLeaf> SomeUnsortableCompounds { get; set; } = [];
+
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public List<string> SomeUnsortableStrings { get; set; } = [];
+
     [Attr]
     public List<string>? SomeStrings { get; set; }
 

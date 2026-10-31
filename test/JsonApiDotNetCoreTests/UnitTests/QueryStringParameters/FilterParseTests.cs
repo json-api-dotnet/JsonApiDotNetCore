@@ -109,6 +109,8 @@ public sealed class FilterParseTests : BaseParseTests
 
     [Theory]
     [InlineData("filter[posts]", "equals(author,^'some')", "To-one relationship name or null expected.")]
+    [InlineData("filter[posts]", "equals(author,^count(comments))", "To-one relationship name or null expected.")]
+    [InlineData("filter[posts]", "equals(author,^has(comments))", "To-one relationship name or null expected.")]
     [InlineData("filter[posts]", "lessThan(^some,null)", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[posts]", "lessThan(author^,null)",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
@@ -138,6 +140,8 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "has(tags,^has(tags,equals(_,'w')))", "Function 'has' cannot be used on scalar collection elements.")]
     [InlineData("filter", "has(tags,equals(^count(tags),'1'))", "Function 'count' cannot be used on scalar collection elements.")]
     [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' can only be used on resource types.")]
+    [InlineData("filter", "has(tags,equals(_,^_))", "Function, value between quotes or null expected.")]
+    [InlineData("filter", "has(tags,startsWith(_,^_))", "Value between quotes expected.")]
     [InlineData("filter", "equals(title,^_)", "Function, field name, value between quotes or null expected.")]
     [InlineData("filter", "equals(owner,^'some')", "To-one relationship name or null expected.")]
     [InlineData("filter", "equals(^posts,null)",
@@ -171,6 +175,8 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "isType(,^", "Resource type expected.")]
     [InlineData("filter[posts.contributors]", "isType(,^some)", "Resource type 'some' does not exist or does not derive from 'humans'.")]
     [InlineData("filter[posts.contributors]", "isType(,^humans)", "Resource type 'humans' does not exist or does not derive from 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(father,^men)", "Resource type 'men' does not exist or does not derive from 'men'.")]
+    [InlineData("filter[posts.contributors]", "isType(mother,^men)", "Resource type 'men' does not exist or does not derive from 'women'.")]
     [InlineData("filter[posts.contributors]", "isType(^some,men)", "Field 'some' does not exist on resource type 'humans'.")]
     [InlineData("filter[posts.contributors]", "isType(father.^some,women)", "Field 'some' does not exist on resource type 'men'.")]
     [InlineData("filter[posts.contributors]", "isType(^children,men)",
@@ -247,6 +253,10 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "any(title,'that','there','this')", null)]
     [InlineData("filter", "any(equals(title,'x'),'true')", null)]
     [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null)]
+    [InlineData("filter", "and(contains(title,'a'),contains(title,'b'),contains(title,'c'),contains(title,'d'))", null)]
+    [InlineData("filter", "or(equals(title,'a'),equals(title,'b'),equals(title,'c'),equals(title,'d'),equals(title,'e'))", null)]
+    [InlineData("filter", "and(equals(title,'a'),or(equals(title,'b'),equals(title,'c'),equals(title,'d'),equals(title,'e')),not(equals(title,'f')),has(posts))",
+        null)]
     [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))",
         "posts")]
     [InlineData("filter", "isType(owner.person,men)", null)]
@@ -450,6 +460,15 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("calendars", "equals(^audit.createdBy,'x')", "Filtering on attribute 'audit' is not allowed.")]
     [InlineData("calendars", "equals(^audit,null)", "Filtering on attribute 'audit' is not allowed.")]
     [InlineData("calendars", "has(^appointments)", "Filtering on relationship 'appointments' is not allowed.")]
+    // Position of the last field in a chain is reported for text matches on non-string attributes
+    [InlineData("appointments", "contains(cost.^amount,'x')", "Attribute 'amount' is of type 'Decimal' while type 'String' was expected.")]
+    [InlineData("calendars", "startsWith(workweek.officeHours.^opensAt,'x')", "Attribute 'opensAt' is of type 'TimeOnly' while type 'String' was expected.")]
+    [InlineData("appointments", "endsWith(calendar.workweek.^firstDay,'x')", "Attribute 'firstDay' is of type 'DayOfWeek' while type 'String' was expected.")]
+    // Element and function operands
+    [InlineData("calendars", "has(workweek.workDays,equals(_,^_))", "Function, value between quotes or null expected.")]
+    [InlineData("calendars", "has(workweek.workDays,lessThan(_,^_))", "Function or value between quotes expected.")]
+    [InlineData("appointments", "has(keywords,equals(_,^_))", "Function, value between quotes or null expected.")]
+    [InlineData("appointments", "has(keywords,any(_,^_))", "Value between quotes expected.")]
     // Equality between to-one relationships
     [InlineData("blogPosts", "equals(author,^caption)", ToOneChain + "To-one relationship on resource type 'blogPosts' expected.")]
     [InlineData("blogPosts", "equals(author,^comments)", ToOneChain + "To-one relationship on resource type 'blogPosts' expected.")]

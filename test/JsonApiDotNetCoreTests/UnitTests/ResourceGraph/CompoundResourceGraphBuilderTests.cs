@@ -234,7 +234,7 @@ public sealed class CompoundResourceGraphBuilderTests
     }
 
     [Fact]
-    public void Strips_AllowSort_from_nested_compound_attributes()
+    public void Keeps_AllowSort_on_nested_compound_attributes()
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -248,7 +248,7 @@ public sealed class CompoundResourceGraphBuilderTests
         CompoundType outer = resourceGraph.GetCompoundType<SortableOuterCompound>();
         AttrAttribute nested = outer.GetAttributeByPropertyName(nameof(SortableOuterCompound.Nested));
 
-        nested.Capabilities.Should().NotHaveFlag(AttrCapabilities.AllowSort);
+        nested.Capabilities.Should().HaveFlag(AttrCapabilities.AllowSort);
         nested.Capabilities.Should().HaveFlag(AttrCapabilities.AllowFilter);
 
         AttrAttribute scalar = outer.GetAttributeByPropertyName(nameof(SortableOuterCompound.Scalar));

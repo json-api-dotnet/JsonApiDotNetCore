@@ -125,8 +125,10 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         {
             string fieldChain = parameterName["filter[".Length..^1];
 
+            // An expression value is not a comparison with the relationship: the scope is then validated as a to-many relationship chain.
             if (fieldChain.Length > 0 && parameterValue != LegacyFilterNotationConverter.ParameterValuePrefix.IsNull &&
-                parameterValue != LegacyFilterNotationConverter.ParameterValuePrefix.IsNotNull)
+                parameterValue != LegacyFilterNotationConverter.ParameterValuePrefix.IsNotNull &&
+                !parameterValue.StartsWith(LegacyFilterNotationConverter.ParameterValuePrefix.Expression, StringComparison.Ordinal))
             {
                 PatternMatchResult result = BuiltInPatterns.ToOneOrCompoundChainEndingInToOneOrAttribute.Match(fieldChain, RequestResourceType);
 

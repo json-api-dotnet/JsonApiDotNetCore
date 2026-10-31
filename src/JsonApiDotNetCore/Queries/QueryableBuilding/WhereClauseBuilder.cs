@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq.Expressions;
+using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -168,6 +169,11 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
         Expression left = WrapInConvert(Visit(expression.Left, context), commonType);
         Expression right = WrapInConvert(Visit(expression.Right, context), commonType);
 
+        if (expression.Operator != ComparisonOperator.Equals)
+        {
+            (left, right) = MakeOrderable(left, right);
+        }
+
         return expression.Operator switch
         {
             ComparisonOperator.Equals => Expression.Equal(left, right),
@@ -177,6 +183,33 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
             ComparisonOperator.GreaterOrEqual => Expression.GreaterThanOrEqual(left, right),
             _ => throw new InvalidOperationException($"Unknown comparison operator '{expression.Operator}'.")
         };
+    }
+
+    /// <summary>
+    /// Rewrites operands of types for which the CLR has no relational operators. Strings are compared using <see cref="string.Compare(string, string)" />
+    /// (the ordering is determined by the database), enums are compared by their underlying numeric value.
+    /// </summary>
+    private static (Expression Left, Expression Right) MakeOrderable(Expression left, Expression right)
+    {
+        Type type = Nullable.GetUnderlyingType(left.Type) ?? left.Type;
+
+        if (type == typeof(string))
+        {
+            MethodInfo compareMethod = typeof(string).GetMethod(nameof(string.Compare), [typeof(string), typeof(string)])!;
+            ConstantExpression zero = Expression.Constant(0);
+
+            return (Expression.Call(compareMethod, left, right), zero);
+        }
+
+        if (type.IsEnum)
+        {
+            Type underlyingType = Enum.GetUnderlyingType(type);
+            Type numericType = left.Type == type ? underlyingType : typeof(Nullable<>).MakeGenericType(underlyingType);
+
+            return (Expression.Convert(left, numericType), Expression.Convert(right, numericType));
+        }
+
+        return (left, right);
     }
 
     private Type ResolveCommonType(QueryExpression left, QueryExpression right, QueryClauseBuilderContext context)

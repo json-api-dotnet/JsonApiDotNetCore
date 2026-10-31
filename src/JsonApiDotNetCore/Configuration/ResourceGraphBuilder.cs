@@ -382,11 +382,6 @@ public sealed partial class ResourceGraphBuilder
                 attribute.Capabilities = _options.DefaultAttrCapabilities;
             }
 
-            if (attribute.IsCompound)
-            {
-                attribute.Capabilities &= ~AttrCapabilities.AllowSort;
-            }
-
             IncludeField(attributesByName, attribute);
         }
 
@@ -432,8 +427,6 @@ public sealed partial class ResourceGraphBuilder
         }
 
         AssertCanBeCompoundType(compoundClrType, compoundAttribute.Property);
-
-        compoundAttribute.Capabilities &= ~AttrCapabilities.AllowSort;
 
         _nonIdentifiableTypes.Remove(compoundClrType);
 
@@ -483,7 +476,6 @@ public sealed partial class ResourceGraphBuilder
 
                 if (attribute.IsCompound)
                 {
-                    attribute.Capabilities &= ~AttrCapabilities.AllowSort;
                     pendingAttributes.Enqueue(attribute);
                 }
 

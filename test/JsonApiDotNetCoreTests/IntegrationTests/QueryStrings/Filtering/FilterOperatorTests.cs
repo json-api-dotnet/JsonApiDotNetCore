@@ -63,8 +63,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             AddComparisons(data, "someDateTime", $"{IsoDateTimeLowerBound}Z", $"{IsoDateTimeInTheRange}Z", $"{IsoDateTimeUpperBound}Z");
             AddComparisons(data, "someTimeSpan", TimeSpanLowerBound, TimeSpanInTheRange, TimeSpanUpperBound);
             AddComparisons(data, "someGuid", NestedGuidLowerBound, NestedGuidInTheRange, NestedGuidUpperBound, false);
-            AddComparisons(data, "someEnum", nameof(DayOfWeek.Monday), nameof(DayOfWeek.Tuesday), nameof(DayOfWeek.Wednesday), false);
-            AddComparisons(data, "someString", "apple", "banana", "cherry", false);
+            AddComparisons(data, "someEnum", nameof(DayOfWeek.Monday), nameof(DayOfWeek.Tuesday), nameof(DayOfWeek.Wednesday));
+            AddComparisons(data, "someString", "apple", "banana", "cherry");
 
             data.Add("contains(someCompound.someString,'nan')", "1");
             data.Add("startsWith(someCompound.someString,'ch')", "2");
@@ -1192,6 +1192,19 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData("has(someStrings,endsWith(_,'ta'))", "01")]
     [InlineData("has(someStrings,equals(_,'gamma'))", "1")]
     [InlineData("has(someStrings,any(_,'beta','delta'))", "01")]
+    [InlineData("has(someGuids,any(_,'" + NestedGuidLowerBound + "','" + NestedGuidUpperBound + "'))", "01")]
+    [InlineData("has(someGuids,any(_,'" + NestedGuidInTheRange + "'))", "0")]
+    [InlineData("has(someDecimals,any(_,'1.5','10.5'))", "01")]
+    [InlineData("has(someDecimals,any(_,'2.5'))", "0")]
+    [InlineData("has(someDateTimes,any(_,'2001-01-01T00:00:00Z'))", "1")]
+    [InlineData("has(someTimeSpans,any(_,'0:01:00:00','0:10:00:00'))", "01")]
+    [InlineData("has(someTimeSpans,any(_,'0:05:00:00'))", "0")]
+    [InlineData("has(someDateOnlys,any(_,'2000-01-01','2001-01-01'))", "01")]
+    [InlineData("has(someDateOnlys,any(_,'2000-06-01'))", "0")]
+    [InlineData("has(someEnums,any(_,'Monday','Friday'))", "01")]
+    [InlineData("has(someEnums,any(_,'Friday'))", "1")]
+    [InlineData("has(someBooleans,any(_,'true'))", "1")]
+    [InlineData("has(someBooleans,any(_,'false'))", "0")]
     public async Task Can_filter_scalar_collection_elements_with_operator(string filterExpression, string expectedRows)
     {
         // Arrange
@@ -1274,6 +1287,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData("has(someNullableInt32s,equals(_,null))", "02")]
     [InlineData("not(has(someNullableInt32s,equals(_,null)))", "1")]
     [InlineData("has(someNullableInt32s,greaterThan(_,'1'))", "1")]
+    [InlineData("has(someNullableInt32s,any(_,'1','3'))", "01")]
+    [InlineData("has(someNullableInt32s,any(_,'2'))", "1")]
     public async Task Can_filter_nullable_scalar_collection_elements(string filterExpression, string expectedRows)
     {
         // Arrange
@@ -1305,6 +1320,279 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         {
             await dbContext.ClearTableAsync<FilterableResource>();
             dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Theory]
+    [InlineData("lessThan(someString,'banana')", "03")]
+    [InlineData("lessOrEqual(someString,'banana')", "013")]
+    [InlineData("greaterThan(someString,'banana')", "2")]
+    [InlineData("greaterOrEqual(someString,'banana')", "12")]
+    [InlineData("lessThan(someNullableString,'banana')", "0")]
+    [InlineData("lessOrEqual(someNullableString,'banana')", "01")]
+    [InlineData("greaterThan(someNullableString,'banana')", "2")]
+    [InlineData("greaterOrEqual(someNullableString,'banana')", "12")]
+    [InlineData("lessThan(someEnum,'Tuesday')", "03")]
+    [InlineData("lessOrEqual(someEnum,'Tuesday')", "013")]
+    [InlineData("greaterThan(someEnum,'Tuesday')", "2")]
+    [InlineData("greaterOrEqual(someEnum,'Tuesday')", "12")]
+    [InlineData("lessThan(someNullableEnum,'Tuesday')", "0")]
+    [InlineData("lessOrEqual(someNullableEnum,'Tuesday')", "01")]
+    [InlineData("greaterThan(someNullableEnum,'Tuesday')", "2")]
+    [InlineData("greaterOrEqual(someNullableEnum,'Tuesday')", "12")]
+    [InlineData("lessThan(someString,someNullableString)", "")]
+    [InlineData("lessOrEqual(someString,someNullableString)", "012")]
+    [InlineData("greaterOrEqual(someEnum,someNullableEnum)", "012")]
+    [InlineData("greaterThan(someEnum,someNullableEnum)", "")]
+    public async Task Can_filter_ordered_comparison_on_string_and_enum_attributes(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeString = "apple",
+                SomeNullableString = "apple",
+                SomeEnum = DayOfWeek.Monday,
+                SomeNullableEnum = DayOfWeek.Monday
+            },
+            new()
+            {
+                SomeString = "banana",
+                SomeNullableString = "banana",
+                SomeEnum = DayOfWeek.Tuesday,
+                SomeNullableEnum = DayOfWeek.Tuesday
+            },
+            new()
+            {
+                SomeString = "cherry",
+                SomeNullableString = "cherry",
+                SomeEnum = DayOfWeek.Wednesday,
+                SomeNullableEnum = DayOfWeek.Wednesday
+            },
+            new()
+            {
+                SomeString = string.Empty,
+                SomeEnum = DayOfWeek.Sunday
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Theory]
+    [InlineData("has(someStrings,lessThan(_,'b'))", "0")]
+    [InlineData("has(someStrings,lessOrEqual(_,'alpha'))", "0")]
+    [InlineData("has(someStrings,greaterThan(_,'delta'))", "1")]
+    [InlineData("has(someStrings,greaterOrEqual(_,'gamma'))", "1")]
+    [InlineData("has(someEnums,greaterThan(_,'Monday'))", "1")]
+    [InlineData("has(someEnums,greaterOrEqual(_,'Monday'))", "01")]
+    [InlineData("has(someEnums,lessThan(_,'Tuesday'))", "0")]
+    [InlineData("has(someEnums,lessOrEqual(_,'Monday'))", "0")]
+    [InlineData("has(someCompound.someStrings,lessThan(_,'b'))", "0")]
+    [InlineData("has(someCompound.someStrings,greaterThan(_,'b'))", "01")]
+    [InlineData("has(someCompounds,lessThan(someString,'b'))", "0")]
+    [InlineData("has(someCompounds,greaterOrEqual(someEnum,'Tuesday'))", "1")]
+    [InlineData("has(someCompounds,lessOrEqual(someEnum,'Monday'))", "0")]
+    public async Task Can_filter_ordered_comparison_on_string_and_enum_in_collection_scopes(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeStrings =
+                [
+                    "alpha",
+                    "beta"
+                ],
+                SomeEnums = [DayOfWeek.Monday],
+                SomeCompound = new FilterableNested
+                {
+                    SomeStrings =
+                    [
+                        "apple",
+                        "banana"
+                    ]
+                },
+                SomeCompounds =
+                [
+                    new FilterableNested
+                    {
+                        SomeString = "apple",
+                        SomeEnum = DayOfWeek.Monday
+                    }
+                ]
+            },
+            new()
+            {
+                SomeStrings =
+                [
+                    "gamma",
+                    "delta"
+                ],
+                SomeEnums = [DayOfWeek.Friday],
+                SomeCompound = new FilterableNested
+                {
+                    SomeStrings = ["cherry"]
+                },
+                SomeCompounds =
+                [
+                    new FilterableNested
+                    {
+                        SomeString = "cherry",
+                        SomeEnum = DayOfWeek.Wednesday
+                    }
+                ]
+            },
+            new()
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Theory]
+    [InlineData("and(equals(someString,'ABC'),equals(someInt32,'11'),equals(someEnum,'Tuesday'),equals(someBoolean,'false'))", "0")]
+    [InlineData("and(equals(someString,'ABC'),equals(someInt32,'11'),equals(someEnum,'Tuesday'),equals(someBoolean,'false'),equals(otherInt32,'1'))", "0")]
+    [InlineData("and(equals(someString,'ABC'),equals(someInt32,'11'),equals(someEnum,'Tuesday'),equals(someBoolean,'true'))", "1")]
+    [InlineData("and(equals(someString,'ABC'),equals(someInt32,'11'),equals(someEnum,'Tuesday'),equals(someBoolean,'false'),equals(otherInt32,'2'))", "")]
+    [InlineData("or(equals(someString,'---'),equals(someInt32,'0'),equals(someEnum,'Saturday'),equals(someBoolean,'true'))", "1")]
+    [InlineData("or(equals(someString,'---'),equals(someInt32,'0'),equals(someEnum,'Saturday'),equals(otherInt32,'1'))", "0")]
+    [InlineData("or(equals(someString,'---'),equals(someInt32,'0'),equals(someInt32,'999'),equals(otherInt32,'2'))", "1")]
+    public async Task Can_filter_on_logical_functions_with_four_or_more_terms(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources =
+        [
+            new()
+            {
+                SomeString = "ABC",
+                SomeInt32 = 11,
+                SomeEnum = DayOfWeek.Tuesday,
+                SomeBoolean = false,
+                OtherInt32 = 1
+            },
+            new()
+            {
+                SomeString = "ABC",
+                SomeInt32 = 11,
+                SomeEnum = DayOfWeek.Tuesday,
+                SomeBoolean = true,
+                OtherInt32 = 2
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => resources[row - '0'].StringId!).ToArray();
+        responseDocument.Data.ManyValue.Should().HaveCount(expectedIds.Length);
+        responseDocument.Data.ManyValue.Select(resource => resource.Id).Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Theory]
+    [InlineData("equals(parent,parent.parent)", "034")]
+    [InlineData("not(equals(parent,parent.parent))", "12")]
+    [InlineData("equals(parent,null)", "0")]
+    [InlineData("equals(parent.parent,null)", "01")]
+    public async Task Can_filter_equality_on_to_one_relationship_chain(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        var root = new FilterableResource();
+
+        var child = new FilterableResource
+        {
+            Parent = root
+        };
+
+        var grandChild = new FilterableResource
+        {
+            Parent = child
+        };
+
+        var loopedParent = new FilterableResource();
+
+        var looped = new FilterableResource
+        {
+            Parent = loopedParent
+        };
+
+        List<FilterableResource> resources =
+        [
+            root,
+            child,
+            grandChild,
+            looped,
+            loopedParent
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resources);
+            await dbContext.SaveChangesAsync();
+
+            // A resource that is its own parent cannot be inserted in a single step.
+            loopedParent.Parent = loopedParent;
             await dbContext.SaveChangesAsync();
         });
 
