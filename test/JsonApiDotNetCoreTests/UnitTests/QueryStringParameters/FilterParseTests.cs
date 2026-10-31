@@ -16,6 +16,17 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
 
 public sealed class FilterParseTests : BaseParseTests
 {
+    private const string ScalarChain =
+        "Field chain on resource type 'appointments' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. ";
+
+    private const string EqualityChain =
+        "Field chain on resource type 'appointments' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-one relationship or an attribute. ";
+
+    private const string CollectionChain =
+        "Field chain on resource type 'appointments' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. ";
+
+    private const string ToOneChain = "Field chain on resource type 'blogPosts' failed to match the pattern: one or more to-one relationships. ";
+
     private readonly FilterQueryStringParameterReader _reader;
 
     public FilterParseTests()
@@ -255,6 +266,231 @@ public sealed class FilterParseTests : BaseParseTests
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
         value.ToString().Should().Be(parameterValue);
+    }
+
+    [Theory]
+    // Nested attributes in compound types, through compounds and to-one relationships
+    [InlineData("appointments", "filter", "equals(location.address.city,'x')", null)]
+    [InlineData("appointments", "filter", "equals(location.address.city,null)", null)]
+    [InlineData("appointments", "filter", "equals(location.name,location.room)", null)]
+    [InlineData("appointments", "filter", "equals(location.name,calendar.timeZone)", null)]
+    [InlineData("appointments", "filter", "equals(cost.amount,null)", null)]
+    [InlineData("calendars", "filter", "equals(workweek.firstDay,'Monday')", null)]
+    [InlineData("calendars", "filter", "equals(workweek.officeHours.opensAt,'09:00:00')", null)]
+    [InlineData("calendars", "filter", "equals(workweek.secret,'x')", null)]
+    [InlineData("calendars", "filter", "equals(mostRecentAppointment.location.address.city,'x')", null)]
+    // Null checks on compound types, compound collections and scalar collections
+    [InlineData("appointments", "filter", "equals(location,null)", null)]
+    [InlineData("appointments", "filter", "equals(location.address,null)", null)]
+    [InlineData("appointments", "filter", "equals(cost,null)", null)]
+    [InlineData("appointments", "filter", "equals(calendar.workweek,null)", null)]
+    [InlineData("appointments", "filter", "equals(attendees,null)", null)]
+    [InlineData("appointments", "filter", "equals(keywords,null)", null)]
+    [InlineData("appointments", "filter", "not(equals(keywords,null))", null)]
+    [InlineData("calendars", "filter", "equals(workweek,null)", null)]
+    [InlineData("calendars", "filter", "equals(workweek.officeHours,null)", null)]
+    [InlineData("calendars", "filter", "equals(mostRecentAppointment.attendees,null)", null)]
+    [InlineData("calendars", "filter", "equals(mostRecentAppointment,null)", null)]
+    // Functions over nested paths
+    [InlineData("appointments", "filter", "any(location.address.city,'a','b')", null)]
+    [InlineData("appointments", "filter", "contains(location.address.city,'x')", null)]
+    [InlineData("appointments", "filter", "startsWith(location.address.city,'x')", null)]
+    [InlineData("appointments", "filter", "endsWith(location.address.city,'x')", null)]
+    [InlineData("appointments", "filter", "and(equals(location.name,'x'),not(equals(cost.amount,'1')))", null)]
+    // Count and has on collections
+    [InlineData("appointments", "filter", "equals(count(keywords),'1')", null)]
+    [InlineData("appointments", "filter", "equals(count(attendees),'1')", null)]
+    [InlineData("appointments", "filter", "equals(count(reminders),'1')", null)]
+    [InlineData("appointments", "filter", "equals(count(calendar.holidays),'1')", null)]
+    [InlineData("calendars", "filter", "equals(count(holidays),'1')", null)]
+    [InlineData("calendars", "filter", "equals(count(workweek.workDays),'1')", null)]
+    [InlineData("calendars", "filter", "equals(count(mostRecentAppointment.attendees),'1')", null)]
+    [InlineData("appointments", "filter", "has(keywords)", null)]
+    [InlineData("appointments", "filter", "has(attendees)", null)]
+    [InlineData("appointments", "filter", "has(reminders)", null)]
+    [InlineData("appointments", "filter", "has(calendar.holidays)", null)]
+    [InlineData("calendars", "filter", "has(workweek.workDays)", null)]
+    [InlineData("calendars", "filter", "has(mostRecentAppointment.attendees)", null)]
+    [InlineData("calendars", "filter", "has(mostRecentAppointment.keywords)", null)]
+    // Predicates inside the scope of a compound collection
+    [InlineData("appointments", "filter", "has(attendees,equals(name,'x'))", null)]
+    [InlineData("appointments", "filter", "has(attendees,contains(name,'x'))", null)]
+    [InlineData("appointments", "filter", "has(attendees,any(name,'a','b'))", null)]
+    [InlineData("appointments", "filter", "has(attendees,not(equals(name,'x')))", null)]
+    [InlineData("appointments", "filter", "has(attendees,equals(response,'Accepted'))", null)]
+    [InlineData("appointments", "filter", "has(attendees,equals(response,null))", null)]
+    [InlineData("appointments", "filter", "has(attendees,equals(name,email))", null)]
+    [InlineData("appointments", "filter", "has(attendees,and(equals(name,'a'),equals(email,null)))", null)]
+    [InlineData("calendars", "filter", "has(holidays,equals(name,'x'))", null)]
+    [InlineData("calendars", "filter", "has(holidays,equals(isPublic,'true'))", null)]
+    [InlineData("calendars", "filter", "has(holidays,equals(date,'2020-01-01'))", null)]
+    [InlineData("calendars", "filter", "has(holidays,equals(date,null))", null)]
+    // Element scope on scalar collections
+    [InlineData("appointments", "filter", "has(keywords,equals(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,lessThan(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,greaterThan(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,lessOrEqual(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,greaterOrEqual(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,contains(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,startsWith(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,endsWith(_,'x'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,any(_,'x','y'))", null)]
+    [InlineData("appointments", "filter", "has(keywords,equals(_,null))", null)]
+    [InlineData("calendars", "filter", "has(workweek.workDays,equals(_,'Monday'))", null)]
+    [InlineData("calendars", "filter", "has(workweek.workDays,equals(_,null))", null)]
+    // To-one equality
+    [InlineData("blogs", "filter", "has(posts,equals(author,reviewer))", null)]
+    // Scopes
+    [InlineData("calendars", "filter[appointments]", "equals(location.name,'x')", "appointments")]
+    [InlineData("appointments", "filter[calendar.appointments]", "equals(location.name,'x')", "calendar.appointments")]
+    public void Reader_Read_Succeeds_On_Compound_Types(string resourceTypeName, string parameterName, string parameterValue, string? scopeExpected)
+    {
+        // Arrange
+        FilterQueryStringParameterReader reader = CreateReader(resourceTypeName);
+
+        // Act
+        reader.Read(parameterName, parameterValue);
+
+        // Assert
+        RelationshipChainExpressionInScope[] constraints = reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
+        ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+
+        scope?.ToString().Should().Be(scopeExpected);
+
+        QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
+        value.ToString().Should().Be(parameterValue);
+    }
+
+    [Theory]
+    [InlineData("calendars", "filter[^workweek]", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "filter[^holidays]", "To-many relationship 'holidays' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "filter[^workweek.workDays]", "Relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "filter[mostRecentAppointment.^attendees]", "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "filter[^location]", "To-many relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "filter[calendar.^workweek]", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    public void Reader_Read_ParameterName_Fails_On_Compound_Types(string resourceTypeName, string parameterName, string errorMessage)
+    {
+        // Arrange
+        FilterQueryStringParameterReader reader = CreateReader(resourceTypeName);
+        var parameterNameSource = new MarkedText(parameterName, '^');
+
+        // Act
+        Action action = () => reader.Read(parameterNameSource.Text, "equals(x,'1')");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterNameSource.Text);
+        exception.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterNameSource}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be(parameterNameSource.Text);
+    }
+
+    [Theory]
+    // Null is only allowed for equality
+    [InlineData("appointments", "lessThan(cost.amount,^null)", "Function, field name or value between quotes expected.")]
+    // Compound and collection attributes are rejected where a scalar is expected
+    [InlineData("appointments", "greaterThan(location^,null)", ScalarChain + "Non-collection attribute on compound type 'AppointmentLocation' expected.")]
+    [InlineData("appointments", "greaterThan(^keywords,null)", ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "lessThan(^attendees,null)", ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "contains(^keywords,'x')", ScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    // Only null may be compared against compound and collection attributes
+    [InlineData("appointments", "equals(location,^'x')", "null expected.")]
+    [InlineData("appointments", "equals(attendees,^'x')", "null expected.")]
+    [InlineData("appointments", "equals(keywords,^'x')", "null expected.")]
+    [InlineData("appointments", "equals(cost,^'x')", "null expected.")]
+    // Collection attributes cannot be navigated into
+    [InlineData("appointments", "equals(attendees.^name,'1')", EqualityChain + "End of field chain expected.")]
+    [InlineData("appointments", "equals(keywords.^x,'1')", EqualityChain + "End of field chain expected.")]
+    // Count and has require a collection
+    [InlineData("appointments", "greaterThan(count(location^),'0')",
+        CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentLocation' expected.")]
+    [InlineData("appointments", "greaterThan(count(location.address.^city),'0')",
+        CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentAddress' expected.")]
+    [InlineData("appointments", "has(location^)", CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentLocation' expected.")]
+    [InlineData("appointments", "has(cost.^amount)", CollectionChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentCost' expected.")]
+    // Scope of a compound collection
+    [InlineData("appointments", "has(attendees,equals(^unknown,'x'))", "Field 'unknown' does not exist on compound type 'Attendee'.")]
+    [InlineData("appointments", "has(attendees,has(^keywords))", "Field 'keywords' does not exist on compound type 'Attendee'.")]
+    [InlineData("appointments", "has(attendees,^isType(x,y))", "Function 'isType' can only be used on resource types.")]
+    [InlineData("appointments", "has(attendees,^count(name))", "Filter function expected.")]
+    [InlineData("appointments", "has(attendees,equals(^_,'x'))", "Function or field name expected.")]
+    [InlineData("appointments", "has(attendees,equals(response,^'Bogus'))", "Failed to convert 'Bogus' to type 'Nullable<AttendeeResponse>'.")]
+    // Element scope of a scalar collection
+    [InlineData("appointments", "equals(^_,'x')", "Function or field name expected.")]
+    [InlineData("appointments", "has(keywords,equals(^x,'1'))", "Function or _ expected.")]
+    [InlineData("appointments", "has(keywords,^count(_))", "Filter function expected.")]
+    [InlineData("appointments", "has(keywords,^has(_))", "Function 'has' cannot be used on scalar collection elements.")]
+    [InlineData("appointments", "has(keywords,^isType(_,x))", "Function 'isType' can only be used on resource types.")]
+    [InlineData("calendars", "has(workweek.workDays,contains(^_,'x'))", "Element is of type 'DayOfWeek' while type 'String' was expected.")]
+    [InlineData("calendars", "has(workweek.workDays,equals(_,^'Bogus'))", "Failed to convert 'Bogus' to type 'DayOfWeek'.")]
+    [InlineData("calendars", "has(holidays,equals(date,^'x'))", "Failed to convert 'x' to type 'DateOnly'.")]
+    [InlineData("calendars", "equals(workweek.officeHours.opensAt,^'x')", "Failed to convert 'x' to type 'TimeOnly'.")]
+    // Capabilities on nested attributes
+    [InlineData("appointments", "equals(calendar.workweek.^internalNote,'x')", "Filtering on attribute 'internalNote' is not allowed.")]
+    [InlineData("calendars", "equals(workweek.^internalNote,'x')", "Filtering on attribute 'internalNote' is not allowed.")]
+    [InlineData("calendars", "equals(workweek.^internalNote,null)", "Filtering on attribute 'internalNote' is not allowed.")]
+    [InlineData("calendars", "equals(^audit.createdBy,'x')", "Filtering on attribute 'audit' is not allowed.")]
+    [InlineData("calendars", "equals(^audit,null)", "Filtering on attribute 'audit' is not allowed.")]
+    [InlineData("calendars", "has(^appointments)", "Filtering on relationship 'appointments' is not allowed.")]
+    // Equality between to-one relationships
+    [InlineData("blogPosts", "equals(author,^caption)", ToOneChain + "To-one relationship on resource type 'blogPosts' expected.")]
+    [InlineData("blogPosts", "equals(author,^comments)", ToOneChain + "To-one relationship on resource type 'blogPosts' expected.")]
+    [InlineData("blogPosts", "equals(author,reviewer.^userName)", ToOneChain + "End of field chain or to-one relationship on resource type 'webAccounts' expected.")]
+    public void Reader_Read_ParameterValue_Fails_On_Compound_Types(string resourceTypeName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        FilterQueryStringParameterReader reader = CreateReader(resourceTypeName);
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => reader.Read("filter", parameterValueSource.Text);
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be("filter");
+        exception.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Fact(Skip = "KNOWN-ISSUE D7: A field name that starts with an underscore is tokenized as an underscore followed by text")]
+    public void Reader_Read_Field_Name_Starting_With_Underscore_Is_Reported_As_Unknown_Field()
+    {
+        // Arrange
+        FilterQueryStringParameterReader reader = CreateReader("appointments");
+        var parameterValueSource = new MarkedText("equals(^_x,'1')", '^');
+
+        // Act
+        Action action = () => reader.Read("filter", parameterValueSource.Text);
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        ErrorObject error = exception.Errors.Should().ContainSingle().Which;
+        error.Detail.Should().Be($"Field '_x' does not exist on resource type 'appointments'. {parameterValueSource}");
+    }
+
+    private FilterQueryStringParameterReader CreateReader(string resourceTypeName)
+    {
+        Request.PrimaryResourceType = ResourceGraph.GetResourceType(resourceTypeName);
+
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new FilterParser(resourceFactory);
+        return new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 
     [Fact]

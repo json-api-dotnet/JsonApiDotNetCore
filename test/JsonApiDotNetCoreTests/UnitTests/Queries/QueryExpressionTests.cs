@@ -196,6 +196,80 @@ public sealed class QueryExpressionTests
     }
 
     [Fact]
+    public void ScalarCollectionElementValue_ToString_Equals_GetHashCode()
+    {
+        // Arrange
+        var stringElement = new ScalarCollectionElementValueExpression(typeof(string));
+        var otherStringElement = new ScalarCollectionElementValueExpression(typeof(string));
+        var guidElement = new ScalarCollectionElementValueExpression(typeof(Guid));
+
+        // Act and assert
+        stringElement.ToString().Should().Be("_");
+        stringElement.ToFullString().Should().Be("_");
+        guidElement.ToString().Should().Be("_");
+
+        stringElement.Should().Be(otherStringElement);
+        stringElement.GetHashCode().Should().Be(otherStringElement.GetHashCode());
+        stringElement.Should().NotBe(guidElement);
+        stringElement.GetHashCode().Should().NotBe(guidElement.GetHashCode());
+    }
+
+    [Fact]
+    public void SparseFieldSetElement_equality_includes_children()
+    {
+        // Arrange
+        CompoundFixture fixture = CompoundFixture.Instance;
+
+        SparseFieldSetElementExpression streetAndCity = fixture.CreateAddressElement(fixture.StreetAttribute, fixture.CityAttribute);
+        SparseFieldSetElementExpression cityAndStreet = fixture.CreateAddressElement(fixture.CityAttribute, fixture.StreetAttribute);
+        SparseFieldSetElementExpression cityOnly = fixture.CreateAddressElement(fixture.CityAttribute);
+        SparseFieldSetElementExpression whole = fixture.CreateAddressElement();
+
+        // Act and assert
+        streetAndCity.Should().Be(cityAndStreet);
+        streetAndCity.GetHashCode().Should().Be(cityAndStreet.GetHashCode());
+        streetAndCity.ToString().Should().Be(cityAndStreet.ToString());
+
+        streetAndCity.Should().NotBe(cityOnly);
+        cityOnly.Should().NotBe(whole);
+        streetAndCity.Should().NotBe(whole);
+        whole.ToString().Should().Be("address");
+        streetAndCity.ToString().Should().Be("address.city,address.street");
+    }
+
+    [Fact]
+    public void SparseFieldSet_Create_and_Empty()
+    {
+        // Arrange
+        CompoundFixture fixture = CompoundFixture.Instance;
+
+        // Act
+        SparseFieldSetExpression emptySet = SparseFieldSetExpression.Create(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty);
+
+        SparseFieldSetExpression nonEmptySet = SparseFieldSetExpression.Create(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty
+            .Add(fixture.AddressAttribute, fixture.CreateAddressElement()));
+
+        // Assert
+        emptySet.Should().BeSameAs(SparseFieldSetExpression.Empty);
+        SparseFieldSetExpression.Empty.Elements.Should().BeEmpty();
+        SparseFieldSetExpression.Empty.ToString().Should().BeEmpty();
+
+        nonEmptySet.Should().NotBeSameAs(SparseFieldSetExpression.Empty);
+        nonEmptySet.Elements.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void Has_without_filter_renders_as_has_collection()
+    {
+        // Arrange
+        var has = new HasExpression(TestExpressionFactory.Instance.ResourceFieldChainForChildren(), null);
+
+        // Act and assert
+        has.ToString().Should().Be("has(children)");
+        has.ToFullString().Should().Be("has(baseTestResources:children)");
+    }
+
+    [Fact]
     public void Can_convert_QueryLayer_to_string()
     {
         // Arrange
@@ -467,6 +541,51 @@ public sealed class QueryExpressionTests
         private static IQueryable<BaseTestResource> TestQueryableHandler(IQueryable<BaseTestResource> source, StringValues parameterValue)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class CompoundResource : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public CompoundAddress? Address { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class CompoundAddress
+    {
+        [Attr]
+        public string? Street { get; set; }
+
+        [Attr]
+        public string? City { get; set; }
+    }
+
+    private sealed class CompoundFixture
+    {
+        public static CompoundFixture Instance { get; } = new();
+
+        public AttrAttribute AddressAttribute { get; }
+        public AttrAttribute StreetAttribute { get; }
+        public AttrAttribute CityAttribute { get; }
+
+        private CompoundFixture()
+        {
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<CompoundResource, long>().Build();
+            ResourceType resourceType = resourceGraph.GetResourceType<CompoundResource>();
+
+            AddressAttribute = resourceType.GetAttributeByPropertyName(nameof(CompoundResource.Address));
+            StreetAttribute = AddressAttribute.CompoundType!.GetAttributeByPropertyName(nameof(CompoundAddress.Street));
+            CityAttribute = AddressAttribute.CompoundType.GetAttributeByPropertyName(nameof(CompoundAddress.City));
+        }
+
+        public SparseFieldSetElementExpression CreateAddressElement(params AttrAttribute[] children)
+        {
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> childElements =
+                children.ToImmutableDictionary(child => (ResourceFieldAttribute)child, child => new SparseFieldSetElementExpression(child));
+
+            return new SparseFieldSetElementExpression(AddressAttribute, childElements);
         }
     }
 
