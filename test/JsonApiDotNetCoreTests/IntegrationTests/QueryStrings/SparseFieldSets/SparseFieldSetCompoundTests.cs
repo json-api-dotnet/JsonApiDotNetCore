@@ -445,6 +445,61 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
     }
 
     [Fact]
+    public async Task Can_select_leaf_of_compound_collection_nested_in_compound()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+
+        calendar.Workweek = new Workweek
+        {
+            FirstDay = DayOfWeek.Monday,
+            WorkDays = [DayOfWeek.Monday],
+            Breaks =
+            [
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(10, 0),
+                    ClosesAt = new TimeOnly(10, 15)
+                },
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(12, 0),
+                    ClosesAt = new TimeOnly(13, 0)
+                }
+            ]
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}?fields[calendars]=workweek.breaks.opensAt";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        JsonElement workweek = responseDocument.Data.SingleValue.GetAttribute("workweek");
+        workweek.GetMemberNames().Should().Equal("breaks");
+
+        JsonElement breaks = workweek.GetProperty("breaks");
+        breaks.GetArrayLength().Should().Be(2);
+        breaks.EnumerateArray().Should().OnlyContain(element => element.GetMemberNames().SequenceEqual(new[]
+        {
+            "opensAt"
+        }));
+
+        breaks[0].GetProperty("opensAt").GetString().Should().Be("10:00:00");
+        breaks[1].GetProperty("opensAt").GetString().Should().Be("12:00:00");
+    }
+
+    [Fact]
     public async Task Can_select_scalar_collection_with_database_projection()
     {
         // Arrange
