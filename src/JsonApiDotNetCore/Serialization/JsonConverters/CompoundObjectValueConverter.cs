@@ -5,7 +5,8 @@ using JsonApiDotNetCore.Serialization.Response;
 namespace JsonApiDotNetCore.Serialization.JsonConverters;
 
 /// <summary>
-/// Writes a <see cref="CompoundObjectValue" /> to JSON, using the member names verbatim (bypassing <see cref="JsonSerializerOptions.DictionaryKeyPolicy" />).
+/// Writes a <see cref="CompoundObjectValue" /> to JSON, using the member names verbatim (bypassing
+/// <see cref="JsonSerializerOptions.DictionaryKeyPolicy" />).
 /// </summary>
 internal sealed class CompoundObjectValueConverter : JsonConverter<CompoundObjectValue>
 {

@@ -156,9 +156,11 @@ public sealed class NestedAttributeTypeTests : IClassFixture<IntegrationTestCont
     [Theory]
     [MemberData(nameof(FilterableCollectionNames))]
     [InlineData(nameof(TypeContainerNested.TestBigIntegers),
-        Skip = "EF Core 10: Contains over a JSON collection translates to '@> to_jsonb(@value)' using the relational (numeric) parameter, but elements are stored as JSON strings (\"42\").")]
+        Skip =
+            "EF Core 10: Contains over a JSON collection translates to '@> to_jsonb(@value)' using the relational (numeric) parameter, but elements are stored as JSON strings (\"42\").")]
     [InlineData(nameof(TypeContainerNested.TestTimeOnlys),
-        Skip = "EF Core 10: Contains over a JSON collection translates to '@> to_jsonb(@value)' using the relational time parameter, but elements are stored as JSON strings (\"04:05:06.0000000\").")]
+        Skip =
+            "EF Core 10: Contains over a JSON collection translates to '@> to_jsonb(@value)' using the relational time parameter, but elements are stored as JSON strings (\"04:05:06.0000000\").")]
     public async Task Can_filter_scalar_collection_elements_of_type(string memberName)
     {
         // Arrange
