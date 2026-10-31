@@ -26,7 +26,7 @@ public sealed class TypeContainerNested
     public Half TestHalf { get; set; }
 
     [Attr]
-    public Rune TestRune { get; set; }
+    public Rune? TestRune { get; set; }
 
     [Attr]
     public IPAddress? TestIPAddress { get; set; }
