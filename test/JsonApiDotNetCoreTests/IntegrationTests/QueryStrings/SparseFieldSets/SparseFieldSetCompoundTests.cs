@@ -490,6 +490,7 @@ public sealed class SparseFieldSetCompoundTests : IClassFixture<IntegrationTestC
 
         JsonElement breaks = workweek.GetProperty("breaks");
         breaks.GetArrayLength().Should().Be(2);
+
         breaks.EnumerateArray().Should().OnlyContain(element => element.GetMemberNames().SequenceEqual(new[]
         {
             "opensAt"

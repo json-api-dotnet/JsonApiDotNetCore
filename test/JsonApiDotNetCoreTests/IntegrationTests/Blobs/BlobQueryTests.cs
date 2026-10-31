@@ -44,8 +44,7 @@ public sealed class BlobQueryTests : IClassFixture<IntegrationTestContext<Testab
         (ImageContainer pngLike, ImageContainer small, ImageContainer empty) = await CreateContainersAsync();
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) =
-            await _testContext.ExecuteGetAsync<Document>("/imageContainers?sort=-count(data)");
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>("/imageContainers?sort=-count(data)");
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -91,7 +90,8 @@ public sealed class BlobQueryTests : IClassFixture<IntegrationTestContext<Testab
         responseDocument.Data.ManyValue[0].Id.Should().Be(pngLike.StringId);
     }
 
-    [Fact(Skip = "Npgsql 10 cannot translate Any(predicate) over bytea for comparisons other than equality: 'The LINQ expression b => b > @value could not be translated'.")]
+    [Fact(Skip =
+        "Npgsql 10 cannot translate Any(predicate) over bytea for comparisons other than equality: 'The LINQ expression b => b > @value could not be translated'.")]
     public async Task Can_filter_on_byte_range_in_blob()
     {
         // Arrange
@@ -111,10 +111,25 @@ public sealed class BlobQueryTests : IClassFixture<IntegrationTestContext<Testab
     private async Task<(ImageContainer PngLike, ImageContainer Small, ImageContainer Empty)> CreateContainersAsync()
     {
         ImageContainer pngLike = _fakers.ImageContainer.GenerateOne();
-        pngLike.Data = [137, 80, 78, 71, 13, 10];
+
+        pngLike.Data =
+        [
+            137,
+            80,
+            78,
+            71,
+            13,
+            10
+        ];
 
         ImageContainer small = _fakers.ImageContainer.GenerateOne();
-        small.Data = [1, 2, 3];
+
+        small.Data =
+        [
+            1,
+            2,
+            3
+        ];
 
         ImageContainer empty = _fakers.ImageContainer.GenerateOne();
         empty.Data = [];
