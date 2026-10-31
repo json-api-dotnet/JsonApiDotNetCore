@@ -189,4 +189,84 @@ public sealed class PaginationParseTests : BaseParseTests
         valueTrees.Should().HaveSameCount(valueTreesExpectedArray);
         valueTrees.Select(tree => tree.ToString()).Should().BeEquivalentTo(valueTreesExpectedArray, options => options.WithStrictOrdering());
     }
+
+    [Theory]
+    [InlineData("calendars", "appointments:2", "|appointments", "Page number: 1, size: 25|Page number: 1, size: 2")]
+    [InlineData("calendars", "appointments.reminders:1", "|appointments.reminders", "Page number: 1, size: 25|Page number: 1, size: 1")]
+    [InlineData("appointments", "reminders:2", "|reminders", "Page number: 1, size: 25|Page number: 1, size: 2")]
+    [InlineData("appointments", "calendar.appointments:2", "|calendar.appointments", "Page number: 1, size: 25|Page number: 1, size: 2")]
+    [InlineData("blogs", "posts.comments:2", "|posts.comments", "Page number: 1, size: 25|Page number: 1, size: 2")]
+    public void Reader_Read_Page_Size_Succeeds_On_Compound_Types(string resourceTypeName, string parameterValue, string scopeTreesExpected, string valueTreesExpected)
+    {
+        // Arrange
+        PaginationQueryStringParameterReader reader = CreateReader(resourceTypeName);
+
+        // Act
+        reader.Read("page[size]", parameterValue);
+
+        // Assert
+        RelationshipChainExpressionInScope[] constraints = reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
+        string[] scopeTreesExpectedArray = scopeTreesExpected.Split("|");
+        ResourceFieldChainExpression?[] scopeTrees = constraints.Select(expressionInScope => expressionInScope.Scope).ToArray();
+
+        scopeTrees.Select(tree => tree?.ToString() ?? string.Empty).Should().BeEquivalentTo(scopeTreesExpectedArray, options => options.WithStrictOrdering());
+
+        string[] valueTreesExpectedArray = valueTreesExpected.Split("|");
+        QueryExpression[] valueTrees = constraints.Select(expressionInScope => expressionInScope.Expression).ToArray();
+
+        valueTrees.Select(tree => tree.ToString()).Should().BeEquivalentTo(valueTreesExpectedArray, options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    // Compound attributes are not relationships
+    [InlineData("calendars", "page[size]", "^workweek:2", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[size]", "^holidays:2", "To-many relationship 'holidays' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[size]", "^mostRecentAppointment:2", "To-many relationship 'mostRecentAppointment' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[size]", "^workweek.officeHours:2", "Relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[size]", "appointments.^location:1", "To-many relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("calendars", "page[size]", "appointments.^attendees:1", "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
+    [InlineData("calendars", "page[size]", "appointments.^keywords:1", "To-many relationship 'keywords' does not exist on resource type 'appointments'.")]
+    [InlineData("calendars", "page[size]", "appointments:2,^workweek:1", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[size]", "appointments:2,appointments.^attendees:1", "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "page[size]", "^location:2", "To-many relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "page[size]", "^location.address:2", "Relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "page[size]", "^address:2", "To-many relationship 'address' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "page[size]", "^attendees:2", "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "page[size]", "^keywords:2", "To-many relationship 'keywords' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "page[size]", "calendar.^workweek:2", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("appointments", "page[size]", "calendar.^holidays:2", "To-many relationship 'holidays' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[number]", "^workweek:2", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[number]", "appointments:2,^holidays:1", "To-many relationship 'holidays' does not exist on resource type 'calendars'.")]
+    [InlineData("appointments", "page[number]", "^location:2", "To-many relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "page[number]", "^attendees:2", "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
+    public void Reader_Read_Pagination_Fails_On_Compound_Types(string resourceTypeName, string parameterName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        PaginationQueryStringParameterReader reader = CreateReader(resourceTypeName);
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => reader.Read(parameterName, parameterValueSource.Text);
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterName);
+        exception.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified pagination is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be(parameterName);
+    }
+
+    private PaginationQueryStringParameterReader CreateReader(string resourceTypeName)
+    {
+        Request.PrimaryResourceType = ResourceGraph.GetResourceType(resourceTypeName);
+
+        var parser = new PaginationParser();
+        return new PaginationQueryStringParameterReader(parser, Request, ResourceGraph, Options);
+    }
 }
