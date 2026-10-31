@@ -21,7 +21,7 @@ public sealed class RequestAdapterPosition
 
     public IDisposable PushElement(string name)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(name);
 
         _stack.Push($"/{name}");
         return _disposable;

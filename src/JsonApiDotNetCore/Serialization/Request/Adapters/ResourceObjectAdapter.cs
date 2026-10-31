@@ -152,9 +152,9 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
             using (state.Position.PushElement(childAttr.PublicName))
             {
-                AssertNotReadOnly(childAttr, compoundType, state);
                 AssertSetAttributeInCreateResourceNotBlocked(childAttr, compoundType, state);
                 AssertSetAttributeInUpdateResourceNotBlocked(childAttr, compoundType, state);
+                AssertNotReadOnly(childAttr, compoundType, state);
 
                 object? childValue;
 
@@ -216,10 +216,13 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         {
             using (state.Position.PushArrayIndex(index))
             {
-                object? itemValue = itemElement.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined
-                    ? null
-                    : ConvertCompoundObject(itemElement, elementCompoundType, elementType, null, state);
+                if (itemElement.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+                {
+                    throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
+                        $"Failed to convert element with value 'null' to type '{RuntimeTypeConverter.GetFriendlyTypeName(elementType)}'.");
+                }
 
+                object? itemValue = ConvertCompoundObject(itemElement, elementCompoundType, elementType, null, state);
                 items.Add(itemValue);
             }
 
@@ -245,7 +248,8 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
     {
         try
         {
-            return Activator.CreateInstance(type, true) ?? throw new InvalidOperationException($"Failed to instantiate compound type '{type.Name}'.");
+            Type instanceType = Nullable.GetUnderlyingType(type) ?? type;
+            return Activator.CreateInstance(instanceType, true) ?? throw new InvalidOperationException($"Failed to instantiate compound type '{type.Name}'.");
         }
         catch (MissingMethodException exception)
         {
