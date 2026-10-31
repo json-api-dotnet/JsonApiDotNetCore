@@ -9,7 +9,8 @@ using Xunit;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets;
 
 /// <summary>
-/// Verifies sparse fieldsets on the address book domain, which has a read-only nested member, a view-blocked nested member and a nullable struct compound.
+/// Verifies sparse fieldsets on the address book domain, which has a read-only nested member, a view-blocked nested member and a nullable struct
+/// compound.
 /// </summary>
 public sealed class SparseFieldSetAddressBookTests
     : IClassFixture<IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext>>

@@ -7,10 +7,10 @@ using Xunit;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Compound.TablePerType;
 
 /// <summary>
-/// The read and write tests of the other inheritance mappings cannot run against this mapping. This test detects when the EF Core limitation is fixed, in
-/// which case it fails and the test classes should be derived from <see cref="CompoundInheritanceReadTests{TDbContext}" /> and
-/// <see cref="CompoundInheritanceWriteTests{TDbContext}" /> (as the TablePerHierarchy variants do), with the TPT mapping. xUnit v2 offers no way to skip a
-/// derived test class as a whole.
+/// The read and write tests of the other inheritance mappings cannot run against this mapping. This test detects when the EF Core limitation is fixed,
+/// in which case it fails and the test classes should be derived from <see cref="CompoundInheritanceReadTests{TDbContext}" /> and
+/// <see cref="CompoundInheritanceWriteTests{TDbContext}" /> (as the TablePerHierarchy variants do), with the TPT mapping. xUnit v2 offers no way to skip
+/// a derived test class as a whole.
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class CompoundTablePerTypeLimitationTests(

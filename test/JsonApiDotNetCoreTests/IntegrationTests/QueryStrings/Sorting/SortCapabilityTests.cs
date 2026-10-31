@@ -1,6 +1,5 @@
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering;
 using TestBuildingBlocks;

@@ -1113,7 +1113,8 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/companies/{company.StringId}?include=departments&filter[departments]=has(contacts,equals(role,'manager'))&fields[departments]=contacts";
+        string route =
+            $"/companies/{company.StringId}?include=departments&filter[departments]=has(contacts,equals(role,'manager'))&fields[departments]=contacts";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

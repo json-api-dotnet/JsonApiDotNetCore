@@ -130,6 +130,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
             resource.Attributes.Should().ContainKey("credits").WhoseValue.Should().NotBeNull();
         });
     }
+
     [Fact]
     public async Task Hides_text_in_create_resource_with_side_effects()
     {

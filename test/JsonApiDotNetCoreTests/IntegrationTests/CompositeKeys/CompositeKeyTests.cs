@@ -594,6 +594,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Com
         responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("paint").WhoseValue.Should().BeOfType<JsonElement>().Subject.With(paint =>
         {
             paint.EnumerateObject().Select(property => property.Name).Should().Equal("color");
@@ -634,7 +635,10 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Com
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Included.Should().HaveCount(2);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Type == "cars" && resource.Attributes != null && resource.Attributes.ContainsKey("paint"));
+
+        responseDocument.Included.Should()
+            .OnlyContain(resource => resource.Type == "cars" && resource.Attributes != null && resource.Attributes.ContainsKey("paint"));
+
         responseDocument.Included.Select(resource => resource.Id).Should().BeEquivalentTo(dealership.Inventory.Select(car => car.StringId));
     }
 }

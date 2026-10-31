@@ -255,8 +255,8 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null)]
     [InlineData("filter", "and(contains(title,'a'),contains(title,'b'),contains(title,'c'),contains(title,'d'))", null)]
     [InlineData("filter", "or(equals(title,'a'),equals(title,'b'),equals(title,'c'),equals(title,'d'),equals(title,'e'))", null)]
-    [InlineData("filter", "and(equals(title,'a'),or(equals(title,'b'),equals(title,'c'),equals(title,'d'),equals(title,'e')),not(equals(title,'f')),has(posts))",
-        null)]
+    [InlineData("filter",
+        "and(equals(title,'a'),or(equals(title,'b'),equals(title,'c'),equals(title,'d'),equals(title,'e')),not(equals(title,'f')),has(posts))", null)]
     [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))",
         "posts")]
     [InlineData("filter", "isType(owner.person,men)", null)]

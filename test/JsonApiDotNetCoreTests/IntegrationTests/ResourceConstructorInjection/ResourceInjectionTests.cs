@@ -1,12 +1,9 @@
 using System.Net;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -418,5 +415,4 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
             certificateInDatabase.Recipient.EmailAddress.Should().Be("alice@example.com");
         });
     }
-
 }

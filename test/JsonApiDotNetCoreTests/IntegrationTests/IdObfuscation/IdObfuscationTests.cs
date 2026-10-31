@@ -737,6 +737,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Ob
 
         ResourceObject first = responseDocument.Data.ManyValue.Single(resource => resource.Id == account.Cards[0].StringId);
         first.Attributes.Should().HaveCount(2);
+
         first.Attributes.Should().ContainKey("limits").WhoseValue.Should().BeOfType<JsonElement>().Subject.With(limits =>
         {
             limits.EnumerateObject().Select(property => property.Name).Should().Equal("dailyLimit");
