@@ -26,6 +26,11 @@ public sealed class AttributeTypesDbContext(DbContextOptions<AttributeTypesDbCon
 
     protected override void ConfigureConventions(ModelConfigurationBuilder builder)
     {
+        ConfigureTypeConventions(builder);
+    }
+
+    internal static void ConfigureTypeConventions(ModelConfigurationBuilder builder)
+    {
         builder.Properties<Int128>()
             .HaveConversion<Int128Converter>();
 

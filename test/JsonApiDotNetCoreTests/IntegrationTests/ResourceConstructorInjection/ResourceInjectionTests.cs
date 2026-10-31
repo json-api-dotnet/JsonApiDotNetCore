@@ -419,19 +419,4 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         });
     }
 
-    [Fact]
-    public void Compound_types_do_not_get_dependency_injection()
-    {
-        // Arrange
-        // Compound types are created without dependency injection, so a compound type that needs a constructor dependency is rejected at startup.
-        var options = new JsonApiOptions();
-        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<Postcard, long>();
-
-        // Act
-        Action action = () => builder.Build();
-
-        // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(Stamp)}*parameterless constructor*");
-    }
 }

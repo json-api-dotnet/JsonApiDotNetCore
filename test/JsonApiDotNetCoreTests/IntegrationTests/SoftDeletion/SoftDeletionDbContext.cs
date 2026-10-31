@@ -18,6 +18,9 @@ public sealed class SoftDeletionDbContext(DbContextOptions<SoftDeletionDbContext
         builder.Entity<Company>()
             .ComplexProperty(company => company.Headquarters, complexBuilder => complexBuilder.ToJson());
 
+        builder.Entity<Department>()
+            .ComplexCollection(department => department.Contacts, complexBuilder => complexBuilder.ToJson());
+
         builder.Entity<Company>()
             .HasQueryFilter(company => company.SoftDeletedAt == null);
 

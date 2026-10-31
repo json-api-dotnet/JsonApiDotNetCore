@@ -27,7 +27,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     private readonly IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
     private readonly UniverseFakers _fakers = new();
 
-    public static TheoryData<string, string, string> HookOrderData =>
+    public static TheoryData<string, string, string> HookInvocationSequenceData =>
         new()
         {
             { "GET", "/stars", StarCollectionHits },
@@ -1101,8 +1101,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     }
 
     [Theory]
-    [MemberData(nameof(HookOrderData))]
-    public async Task Invokes_hooks_in_documented_order(string method, string routeTemplate, string expectedHits)
+    [MemberData(nameof(HookInvocationSequenceData))]
+    public async Task Invokes_hooks_in_current_order_per_request_kind(string method, string routeTemplate, string expectedHits)
     {
         // Arrange
         var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
@@ -1186,6 +1186,89 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         actualHits.Should().Be(expectedHits);
     }
 
+    [Fact]
+    public async Task Invokes_sparse_fieldset_hook_once_per_type_per_phase_when_type_occurs_in_multiple_layers()
+    {
+        // Arrange
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Moon moon = _fakers.Moon.GenerateOne();
+        moon.OrbitsAround = _fakers.Planet.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Moon>();
+            dbContext.Moons.Add(moon);
+            await dbContext.SaveChangesAsync();
+        });
+
+        // Moon occurs in the top layer and again in the nested layer below its planet.
+        const string route = "/moons?include=orbitsAround.moons";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] sparseFieldSetHits = hitCounter.HitExtensibilityPoints.Where(hit => hit.Item2 == ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
+            .Select(hit => hit.Item1.Name).ToArray();
+
+        // One hit per type for the query, and one per type for the serializer.
+        sparseFieldSetHits.Count(name => name == nameof(Moon)).Should().Be(2);
+        sparseFieldSetHits.Count(name => name == nameof(Planet)).Should().Be(2);
+    }
+    [Fact]
+    public async Task Reports_right_side_resource_hidden_by_definition_filter_as_missing_when_assignment_fails()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HidePlanetsWithPrivateName();
+
+        Star existingStar = _fakers.Star.GenerateOne();
+        Planet hiddenPlanet = _fakers.Planet.GenerateOne();
+        hiddenPlanet.PrivateName = "Secret";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Stars.Add(existingStar);
+            dbContext.Planets.Add(hiddenPlanet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "planets",
+                    id = hiddenPlanet.StringId!
+                },
+                new
+                {
+                    type = "planets",
+                    id = Unknown.StringId.Int64
+                }
+            }
+        };
+
+        // The existence check only runs after the database rejects the assignment, which is forced here by an unknown planet.
+        string route = $"/stars/{existingStar.StringId}/relationships/planets";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.Should().HaveCount(2);
+        responseDocument.Errors.Should().OnlyContain(error => error.StatusCode == HttpStatusCode.NotFound && error.Title == "A related resource does not exist.");
+        responseDocument.Errors.Select(error => error.Detail).Should().BeEquivalentTo(new[]
+        {
+            $"Related resource of type 'planets' with ID '{hiddenPlanet.StringId}' in relationship 'planets' does not exist.",
+            $"Related resource of type 'planets' with ID '{Unknown.StringId.Int64}' in relationship 'planets' does not exist."
+        });
+    }
     [Fact]
     public async Task Can_include_nested_chain_in_sparse_fieldset_from_hook()
     {
