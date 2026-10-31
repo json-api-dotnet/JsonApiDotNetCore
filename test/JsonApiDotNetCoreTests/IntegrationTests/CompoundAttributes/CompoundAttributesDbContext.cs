@@ -24,6 +24,7 @@ public sealed class CompoundAttributesDbContext(DbContextOptions<CompoundAttribu
         builder.Entity<Contact>(b =>
         {
             b.ComplexProperty(c => c.Content, cb => cb.ToJson());
+            b.ComplexProperty<GeoPoint>(c => c.LastKnownLocation, cb => cb.ToJson());
             b.HasMany(c => c.Notes).WithOne();
         });
 

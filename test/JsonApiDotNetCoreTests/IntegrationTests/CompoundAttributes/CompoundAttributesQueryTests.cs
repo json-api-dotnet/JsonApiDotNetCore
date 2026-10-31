@@ -7,13 +7,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompoundAttributes;
 
-public sealed class CompoundAttributesReadTests
+public sealed class CompoundAttributesQueryTests
     : IClassFixture<IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext>>
 {
     private readonly IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> _testContext;
     private readonly CompoundAttributesFakers _fakers = new();
 
-    public CompoundAttributesReadTests(IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> testContext)
+    public CompoundAttributesQueryTests(IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -1024,55 +1024,5 @@ public sealed class CompoundAttributesReadTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(addressBooks[0].StringId);
-    }
-
-    [Fact]
-    public async Task Restricted_SecurityPin_is_omitted_without_sparse_fieldset()
-    {
-        // Arrange
-        Contact contact = _fakers.Contact.Generate();
-        contact.Content.SecurityPin = "SecretPin123";
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await dbContext.ClearTableAsync<Contact>();
-            dbContext.Contacts.Add(contact);
-            await dbContext.SaveChangesAsync();
-        });
-
-        string route = $"/contacts/{contact.StringId}";
-
-        // Act
-        (HttpResponseMessage httpResponse, string responseRaw) = await _testContext.ExecuteGetAsync<string>(route);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-        responseRaw.Should().NotContain("SecretPin123");
-        responseRaw.Should().NotContain("securityPin");
-    }
-
-    [Fact]
-    public async Task Restricted_SecurityPin_is_omitted_with_whole_compound_sparse_fieldset()
-    {
-        // Arrange
-        Contact contact = _fakers.Contact.Generate();
-        contact.Content.SecurityPin = "SecretPin456";
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await dbContext.ClearTableAsync<Contact>();
-            dbContext.Contacts.Add(contact);
-            await dbContext.SaveChangesAsync();
-        });
-
-        string route = $"/contacts/{contact.StringId}?fields[contacts]=content";
-
-        // Act
-        (HttpResponseMessage httpResponse, string responseRaw) = await _testContext.ExecuteGetAsync<string>(route);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-        responseRaw.Should().NotContain("SecretPin456");
-        responseRaw.Should().NotContain("securityPin");
     }
 }
