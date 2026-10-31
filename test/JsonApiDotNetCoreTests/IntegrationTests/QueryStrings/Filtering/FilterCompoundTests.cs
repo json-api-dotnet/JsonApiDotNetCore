@@ -47,7 +47,7 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Null_equality_on_non_nullable_returns_no_rows()
+    public async Task Can_filter_null_equality_on_non_nullable_attribute_without_matching_rows()
     {
         // Arrange
         await SeedAsync();
