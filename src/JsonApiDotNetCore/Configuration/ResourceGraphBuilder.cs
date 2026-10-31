@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -353,8 +354,7 @@ public sealed partial class ResourceGraphBuilder
             SetPublicName(attribute, property);
             attribute.Property = property;
 
-            attribute.IsCollection = property.PropertyType != typeof(string) &&
-                CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) != null;
+            attribute.IsCollection = IsCollectionType(property.PropertyType);
 
             if (!attribute.HasExplicitCapabilities)
             {
@@ -410,6 +410,8 @@ public sealed partial class ResourceGraphBuilder
                 $"Property '{compoundAttribute.Property.DeclaringType!.Name}.{compoundAttribute.Property.Name}' implements IIdentifiable and must be exposed as a JSON:API relationship using [HasOne] or [HasMany], not as a compound attribute.");
         }
 
+        AssertCanBeCompoundType(compoundClrType, compoundAttribute.Property);
+
         compoundAttribute.Capabilities &= ~AttrCapabilities.AllowSort;
 
         if (_resourceTypesByClrType.ContainsKey(compoundClrType))
@@ -438,7 +440,7 @@ public sealed partial class ResourceGraphBuilder
             if (relationship != null)
             {
                 throw new InvalidConfigurationException(
-                    $"Property '{compoundClrType.Name}.{property.Name}' in compound type '{compoundClrType.Name}' cannot be annotated with [{relationship.GetType().Name}]. Compound types cannot contain relationships.");
+                    $"Property '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}.{property.Name}' in compound type '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}' cannot be annotated with [{relationship.GetType().Name}]. Compound types cannot contain relationships.");
             }
 
             var eagerLoad = property.GetCustomAttribute<EagerLoadAttribute>(true);
@@ -446,7 +448,7 @@ public sealed partial class ResourceGraphBuilder
             if (eagerLoad != null)
             {
                 throw new InvalidConfigurationException(
-                    $"Property '{compoundClrType.Name}.{property.Name}' in compound type '{compoundClrType.Name}' cannot be annotated with [EagerLoad].");
+                    $"Property '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}.{property.Name}' in compound type '{RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType)}' cannot be annotated with [EagerLoad].");
             }
 
             var attribute = property.GetCustomAttribute<AttrAttribute>(true);
@@ -456,8 +458,7 @@ public sealed partial class ResourceGraphBuilder
                 SetPublicName(attribute, property);
                 attribute.Property = property;
 
-                attribute.IsCollection = property.PropertyType != typeof(string) &&
-                    CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) != null;
+                attribute.IsCollection = IsCollectionType(property.PropertyType);
 
                 if (!attribute.HasExplicitCapabilities)
                 {
@@ -474,6 +475,11 @@ public sealed partial class ResourceGraphBuilder
             }
         }
 
+        if (attributesByName.Count == 0)
+        {
+            LogResourceTypeHasNoAttributes(compoundClrType);
+        }
+
         var newCompoundType = new CompoundType(compoundClrType, attributesByName.Values);
 
         foreach (AttrAttribute attribute in newCompoundType.Attributes)
@@ -483,6 +489,57 @@ public sealed partial class ResourceGraphBuilder
 
         _compoundTypesByClrType.Add(compoundClrType, newCompoundType);
         return newCompoundType;
+    }
+
+    private static bool IsCollectionType(Type type)
+    {
+        if (type == typeof(string) || type == typeof(byte[]) || IsDictionaryType(type))
+        {
+            return false;
+        }
+
+        return CollectionConverter.Instance.FindCollectionElementType(type) != null;
+    }
+
+    private static bool IsDictionaryType(Type type)
+    {
+        return type.IsAssignableTo(typeof(IDictionary)) || type.GetInterfaces().Append(type).Any(interfaceType =>
+            interfaceType is { IsGenericType: true } && (interfaceType.GetGenericTypeDefinition() == typeof(IDictionary<,>) ||
+                interfaceType.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)));
+    }
+
+    private static void AssertCanBeCompoundType(Type compoundClrType, PropertyInfo property)
+    {
+        string typeName = RuntimeTypeConverter.GetFriendlyTypeName(compoundClrType);
+        string propertyName = $"{property.DeclaringType!.Name}.{property.Name}";
+
+        if (compoundClrType == typeof(string) || compoundClrType.IsPrimitive || compoundClrType.IsEnum || compoundClrType == typeof(decimal) ||
+            compoundClrType == typeof(DateTime) || compoundClrType == typeof(DateTimeOffset) || compoundClrType == typeof(DateOnly) ||
+            compoundClrType == typeof(TimeOnly) || compoundClrType == typeof(TimeSpan) || compoundClrType == typeof(Guid) ||
+            compoundClrType == typeof(byte[]) || IsDictionaryType(compoundClrType))
+        {
+            throw new InvalidConfigurationException(
+                $"Property '{propertyName}' of type '{typeName}' cannot be a compound attribute. Compound attributes require a class with [Attr] properties, not a scalar type.");
+        }
+
+        if (compoundClrType.IsInterface)
+        {
+            throw new InvalidConfigurationException($"Property '{propertyName}' uses interface '{typeName}' as compound type, which cannot be instantiated.");
+        }
+
+        if (!compoundClrType.IsValueType)
+        {
+            if (compoundClrType.IsAbstract)
+            {
+                throw new InvalidConfigurationException($"Property '{propertyName}' uses abstract class '{typeName}' as compound type, which cannot be instantiated.");
+            }
+
+            if (compoundClrType.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, Type.EmptyTypes) == null)
+            {
+                throw new InvalidConfigurationException(
+                    $"Compound type '{typeName}' (used by property '{propertyName}') must have a parameterless constructor (can be non-public) to support deserialization.");
+            }
+        }
     }
 
     private void AssertNoCyclesInCompoundTypes()

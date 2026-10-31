@@ -65,7 +65,7 @@ public sealed class AttrAttribute : ResourceFieldAttribute
         var other = (AttrAttribute)obj;
 
         return Capabilities == other.Capabilities && IsCollection == other.IsCollection && IsCompound == other.IsCompound &&
-            CompoundType == other.CompoundType && base.Equals(other);
+            Equals(CompoundType, other.CompoundType) && base.Equals(other);
     }
 
     /// <inheritdoc />

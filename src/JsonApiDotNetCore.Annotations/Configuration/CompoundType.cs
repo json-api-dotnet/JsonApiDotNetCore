@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration;
@@ -37,7 +38,7 @@ public sealed class CompoundType : IAttributeContainer
     public AttrAttribute GetAttributeByPublicName(string publicName)
     {
         AttrAttribute? attribute = FindAttributeByPublicName(publicName);
-        return attribute ?? throw new InvalidOperationException($"Attribute '{publicName}' does not exist on compound type '{ClrType.Name}'.");
+        return attribute ?? throw new InvalidOperationException($"Attribute '{publicName}' does not exist on compound type '{this}'.");
     }
 
     /// <inheritdoc />
@@ -52,7 +53,7 @@ public sealed class CompoundType : IAttributeContainer
     public AttrAttribute GetAttributeByPropertyName(string propertyName)
     {
         AttrAttribute? attribute = FindAttributeByPropertyName(propertyName);
-        return attribute ?? throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on compound type '{ClrType.Name}'.");
+        return attribute ?? throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on compound type '{this}'.");
     }
 
     /// <inheritdoc />
@@ -66,7 +67,7 @@ public sealed class CompoundType : IAttributeContainer
     /// <inheritdoc />
     public override string ToString()
     {
-        return ClrType.Name;
+        return RuntimeTypeConverter.GetFriendlyTypeName(ClrType);
     }
 
     /// <inheritdoc />
