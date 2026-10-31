@@ -27,6 +27,9 @@ public sealed class FilterDbContext(DbContextOptions<FilterDbContext> options)
         builder.Entity<FilterableResource>()
             .ComplexCollection(resource => resource.SomeCompounds, complexBuilder => complexBuilder.ToJson());
 
+        builder.Entity<FilterableResource>()
+            .ComplexCollection(resource => resource.SomeLabeledDates, complexBuilder => complexBuilder.ToJson());
+
         base.OnModelCreating(builder);
     }
 }

@@ -15,6 +15,9 @@ public sealed class Workweek
     [Attr]
     public List<DayOfWeek> WorkDays { get; set; } = [];
 
+    [Attr(IsCompound = true)]
+    public List<OfficeHours> Breaks { get; set; } = [];
+
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
     public string? InternalNote { get; set; }
 

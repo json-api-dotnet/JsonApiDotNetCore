@@ -11,4 +11,7 @@ public sealed class FilterableLeaf
 
     [Attr]
     public int? SomeInt32 { get; set; }
+
+    [Attr]
+    public List<TimeSpan> SomeTimeSpans { get; set; } = [];
 }

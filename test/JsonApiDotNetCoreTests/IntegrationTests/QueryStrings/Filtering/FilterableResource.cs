@@ -104,6 +104,9 @@ public sealed class FilterableResource : Identifiable<long>
     [Attr(IsCompound = true)]
     public List<FilterableNested> SomeCompounds { get; set; } = [];
 
+    [Attr(IsCompound = true)]
+    public List<FilterableLabeled<DateOnly>> SomeLabeledDates { get; set; } = [];
+
     [Attr]
     public List<string>? SomeStrings { get; set; }
 

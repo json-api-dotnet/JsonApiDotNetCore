@@ -688,6 +688,127 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
     }
 
     [Fact]
+    public async Task Can_filter_to_many_relationship_with_compound_collection_condition()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(3);
+
+        calendars[0].PinnedAppointments = _fakers.Appointment.GenerateSet(2);
+
+        calendars[0].PinnedAppointments.ElementAt(0).Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        calendars[0].PinnedAppointments.ElementAt(1).Attendees =
+        [
+            new Attendee
+            {
+                Name = "Bob"
+            }
+        ];
+
+        calendars[1].PinnedAppointments = _fakers.Appointment.GenerateSet(1);
+
+        calendars[1].PinnedAppointments.ElementAt(0).Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        calendars[2].PinnedAppointments = _fakers.Appointment.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?filter=has(pinnedAppointments,has(attendees,equals(name,'Bob')))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(calendars[0].StringId);
+    }
+
+    [Theory]
+    [InlineData("has(workweek.breaks)", "01")]
+    [InlineData("has(workweek.breaks,equals(opensAt,'12:00:00'))", "0")]
+    [InlineData("has(workweek.breaks,greaterThan(opensAt,'14:00:00'))", "0")]
+    [InlineData("greaterThan(count(workweek.breaks),'1')", "0")]
+    [InlineData("equals(count(workweek.breaks),'0')", "23")]
+    public async Task Can_filter_on_compound_collection_nested_in_compound(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(4);
+
+        calendars[0].Workweek = new Workweek
+        {
+            Breaks =
+            [
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(12, 0),
+                    ClosesAt = new TimeOnly(12, 30)
+                },
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(15, 0),
+                    ClosesAt = new TimeOnly(15, 15)
+                }
+            ]
+        };
+
+        calendars[1].Workweek = new Workweek
+        {
+            Breaks =
+            [
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(13, 0),
+                    ClosesAt = new TimeOnly(13, 30)
+                }
+            ]
+        };
+
+        calendars[2].Workweek = new Workweek
+        {
+            Breaks = []
+        };
+
+        calendars[3].Workweek = null;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => calendars[row - '0'].StringId!).ToArray();
+        responseDocument.GetPrimaryIds().Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Fact]
     public async Task Can_filter_with_count_of_related_to_many_and_compound_collection()
     {
         // Arrange
