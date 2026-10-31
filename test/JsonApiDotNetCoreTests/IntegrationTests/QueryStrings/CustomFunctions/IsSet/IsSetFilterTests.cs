@@ -72,6 +72,57 @@ public sealed class IsSetFilterTests : IClassFixture<IntegrationTestContext<Test
         responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
     }
 
+    [Theory]
+    [InlineData("has(attendees,isSet(email))")]
+    [InlineData("has(attendees,isSet(contact))")]
+    [InlineData("has(attendees,isSet(contact.title))")]
+    public async Task Can_filter_on_attribute_in_compound_collection_scope(string filterExpression)
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice",
+                Email = null,
+                Contact = null
+            }
+        ];
+
+        appointments[1].Attendees =
+        [
+            new Attendee
+            {
+                Name = "Bob",
+                Email = "bob@example.com",
+                Contact = new AttendeeContact
+                {
+                    Title = "Dr"
+                }
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/appointments?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
     [Fact]
     public async Task Cannot_filter_on_to_many_relationship_using_attribute_pattern()
     {

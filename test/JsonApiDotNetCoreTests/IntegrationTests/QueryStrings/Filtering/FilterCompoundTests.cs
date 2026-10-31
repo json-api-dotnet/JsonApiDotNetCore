@@ -125,6 +125,31 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Theory]
+    [InlineData("has(someCompounds,greaterThan(count(someStrings),'1'))", "2")]
+    [InlineData("has(someCompounds,equals(count(someStrings),'0'))", "2")]
+    [InlineData("has(someCompounds,equals(count(someStrings),'1'))", "1")]
+    [InlineData("has(someCompounds,has(someStrings))", "12")]
+    [InlineData("has(someCompounds,equals(child,null))", "12")]
+    [InlineData("has(someCompounds,not(equals(child,null)))", "2")]
+    [InlineData("has(someCompounds,equals(child.someInt32,'1'))", "2")]
+    [InlineData("not(has(someCompounds,equals(child,null)))", "0")]
+    public async Task Can_filter_count_and_nested_members_in_scope_of_compound_collection(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<FilterableResource> resources = await SeedAsync();
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        AssertRows(responseDocument, resources, expectedRows);
+    }
+
+    [Theory]
     [InlineData("equals(count(someCompounds),'0')", "0")]
     [InlineData("greaterThan(count(someCompounds),'1')", "2")]
     [InlineData("lessThan(count(someCompounds),'2')", "01")]
@@ -387,7 +412,11 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
                     new FilterableNested
                     {
                         SomeString = "xyz",
-                        SomeNullableString = "q"
+                        SomeNullableString = "q",
+                        Child = new FilterableLeaf
+                        {
+                            SomeInt32 = 1
+                        }
                     }
                 ],
                 SomeStrings = []
