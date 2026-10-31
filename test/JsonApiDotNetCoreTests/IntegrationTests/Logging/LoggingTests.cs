@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
@@ -30,6 +31,28 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
             builder.Services.AddSingleton(loggerProvider);
         });
+    }
+
+    [Fact]
+    public async Task Compound_types_cause_no_non_identifiable_warning()
+    {
+        // Arrange
+        using var capturingProvider = new CapturingLoggerProvider(LogLevel.Trace);
+        using ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddProvider(capturingProvider).SetMinimumLevel(LogLevel.Trace));
+
+        await using AsyncServiceScope scope = _testContext.App.Services.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<LoggingDbContext>();
+        var options = scope.ServiceProvider.GetRequiredService<IJsonApiOptions>();
+
+        // Act
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(options, loggerFactory).Add(dbContext).Build();
+
+        // Assert
+        resourceGraph.FindResourceType<AuditEntry>().Should().NotBeNull();
+        resourceGraph.GetResourceTypes().Should().NotContain(resourceType => resourceType.ClrType == typeof(AuditOrigin));
+        resourceGraph.FindCompoundType<AuditOrigin>().Should().NotBeNull();
+
+        capturingProvider.GetLines().Should().NotContain(line => line.Contains("does not implement", StringComparison.Ordinal));
     }
 
     [Fact]

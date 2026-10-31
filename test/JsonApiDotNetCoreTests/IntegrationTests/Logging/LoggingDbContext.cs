@@ -13,4 +13,12 @@ public sealed class LoggingDbContext(DbContextOptions<LoggingDbContext> options)
     public DbSet<Fruit> Fruits => Set<Fruit>();
     public DbSet<Banana> Bananas => Set<Banana>();
     public DbSet<Peach> Peaches => Set<Peach>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<AuditEntry>()
+            .OwnsOne(auditEntry => auditEntry.Origin, ownedBuilder => ownedBuilder.ToJson());
+
+        base.OnModelCreating(builder);
+    }
 }

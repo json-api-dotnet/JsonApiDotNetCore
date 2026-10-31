@@ -14,4 +14,7 @@ public sealed class Game : Identifiable<Guid>
 
     [Attr]
     public decimal PurchasePrice { get; set; }
+
+    [Attr(IsCompound = true)]
+    public GameSettings? Settings { get; set; }
 }
