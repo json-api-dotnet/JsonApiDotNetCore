@@ -285,8 +285,8 @@ public sealed class CompoundAttributesFetchTests
         addressObject.Should().NotContainKey("postalCode");
         addressObject.Should().NotContainKey("line2");
 
-        // The nested key is written through DictionaryKeyPolicy, which lower-cases the first letter (see D9, asserted in the naming tests).
-        addressObject.Select(pair => pair.Key).Should().Contain(key => string.Equals(key, "Address-Line2", StringComparison.OrdinalIgnoreCase));
+        // The nested key is written verbatim, not rewritten by DictionaryKeyPolicy.
+        addressObject.Should().ContainKey("Address-Line2");
     }
 
     [Fact]

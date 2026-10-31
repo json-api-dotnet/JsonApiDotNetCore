@@ -40,7 +40,7 @@ internal static class CompoundAttributesSamples
               "isoCountryCode": "NL",
               "city": "Utrecht",
               "line1": "Main 1",
-              "address-Line2": "Apt 2",
+              "Address-Line2": "Apt 2",
               "zipCode": "1234 AB",
               "label": "home"
             }
@@ -197,11 +197,6 @@ internal static class CompoundAttributesSamples
         name.Remove("maidenName");
         name["secretAlias"] = "secret";
         content["securityPin"] = "1234";
-
-        // Output keys are camel-cased by DictionaryKeyPolicy (see D9), but input requires the exact public name.
-        var address = (JsonObject)content["addresses"]![0]!;
-        address.Remove("address-Line2");
-        address["Address-Line2"] = "Apt 2";
 
         return content;
     }

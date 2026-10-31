@@ -20,7 +20,7 @@ public sealed class PropertyPolicyOnlyTests : IClassFixture<IntegrationTestConte
         testContext.UseController<SwimmingPoolsController>();
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D9: nested keys are written using DictionaryKeyPolicy (camelCase by default) instead of following PropertyNamingPolicy")]
+    [Fact]
     public async Task Does_not_camel_case_nested_keys_when_only_property_policy_is_null()
     {
         // Arrange
