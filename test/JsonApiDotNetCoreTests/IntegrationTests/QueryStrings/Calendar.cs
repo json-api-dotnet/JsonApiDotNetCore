@@ -32,6 +32,11 @@ public sealed class Calendar : Identifiable<long>
     [HasMany(Capabilities = HasManyCapabilities.All & ~(HasManyCapabilities.AllowView | HasManyCapabilities.AllowFilter))]
     public ISet<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
+    [HasOne(CanInclude = false)]
+#pragma warning restore CS0618 // Type or member is obsolete
+    public Appointment? FirstAppointment { get; set; }
+
     [HasMany]
     public ISet<Appointment> PinnedAppointments { get; set; } = new HashSet<Appointment>();
 }
