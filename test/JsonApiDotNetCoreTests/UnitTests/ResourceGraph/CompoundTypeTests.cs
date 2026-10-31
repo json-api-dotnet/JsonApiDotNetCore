@@ -112,8 +112,7 @@ public sealed class CompoundTypeTests
         firstCompound.Equals(null).Should().BeFalse();
     }
 
-    [Fact(Skip = "KNOWN-ISSUE NEW-attr-equals-compound-reference: AttrAttribute.Equals compares CompoundType with ==, which is reference equality, " +
-        "so compound attributes from two builds of the same graph are not equal")]
+    [Fact]
     public void Equality_of_compound_attributes_is_structural()
     {
         // Arrange
@@ -129,7 +128,7 @@ public sealed class CompoundTypeTests
         firstAttribute.GetHashCode().Should().Be(secondAttribute.GetHashCode());
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D8: CompoundType.ToString() returns the CLR type name without generic arguments, so closed generic compounds look the same")]
+    [Fact]
     public void ToString_distinguishes_generic_arguments()
     {
         // Arrange

@@ -115,7 +115,7 @@ public sealed class CompoundResourceGraphBuilderTests
         attribute.IsCollection.Should().Be(expected);
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D1: byte[] is classified as a collection (IsCollection is true), although it is a binary scalar")]
+    [Fact]
     public void Does_not_classify_byte_array_as_collection()
     {
         // Arrange
@@ -131,7 +131,7 @@ public sealed class CompoundResourceGraphBuilderTests
         attribute.IsCollection.Should().BeFalse();
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D1: Dictionary<,> is classified as a collection (IsCollection is true), although it is not a list of values")]
+    [Fact]
     public void Does_not_classify_dictionary_as_collection()
     {
         // Arrange
@@ -286,7 +286,7 @@ public sealed class CompoundResourceGraphBuilderTests
             $"Circular reference detected: compound type '{expectedCompoundClrType}' references itself directly or indirectly.");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D4: an interface marked as compound type is accepted at startup (fails at request time)")]
+    [Fact]
     public void Rejects_interface_as_compound_type()
     {
         // Arrange
@@ -318,7 +318,7 @@ public sealed class CompoundResourceGraphBuilderTests
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(GeoPoint)}*");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D4: an abstract compound type is accepted at startup (fails at request time)")]
+    [Fact]
     public void Rejects_abstract_compound_type()
     {
         // Arrange
@@ -333,7 +333,7 @@ public sealed class CompoundResourceGraphBuilderTests
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(AbstractCompound)}*");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D4: a compound type without parameterless constructor is accepted at startup (fails at request time)")]
+    [Fact]
     public void Rejects_compound_type_without_parameterless_constructor()
     {
         // Arrange
@@ -348,7 +348,7 @@ public sealed class CompoundResourceGraphBuilderTests
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(PositionalCompound)}*parameterless constructor*");
     }
 
-    [Theory(Skip = "KNOWN-ISSUE D4: IsCompound on a scalar type silently creates a compound type at startup")]
+    [Theory]
     [InlineData(typeof(ResourceWithStringCompound))]
     [InlineData(typeof(ResourceWithInt32Compound))]
     [InlineData(typeof(ResourceWithDateTimeCompound))]
@@ -367,7 +367,7 @@ public sealed class CompoundResourceGraphBuilderTests
         action.Should().ThrowExactly<InvalidConfigurationException>();
     }
 
-    [Fact(Skip = "KNOWN-ISSUE NEW-compound-no-attributes-warning: no warning is logged for a compound type without attributes")]
+    [Fact]
     public void Logs_warning_when_compound_type_has_no_attributes()
     {
         // Arrange

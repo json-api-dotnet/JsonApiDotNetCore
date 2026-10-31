@@ -135,7 +135,7 @@ public abstract class ResourceFieldAttribute : Attribute
         string prefix = _containingType switch
         {
             ResourceType resourceType => resourceType.PublicName,
-            CompoundType compoundType => compoundType.ClrType.Name,
+            CompoundType compoundType => compoundType.ToString(),
             _ => string.Empty
         };
 

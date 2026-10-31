@@ -1,9 +1,12 @@
 using System.Net;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -24,7 +27,6 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         testContext.UseController<GiftCertificatesController>();
         testContext.UseController<PostOfficesController>();
-        testContext.UseController<PostcardsController>();
 
         testContext.ConfigureServices(services => services.AddSingleton<TimeProvider>(new FrozenTimeProvider(CurrentTime)));
 
@@ -418,38 +420,18 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Compound_types_do_not_get_dependency_injection()
+    public void Compound_types_do_not_get_dependency_injection()
     {
         // Arrange
-        var requestBody = new
-        {
-            data = new
-            {
-                type = "postcards",
-                attributes = new
-                {
-                    message = "Greetings",
-                    stamp = new
-                    {
-                        country = "NL"
-                    }
-                }
-            }
-        };
-
-        const string route = "/postcards";
+        // Compound types are created without dependency injection, so a compound type that needs a constructor dependency is rejected at startup.
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<Postcard, long>();
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        Action action = () => builder.Build();
 
         // Assert
-        // Compound types are created by Activator without dependency injection, so a constructor dependency cannot be satisfied.
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.InternalServerError);
-
-        responseDocument.Errors.Should().HaveCount(1);
-
-        ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-        error.Title.Should().Be("An unhandled error occurred while processing this request.");
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"*{nameof(Stamp)}*parameterless constructor*");
     }
 }

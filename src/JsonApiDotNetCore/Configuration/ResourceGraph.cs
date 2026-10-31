@@ -301,7 +301,7 @@ public sealed class ResourceGraph : IResourceGraph
 
             if (field == null)
             {
-                string containerName = currentContainer is ResourceType resType ? resType.PublicName : currentContainer.ClrType.Name;
+                string containerName = currentContainer is ResourceType resType ? resType.PublicName : currentContainer.ToString()!;
 
                 throw new ArgumentException(
                     $"The expression '{selector}' contains member '{member.Name}', which is not exposed as a JSON:API field on '{containerName}'.",
