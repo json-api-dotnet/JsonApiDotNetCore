@@ -122,7 +122,31 @@ public sealed class QueryTokenizer
 
     private bool IsPunctuationInsideText(TokenKind kind)
     {
-        return kind is TokenKind.Minus or TokenKind.Underscore && _textBuffer.Length > 0;
+        if (kind is not (TokenKind.Minus or TokenKind.Underscore))
+        {
+            return false;
+        }
+
+        if (_textBuffer.Length > 0)
+        {
+            return true;
+        }
+
+        // An underscore is a token on its own only when it is the whole token. When followed by text, it starts a field name (such as _x).
+        return kind == TokenKind.Underscore && IsFollowedByTextCharacter();
+    }
+
+    private bool IsFollowedByTextCharacter()
+    {
+        char? peeked = PeekChar();
+
+        if (peeked is null or '\'')
+        {
+            return false;
+        }
+
+        TokenKind? peekedKind = TryGetSingleCharacterTokenKind(peeked.Value);
+        return peekedKind is null or TokenKind.Minus or TokenKind.Underscore;
     }
 
     private char? PeekChar()

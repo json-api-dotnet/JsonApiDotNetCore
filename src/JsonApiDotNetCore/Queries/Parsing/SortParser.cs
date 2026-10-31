@@ -148,8 +148,8 @@ public class SortParser : QueryExpressionParser, ISortParser
         ArgumentNullException.ThrowIfNull(field);
 
         // Intermediate compound attributes are skipped during capability checks because AllowSort was stripped at startup
-        // to prevent sorting by whole compound objects, while built-in sort pattern '[OC]*S' ensures only leaf scalar attributes are evaluated.
-        if (field is AttrAttribute { IsCompound: false, IsCollection: false } attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
+        // to prevent sorting by whole compound objects, while built-in sort patterns ensure only leaf scalar attributes or collection counts are evaluated.
+        if (field is AttrAttribute { IsCompound: false } attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
             throw new QueryParseException($"Sorting on attribute '{attribute}' is not allowed.", position);
         }

@@ -188,9 +188,15 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return newExpression.Equals(expression) ? expression : newExpression;
     }
 
-    public override QueryExpression VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, TArgument argument)
+    public override QueryExpression? VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, TArgument argument)
     {
         IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> newChildren = VisitDictionary(expression.Children, argument);
+
+        if (newChildren.Count == 0 && expression.Children.Count > 0)
+        {
+            // An empty set of children means "all children", so removal of all children must drop the element instead of widening the selection.
+            return null;
+        }
 
         var newExpression = new SparseFieldSetElementExpression(expression.Field, newChildren);
         return newExpression.Equals(expression) ? expression : newExpression;
