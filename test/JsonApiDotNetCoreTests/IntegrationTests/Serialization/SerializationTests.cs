@@ -152,7 +152,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                       "zipCode": "{{meeting.Attendees[0].HomeAddress.ZipCode}}",
                       "city": "{{meeting.Attendees[0].HomeAddress.City}}",
                       "country": "{{meeting.Attendees[0].HomeAddress.Country}}"
-                    }
+                    },
+                    "profile": null
                   },
                   "relationships": {
                     "meeting": {
@@ -209,7 +210,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                     "zipCode": "{{attendee.HomeAddress.ZipCode}}",
                     "city": "{{attendee.HomeAddress.City}}",
                     "country": "{{attendee.HomeAddress.Country}}"
-                  }
+                  },
+                  "profile": null
                 },
                 "relationships": {
                   "meeting": {
@@ -501,7 +503,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                       "zipCode": "{{meeting.Attendees[0].HomeAddress.ZipCode}}",
                       "city": "{{meeting.Attendees[0].HomeAddress.City}}",
                       "country": "{{meeting.Attendees[0].HomeAddress.Country}}"
-                    }
+                    },
+                    "profile": null
                   },
                   "relationships": {
                     "meeting": {
@@ -756,7 +759,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                     "zipCode": "{{existingAttendee.HomeAddress.ZipCode}}",
                     "city": "{{existingAttendee.HomeAddress.City}}",
                     "country": "{{existingAttendee.HomeAddress.Country}}"
-                  }
+                  },
+                  "profile": null
                 },
                 "relationships": {
                   "meeting": {
@@ -893,5 +897,47 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
               ]
             }
             """);
+    }
+
+    [Fact]
+    public async Task Non_compound_complex_attribute_still_uses_System_Text_Json()
+    {
+        // Arrange
+        MeetingAttendee attendee = _fakers.MeetingAttendee.GenerateOne();
+        attendee.Meeting = _fakers.Meeting.GenerateOne();
+
+        attendee.Profile = new AttendeeProfile
+        {
+            Nickname = "Alpha",
+            Biography = "First biography"
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Attendees.Add(attendee);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/meetingAttendees/{attendee.StringId}?include=meeting";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseText) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        using JsonDocument document = JsonDocument.Parse(responseText);
+
+        // [JsonPropertyName] is honored on the non-compound Meeting.Location.
+        JsonElement location = document.RootElement.GetProperty("included")[0].GetProperty("attributes").GetProperty("location");
+        location.TryGetProperty("lat", out _).Should().BeTrue();
+        location.TryGetProperty("lng", out _).Should().BeTrue();
+        location.TryGetProperty("latitude", out _).Should().BeFalse();
+
+        // [JsonPropertyName] is ignored on the compound AttendeeProfile.
+        JsonElement profile = document.RootElement.GetProperty("data").GetProperty("attributes").GetProperty("profile");
+        profile.GetProperty("nickname").GetString().Should().Be("Alpha");
+        profile.GetProperty("biography").GetString().Should().Be("First biography");
+        profile.TryGetProperty("nick", out _).Should().BeFalse();
     }
 }
