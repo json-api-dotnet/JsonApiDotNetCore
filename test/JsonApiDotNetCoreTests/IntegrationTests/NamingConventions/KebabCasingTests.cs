@@ -336,7 +336,7 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         schedule.EnumerateObject().Should().ContainSingle().Which.Name.Should().Be("opens-at");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D9: nested keys are written using DictionaryKeyPolicy, so explicit PublicName 'Booked-By' is output as 'booked-by'")]
+    [Fact]
     public async Task Round_trips_nested_public_name_with_uppercase()
     {
         // Arrange
