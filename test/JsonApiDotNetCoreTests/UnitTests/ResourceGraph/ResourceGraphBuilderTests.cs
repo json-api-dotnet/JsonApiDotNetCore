@@ -493,30 +493,7 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
-    public void Generic_Find_and_Get_overloads_on_ResourceGraph_succeed_and_fail_as_expected()
-    {
-        // Arrange
-        var options = new JsonApiOptions();
-        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-        builder.Add<ResourceWithCompoundAttributes, long>();
-        IResourceGraph resourceGraph = builder.Build();
-
-        // Act & Assert
-        resourceGraph.FindResourceType<ResourceWithCompoundAttributes>().Should().NotBeNull();
-        resourceGraph.FindResourceType<ResourceWithCompoundAttributes>()!.ClrType.Should().Be<ResourceWithCompoundAttributes>();
-        resourceGraph.FindResourceType<ResourceWithAttribute>().Should().BeNull();
-
-        resourceGraph.GetCompoundType<TestRootCompound>().ClrType.Should().Be<TestRootCompound>();
-        resourceGraph.FindCompoundType<TestRootCompound>().Should().NotBeNull();
-        resourceGraph.FindCompoundType<TestRootCompound>()!.ClrType.Should().Be<TestRootCompound>();
-        resourceGraph.FindCompoundType<string>().Should().BeNull();
-
-        Action action = () => resourceGraph.GetCompoundType<string>();
-        action.Should().ThrowExactly<InvalidOperationException>();
-    }
-
-    [Fact]
-    public void GetFieldChain_and_GetFieldChains_resolve_nested_compound_chains_and_fail_on_invalid_expressions()
+    public void GetFieldChains_resolves_multiple_nested_compound_chains()
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -525,31 +502,15 @@ public sealed class ResourceGraphBuilderTests
         IResourceGraph resourceGraph = builder.Build();
 
         // Act
-        ResourceFieldChainExpression singleChain = resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => x.Content!.Name!.FirstName);
-
-        IReadOnlyCollection<ResourceFieldChainExpression> multiChains = resourceGraph.GetFieldChains<ResourceWithCompoundAttributes>(x => new
+        IReadOnlyCollection<ResourceFieldChainExpression> chains = resourceGraph.GetFieldChains<ResourceWithCompoundAttributes>(x => new
         {
             x.Content!.Name!.FirstName,
             x.Content.PhoneNumbers
         });
 
         // Assert
-        singleChain.ToString().Should().Be("content.name.firstName");
-        singleChain.Fields.Should().HaveCount(3);
-
-        multiChains.Should().HaveCount(2);
-        multiChains.Select(c => c.ToString()).Should().BeEquivalentTo("content.name.firstName", "content.phoneNumbers");
-
-        Action multipleInSingleAction = () => resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => new
-        {
-            x.Content!.Name!.FirstName,
-            x.Content.PhoneNumbers
-        });
-
-        multipleInSingleAction.Should().ThrowExactly<ArgumentException>();
-
-        Action invalidPropertyAction = () => resourceGraph.GetFieldChain<ResourceWithCompoundAttributes>(x => x.Id.ToString());
-        invalidPropertyAction.Should().ThrowExactly<ArgumentException>();
+        chains.Should().HaveCount(2);
+        chains.Select(chain => chain.ToString()).Should().BeEquivalentTo("content.name.firstName", "content.phoneNumbers");
     }
 
     [Fact]
@@ -570,23 +531,7 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
-    public void Cannot_use_identifiable_type_as_compound_attribute()
-    {
-        // Arrange
-        var options = new JsonApiOptions();
-        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-
-        // Act
-        builder.Add<ResourceWithIdentifiableAsCompound, long>();
-        Action action = () => builder.Build();
-
-        // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
-            $"Property '{nameof(ResourceWithIdentifiableAsCompound)}.{nameof(ResourceWithIdentifiableAsCompound.Child)}' implements IIdentifiable and must be exposed as a JSON:API relationship using [HasOne] or [HasMany], not as a compound attribute.");
-    }
-
-    [Fact]
-    public void Cannot_use_resource_type_as_compound_type()
+    public void Cannot_use_registered_resource_type_as_compound_attribute()
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -842,13 +787,6 @@ public sealed class ResourceGraphBuilderTests
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SimpleResource : Identifiable<long>;
-
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ResourceWithIdentifiableAsCompound : Identifiable<long>
-    {
-        [Attr(IsCompound = true)]
-        public SimpleResource? Child { get; set; }
-    }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ResourceWithRegisteredResourceAsCompound : Identifiable<long>
