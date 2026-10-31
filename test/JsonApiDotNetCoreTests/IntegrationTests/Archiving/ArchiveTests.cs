@@ -346,6 +346,32 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
+    public async Task Excludes_archived_broadcasts_at_secondary_endpoint()
+    {
+        // Arrange
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
+        station.Broadcasts.ElementAt(1).ArchivedAt = null;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Stations.Add(station);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/televisionStations/{station.StringId}/broadcasts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
+    }
+
+    [Fact]
     public async Task Get_ToMany_relationship_excludes_archived()
     {
         // Arrange

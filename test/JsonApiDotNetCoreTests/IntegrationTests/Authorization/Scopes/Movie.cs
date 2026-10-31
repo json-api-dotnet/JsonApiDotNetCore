@@ -17,6 +17,9 @@ public sealed class Movie : Identifiable<long>
     [Attr]
     public int DurationInSeconds { get; set; }
 
+    [Attr(IsCompound = true)]
+    public MovieProduction? Production { get; set; }
+
     [HasOne]
     public Genre Genre { get; set; } = null!;
 

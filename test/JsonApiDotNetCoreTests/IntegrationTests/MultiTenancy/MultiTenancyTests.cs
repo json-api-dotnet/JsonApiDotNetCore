@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -129,6 +130,54 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webProducts");
         responseDocument.Included[0].Id.Should().Be(shops[1].Products[0].StringId);
+    }
+
+    [Fact]
+    public async Task Applies_tenant_filter_to_included_products_with_compound_shop()
+    {
+        // Arrange
+        List<WebShop> shops = _fakers.WebShop.GenerateList(2);
+
+        shops[0].TenantId = OtherTenantId;
+        shops[0].Contact = new ShopContact
+        {
+            Email = "other@example.com"
+        };
+
+        shops[0].Products = _fakers.WebProduct.GenerateList(2);
+
+        shops[1].TenantId = ThisTenantId;
+        shops[1].Contact = new ShopContact
+        {
+            Email = "this@example.com"
+        };
+
+        shops[1].Products = _fakers.WebProduct.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<WebShop>();
+            dbContext.WebShops.AddRange(shops);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/nld/shops?include=products";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
+
+        JsonElement contact = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("contact").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        contact.GetProperty("email").GetString().Should().Be("this@example.com");
+
+        responseDocument.Included.Should().HaveCount(2);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Type == "webProducts");
+        responseDocument.Included.Select(resource => resource.Id).Should().BeEquivalentTo(shops[1].Products.Select(product => product.StringId));
     }
 
     [Fact]

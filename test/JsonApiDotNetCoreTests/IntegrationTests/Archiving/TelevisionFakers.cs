@@ -10,7 +10,12 @@ internal sealed class TelevisionFakers
 {
     private readonly Lazy<Faker<TelevisionNetwork>> _lazyTelevisionNetworkFaker = new(() => new Faker<TelevisionNetwork>()
         .MakeDeterministic()
-        .RuleFor(network => network.Name, faker => faker.Company.CompanyName()));
+        .RuleFor(network => network.Name, faker => faker.Company.CompanyName())
+        .RuleFor(network => network.Profile, faker => new NetworkProfile
+        {
+            Country = faker.Address.Country(),
+            FoundedYear = faker.Random.Int(1920, 2020)
+        }));
 
     private readonly Lazy<Faker<TelevisionStation>> _lazyTelevisionStationFaker = new(() => new Faker<TelevisionStation>()
         .MakeDeterministic()

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
@@ -210,5 +211,191 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/height-in-meters");
+    }
+
+    [Fact]
+    public async Task Uses_kebab_case_for_nested_members()
+    {
+        // Arrange
+        const string requestBody = """
+            {
+              "data": {
+                "type": "diving-boards",
+                "attributes": {
+                  "height-in-meters": 5,
+                  "schedule": {
+                    "opens-at": "09:00:00",
+                    "closes-at": "17:30:00",
+                    "is-heated": true
+                  },
+                  "reservations": [
+                    {
+                      "lane-number": 3
+                    }
+                  ]
+                }
+              }
+            }
+            """;
+
+        const string postRoute = "/public-api/diving-boards";
+
+        // Act
+        (HttpResponseMessage postResponse, Document postDocument) = await _testContext.ExecutePostAsync<Document>(postRoute, requestBody);
+
+        // Assert
+        postResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        postDocument.Data.SingleValue.Should().NotBeNull();
+        string newPoolId = postDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject;
+
+        JsonElement scheduleInPost = postDocument.Data.SingleValue.Attributes.Should().ContainKey("schedule").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        scheduleInPost.GetProperty("opens-at").GetString().Should().Be("09:00:00");
+        scheduleInPost.GetProperty("closes-at").GetString().Should().Be("17:30:00");
+        scheduleInPost.GetProperty("is-heated").GetBoolean().Should().BeTrue();
+
+        // Act
+        (HttpResponseMessage getResponse, Document getDocument) = await _testContext.ExecuteGetAsync<Document>($"{postRoute}/{newPoolId}");
+
+        // Assert
+        getResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        getDocument.Data.SingleValue.Should().NotBeNull();
+
+        JsonElement scheduleInGet = getDocument.Data.SingleValue.Attributes.Should().ContainKey("schedule").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        scheduleInGet.GetProperty("opens-at").GetString().Should().Be("09:00:00");
+        scheduleInGet.GetProperty("closes-at").GetString().Should().Be("17:30:00");
+        scheduleInGet.GetProperty("is-heated").GetBoolean().Should().BeTrue();
+
+        JsonElement reservationsInGet = getDocument.Data.SingleValue.Attributes.Should().ContainKey("reservations").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        reservationsInGet.GetArrayLength().Should().Be(1);
+        reservationsInGet[0].GetProperty("lane-number").GetInt32().Should().Be(3);
+    }
+
+    [Fact]
+    public async Task Can_filter_sort_and_select_nested_members()
+    {
+        // Arrange
+        List<DivingBoard> boards = _fakers.DivingBoard.GenerateList(3);
+
+        boards[0].Schedule = new PoolSchedule
+        {
+            OpensAt = new TimeOnly(11, 0)
+        };
+
+        boards[1].Schedule = new PoolSchedule
+        {
+            OpensAt = new TimeOnly(9, 0)
+        };
+
+        boards[2].Schedule = new PoolSchedule
+        {
+            OpensAt = new TimeOnly(7, 0)
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<DivingBoard>();
+            dbContext.DivingBoards.AddRange(boards);
+            await dbContext.SaveChangesAsync();
+        });
+
+        // Act
+        (HttpResponseMessage filterResponse, Document filterDocument) =
+            await _testContext.ExecuteGetAsync<Document>("/public-api/diving-boards?filter=equals(schedule.opens-at,'09:00')");
+
+        (HttpResponseMessage sortResponse, Document sortDocument) =
+            await _testContext.ExecuteGetAsync<Document>("/public-api/diving-boards?sort=schedule.opens-at");
+
+        (HttpResponseMessage fieldsResponse, Document fieldsDocument) =
+            await _testContext.ExecuteGetAsync<Document>("/public-api/diving-boards?fields[diving-boards]=schedule.opens-at");
+
+        // Assert
+        filterResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        filterDocument.Data.ManyValue.Should().HaveCount(1);
+        filterDocument.Data.ManyValue[0].Id.Should().Be(boards[1].StringId);
+
+        sortResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        sortDocument.Data.ManyValue.Should().HaveCount(3);
+        sortDocument.Data.ManyValue[0].Id.Should().Be(boards[2].StringId);
+        sortDocument.Data.ManyValue[1].Id.Should().Be(boards[1].StringId);
+        sortDocument.Data.ManyValue[2].Id.Should().Be(boards[0].StringId);
+
+        fieldsResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        fieldsDocument.Data.ManyValue.Should().HaveCount(3);
+        fieldsDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Attributes != null && resource.Attributes.Count == 1);
+
+        JsonElement schedule = fieldsDocument.Data.ManyValue[0].Attributes.Should().ContainKey("schedule").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        schedule.EnumerateObject().Should().ContainSingle().Which.Name.Should().Be("opens-at");
+    }
+
+    [Fact(Skip = "KNOWN-ISSUE D9: nested keys are written using DictionaryKeyPolicy, so explicit PublicName 'Booked-By' is output as 'booked-by'")]
+    public async Task Round_trips_nested_public_name_with_uppercase()
+    {
+        // Arrange
+        DivingBoard board = _fakers.DivingBoard.GenerateOne();
+        board.Reservations = [new LaneReservation { LaneNumber = 2, BookedBy = "Bob" }];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.DivingBoards.Add(board);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/public-api/diving-boards/{board.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+
+        JsonElement reservations = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("reservations").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        reservations.GetArrayLength().Should().Be(1);
+
+        string[] keys = reservations[0].EnumerateObject().Select(property => property.Name).ToArray();
+        keys.Should().BeEquivalentTo("lane-number", "Booked-By");
+    }
+
+    [Fact]
+    public async Task Reports_pointer_with_nested_public_names()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "diving-boards",
+                attributes = new Dictionary<string, object>
+                {
+                    ["height-in-meters"] = 5,
+                    ["schedule"] = new Dictionary<string, object>
+                    {
+                        ["closes-at"] = "17:30:00"
+                    }
+                }
+            }
+        };
+
+        const string route = "/public-api/diving-boards";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Input validation failed.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/schedule/opens-at");
     }
 }
