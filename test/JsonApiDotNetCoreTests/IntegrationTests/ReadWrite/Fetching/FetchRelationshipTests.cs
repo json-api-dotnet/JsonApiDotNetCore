@@ -21,6 +21,42 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
+    public async Task Can_get_relationship_of_resource_with_compounds()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        workItem.Assignee = _fakers.UserAccount.GenerateOne();
+        workItem.Tags = _fakers.WorkTag.GenerateSet(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string toOneRoute = $"/workItems/{workItem.StringId}/relationships/assignee";
+        string toManyRoute = $"/workItems/{workItem.StringId}/relationships/tags";
+
+        // Act
+        (HttpResponseMessage httpResponse1, Document responseDocument1) = await _testContext.ExecuteGetAsync<Document>(toOneRoute);
+        (HttpResponseMessage httpResponse2, Document responseDocument2) = await _testContext.ExecuteGetAsync<Document>(toManyRoute);
+
+        // Assert
+        httpResponse1.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument1.Data.SingleValue.Should().NotBeNull();
+        responseDocument1.Data.SingleValue.Type.Should().Be("userAccounts");
+        responseDocument1.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
+        responseDocument1.Data.SingleValue.Attributes.Should().BeNull();
+
+        httpResponse2.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument2.Data.ManyValue.Should().HaveCount(2);
+        responseDocument2.Data.ManyValue.Should().OnlyContain(resource => resource.Type == "workTags");
+        responseDocument2.Data.ManyValue.Should().OnlyContain(resource => resource.Attributes == null);
+    }
+
+    [Fact]
     public async Task Can_get_ManyToOne_relationship()
     {
         WorkItem workItem = _fakers.WorkItem.GenerateOne();
