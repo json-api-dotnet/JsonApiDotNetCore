@@ -41,4 +41,13 @@ public sealed class FilterableNested
 
     [Attr(IsCompound = true)]
     public FilterableLeaf? Child { get; set; }
+
+    [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public FilterableLeaf? UnsortableChild { get; set; }
+
+    [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public List<FilterableLeaf> UnsortableLeaves { get; set; } = [];
+
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+    public List<string> UnsortableStrings { get; set; } = [];
 }

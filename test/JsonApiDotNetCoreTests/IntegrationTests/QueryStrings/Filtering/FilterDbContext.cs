@@ -30,6 +30,12 @@ public sealed class FilterDbContext(DbContextOptions<FilterDbContext> options)
         builder.Entity<FilterableResource>()
             .ComplexCollection(resource => resource.SomeLabeledDates, complexBuilder => complexBuilder.ToJson());
 
+        builder.Entity<FilterableResource>()
+            .ComplexProperty(resource => resource.SomeUnsortableCompound, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<FilterableResource>()
+            .ComplexCollection(resource => resource.SomeUnsortableCompounds, complexBuilder => complexBuilder.ToJson());
+
         base.OnModelCreating(builder);
     }
 }
