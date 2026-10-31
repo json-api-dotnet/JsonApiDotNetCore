@@ -24,6 +24,8 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<LyricTextDefinition>();
+            services.AddResourceDefinition<PlaylistFieldSetDefinition>();
+            services.AddResourceService<PlaylistQueryService>();
 
             services.AddSingleton<LyricPermissionProvider>();
             services.AddSingleton<ResourceDefinitionHitCounter>();
@@ -34,6 +36,100 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         hitCounter.Reset();
     }
 
+    [Fact]
+    public async Task Evaluates_query_side_sparse_fieldset_hook_once_per_operation()
+    {
+        // Arrange
+        var provider = _testContext.App.Services.GetRequiredService<PlaylistFieldSetProvider>();
+        provider.IsEnabled = true;
+        provider.QueryCallCount = 0;
+
+        List<Playlist> existingPlaylists = _fakers.Playlist.GenerateList(2);
+
+        foreach (Playlist playlist in existingPlaylists)
+        {
+            playlist.Credits =
+            [
+                new PlaylistCredit
+                {
+                    Role = "Producer",
+                    PersonName = "Alice"
+                }
+            ];
+
+            playlist.Recording = new PlaylistRecording
+            {
+                Studio = "Abbey Road"
+            };
+        }
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Playlists.AddRange(existingPlaylists);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string[] newNames = _fakers.Playlist.GenerateList(2).Select(playlist => playlist.Name).ToArray();
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "update",
+                    data = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylists[0].StringId,
+                        attributes = new
+                        {
+                            name = newNames[0]
+                        }
+                    }
+                },
+                new
+                {
+                    op = "update",
+                    data = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylists[1].StringId,
+                        attributes = new
+                        {
+                            name = newNames[1]
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        // The hook returns a different fieldset for the query of the first and the second operation, which only happens when the evaluator is reset
+        // between operations.
+        provider.QueryCallCount.Should().Be(2);
+
+        responseDocument.Results.Should().HaveCount(2);
+
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
+        {
+            resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(newNames[0]);
+            resource.Attributes.Should().ContainKey("recording").WhoseValue.Should().NotBeNull();
+        });
+
+        responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
+        {
+            resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(newNames[1]);
+            resource.Attributes.Should().ContainKey("credits").WhoseValue.Should().NotBeNull();
+        });
+    }
     [Fact]
     public async Task Hides_text_in_create_resource_with_side_effects()
     {

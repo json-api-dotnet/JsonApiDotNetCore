@@ -16,6 +16,31 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     private readonly IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
     private readonly UniverseFakers _fakers = new();
 
+    public static TheoryData<string, string, string> HookInvocationSequenceData =>
+        new()
+        {
+            { "GET", "/stars", StarCollectionHits },
+            { "GET", "/stars?fields[stars]=name", StarCollectionHits },
+            { "GET", "/stars?filter=equals(name,'Sun')", StarCollectionHits },
+            { "GET", "/stars?sort=name", StarCollectionHits },
+            { "GET", "/stars?page[size]=2", StarCollectionHits },
+            {
+                "GET", "/stars?include=planets",
+                "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes Planet.OnApplyFilter " +
+                "Planet.OnApplySort Planet.OnApplyPagination Planet.OnApplySparseFieldSet Planet.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta " +
+                "Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta"
+            },
+            { "GET", "/stars/{id}", StarSingleHits },
+            { "GET", "/stars/{id}?fields[stars]=name", StarSingleHits },
+            { "GET", "/stars/{id}/planets", PlanetSecondaryHits },
+            { "GET", "/stars/{id}/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2&fields[planets]=publicName", PlanetSecondaryHits },
+            { "GET", "/stars/{id}/relationships/planets", PlanetRelationshipHits },
+            { "GET", "/stars/{id}/relationships/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2", PlanetRelationshipHits },
+            { "POST", "/stars", "Star.OnApplyFilter Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta" },
+            { "PATCH", "/stars/{id}", "Star.OnApplyFilter Star.OnApplyFilter Star.OnApplyIncludes" },
+            { "DELETE", "/stars/{id}", "" }
+        };
+
     public ResourceDefinitionReadTests(IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> testContext)
     {
         _testContext = testContext;
@@ -1100,8 +1125,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     };
 
     [Theory]
-    [MemberData(nameof(HookOrderData))]
-    public async Task Invokes_hooks_in_documented_order(string method, string routeTemplate, string expectedHits)
+    [MemberData(nameof(HookInvocationSequenceData))]
+    public async Task Invokes_hooks_in_current_order_per_request_kind(string method, string routeTemplate, string expectedHits)
     {
         // Arrange
         var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
