@@ -99,6 +99,16 @@ public sealed class CompoundShapeParseTests
     [InlineData("containers", "filter", "has(members,has(nicknames,^count(_)))", "Filter function expected.")]
     [InlineData("apartments", "filter", "equals(building.^unknown,'x')", "Field 'unknown' does not exist on compound type 'Building'.")]
     [InlineData("apartments", "filter", "equals(^unknown.premium,'x')", "Field 'unknown' does not exist on resource type 'apartments'.")]
+    // AllowFilter-blocked compound collection or scalar collection nested in a compound
+    [InlineData("containers", "filter", "has(^unfilterablePhones)", "Filtering on attribute 'unfilterablePhones' is not allowed.")]
+    [InlineData("containers", "filter", "has(^unfilterablePhones,equals(number,'1'))", "Filtering on attribute 'unfilterablePhones' is not allowed.")]
+    [InlineData("containers", "filter", "equals(count(^unfilterablePhones),'1')", "Filtering on attribute 'unfilterablePhones' is not allowed.")]
+    [InlineData("containers", "filter", "has(outer.^unfilterableTags)", "Filtering on attribute 'unfilterableTags' is not allowed.")]
+    [InlineData("containers", "filter", "has(outer.^unfilterableTags,equals(_,'x'))", "Filtering on attribute 'unfilterableTags' is not allowed.")]
+    [InlineData("containers", "filter", "equals(count(outer.^unfilterableTags),'1')", "Filtering on attribute 'unfilterableTags' is not allowed.")]
+    // Right-hand underscore is not allowed
+    [InlineData("containers", "filter", "has(members,has(nicknames,equals(_,^_)))", "Function, value between quotes or null expected.")]
+    [InlineData("containers", "filter", "has(members,has(nicknames,lessThan(_,^_)))", "Function, value between quotes or null expected.")]
     // Filters (unlike sort) do not look for fields on derived types, except inside isType
     [InlineData("listings", "filter", "equals(^building.name,'x')", "Field 'building' does not exist on resource type 'listings'.")]
     [InlineData("listings", "filter", "equals(^building,null)", "Field 'building' does not exist on resource type 'listings'.")]
@@ -164,6 +174,16 @@ public sealed class CompoundShapeParseTests
     [InlineData("listings", "^insurance.premium", "Field 'insurance' is defined on multiple types that derive from resource type 'listings'.")]
     [InlineData("listings", "building.^unknown", "Field 'unknown' does not exist on compound type 'Building'.")]
     [InlineData("apartments", "^unknown.premium", "Field 'unknown' does not exist on resource type 'apartments'.")]
+    // Sorting by a whole compound attribute or by a collection without count() is not possible
+    [InlineData("containers", "outer^",
+        "Field chain on resource type 'containers' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "Non-collection attribute on compound type 'Outer' expected.")]
+    [InlineData("containers", "^members",
+        "Field chain on resource type 'containers' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'containers' expected.")]
+    [InlineData("containers", "^syncDeviceIds",
+        "Field chain on resource type 'containers' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'containers' expected.")]
     public void Sort_Fails(string resourceTypeName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -182,12 +202,19 @@ public sealed class CompoundShapeParseTests
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
     }
 
-    [Fact]
-    public void Sort_By_Count_Of_Collection_Without_AllowSort_Fails()
+    [Theory]
+    [InlineData("count(^syncDeviceIds)", "syncDeviceIds")]
+    [InlineData("count(^lockedPhones)", "lockedPhones")]
+    [InlineData("^lockedOuter.name", "lockedOuter")]
+    [InlineData("-^lockedOuter.name", "lockedOuter")]
+    [InlineData("outer.^lockedInner.number", "lockedInner")]
+    [InlineData("outer.name,outer.^lockedInner.number", "lockedInner")]
+    [InlineData("count(outer.^lockedInner.notes)", "lockedInner")]
+    public void Sort_Without_AllowSort_Fails(string parameterValue, string blockedAttributeName)
     {
         // Arrange
         SortQueryStringParameterReader reader = CreateSortReader("containers");
-        var parameterValueSource = new MarkedText("count(^syncDeviceIds)", '^');
+        var parameterValueSource = new MarkedText(parameterValue, '^');
 
         // Act
         Action action = () => reader.Read("sort", parameterValueSource.Text);
@@ -196,7 +223,23 @@ public sealed class CompoundShapeParseTests
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
         ErrorObject error = exception.Errors.Should().ContainSingle().Which;
-        error.Detail.Should().Be($"Sorting on attribute 'syncDeviceIds' is not allowed. {parameterValueSource}");
+        error.Detail.Should().Be($"Sorting on attribute '{blockedAttributeName}' is not allowed. {parameterValueSource}");
+    }
+
+    [Theory]
+    [InlineData("outer.name")]
+    [InlineData("outer.inner.number")]
+    [InlineData("count(outer.inner.notes)")]
+    public void Sort_With_AllowSort_On_All_Fields_Succeeds(string parameterValue)
+    {
+        // Arrange
+        SortQueryStringParameterReader reader = CreateSortReader("containers");
+
+        // Act
+        reader.Read("sort", parameterValue);
+
+        // Assert
+        reader.GetConstraints().Should().ContainSingle();
     }
 
     [Theory]
@@ -222,6 +265,8 @@ public sealed class CompoundShapeParseTests
     [Theory]
     [InlineData("fields[listings]", "^building.name", "Field 'building' does not exist on resource type 'listings'.")]
     [InlineData("fields[listings]", "^insurance.premium", "Field 'insurance' does not exist on resource type 'listings'.")]
+    [InlineData("fields[containers]", "outer.^hiddenInner.number", "Retrieving attribute 'hiddenInner' is not allowed.")]
+    [InlineData("fields[containers]", "outer.^hiddenInner", "Retrieving attribute 'hiddenInner' is not allowed.")]
     [InlineData("fields[containers]", "members.^unknown", "Field 'unknown' does not exist on compound type 'Member'.")]
     [InlineData("fields[containers]", "members.nicknames.^x",
         "Field chain on resource type 'containers' failed to match the pattern: zero or more compound attributes, followed by a field. End of field chain expected.")]
@@ -287,8 +332,39 @@ public sealed class CompoundShapeParseTests
         [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
         public List<string> SyncDeviceIds { get; set; } = [];
 
+        [Attr(IsCompound = true)]
+        public Outer? Outer { get; set; }
+
+        [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+        public Outer? LockedOuter { get; set; }
+
+        [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+        public List<Phone> LockedPhones { get; set; } = [];
+
+        [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowFilter)]
+        public List<Phone> UnfilterablePhones { get; set; } = [];
+
         [HasMany]
         public ISet<Listing> Listings { get; set; } = new HashSet<Listing>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class Outer
+    {
+        [Attr]
+        public string? Name { get; set; }
+
+        [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowSort)]
+        public Phone? LockedInner { get; set; }
+
+        [Attr(IsCompound = true)]
+        public Phone? Inner { get; set; }
+
+        [Attr(IsCompound = true, Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowView)]
+        public Phone? HiddenInner { get; set; }
+
+        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowFilter)]
+        public List<string> UnfilterableTags { get; set; } = [];
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
