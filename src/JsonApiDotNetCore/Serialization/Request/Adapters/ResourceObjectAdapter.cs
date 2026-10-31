@@ -100,9 +100,16 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
         object instance = CreateCompoundInstance(targetType);
 
-        foreach (JsonProperty jsonProperty in element.EnumerateObject())
+        // When a member occurs multiple times, the last occurrence wins (the same as for attributes of a resource), so an earlier invalid value is ignored.
+        Dictionary<string, JsonElement> jsonProperties = [];
+
+        foreach (JsonProperty property in element.EnumerateObject())
         {
-            string childMemberName = jsonProperty.Name;
+            jsonProperties[property.Name] = property.Value;
+        }
+
+        foreach ((string childMemberName, JsonElement childElement) in jsonProperties)
+        {
             AttrAttribute? childAttr = compoundType.FindAttributeByPublicName(childMemberName);
 
             if (childAttr == null)
@@ -129,21 +136,21 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
                 if (childAttr.IsCompound)
                 {
                     childValue = childAttr.IsCollection
-                        ? ConvertCompoundCollection(jsonProperty.Value, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state)
-                        : ConvertCompoundObject(jsonProperty.Value, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state);
+                        ? ConvertCompoundCollection(childElement, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state)
+                        : ConvertCompoundObject(childElement, childAttr.CompoundType!, childAttr.Property.PropertyType, childAttr.PublicName, state);
                 }
                 else
                 {
                     try
                     {
-                        childValue = jsonProperty.Value.Deserialize(childAttr.Property.PropertyType, _options.SerializerReadOptions);
+                        childValue = childElement.Deserialize(childAttr.Property.PropertyType, _options.SerializerReadOptions);
                     }
                     catch (JsonException exception)
                     {
                         string typeName = RuntimeTypeConverter.GetFriendlyTypeName(childAttr.Property.PropertyType);
 
                         throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
-                            $"Failed to convert attribute '{childAttr.PublicName}' with value '{jsonProperty.Value}' of type '{jsonProperty.Value.ValueKind}' to type '{typeName}'.",
+                            $"Failed to convert attribute '{childAttr.PublicName}' with value '{childElement}' of type '{childElement.ValueKind}' to type '{typeName}'.",
                             innerException: exception);
                     }
                 }
