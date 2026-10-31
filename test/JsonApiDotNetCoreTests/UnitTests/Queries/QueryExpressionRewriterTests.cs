@@ -131,7 +131,7 @@ public sealed class QueryExpressionRewriterTests
         visitedTypeNames.Should().HaveCount(5);
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D13: A rewriter that removes all children of a compound element widens the selection to the whole compound")]
+    [Fact]
     public void Rewriter_removing_all_children_does_not_widen_selection()
     {
         // Arrange

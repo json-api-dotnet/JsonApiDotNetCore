@@ -182,7 +182,7 @@ public sealed class CompoundShapeParseTests
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D10: Sorting by count of a collection attribute does not honor the AllowSort capability of that attribute")]
+    [Fact]
     public void Sort_By_Count_Of_Collection_Without_AllowSort_Fails()
     {
         // Arrange

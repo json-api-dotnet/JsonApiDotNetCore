@@ -108,7 +108,7 @@ internal sealed class TestableQueryExpressionRewriter : QueryExpressionRewriter<
         return base.VisitSparseFieldSet(expression, argument);
     }
 
-    public override QueryExpression VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, object? argument)
+    public override QueryExpression? VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, object? argument)
     {
         Capture(expression);
         return base.VisitSparseFieldSetElement(expression, argument);

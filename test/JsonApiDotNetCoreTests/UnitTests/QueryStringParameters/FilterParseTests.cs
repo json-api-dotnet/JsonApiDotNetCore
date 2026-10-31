@@ -465,7 +465,7 @@ public sealed class FilterParseTests : BaseParseTests
         error.Source.Parameter.Should().Be("filter");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D7: A field name that starts with an underscore is tokenized as an underscore followed by text")]
+    [Fact]
     public void Reader_Read_Field_Name_Starting_With_Underscore_Is_Reported_As_Unknown_Field()
     {
         // Arrange

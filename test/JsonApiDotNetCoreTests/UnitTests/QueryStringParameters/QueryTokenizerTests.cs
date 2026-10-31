@@ -32,7 +32,7 @@ public sealed class QueryTokenizerTests
         string.Join('|', tokens.Select(token => token.ToString())).Should().Be(tokensExpected);
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D7: A field name that starts with an underscore is split into an Underscore token and a Text token")]
+    [Fact]
     public void Tokenizes_Text_Starting_With_Underscore_As_Single_Token()
     {
         // Arrange
@@ -45,7 +45,7 @@ public sealed class QueryTokenizerTests
         string.Join('|', tokens.Select(token => token.ToString())).Should().Be("Text: '_x' at 0");
     }
 
-    [Fact(Skip = "KNOWN-ISSUE D7: A field name that starts with an underscore is split into an Underscore token and a Text token")]
+    [Fact]
     public void Tokenizes_Text_Starting_With_Underscore_After_Period_As_Single_Token()
     {
         // Arrange

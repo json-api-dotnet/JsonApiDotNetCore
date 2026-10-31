@@ -80,7 +80,7 @@ internal sealed class ScopesAuthorizationFilter : IActionFilter
             return base.VisitIncludeElement(expression, argument);
         }
 
-        public override QueryExpression VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, object? argument)
+        public override QueryExpression? VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, object? argument)
         {
             if (expression.Field is RelationshipAttribute relationship)
             {
