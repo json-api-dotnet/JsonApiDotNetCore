@@ -139,6 +139,24 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("[OC]*[OAC]", $"{C}.{A2}")]
     [InlineData("[OC]*[OAC]", $"{C}.{C2}")]
     [InlineData("[OC]*[OAC]", $"{O}.{C}.{C2}")]
+    // Scalar attributes in compound containers and mixed chains
+    [InlineData("S?", "")]
+    [InlineData("S?", A)]
+    [InlineData("CS", $"{C}.{A2}")]
+    [InlineData("CCS", $"{C}.{C2}.{A3}")]
+    [InlineData("C*S", A)]
+    [InlineData("C*S", $"{C}.{C2}.{A3}")]
+    [InlineData("[OC]*S", $"{O}.{A}")]
+    [InlineData("[OC]*S", $"{O}.{C}.{A2}")]
+    [InlineData("[OC]*S", $"{O}.{O}.{C}.{C2}.{A3}")]
+    [InlineData("[OC]*[MLQ]", $"{O}.{C}.{L2}")]
+    [InlineData("[CQ]*F", $"{C}.{Q}")]
+    // Q is only traversable when the pattern asks for it
+    [InlineData("[CQ]*S", $"{Q}.label")]
+    [InlineData("[CQ]*S", $"{C}.{Q}.label")]
+    [InlineData("QS", $"{Q}.label")]
+    [InlineData("OCS", $"{O}.{C}.{A2}")]
+    [InlineData("MCS", $"{M}.{C}.{A2}")]
     // Backtracking multiple times
     [InlineData("F*M+O+", $"{M}.{M}.{M}.{M}.{M}.{O}.{O}.{O}.{O}.{O}")]
     [InlineData("F+OF*A?", $"{M}.{M}.{M}.{O}.{M}.{M}.{M}.{A}")]
@@ -454,6 +472,33 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("C", $"{C}.^{A2}", "End of field chain expected.")]
     // Direct navigation into collection rejected
     [InlineData("[OC]*S", $"{C}.^{Q}", "Non-collection attribute on compound type 'RootCompound' expected.")]
+    // Type mismatch
+    [InlineData("S", $"^{M}", $"Scalar non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("S", $"^{O}", $"Scalar non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("C", $"^{Q}", $"Compound non-collection attribute on resource type '{T}' expected.")]
+    [InlineData("L", $"^{C}", $"Scalar collection attribute on resource type '{T}' expected.")]
+    [InlineData("Q", $"^{A}", $"Compound collection attribute on resource type '{T}' expected.")]
+    [InlineData("Q", $"^{C}", $"Compound collection attribute on resource type '{T}' expected.")]
+    // Q and L are terminal
+    [InlineData("Q", $"{Q}.^label", "End of field chain expected.")]
+    [InlineData("L", $"{L}.^{X}", "End of field chain expected.")]
+    [InlineData("[CL]*S", $"{L}.^{X}", $"Field '{X}' does not exist.")]
+    [InlineData("[CL]*S", $"{C}.{L2}.^{X}", $"Field '{X}' does not exist.")]
+    // Relationship choices are removed from the message inside a compound container
+    [InlineData("[OC]*O", $"{C}.^{A2}", "Compound non-collection attribute on compound type 'RootCompound' expected.")]
+    [InlineData("[OC]*O", $"{O}.{C}.^{A2}", "Compound non-collection attribute on compound type 'RootCompound' expected.")]
+    [InlineData("[OC]*S", $"{C}.{C2}.^{X}", "Field 'unknown' does not exist on compound type 'NestedCompound'.")]
+    [InlineData("[OC]*S", $"{O}.{C}.^{X}", "Field 'unknown' does not exist on compound type 'RootCompound'.")]
+    [InlineData("[OC]*S", $"{O}.^{X}", $"Field '{X}' does not exist on resource type '{T}'.")]
+    [InlineData("CS", $"{C}.^{M}", "Field 'children' does not exist on compound type 'RootCompound'.")]
+    [InlineData("CS", $"{C}.^{O}", "Field 'parent' does not exist on compound type 'RootCompound'.")]
+    // Insufficient input and empty segments
+    [InlineData("CS", $"{C}^", "Scalar non-collection attribute on compound type 'RootCompound' expected.")]
+    [InlineData("CCS", $"{C}.{C2}^", "Scalar non-collection attribute on compound type 'NestedCompound' expected.")]
+    [InlineData("CS", $"{C}.^", "Field name expected.")]
+    [InlineData("CS", $"^.{A2}", "Field name expected.")]
+    [InlineData("CS", $"{C}.^.{A2}", "Field name expected.")]
+    [InlineData("CS", $"{C}.^ {A2}", "Field name expected.")]
     public void MatchFails(string patternText, string fieldChainText, string failureMessage)
     {
         // Arrange
@@ -462,6 +507,57 @@ public sealed class FieldChainPatternMatchTests : IDisposable
 
         // Act
         PatternMatchResult result = pattern.Match(fieldChainSource.Text, _resourceType, FieldChainPatternMatchOptions.None, _loggerFactory);
+
+        // Assert
+        result.FailureMessage.Should().Be(failureMessage);
+        result.FailurePosition.Should().Be(fieldChainSource.Position);
+        result.FieldChain.Should().BeEmpty();
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData("S", A2)]
+    [InlineData("A", A2)]
+    [InlineData("C", C2)]
+    [InlineData("CS", $"{C2}.{A3}")]
+    [InlineData("L", L2)]
+    [InlineData("Q", Q)]
+    [InlineData("F", Q)]
+    [InlineData("C*S", $"{C2}.{A3}")]
+    [InlineData("[CQ]*A", $"{C2}.{A3}")]
+    public void MatchSucceedsStartingInCompoundType(string patternText, string fieldChainText)
+    {
+        // Arrange
+        FieldChainPattern pattern = FieldChainPattern.Parse(patternText);
+        CompoundType compoundType = _resourceType.GetAttributeByPublicName(C).CompoundType!;
+
+        // Act
+        PatternMatchResult result = pattern.Match(fieldChainText, compoundType, FieldChainPatternMatchOptions.None, _loggerFactory);
+
+        // Assert
+        result.FailureMessage.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+
+        string chainText = string.Join('.', result.FieldChain);
+        chainText.Should().Be(fieldChainText);
+    }
+
+    [Theory]
+    [InlineData("S", $"^{C2}", "Scalar non-collection attribute on compound type 'RootCompound' expected.")]
+    [InlineData("S", $"^{X}", "Field 'unknown' does not exist on compound type 'RootCompound'.")]
+    [InlineData("S", $"^{M}", "Field 'children' does not exist on compound type 'RootCompound'.")]
+    [InlineData("O", $"^{O}", "Field 'parent' does not exist on compound type 'RootCompound'.")]
+    [InlineData("S", $"{A2}.^{X}", "End of field chain expected.")]
+    [InlineData("S", "^", "Scalar non-collection attribute on compound type 'RootCompound' expected.")]
+    public void MatchFailsStartingInCompoundType(string patternText, string fieldChainText, string failureMessage)
+    {
+        // Arrange
+        var fieldChainSource = new MarkedText(fieldChainText, '^');
+        FieldChainPattern pattern = FieldChainPattern.Parse(patternText);
+        CompoundType compoundType = _resourceType.GetAttributeByPublicName(C).CompoundType!;
+
+        // Act
+        PatternMatchResult result = pattern.Match(fieldChainSource.Text, compoundType, FieldChainPatternMatchOptions.None, _loggerFactory);
 
         // Assert
         result.FailureMessage.Should().Be(failureMessage);
