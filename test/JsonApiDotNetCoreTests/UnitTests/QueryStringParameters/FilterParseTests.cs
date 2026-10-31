@@ -109,6 +109,8 @@ public sealed class FilterParseTests : BaseParseTests
 
     [Theory]
     [InlineData("filter[posts]", "equals(author,^'some')", "To-one relationship name or null expected.")]
+    [InlineData("filter[posts]", "equals(author,^count(comments))", "To-one relationship name or null expected.")]
+    [InlineData("filter[posts]", "equals(author,^has(comments))", "To-one relationship name or null expected.")]
     [InlineData("filter[posts]", "lessThan(^some,null)", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[posts]", "lessThan(author^,null)",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
