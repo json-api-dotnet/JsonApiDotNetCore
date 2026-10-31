@@ -54,6 +54,12 @@ internal sealed class TestableQueryExpressionRewriter : QueryExpressionRewriter<
         return base.VisitHas(expression, argument);
     }
 
+    public override QueryExpression VisitScalarCollectionElementValue(ScalarCollectionElementValueExpression expression, object? argument)
+    {
+        Capture(expression);
+        return base.VisitScalarCollectionElementValue(expression, argument);
+    }
+
     public override QueryExpression VisitIsType(IsTypeExpression expression, object? argument)
     {
         Capture(expression);
