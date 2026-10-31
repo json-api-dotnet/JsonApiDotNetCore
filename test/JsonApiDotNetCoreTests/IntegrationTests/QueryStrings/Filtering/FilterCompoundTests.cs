@@ -128,12 +128,12 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
     [InlineData("equals(count(someCompounds),'0')", "0")]
     [InlineData("greaterThan(count(someCompounds),'1')", "2")]
     [InlineData("lessThan(count(someCompounds),'2')", "01")]
-    [InlineData("equals(count(someStrings),'0')", "2")]
+    [InlineData("equals(count(someStrings),'0')", "02")]
     [InlineData("greaterThan(count(someStrings),'0')", "1")]
-    [InlineData("lessThan(count(someStrings),'2')", "12")]
-    [InlineData("equals(count(someCompound.someStrings),'0')", "1")]
+    [InlineData("lessThan(count(someStrings),'2')", "012")]
+    [InlineData("equals(count(someCompound.someStrings),'0')", "01")]
     [InlineData("greaterThan(count(someCompound.someStrings),'1')", "2")]
-    [InlineData("lessThan(count(someCompound.someStrings),'3')", "12")]
+    [InlineData("lessThan(count(someCompound.someStrings),'3')", "012")]
     public async Task Can_filter_by_count(string filterExpression, string expectedRows)
     {
         // Arrange
