@@ -43,6 +43,10 @@ public sealed class Contact : Identifiable<long>
     [Attr]
     public string? Remarks { get; set; }
 
+    // Nullable struct as compound type (see KNOWN-ISSUE D5)
+    [Attr(IsCompound = true)]
+    public GeoPoint? LastKnownLocation { get; set; }
+
     [HasOne]
     public AddressBook? AddressBook { get; set; }
 
@@ -269,6 +273,16 @@ public sealed class LabeledValue<T>
 
     [Attr]
     public string? Label { get; set; }
+}
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public struct GeoPoint
+{
+    [Attr]
+    public double Latitude { get; set; }
+
+    [Attr]
+    public double Longitude { get; set; }
 }
 
 public enum ContactMethod
