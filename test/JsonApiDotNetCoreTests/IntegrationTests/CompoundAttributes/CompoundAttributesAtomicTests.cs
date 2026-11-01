@@ -53,6 +53,28 @@ public sealed class CompoundAttributesAtomicTests
     }
 
     [Theory]
+    [InlineData("add")]
+    [InlineData("update")]
+    public async Task Cannot_send_null_element_in_scalar_collection_of_non_nullable_elements(string op)
+    {
+        // Arrange
+        Contact existingContact = CompoundAttributesSamples.CreateContact();
+        await SeedAsync(existingContact);
+
+        JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
+        content["creditLimits"] = new JsonArray(1, null);
+
+        object requestBody = CreateOperationsBody(CreateOperation(op, existingContact, content));
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>("/operations", requestBody);
+
+        // Assert
+        AssertSingleError(httpResponse, responseDocument, HttpStatusCode.UnprocessableEntity,
+            "Failed to deserialize request body: Incompatible attribute value found.", null, "/atomic:operations/0/data/attributes/content/creditLimits");
+    }
+
+    [Theory]
     [InlineData("add", "nickName", "Failed to deserialize request body: Attribute value cannot be assigned when creating resource.",
         "The attribute 'nickName' on compound type 'ContactName' cannot be assigned to.")]
     [InlineData("update", "maidenName", "Failed to deserialize request body: Attribute value cannot be assigned when updating resource.",
