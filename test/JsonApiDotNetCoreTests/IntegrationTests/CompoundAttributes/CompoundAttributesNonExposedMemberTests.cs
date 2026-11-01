@@ -21,11 +21,13 @@ public sealed class CompoundAttributesNonExposedMemberTests
 {
     private static readonly DateTime StampTime = new(2030, 5, 6, 7, 8, 9, DateTimeKind.Utc);
 
-    private readonly IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> _testContext;
     // The same instance is used for all tests of this class, because services can only be configured once per fixture.
     private static readonly StampSettings Settings = new();
 
-    public CompoundAttributesNonExposedMemberTests(IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> testContext)
+    private readonly IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> _testContext;
+
+    public CompoundAttributesNonExposedMemberTests(
+        IntegrationTestContext<TestableStartup<CompoundAttributesDbContext>, CompoundAttributesDbContext> testContext)
     {
         _testContext = testContext;
         Settings.Reset();
@@ -35,12 +37,6 @@ public sealed class CompoundAttributesNonExposedMemberTests
         testContext.UseController<ContactNotesController>();
 
         testContext.ConfigureServices(RegisterServices);
-    }
-
-    private static void RegisterServices(IServiceCollection services)
-    {
-        services.AddSingleton(Settings);
-        services.AddResourceDefinition<ContactStampDefinition>();
     }
 
     [Fact]
@@ -227,7 +223,8 @@ public sealed class CompoundAttributesNonExposedMemberTests
         existingContact.Content.Company!.InternalVersion = 7;
         await SeedAsync(existingContact);
 
-        object requestBody = CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
+        object requestBody =
+            CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
 
         // Act
         (HttpResponseMessage httpResponse, string _) = await _testContext.ExecutePatchAsync<string>($"/contacts/{existingContact.StringId}", requestBody);
@@ -251,10 +248,12 @@ public sealed class CompoundAttributesNonExposedMemberTests
         Contact existingContact = CompoundAttributesSamples.CreateContact();
         await SeedAsync(existingContact);
 
-        object requestBody = CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
+        object requestBody =
+            CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
 
         // Act
-        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>($"/contacts/{existingContact.StringId}", requestBody);
+        (HttpResponseMessage httpResponse, string responseDocument) =
+            await _testContext.ExecutePatchAsync<string>($"/contacts/{existingContact.StringId}", requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
@@ -271,7 +270,8 @@ public sealed class CompoundAttributesNonExposedMemberTests
         Contact existingContact = CompoundAttributesSamples.CreateContact();
         await SeedAsync(existingContact);
 
-        object requestBody = CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
+        object requestBody =
+            CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) =
@@ -317,6 +317,12 @@ public sealed class CompoundAttributesNonExposedMemberTests
         AssertNoNonExposedMembers(company);
     }
 
+    private static void RegisterServices(IServiceCollection services)
+    {
+        services.AddSingleton(Settings);
+        services.AddResourceDefinition<ContactStampDefinition>();
+    }
+
     private static void AssertNoNonExposedMembers(JsonNode? company)
     {
         company.Should().NotBeNull();
@@ -356,7 +362,8 @@ public sealed class CompoundAttributesNonExposedMemberTests
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class ContactStampDefinition(IResourceGraph resourceGraph, StampSettings settings) : JsonApiResourceDefinition<Contact, long>(resourceGraph)
+    private sealed class ContactStampDefinition(IResourceGraph resourceGraph, StampSettings settings)
+        : JsonApiResourceDefinition<Contact, long>(resourceGraph)
     {
         private readonly StampSettings _settings = settings;
 
