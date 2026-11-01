@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,22 +10,6 @@ namespace JsonApiDotNetCore.Resources;
 public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
     where TResource : class, IIdentifiable
 {
-    // Compound and collection attributes are captured as JSON, so that changes to members that are not exposed as attributes (for example a last-update
-    // timestamp inside a compound type) are detected too. This uses private options, independent of the application's serializer options: public
-    // properties and fields only, no naming policy, no converters, nothing skipped (nulls and default values are written), recursion is cut off, and NaN and
-    // Infinity are representable. Limitations: members hidden through [JsonIgnore] (and non-public members) cannot be compared this way. Sets are written
-    // in enumeration order, so a set that enumerates in a different order than before can show up as a change.
-    private static readonly JsonSerializerOptions SnapshotOptions = new()
-    {
-        ReferenceHandler = ReferenceHandler.IgnoreCycles,
-        DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-        NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
-        PropertyNamingPolicy = null,
-        DictionaryKeyPolicy = null,
-        IncludeFields = true,
-        WriteIndented = false
-    };
-
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
 
@@ -83,14 +66,14 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     {
         object? value = attribute.GetValue(resource);
 
-        if (value == null || (!attribute.IsCompound && !attribute.IsCollection))
+        if (value is null || attribute is { IsCompound: false, IsCollection: false })
         {
             // Other values keep their own equality semantics.
             return value;
         }
 
         // Captured now, so that later in-place changes to the instance do not affect the snapshot.
-        return JsonSerializer.SerializeToElement(value, value.GetType(), SnapshotOptions);
+        return JsonSerializer.SerializeToElement(value, value.GetType(), ResourceChangeTrackerSnapshot.Options);
     }
 
     private static bool AreEqual(object? left, object? right)
