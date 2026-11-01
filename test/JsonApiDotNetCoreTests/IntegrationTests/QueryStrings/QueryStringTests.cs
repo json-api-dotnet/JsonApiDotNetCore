@@ -100,7 +100,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Missing query string parameter value.");
-        error.Detail.Should().Be($"Missing value for '{parameterName}' query string parameter.");
+        error.Detail.Should().Be($"Parameter '{parameterName}' cannot have an empty value.");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }

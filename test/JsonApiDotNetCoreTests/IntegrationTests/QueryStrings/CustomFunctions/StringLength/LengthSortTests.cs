@@ -19,6 +19,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         _testContext = testContext;
 
         testContext.UseController<BlogsController>();
+        testContext.UseController<AppointmentsController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -144,5 +145,56 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
 
         responseDocument.Included[1].Type.Should().Be("blogPosts");
         responseDocument.Included[1].Id.Should().Be(blogs[1].Posts[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_on_length_of_nested_attribute()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(3);
+
+        appointments[0].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Oslo"
+            }
+        };
+
+        appointments[1].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Rotterdam"
+            }
+        };
+
+        appointments[2].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Utrecht"
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?sort=-length(location.address.city)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+        responseDocument.Data.ManyValue[1].Id.Should().Be(appointments[2].StringId);
+        responseDocument.Data.ManyValue[2].Id.Should().Be(appointments[0].StringId);
     }
 }

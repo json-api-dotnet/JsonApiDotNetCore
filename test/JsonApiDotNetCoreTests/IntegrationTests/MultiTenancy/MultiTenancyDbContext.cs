@@ -22,6 +22,9 @@ public sealed class MultiTenancyDbContext(DbContextOptions<MultiTenancyDbContext
             .WithOne(webProduct => webProduct.Shop);
 
         builder.Entity<WebShop>()
+            .ComplexProperty(webShop => webShop.Contact, complexBuilder => complexBuilder.ToJson());
+
+        builder.Entity<WebShop>()
             .HasQueryFilter(webShop => webShop.TenantId == _tenantProvider.TenantId);
 
         builder.Entity<WebProduct>()

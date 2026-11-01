@@ -23,6 +23,43 @@ This preserves the values of all other unsent attributes and is called a *partia
 When only the attributes that were sent in the request have changed, the server returns `204 No Content`.
 But if additional attributes have changed (for example, by a database trigger or [resource definition](~/usage/extensibility/resource-definitions.md) that refreshes the last-modified date) the server returns `200 OK`, along with all attributes of the updated resource.
 
+## Updating compound and collection attributes
+
+_since v6.0_
+
+A [compound attribute](~/usage/resources/attributes.md#compound-attributes) or [collection attribute](~/usage/resources/attributes.md#collection-attributes)
+that occurs in the request body is replaced as a whole. Unlike top-level attributes, there is no partial patch *inside* the value:
+members of a compound value (or elements of a collection) that you omit are reset to their default, they do not keep their stored value.
+Attributes that are not sent are left untouched, as always.
+
+```http
+PATCH /contacts/1 HTTP/1.1
+
+{
+  "data": {
+    "type": "contacts",
+    "id": "1",
+    "attributes": {
+      "name": { "lastName": "Byron" },
+      "tags": []
+    }
+  }
+}
+```
+
+The above replaces the name with a value that has no `firstName`, and removes all tags. Phone numbers and all other attributes are unchanged.
+To change a single phone number, send the complete `phoneNumbers` array.
+
+- Send `null` to clear a nullable compound or collection attribute. For non-nullable attributes this results in HTTP 422.
+- Because the whole value is replaced, all validation rules of the nested members apply to what is sent, see [model validation](~/usage/advanced/model-state.md#compound-and-collection-attributes).
+- Sending a member that does not have the `AllowChange` capability results in HTTP 422.
+- Public properties of the compound type that do not have `[Attr]` are fetched before the update and saved afterwards, but they are not part of the request body.
+  They are not copied to the new value for you: a [resource definition](~/usage/extensibility/resource-definitions.md) can carry them over or set them.
+- Unknown members and values of the wrong JSON kind result in HTTP 422 (unknown members are ignored when `AllowUnknownFieldsInRequestBody` is turned on). The `source.pointer` of the error points to the member, such as `/data/attributes/phoneNumbers/0/nope`.
+
+Compound and collection values take part in the comparison that decides between `204 No Content` and `200 OK`, including their members that are not exposed as attributes.
+Sending a value that is identical to what is stored results in `204 No Content`. If your code changes a non-exposed member (such as a last-modified timestamp inside the compound value), `200 OK` is returned.
+
 ## Updating resource relationships
 
 Besides its attributes, the relationships of a resource can be changed using a PATCH request too.

@@ -12,13 +12,6 @@ namespace JsonApiDotNetCore.Queries;
 public interface IQueryLayerComposer
 {
     /// <summary>
-    /// Builds a filter from constraints, used to determine total resource count on a primary collection endpoint.
-    /// </summary>
-    [Obsolete("This method is no longer used and will be removed in a future version.")]
-    // ReSharper disable once UnusedMemberInSuper.Global
-    FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType);
-
-    /// <summary>
     /// Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.
     /// </summary>
     FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship);

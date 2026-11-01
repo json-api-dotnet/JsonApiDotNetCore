@@ -87,3 +87,55 @@ public sealed class Label : Identifiable<long>
     public ISet<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
 }
 ```
+
+# Compound and collection attributes
+
+_since v6.0_
+
+The rules above apply to the members of [compound attributes](~/usage/resources/attributes.md#compound-attributes) as well, at every nesting level.
+Errors on nested members have a source pointer that identifies the member, for example `/data/attributes/name/lastName`.
+
+```c#
+#nullable enable
+
+public sealed class Contact : Identifiable<long>
+{
+    // Required: sending null results in an error.
+    [Attr(IsCompound = true)]
+    public ContactName Name { get; set; } = null!;
+
+    // Optional: can be set to null.
+    [Attr(IsCompound = true)]
+    public Address? HomeAddress { get; set; }
+
+    // Required collection, null is not accepted. Use List<PhoneNumber>? to allow null.
+    [Attr(IsCompound = true)]
+    public List<PhoneNumber> PhoneNumbers { get; set; } = [];
+
+    // Optional scalar collection. The elements can be null too.
+    [Attr]
+    public List<int?>? Ratings { get; set; }
+}
+
+public class ContactName
+{
+    [Attr]
+    public string? FirstName { get; set; }
+
+    // Required within the compound value.
+    [Attr]
+    public string LastName { get; set; } = null!;
+}
+```
+
+- A non-nullable compound attribute (or compound member) that is set to `null` in a request body results in an HTTP 422 response,
+  such as `The Name field is required.` with a pointer to the attribute. A nullable one accepts `null`.
+- Because a PATCH replaces the whole compound value, the nullability rules of all its members are validated when the compound occurs in the request body,
+  even for members the client did not intend to change. Compound attributes that do not occur in the request body are not validated.
+- For a struct, use a nullable struct (`GeoPoint?`) to allow `null`. A non-nullable struct is a value type, so omitting it or its members does not trigger an error.
+  Use `[Required]` on a nullable struct (or nullable member) to require it.
+- A non-nullable collection that is set to `null` results in an error, like any other non-nullable reference type.
+  A nullable collection (`List<string>?`) accepts `null`, which is different from an empty collection.
+  In filters and when sorting by count, a `null` collection counts as empty.
+- Elements of a collection can be `null` when the element type is a nullable value type (`int?`) or a reference type.
+  For non-nullable value types (such as `int`), a `null` element results in an HTTP 422 response.

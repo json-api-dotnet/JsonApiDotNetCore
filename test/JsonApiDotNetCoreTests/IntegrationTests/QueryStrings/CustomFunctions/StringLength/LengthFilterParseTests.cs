@@ -38,7 +38,9 @@ public sealed class LengthFilterParseTests : BaseParseTests
     [InlineData("filter", "equals(length(^caption)", "Field 'caption' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "equals(length(^null)", "Field name expected.")]
     [InlineData("filter", "equals(length(title)^)", ", expected.")]
-    [InlineData("filter", "equals(length(owner.preferences.^useDarkTheme)", "Attribute of type 'String' expected.")]
+    [InlineData("filter", "equals(length(owner.preferences.^useDarkTheme)", "Attribute 'useDarkTheme' is of type 'Boolean' while type 'String' was expected.")]
+    [InlineData("filter", "has(tags,equals(length(^some),'1'))", "_ expected.")]
+    [InlineData("filter", "has(tags,equals(length(^),'1'))", "_ expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -66,15 +68,16 @@ public sealed class LengthFilterParseTests : BaseParseTests
     [InlineData("filter", "greaterThan(length(owner.userName),'1')", null)]
     [InlineData("filter", "has(posts,lessThan(length(author.userName),'1'))", null)]
     [InlineData("filter", "or(equals(length(title),'1'),equals(length(platformName),'1'))", null)]
+    [InlineData("filter", "has(tags,equals(length(_),'1'))", null)]
+    [InlineData("filter", "has(tags,greaterThan(length(_),'5'))", null)]
     [InlineData("filter[posts]", "equals(length(author.userName),'1')", "posts")]
     public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
         scope?.ToString().Should().Be(scopeExpected);
 

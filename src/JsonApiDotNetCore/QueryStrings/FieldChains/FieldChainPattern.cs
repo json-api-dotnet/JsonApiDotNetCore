@@ -72,6 +72,30 @@ public sealed class FieldChainPattern
     /// </description>
     /// </item>
     /// <item>
+    /// <term>S</term>
+    /// <description>
+    /// Matches a scalar non-collection attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>L</term>
+    /// <description>
+    /// Matches a scalar collection attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>C</term>
+    /// <description>
+    /// Matches a compound non-collection attribute.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <term>Q</term>
+    /// <description>
+    /// Matches a compound collection attribute.
+    /// </description>
+    /// </item>
+    /// <item>
     /// <term>A</term>
     /// <description>
     /// Matches an attribute.
@@ -124,13 +148,13 @@ public sealed class FieldChainPattern
     }
 
     /// <summary>
-    /// Matches the specified resource field chain against this pattern.
+    /// Matches the specified resource field chain against this pattern, starting from the specified container.
     /// </summary>
     /// <param name="fieldChain">
     /// The dot-separated chain of resource field names.
     /// </param>
-    /// <param name="resourceType">
-    /// The parent resource type to start matching from.
+    /// <param name="container">
+    /// The parent attribute container to start matching from.
     /// </param>
     /// <param name="options">
     /// Match options, defaults to <see cref="FieldChainPatternMatchOptions.None" />.
@@ -141,15 +165,15 @@ public sealed class FieldChainPattern
     /// <returns>
     /// The match result.
     /// </returns>
-    public PatternMatchResult Match(string fieldChain, ResourceType resourceType, FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None,
-        ILoggerFactory? loggerFactory = null)
+    public PatternMatchResult Match(string fieldChain, IAttributeContainer container,
+        FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None, ILoggerFactory? loggerFactory = null)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(container);
 
         ILogger<PatternMatcher> logger = loggerFactory == null ? NullLogger<PatternMatcher>.Instance : loggerFactory.CreateLogger<PatternMatcher>();
         var matcher = new PatternMatcher(this, options, logger);
-        return matcher.Match(fieldChain, resourceType);
+        return matcher.Match(fieldChain, container);
     }
 
     /// <summary>

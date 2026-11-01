@@ -133,7 +133,7 @@ Here are some injectable request-scoped types to be aware of:
 - `ITargetedFields`: Lists the attributes and relationships from an incoming POST/PATCH resource request. Any fields missing there should not be stored (partial updates).
 - `IEnumerable<IQueryConstraintProvider>`: Provides access to the parsed query string parameters.
 - `IEvaluatedIncludeCache`: This tells the response serializer which related resources to render.
-- `ISparseFieldSetCache`: This tells the response serializer which fields to render in the `attributes` and `relationships` objects.
+- `ISparseFieldSetEvaluator`: This tells the response serializer which fields to render in the `attributes` and `relationships` objects.
 
 You may also want to inject the singletons `IJsonApiOptions` (which contains settings such as default page size) and `IResourceGraph` (the JSON:API model of resources, attributes and relationships).
 

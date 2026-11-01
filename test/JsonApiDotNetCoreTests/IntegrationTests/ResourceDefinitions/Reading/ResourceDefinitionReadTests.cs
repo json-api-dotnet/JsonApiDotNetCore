@@ -1,8 +1,11 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -10,8 +13,44 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext>>
 {
+    private const string StarCollectionHits = "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes " +
+        "Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string StarCollectionWithPlanetsHits =
+        "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes Planet.OnApplyFilter " +
+        "Planet.OnApplySort Planet.OnApplyPagination Planet.OnApplySparseFieldSet Planet.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta " +
+        "Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta";
+
+    private const string StarSingleHits = "Star.OnApplyFilter Star.OnApplySparseFieldSet Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string PlanetSecondaryHits = "Planet.OnApplyPagination Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplySparseFieldSet " +
+        "Planet.OnApplyIncludes Star.OnApplyFilter Star.OnApplyFilter Planet.OnApplyFilter Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta";
+
+    private const string PlanetRelationshipHits = "Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplyPagination Star.OnApplyFilter Star.OnApplyFilter " +
+        "Planet.OnApplyFilter";
+
     private readonly IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
     private readonly UniverseFakers _fakers = new();
+
+    public static TheoryData<string, string, string> HookInvocationSequenceData =>
+        new()
+        {
+            { "GET", "/stars", StarCollectionHits },
+            { "GET", "/stars?fields[stars]=name", StarCollectionHits },
+            { "GET", "/stars?filter=equals(name,'Sun')", StarCollectionHits },
+            { "GET", "/stars?sort=name", StarCollectionHits },
+            { "GET", "/stars?page[size]=2", StarCollectionHits },
+            { "GET", "/stars?include=planets", StarCollectionWithPlanetsHits },
+            { "GET", "/stars/{id}", StarSingleHits },
+            { "GET", "/stars/{id}?fields[stars]=name", StarSingleHits },
+            { "GET", "/stars/{id}/planets", PlanetSecondaryHits },
+            { "GET", "/stars/{id}/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2&fields[planets]=publicName", PlanetSecondaryHits },
+            { "GET", "/stars/{id}/relationships/planets", PlanetRelationshipHits },
+            { "GET", "/stars/{id}/relationships/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2", PlanetRelationshipHits },
+            { "POST", "/stars", "Star.OnApplyFilter Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta" },
+            { "PATCH", "/stars/{id}", "Star.OnApplyFilter Star.OnApplyFilter Star.OnApplyIncludes" },
+            { "DELETE", "/stars/{id}", string.Empty }
+        };
 
     public ResourceDefinitionReadTests(IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> testContext)
     {
@@ -31,6 +70,12 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
             services.AddSingleton<IClientSettingsProvider, TestClientSettingsProvider>();
             services.AddSingleton<ResourceDefinitionHitCounter>();
+
+            services.AddSingleton<SparseFieldSetEvaluatorHitCounter>();
+            services.Replace(ServiceDescriptor.Scoped<ISparseFieldSetEvaluator, CountingSparseFieldSetEvaluator>());
+
+            services.AddSingleton<CustomConstraintSettings>();
+            services.AddScoped<IQueryConstraintProvider, CustomConstraintProvider>();
         });
 
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
@@ -41,6 +86,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         hitCounter.Reset();
+
+        _testContext.App.Services.GetRequiredService<SparseFieldSetEvaluatorHitCounter>().Reset();
+        _testContext.App.Services.GetRequiredService<CustomConstraintSettings>().IsEnabled = false;
     }
 
     [Fact]
@@ -167,9 +215,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
-            (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
@@ -222,9 +268,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
@@ -384,7 +428,6 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
@@ -430,13 +473,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySort),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
@@ -481,7 +520,6 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
@@ -532,7 +570,6 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
@@ -572,13 +609,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySort),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
         }, options => options.WithStrictOrdering());
@@ -622,13 +655,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
@@ -808,9 +837,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
@@ -849,9 +876,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
@@ -889,9 +914,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
@@ -929,9 +952,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
-            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
@@ -1077,5 +1098,551 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         {
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnRegisterQueryableHandlersForQueryStringParameters)
         }, options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    [MemberData(nameof(HookInvocationSequenceData))]
+    public async Task Invokes_hooks_in_current_order_per_request_kind(string method, string routeTemplate, string expectedHits)
+    {
+        // Arrange
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Name = "Sun";
+        star.Planets = _fakers.Planet.GenerateSet(2);
+
+        foreach (Planet planet in star.Planets)
+        {
+            planet.HasRingSystem = true;
+        }
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = routeTemplate.Replace("{id}", star.StringId);
+
+        // Act
+        HttpResponseMessage httpResponse;
+
+        switch (method)
+        {
+            case "GET":
+            {
+                (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
+                break;
+            }
+            case "POST":
+            {
+                var requestBody = new
+                {
+                    data = new
+                    {
+                        type = "stars",
+                        attributes = new
+                        {
+                            name = "New star",
+                            solarRadius = 1,
+                            solarMass = 1
+                        }
+                    }
+                };
+
+                (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+                break;
+            }
+            case "PATCH":
+            {
+                var requestBody = new
+                {
+                    data = new
+                    {
+                        type = "stars",
+                        id = star.StringId,
+                        attributes = new
+                        {
+                            name = "Changed star"
+                        }
+                    }
+                };
+
+                (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+                break;
+            }
+            default:
+            {
+                (httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
+                break;
+            }
+        }
+
+        // Assert
+        httpResponse.IsSuccessStatusCode.Should().BeTrue();
+
+        string actualHits = string.Join(' ', hitCounter.HitExtensibilityPoints.Select(hit => $"{hit.Item1.Name}.{hit.Item2}"));
+        actualHits.Should().Be(expectedHits);
+    }
+
+    [Fact]
+    public async Task Invokes_sparse_fieldset_hook_once_per_type_per_phase_when_type_occurs_in_multiple_layers()
+    {
+        // Arrange
+        var hitCounter = _testContext.App.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Moon moon = _fakers.Moon.GenerateOne();
+        moon.OrbitsAround = _fakers.Planet.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Moon>();
+            dbContext.Moons.Add(moon);
+            await dbContext.SaveChangesAsync();
+        });
+
+        // Moon occurs in the top layer and again in the nested layer below its planet.
+        const string route = "/moons?include=orbitsAround.moons";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] sparseFieldSetHits = hitCounter.HitExtensibilityPoints.Where(hit => hit.Item2 == ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
+            .Select(hit => hit.Item1.Name).ToArray();
+
+        // One hit per type for the query, and one per type for the serializer.
+        sparseFieldSetHits.Count(name => name == nameof(Moon)).Should().Be(2);
+        sparseFieldSetHits.Count(name => name == nameof(Planet)).Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Reports_right_side_resource_hidden_by_definition_filter_as_missing_when_assignment_fails()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HidePlanetsWithPrivateName();
+
+        Star existingStar = _fakers.Star.GenerateOne();
+        Planet hiddenPlanet = _fakers.Planet.GenerateOne();
+        hiddenPlanet.PrivateName = "Secret";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Stars.Add(existingStar);
+            dbContext.Planets.Add(hiddenPlanet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "planets",
+                    id = hiddenPlanet.StringId!
+                },
+                new
+                {
+                    type = "planets",
+                    id = Unknown.StringId.Int64
+                }
+            }
+        };
+
+        // The existence check only runs after the database rejects the assignment, which is forced here by an unknown planet.
+        string route = $"/stars/{existingStar.StringId}/relationships/planets";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.Should().HaveCount(2);
+
+        responseDocument.Errors.Should()
+            .OnlyContain(error => error.StatusCode == HttpStatusCode.NotFound && error.Title == "A related resource does not exist.");
+
+        responseDocument.Errors.Select(error => error.Detail).Should().BeEquivalentTo(
+            $"Related resource of type 'planets' with ID '{hiddenPlanet.StringId}' in relationship 'planets' does not exist.",
+            $"Related resource of type 'planets' with ID '{Unknown.StringId.Int64}' in relationship 'planets' does not exist.");
+    }
+
+    [Fact]
+    public async Task Can_include_nested_chain_in_sparse_fieldset_from_hook()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.IncludeAtmospherePressure);
+
+        var evaluatorCounter = _testContext.App.Services.GetRequiredService<SparseFieldSetEvaluatorHitCounter>();
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}?fields[planets]=atmosphere.composition";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        // The hook adds the nested chain to the set that is queried from the database, but the response is limited to what the client requested.
+        evaluatorCounter.QueryResults.Should().ContainSingle(result => result.StartsWith("planets:", StringComparison.Ordinal));
+        evaluatorCounter.QueryResults.Single(result => result.StartsWith("planets:", StringComparison.Ordinal)).Should().Contain("pressure");
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("atmosphere").And.HaveCount(1);
+
+        JsonElement atmosphere = GetAttribute(responseDocument.Data.SingleValue, "atmosphere");
+        atmosphere.TryGetProperty("composition", out _).Should().BeTrue();
+        atmosphere.TryGetProperty("pressure", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Can_exclude_nested_chain_in_sparse_fieldset_from_hook()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.ExcludeAtmosphereComposition);
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("publicName");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasRingSystem");
+
+        JsonElement atmosphere = GetAttribute(responseDocument.Data.SingleValue, "atmosphere");
+        atmosphere.TryGetProperty("pressure", out _).Should().BeTrue();
+        atmosphere.TryGetProperty("composition", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Intersects_query_string_fieldset_with_hook_result()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.ExcludeAtmosphereComposition);
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}?fields[planets]=atmosphere.pressure,atmosphere.composition";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("atmosphere").And.HaveCount(1);
+
+        JsonElement atmosphere = GetAttribute(responseDocument.Data.SingleValue, "atmosphere");
+        atmosphere.TryGetProperty("pressure", out _).Should().BeTrue();
+        atmosphere.TryGetProperty("composition", out _).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Ignores_query_string_fieldset_when_hook_returns_null()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.SetPlanetFieldSetBehavior(PlanetFieldSetBehavior.ReturnNull);
+
+        Planet planet = CreatePlanetWithAtmosphere(_fakers.Planet.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Planet>();
+            dbContext.Planets.Add(planet);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/planets/{planet.StringId}?fields[planets]=publicName";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        // Documents the current rule: a hook that returns null results in the full set of viewable fields being serialized.
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("publicName");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasRingSystem");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("atmosphere");
+    }
+
+    [Fact]
+    public async Task Applies_definition_filter_to_included_collection_with_compound_top()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HidePlanetsWithPrivateName();
+
+        Star star = _fakers.Star.GenerateOne();
+
+        star.Classification = new StarClassification
+        {
+            SpectralClass = "G",
+            LuminosityClass = "V"
+        };
+
+        star.Planets = _fakers.Planet.GenerateSet(3);
+        star.Planets.ElementAt(0).PrivateName = "A";
+        star.Planets.ElementAt(2).PrivateName = "B";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("planets");
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(star.Planets.ElementAt(1).StringId);
+    }
+
+    [Fact]
+    public async Task Applies_definition_filter_to_nested_include_chain()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HideSmallMoons();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(1);
+        star.Planets.ElementAt(0).Moons = _fakers.Moon.GenerateSet(3);
+        star.Planets.ElementAt(0).Moons.ElementAt(0).SolarRadius = 0.5M;
+        star.Planets.ElementAt(0).Moons.ElementAt(1).SolarRadius = 2M;
+        star.Planets.ElementAt(0).Moons.ElementAt(2).SolarRadius = 3M;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets.moons";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(3);
+        responseDocument.Included.Where(resource => resource.Type == "planets").Should().HaveCount(1);
+
+        string[] moonIds = responseDocument.Included.Where(resource => resource.Type == "moons").Select(resource => resource.Id!).ToArray();
+        moonIds.Should().BeEquivalentTo(star.Planets.ElementAt(0).Moons.ElementAt(1).StringId, star.Planets.ElementAt(0).Moons.ElementAt(2).StringId);
+    }
+
+    [Fact]
+    public async Task Applies_definition_pagination_to_included_collection()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.LimitPlanetPageSize();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(4);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Applies_OnApplyIncludes_with_compound()
+    {
+        // Arrange
+        var settingsProvider = (TestClientSettingsProvider)_testContext.App.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.RewriteConstellationStarsInclude();
+
+        Constellation constellation = _fakers.Constellation.GenerateOne();
+
+        constellation.Origin = new ConstellationOrigin
+        {
+            Culture = "Greek",
+            CatalogedInCentury = 2
+        };
+
+        constellation.Stars = _fakers.Star.GenerateSet(1);
+        constellation.Stars.ElementAt(0).Planets = _fakers.Planet.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Constellation>();
+            dbContext.Constellations.Add(constellation);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/constellations?include=stars";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(2);
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "stars");
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "planets");
+
+        JsonElement origin = GetAttribute(responseDocument.Data.ManyValue![0], "origin");
+        origin.GetProperty("culture").GetString().Should().Be("Greek");
+    }
+
+    [Fact]
+    public async Task Calls_replaced_sparse_fieldset_evaluator()
+    {
+        // Arrange
+        var evaluatorCounter = _testContext.App.Services.GetRequiredService<SparseFieldSetEvaluatorHitCounter>();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/stars/{star.StringId}?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        evaluatorCounter.Calls.Should().Equal("stars:ForQuery", "planets:ForQuery", "Reset", "stars:ForSerializer", "planets:ForSerializer",
+            "stars:ForSerializer", "planets:ForSerializer");
+    }
+
+    [Fact]
+    public async Task Applies_constraints_from_custom_provider_of_both_scoped_kinds()
+    {
+        // Arrange
+        var constraintSettings = _testContext.App.Services.GetRequiredService<CustomConstraintSettings>();
+        constraintSettings.IsEnabled = true;
+
+        List<Star> stars = _fakers.Star.GenerateList(2);
+        stars[0].IsVisibleFromEarth = true;
+        stars[0].Planets = _fakers.Planet.GenerateSet(2);
+        stars[0].Planets.ElementAt(0).HasRingSystem = true;
+        stars[0].Planets.ElementAt(1).HasRingSystem = false;
+        stars[1].IsVisibleFromEarth = false;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Star>();
+            dbContext.Stars.AddRange(stars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/stars?include=planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(stars[0].StringId);
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(stars[0].Planets.ElementAt(0).StringId);
+        responseDocument.Included[0].Attributes.Should().ContainKey("publicName").And.HaveCount(1);
+    }
+
+    private static JsonElement GetAttribute(ResourceObject resourceObject, string name)
+    {
+        resourceObject.Attributes.Should().ContainKey(name);
+        return JsonSerializer.SerializeToElement(resourceObject.Attributes[name]);
+    }
+
+    private static Planet CreatePlanetWithAtmosphere(Planet planet)
+    {
+        planet.Atmosphere = new Atmosphere
+        {
+            Pressure = 1.5M,
+            Composition =
+            [
+                new GasFraction
+                {
+                    Gas = "Nitrogen",
+                    Fraction = 0.78M
+                },
+                new GasFraction
+                {
+                    Gas = "Oxygen",
+                    Fraction = 0.21M
+                }
+            ]
+        };
+
+        return planet;
     }
 }

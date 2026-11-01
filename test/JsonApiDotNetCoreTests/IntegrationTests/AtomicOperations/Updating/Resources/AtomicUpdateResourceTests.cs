@@ -23,6 +23,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
 
         // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
         testContext.UseController<TextLanguagesController>();
+        testContext.UseController<PlaylistsController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -33,6 +34,138 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
 
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = false;
+    }
+
+    [Fact]
+    public async Task Can_replace_compound_collection()
+    {
+        // Arrange
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne().WithCompounds();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Playlists.Add(existingPlaylist);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "update",
+                    data = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylist.StringId,
+                        attributes = new
+                        {
+                            credits = new[]
+                            {
+                                new
+                                {
+                                    role = "Singer",
+                                    personName = "Dave"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Playlist playlistInDatabase = await dbContext.Playlists.FirstWithIdAsync(existingPlaylist.Id);
+
+            playlistInDatabase.Credits.Should().ContainSingle();
+            playlistInDatabase.Credits[0].Role.Should().Be("Singer");
+            playlistInDatabase.Credits[0].PersonName.Should().Be("Dave");
+
+            playlistInDatabase.Recording.Should().NotBeNull();
+            playlistInDatabase.Recording.Studio.Should().Be(existingPlaylist.Recording!.Studio);
+        });
+    }
+
+    [Fact]
+    public async Task Update_with_identical_compound_returns_empty_result()
+    {
+        // Arrange
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne().WithCompounds();
+        string newName = _fakers.Playlist.GenerateOne().Name;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Playlists.Add(existingPlaylist);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new object[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = newName
+                        }
+                    }
+                },
+                new
+                {
+                    op = "update",
+                    data = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylist.StringId,
+                        attributes = new
+                        {
+                            recording = new
+                            {
+                                studio = "Abbey Road",
+                                recordedAt = "2020-05-17",
+                                engineer = "Carol"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Results.Should().HaveCount(2);
+        responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+        responseDocument.Results[1].Data.Value.Should().BeNull();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Playlist playlistInDatabase = await dbContext.Playlists.FirstWithIdAsync(existingPlaylist.Id);
+
+            playlistInDatabase.ShouldHaveOriginalCompoundsOf(existingPlaylist);
+        });
     }
 
     [Fact]

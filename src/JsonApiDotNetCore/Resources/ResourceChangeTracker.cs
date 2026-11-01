@@ -1,3 +1,4 @@
+using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -55,11 +56,34 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
 
         foreach (AttrAttribute attribute in attributes)
         {
-            object? value = attribute.GetValue(resource);
-            result.Add(attribute.PublicName, value);
+            result.Add(attribute.PublicName, CreateSnapshot(attribute, resource));
         }
 
         return result;
+    }
+
+    private static object? CreateSnapshot(AttrAttribute attribute, TResource resource)
+    {
+        object? value = attribute.GetValue(resource);
+
+        if (value is null || attribute is { IsCompound: false, IsCollection: false })
+        {
+            // Other values keep their own equality semantics.
+            return value;
+        }
+
+        // Captured now, so that later in-place changes to the instance do not affect the snapshot.
+        return JsonSerializer.SerializeToElement(value, value.GetType(), ResourceChangeTrackerSnapshot.Options);
+    }
+
+    private static bool AreEqual(object? left, object? right)
+    {
+        if (left is JsonElement leftElement && right is JsonElement rightElement)
+        {
+            return JsonElement.DeepEquals(leftElement, rightElement);
+        }
+
+        return Equals(left, right);
     }
 
     /// <inheritdoc />
@@ -73,7 +97,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
                 {
                     object? actualValue = _finallyStoredAttributeValues[key];
 
-                    if (!Equals(requestValue, actualValue))
+                    if (!AreEqual(requestValue, actualValue))
                     {
                         return true;
                     }
@@ -83,7 +107,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
                     object? initiallyStoredValue = _initiallyStoredAttributeValues[key];
                     object? finallyStoredValue = _finallyStoredAttributeValues[key];
 
-                    if (!Equals(initiallyStoredValue, finallyStoredValue))
+                    if (!AreEqual(initiallyStoredValue, finallyStoredValue))
                     {
                         return true;
                     }

@@ -19,18 +19,52 @@ public abstract class QueryClauseBuilder : QueryExpressionVisitor<QueryClauseBui
     {
         Expression collectionExpression = Visit(expression.TargetCollection, context);
 
-        MemberExpression? propertyExpression = GetCollectionCount(collectionExpression);
+        Expression? countExpression = GetCollectionCount(collectionExpression);
 
-        if (propertyExpression == null)
+        if (countExpression == null)
         {
             throw new InvalidOperationException($"Field '{expression.TargetCollection}' must be a collection.");
         }
 
-        return propertyExpression;
+        if (RequiresNullGuard(expression.TargetCollection, collectionExpression))
+        {
+            // A null collection (or a collection below a null compound) counts as empty.
+            return Expression.Condition(IsNotNull(collectionExpression), countExpression, Expression.Constant(0));
+        }
+
+        return countExpression;
     }
 
-    private static MemberExpression? GetCollectionCount(Expression? collectionExpression)
+    /// <summary>
+    /// Determines whether the specified collection expression can be null, which is the case for a collection attribute of a reference type.
+    /// </summary>
+    protected static bool RequiresNullGuard(ResourceFieldChainExpression targetCollection, Expression collectionExpression)
     {
+        ArgumentNullException.ThrowIfNull(targetCollection);
+        ArgumentNullException.ThrowIfNull(collectionExpression);
+
+        return targetCollection.Fields[^1] is AttrAttribute && !collectionExpression.Type.IsValueType;
+    }
+
+    /// <summary>
+    /// Produces a null check for the specified collection expression.
+    /// </summary>
+    protected static BinaryExpression IsNotNull(Expression collectionExpression)
+    {
+        ArgumentNullException.ThrowIfNull(collectionExpression);
+
+        return Expression.NotEqual(collectionExpression, Expression.Constant(null, collectionExpression.Type));
+    }
+
+    private static Expression? GetCollectionCount(Expression? collectionExpression)
+    {
+        if (collectionExpression is { Type.IsArray: true })
+        {
+            // Matches what the C# compiler emits for 'array.Length'. Query providers recognize this node type (for example, Npgsql
+            // translates it to length(bytea) for byte[]), but not a member access on the Array.Length property.
+            return Expression.ArrayLength(collectionExpression);
+        }
+
         if (collectionExpression != null)
         {
             var properties = new HashSet<PropertyInfo>(collectionExpression.Type.GetProperties());

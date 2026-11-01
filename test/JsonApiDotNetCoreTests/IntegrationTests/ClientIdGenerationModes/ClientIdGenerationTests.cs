@@ -177,6 +177,53 @@ public sealed class ClientIdGenerationTests : IClassFixture<IntegrationTestConte
     }
 
     [Fact]
+    public async Task Client_generated_id_with_compound_returns_204_when_nothing_else_changes()
+    {
+        // Arrange
+        Game newGame = _fakers.Game.GenerateOne();
+        newGame.Id = Guid.NewGuid();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "games",
+                id = newGame.StringId,
+                attributes = new
+                {
+                    title = newGame.Title,
+                    purchasePrice = newGame.PurchasePrice,
+                    settings = new
+                    {
+                        maxPlayers = 4,
+                        difficulty = "Hard"
+                    }
+                }
+            }
+        };
+
+        const string route = "/games";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(newGame.Id);
+
+            gameInDatabase.Title.Should().Be(newGame.Title);
+            gameInDatabase.Settings.Should().NotBeNull();
+            gameInDatabase.Settings.MaxPlayers.Should().Be(4);
+            gameInDatabase.Settings.Difficulty.Should().Be("Hard");
+        });
+    }
+
+    [Fact]
     public async Task Cannot_create_resource_with_existing_ID_when_supplying_ID_is_allowed()
     {
         // Arrange

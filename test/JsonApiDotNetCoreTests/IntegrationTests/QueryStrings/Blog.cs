@@ -12,12 +12,21 @@ public sealed class Blog : Identifiable<long>
     public string Title { get; set; } = null!;
 
     [Attr]
+    public string? Description { get; set; }
+
+    [Attr]
     public string PlatformName { get; set; } = null!;
+
+    [Attr]
+    public IList<string>? Tags { get; set; } = new List<string>();
 
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
     public bool ShowAdvertisements => PlatformName.EndsWith("(using free account)", StringComparison.Ordinal);
 
     public bool IsPublished { get; set; }
+
+    [Attr]
+    public int? ShareCount { get; set; }
 
     [HasMany]
     public IList<BlogPost> Posts { get; set; } = new List<BlogPost>();

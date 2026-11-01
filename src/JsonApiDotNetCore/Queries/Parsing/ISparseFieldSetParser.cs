@@ -17,5 +17,5 @@ public interface ISparseFieldSetParser
     /// <param name="resourceType">
     /// The resource type used to lookup JSON:API fields that are referenced in <paramref name="source" />.
     /// </param>
-    SparseFieldSetExpression? Parse(string source, ResourceType resourceType);
+    SparseFieldSetExpression Parse(string source, ResourceType resourceType);
 }

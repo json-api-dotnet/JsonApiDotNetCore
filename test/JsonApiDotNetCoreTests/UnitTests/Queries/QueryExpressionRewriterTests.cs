@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -29,6 +30,9 @@ public sealed class QueryExpressionRewriterTests
         .Add<Woman, long>()
         .Add<AccountPreferences, long>()
         .Add<LoginAttempt, long>()
+        .Add<Calendar, long>()
+        .Add<Appointment, long>()
+        .Add<Reminder, long>()
         .Build();
 
     // @formatter:wrap_chained_method_calls restore
@@ -59,15 +63,39 @@ public sealed class QueryExpressionRewriterTests
     }
 
     [Theory]
-    [InlineData("title", "SparseFieldSet")]
-    [InlineData("title,posts", "SparseFieldSet")]
+    [InlineData("title", "SparseFieldSet,SparseFieldSetElement")]
+    [InlineData("title,posts", "SparseFieldSet,SparseFieldSetElement,SparseFieldSetElement")]
     public void VisitSparseFieldSet(string expressionText, string expectedTypes)
     {
         // Arrange
         var parser = new SparseFieldSetParser();
         ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
 
-        QueryExpression expression = parser.Parse(expressionText, blogType)!;
+        QueryExpression expression = parser.Parse(expressionText, blogType);
+        var rewriter = new TestableQueryExpressionRewriter();
+
+        // Act
+        rewriter.Visit(expression, null);
+
+        // Assert
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
+
+        visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
+    }
+
+    [Theory]
+    [InlineData("location", "SparseFieldSet,SparseFieldSetElement")]
+    [InlineData("location.name,location.room", "SparseFieldSet,SparseFieldSetElement,SparseFieldSetElement,SparseFieldSetElement")]
+    [InlineData("location.address.city,title", "SparseFieldSet,SparseFieldSetElement,SparseFieldSetElement,SparseFieldSetElement,SparseFieldSetElement")]
+    public void VisitSparseFieldSetElement_with_children(string expressionText, string expectedTypes)
+    {
+        // Arrange
+        var parser = new SparseFieldSetParser();
+        ResourceType appointmentType = ResourceGraph.GetResourceType<Appointment>();
+
+        QueryExpression expression = parser.Parse(expressionText, appointmentType);
         var rewriter = new TestableQueryExpressionRewriter();
 
         // Act
@@ -82,21 +110,13 @@ public sealed class QueryExpressionRewriterTests
     }
 
     [Fact]
-    public void VisitSparseFieldTable()
+    public void VisitScalarCollectionElementValue()
     {
         // Arrange
-        var parser = new SparseFieldSetParser();
+        var parser = new FilterParser(ResourceFactory);
+        ResourceType appointmentType = ResourceGraph.GetResourceType<Appointment>();
 
-        ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
-        ResourceType commentType = ResourceGraph.GetResourceType<Comment>();
-
-        var sparseFieldTable = new Dictionary<ResourceType, SparseFieldSetExpression>
-        {
-            [blogType] = parser.Parse("title,owner", blogType)!,
-            [commentType] = parser.Parse("text,createdAt", commentType)!
-        };
-
-        var expression = new SparseFieldTableExpression(sparseFieldTable.ToImmutableDictionary());
+        QueryExpression expression = parser.Parse("has(keywords,equals(_,'x'))", appointmentType);
         var rewriter = new TestableQueryExpressionRewriter();
 
         // Act
@@ -105,10 +125,28 @@ public sealed class QueryExpressionRewriterTests
         // Assert
         string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
 
-        visitedTypeNames.Should().HaveCount(3);
-        visitedTypeNames[0].Should().Be("SparseFieldTableExpression");
-        visitedTypeNames[1].Should().Be("SparseFieldSetExpression");
-        visitedTypeNames[2].Should().Be("SparseFieldSetExpression");
+        visitedTypeNames.Should().ContainInOrder("HasExpression", "ResourceFieldChainExpression", "ComparisonExpression",
+            "ScalarCollectionElementValueExpression", "LiteralConstantExpression");
+
+        visitedTypeNames.Should().HaveCount(5);
+    }
+
+    [Fact]
+    public void Rewriter_removing_all_children_does_not_widen_selection()
+    {
+        // Arrange
+        var parser = new SparseFieldSetParser();
+        ResourceType appointmentType = ResourceGraph.GetResourceType<Appointment>();
+
+        QueryExpression expression = parser.Parse("location.name,location.room,title", appointmentType);
+        var rewriter = new RemoveLocationChildrenRewriter();
+
+        // Act
+        QueryExpression? result = rewriter.Visit(expression, null);
+
+        // Assert
+        SparseFieldSetExpression sparseFieldSet = result.Should().BeOfType<SparseFieldSetExpression>().Subject;
+        sparseFieldSet.ToString().Should().Be("title");
     }
 
     [Theory]
@@ -210,5 +248,18 @@ public sealed class QueryExpressionRewriterTests
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
         visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
+    }
+
+    private sealed class RemoveLocationChildrenRewriter : QueryExpressionRewriter<object?>
+    {
+        protected override IImmutableDictionary<TKey, TExpression> VisitDictionary<TKey, TExpression>(IImmutableDictionary<TKey, TExpression> elements,
+            object? argument)
+        {
+            // Removes all children of the compound attribute, but leaves the top-level fields alone.
+            IImmutableDictionary<TKey, TExpression> remaining = elements.RemoveRange(elements.Keys.Where(key =>
+                key is AttrAttribute { Property.DeclaringType: { } declaringType } && declaringType == typeof(AppointmentLocation)));
+
+            return base.VisitDictionary(remaining, argument);
+        }
     }
 }

@@ -36,10 +36,10 @@ public sealed class ServiceDiscoveryFacadeTests
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
         var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
 
-        ResourceType? personType = resourceGraph.FindResourceType(typeof(Person));
+        ResourceType? personType = resourceGraph.FindResourceType<Person>();
         personType.Should().NotBeNull();
 
-        ResourceType? todoItemType = resourceGraph.FindResourceType(typeof(TodoItem));
+        ResourceType? todoItemType = resourceGraph.FindResourceType<TodoItem>();
         todoItemType.Should().NotBeNull();
     }
 
@@ -56,8 +56,27 @@ public sealed class ServiceDiscoveryFacadeTests
         ServiceProvider serviceProvider = _services.BuildServiceProvider();
         var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
 
-        ResourceType? resourceType = resourceGraph.FindResourceType(typeof(PrivateResource));
+        ResourceType? resourceType = resourceGraph.FindResourceType<PrivateResource>();
         resourceType.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Compound_types_are_not_registered_as_resources_or_controllers()
+    {
+        // Arrange
+        Action<ServiceDiscoveryFacade> addAction = facade => facade.AddCurrentAssembly();
+
+        // Act
+        _services.AddJsonApi(discovery: addAction);
+
+        // Assert
+        ServiceProvider serviceProvider = _services.BuildServiceProvider();
+        var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
+
+        resourceGraph.FindCompoundType<PrivateCompound>().Should().NotBeNull();
+        resourceGraph.GetResourceTypes().Should().NotContain(resourceType => resourceType.ClrType == typeof(PrivateCompound));
+
+        _services.Should().NotContain(descriptor => IsRelatedTo(descriptor.ServiceType) || IsRelatedTo(descriptor.ImplementationType));
     }
 
     [Fact]
@@ -106,6 +125,11 @@ public sealed class ServiceDiscoveryFacadeTests
         var resourceDefinition = serviceProvider.GetRequiredService<IResourceDefinition<PrivateResource, long>>();
 
         resourceDefinition.Should().BeOfType<PrivateResourceDefinition>();
+    }
+
+    private static bool IsRelatedTo(Type? type)
+    {
+        return type != null && (type == typeof(PrivateCompound) || type.GenericTypeArguments.Contains(typeof(PrivateCompound)));
     }
 
     private sealed class FakeDbContextResolver : IDbContextResolver

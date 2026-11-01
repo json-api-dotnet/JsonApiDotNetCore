@@ -14,6 +14,17 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
 
 public sealed class SortParseTests : BaseParseTests
 {
+    private const string ScalarChainSuffix =
+        " failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. ";
+
+    private const string CountChainSuffix =
+        " failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. ";
+
+    private const string AppointmentScalarChain = "Field chain on resource type 'appointments'" + ScalarChainSuffix;
+    private const string CalendarScalarChain = "Field chain on resource type 'calendars'" + ScalarChainSuffix;
+    private const string AppointmentCountChain = "Field chain on resource type 'appointments'" + CountChainSuffix;
+    private const string CalendarCountChain = "Field chain on resource type 'calendars'" + CountChainSuffix;
+
     private readonly SortQueryStringParameterReader _reader;
 
     public SortParseTests()
@@ -94,11 +105,11 @@ public sealed class SortParseTests : BaseParseTests
     [Theory]
     [InlineData("sort", "^", "-, count function or field name expected.")]
     [InlineData("sort", "^ ", "Unexpected whitespace.")]
-    [InlineData("sort", "-^", "Count function or field name expected.")]
+    [InlineData("sort", "-^", "count function or field name expected.")]
     [InlineData("sort", "^abc", "Field 'abc' does not exist on resource type 'blogs'.")]
     [InlineData("sort[posts]", "author^",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
-        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'webAccounts' expected.")]
     [InlineData("sort[posts]", "author.^livingAddress", "Field 'livingAddress' does not exist on resource type 'webAccounts'.")]
     [InlineData("sort", "-count^", "( expected.")]
     [InlineData("sort", "count^", "( expected.")]
@@ -107,14 +118,14 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort", "count(^-abc)", "Field name expected.")]
     [InlineData("sort", "count(^abc)", "Field 'abc' does not exist on resource type 'blogs'.")]
     [InlineData("sort", "count(^id)",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'blogs' expected.")]
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'blogs' expected.")]
     [InlineData("sort[posts]", "count(author^)",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a to-many relationship or a collection attribute. " +
+        "Relationship or scalar collection attribute or compound attribute on resource type 'webAccounts' expected.")]
     [InlineData("sort[posts]", "caption,^", "-, count function or field name expected.")]
     [InlineData("sort[posts]", "caption^:", ", expected.")]
-    [InlineData("sort[posts]", "caption,-^", "Count function or field name expected.")]
+    [InlineData("sort[posts]", "caption,-^", "count function or field name expected.")]
     [InlineData("sort[posts.contributors]", "^some", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]
     [InlineData("sort[posts.contributors]", "wife.father.^some", "Field 'some' does not exist on resource type 'men'.")]
     [InlineData("sort[posts.contributors]", "count(^some)", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]
@@ -165,13 +176,138 @@ public sealed class SortParseTests : BaseParseTests
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
         scope?.ToString().Should().Be(scopeExpected);
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
         value.ToString().Should().Be(parameterValue);
+    }
+
+    [Theory]
+    // Nested attributes through compounds and to-one relationships
+    [InlineData("appointments", "sort", "cost.amount", null)]
+    [InlineData("appointments", "sort", "-location.name", null)]
+    [InlineData("appointments", "sort", "location.address.city", null)]
+    [InlineData("appointments", "sort", "calendar.workweek.firstDay", null)]
+    [InlineData("appointments", "sort", "calendar.audit.createdBy", null)]
+    [InlineData("calendars", "sort", "workweek.secret", null)]
+    [InlineData("calendars", "sort", "audit.createdBy", null)]
+    [InlineData("calendars", "sort", "workweek.officeHours.opensAt", null)]
+    [InlineData("calendars", "sort", "mostRecentAppointment.location.address.city", null)]
+    // Count on to-many relationships and collection attributes
+    [InlineData("appointments", "sort", "count(attendees)", null)]
+    [InlineData("appointments", "sort", "count(keywords)", null)]
+    [InlineData("appointments", "sort", "count(reminders)", null)]
+    [InlineData("appointments", "sort", "-count(reminders)", null)]
+    [InlineData("appointments", "sort", "count(calendar.holidays)", null)]
+    [InlineData("calendars", "sort", "count(holidays)", null)]
+    [InlineData("calendars", "sort", "count(workweek.workDays)", null)]
+    // Scopes
+    [InlineData("calendars", "sort[appointments]", "location.name", "appointments")]
+    [InlineData("calendars", "sort[appointments]", "count(attendees),-cost.amount,location.address.city", "appointments")]
+    [InlineData("calendars", "sort[appointments.reminders]", "id", "appointments.reminders")]
+    public void Reader_Read_Succeeds_On_Compound_Types(string resourceTypeName, string parameterName, string parameterValue, string? scopeExpected)
+    {
+        // Arrange
+        SortQueryStringParameterReader reader = CreateReader(resourceTypeName);
+
+        // Act
+        reader.Read(parameterName, parameterValue);
+
+        // Assert
+        RelationshipChainExpressionInScope[] constraints = reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
+        ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+        scope?.ToString().Should().Be(scopeExpected);
+
+        QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
+        value.ToString().Should().Be(parameterValue);
+    }
+
+    [Theory]
+    [InlineData("calendars", "sort[^workweek]", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "sort[^holidays]", "To-many relationship 'holidays' does not exist on resource type 'calendars'.")]
+    [InlineData("appointments", "sort[^location]", "To-many relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "sort[calendar.^workweek]", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
+    public void Reader_Read_ParameterName_Fails_On_Compound_Types(string resourceTypeName, string parameterName, string errorMessage)
+    {
+        // Arrange
+        SortQueryStringParameterReader reader = CreateReader(resourceTypeName);
+        var parameterNameSource = new MarkedText(parameterName, '^');
+
+        // Act
+        Action action = () => reader.Read(parameterNameSource.Text, "id");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterNameSource.Text);
+        exception.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified sort is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterNameSource}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be(parameterNameSource.Text);
+    }
+
+    [Theory]
+    // Compound attributes are rejected
+    [InlineData("appointments", "location^", AppointmentScalarChain + "Non-collection attribute on compound type 'AppointmentLocation' expected.")]
+    [InlineData("appointments", "cost^", AppointmentScalarChain + "Non-collection attribute on compound type 'AppointmentCost' expected.")]
+    [InlineData("appointments", "location.address^", AppointmentScalarChain + "Non-collection attribute on compound type 'AppointmentAddress' expected.")]
+    [InlineData("calendars", "workweek.^workDays", CalendarScalarChain + "Non-collection attribute on compound type 'Workweek' expected.")]
+    // Collection attributes are rejected
+    [InlineData("appointments", "^attendees",
+        AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "^attendees.name",
+        AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("appointments", "^keywords",
+        AppointmentScalarChain + "To-one relationship or non-collection attribute on resource type 'appointments' expected.")]
+    [InlineData("calendars", "^holidays.name", CalendarScalarChain + "To-one relationship or non-collection attribute on resource type 'calendars' expected.")]
+    // Count requires a collection
+    [InlineData("appointments", "count(location^)",
+        AppointmentCountChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentLocation' expected.")]
+    [InlineData("appointments", "count(cost.^amount)",
+        AppointmentCountChain + "Scalar collection attribute or compound attribute on compound type 'AppointmentCost' expected.")]
+    [InlineData("calendars", "count(workweek.officeHours^)",
+        CalendarCountChain + "Scalar collection attribute or compound attribute on compound type 'OfficeHours' expected.")]
+    // Unknown fields
+    [InlineData("appointments", "location.^unknown", "Field 'unknown' does not exist on compound type 'AppointmentLocation'.")]
+    [InlineData("appointments", "^unknownCompound.x", "Field 'unknownCompound' does not exist on resource type 'appointments'.")]
+    // Capabilities on nested attributes
+    [InlineData("calendars", "workweek.^internalNote", "Sorting on attribute 'internalNote' is not allowed.")]
+    public void Reader_Read_ParameterValue_Fails_On_Compound_Types(string resourceTypeName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        SortQueryStringParameterReader reader = CreateReader(resourceTypeName);
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => reader.Read("sort", parameterValueSource.Text);
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be("sort");
+        exception.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified sort is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("sort");
+    }
+
+    private SortQueryStringParameterReader CreateReader(string resourceTypeName)
+    {
+        Request.PrimaryResourceType = ResourceGraph.GetResourceType(resourceTypeName);
+
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new SortParser();
+        return new SortQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph);
     }
 }

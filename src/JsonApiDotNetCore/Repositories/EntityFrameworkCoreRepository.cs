@@ -136,6 +136,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             QueryableHandlerExpression[] queryableHandlers = _constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
+                .OfType<RelationshipChainExpressionInScope>()
                 .Where(expressionInScope => expressionInScope.Scope == null)
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<QueryableHandlerExpression>()

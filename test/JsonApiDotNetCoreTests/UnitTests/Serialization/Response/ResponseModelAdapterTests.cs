@@ -598,14 +598,14 @@ public sealed class ResponseModelAdapterTests
         var linkBuilder = new FakeLinkBuilder();
         var metaBuilder = new FakeMetaBuilder();
         var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();
-        var sparseFieldSetCache = new SparseFieldSetCache(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
+        var sparseFieldSetEvaluator = new SparseFieldSetEvaluator(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
         var includeParser = new IncludeParser(options);
         IncludeExpression include = includeParser.Parse(includeChains, request.PrimaryResourceType);
         evaluatedIncludeCache.Set(include);
 
-        return new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache, sparseFieldSetCache,
+        return new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache, sparseFieldSetEvaluator,
             requestQueryStringAccessor);
     }
 }

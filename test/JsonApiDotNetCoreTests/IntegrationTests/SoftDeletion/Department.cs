@@ -11,6 +11,9 @@ public sealed class Department : Identifiable<long>, ISoftDeletable
     [Attr]
     public string Name { get; set; } = null!;
 
+    [Attr(IsCompound = true)]
+    public List<DepartmentContact> Contacts { get; set; } = [];
+
     public DateTimeOffset? SoftDeletedAt { get; set; }
 
     [HasOne]

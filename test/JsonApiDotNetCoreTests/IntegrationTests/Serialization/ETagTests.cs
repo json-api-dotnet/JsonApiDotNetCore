@@ -236,4 +236,60 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         responseDocument.Should().NotBeEmpty();
     }
+
+    [Fact]
+    public async Task ETag_changes_when_nested_member_changes()
+    {
+        // Arrange
+        MeetingAttendee existingAttendee = _fakers.MeetingAttendee.GenerateOne();
+
+        existingAttendee.Profile = new AttendeeProfile
+        {
+            Nickname = "Alpha",
+            Biography = "First biography"
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Attendees.Add(existingAttendee);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/meetingAttendees/{existingAttendee.StringId}";
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "meetingAttendees",
+                id = existingAttendee.StringId,
+                attributes = new
+                {
+                    profile = new
+                    {
+                        biography = "Second biography"
+                    }
+                }
+            }
+        };
+
+        // Act
+        (HttpResponseMessage getResponse1, _) = await _testContext.ExecuteGetAsync<string>(route);
+        (HttpResponseMessage getResponse2, _) = await _testContext.ExecuteGetAsync<string>(route);
+        (HttpResponseMessage patchResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        (HttpResponseMessage getResponse3, _) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        getResponse1.ShouldHaveStatusCode(HttpStatusCode.OK);
+        getResponse2.ShouldHaveStatusCode(HttpStatusCode.OK);
+        patchResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+        getResponse3.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        getResponse1.Headers.ETag.Should().NotBeNull();
+        getResponse2.Headers.ETag.Should().NotBeNull();
+        getResponse3.Headers.ETag.Should().NotBeNull();
+
+        getResponse2.Headers.ETag.Tag.Should().Be(getResponse1.Headers.ETag.Tag);
+        getResponse3.Headers.ETag.Tag.Should().NotBe(getResponse1.Headers.ETag.Tag);
+    }
 }

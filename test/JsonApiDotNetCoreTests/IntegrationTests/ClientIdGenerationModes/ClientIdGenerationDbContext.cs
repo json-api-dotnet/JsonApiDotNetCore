@@ -12,4 +12,11 @@ public sealed class ClientIdGenerationDbContext(DbContextOptions<ClientIdGenerat
     public DbSet<Player> Players => Set<Player>();
     public DbSet<Game> Games => Set<Game>();
     public DbSet<PlayerGroup> PlayerGroups => Set<PlayerGroup>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Game>().ComplexProperty(game => game.Settings, complexBuilder => complexBuilder.ToJson());
+
+        base.OnModelCreating(builder);
+    }
 }

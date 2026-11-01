@@ -19,7 +19,9 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
         _testContext = testContext;
 
         testContext.UseController<BlogsController>();
+        testContext.UseController<AppointmentsController>();
         testContext.UseController<BlogPostsController>();
+        testContext.UseController<CalendarsController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -117,7 +119,7 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<BlogPost>();
+            await dbContext.ClearTableAsync<Blog>();
             dbContext.Blogs.Add(blog);
             await dbContext.SaveChangesAsync();
         });
@@ -137,5 +139,119 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_sum_compound_member_of_related_to_many()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Cost = new AppointmentCost
+        {
+            Amount = 30
+        };
+
+        appointments[0].Reminders = _fakers.Reminder.GenerateList(2);
+
+        appointments[1].Cost = new AppointmentCost
+        {
+            Amount = 60
+        };
+
+        appointments[1].Reminders = _fakers.Reminder.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=greaterThan(sum(reminders,appointment.cost.amount),'100')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Cannot_sum_over_to_many_relationship_with_blocked_filter_capability()
+    {
+        // Arrange
+        var parameterValue = new MarkedText("greaterThan(sum(^appointments,cost.amount),'100')", '^');
+        string route = $"/calendars?filter={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Filtering on relationship 'appointments' is not allowed. {parameterValue}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Fact]
+    public async Task Cannot_use_sum_in_scalar_collection_element_scope()
+    {
+        // Arrange
+        var parameterValue = new MarkedText("has(keywords,greaterThan(^sum(reminders,appointment.cost.amount),'1'))", '^');
+        string route = $"/appointments?filter={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Function 'sum' cannot be used on scalar collection elements. {parameterValue}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Theory]
+    [InlineData("appointment.location")]
+    [InlineData("appointment.attendees")]
+    [InlineData("appointment.keywords")]
+    public async Task Cannot_sum_compound_or_collection(string selector)
+    {
+        // Arrange
+        string route = $"/appointments?filter=greaterThan(sum(reminders,{selector}),'1')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+
+        error.Detail.Should().StartWith("Field chain on resource type 'reminders' failed to match the pattern: " +
+            "zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute.");
+
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
     }
 }

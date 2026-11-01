@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
@@ -129,6 +130,51 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("departments");
         responseDocument.Included[0].Id.Should().Be(companies[1].Departments.ElementAt(0).StringId);
+    }
+
+    [Fact]
+    public async Task Excludes_soft_deleted_departments_from_include_with_compound_company()
+    {
+        // Arrange
+        Company company = _fakers.Company.GenerateOne();
+
+        company.Headquarters = new CompanyAddress
+        {
+            Street = "Main Street 1",
+            City = "Springfield"
+        };
+
+        company.Departments = _fakers.Department.GenerateList(3);
+        company.Departments.ElementAt(2).SoftDeletedAt = SoftDeletionTime;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Company>();
+            dbContext.Companies.Add(company);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/companies?include=departments";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(company.StringId);
+
+        JsonElement headquarters = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("headquarters").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
+        headquarters.GetProperty("city").GetString().Should().Be("Springfield");
+
+        responseDocument.Included.Should().HaveCount(2);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Type == "departments");
+
+        responseDocument.Included.Select(resource => resource.Id).Should()
+            .BeEquivalentTo(company.Departments.Take(2).Select(department => department.StringId));
     }
 
     [Fact]
@@ -1032,5 +1078,91 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("The requested resource does not exist.");
         error.Detail.Should().Be($"Resource of type 'departments' with ID '{existingDepartment.StringId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Filters_included_departments_on_compound_collection_and_excludes_soft_deleted()
+    {
+        // Arrange
+        Company company = _fakers.Company.GenerateOne();
+        company.Departments = _fakers.Department.GenerateList(3);
+
+        Department[] departments = company.Departments.ToArray();
+
+        departments[0].Contacts =
+        [
+            new DepartmentContact
+            {
+                Role = "manager",
+                Email = "a@company.com"
+            }
+        ];
+
+        departments[1].Contacts =
+        [
+            new DepartmentContact
+            {
+                Role = "manager"
+            }
+        ];
+
+        departments[1].SoftDeletedAt = SoftDeletionTime;
+        departments[2].Contacts = [];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Company>();
+            dbContext.Companies.Add(company);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route =
+            $"/companies/{company.StringId}?include=departments&filter[departments]=has(contacts,equals(role,'manager'))&fields[departments]=contacts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(departments[0].StringId);
+        responseDocument.Included[0].Attributes.Should().ContainKey("contacts");
+    }
+
+    [Fact]
+    public async Task Filters_departments_by_count_of_compound_collection_excluding_soft_deleted()
+    {
+        // Arrange
+        List<Department> departments = _fakers.Department.GenerateList(3);
+        departments[0].Contacts = [];
+        departments[1].Contacts = [];
+        departments[1].SoftDeletedAt = SoftDeletionTime;
+
+        departments[2].Contacts =
+        [
+            new DepartmentContact
+            {
+                Role = "manager"
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Department>();
+            dbContext.Departments.AddRange(departments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/departments?filter=equals(count(contacts),'0')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(departments[0].StringId);
     }
 }

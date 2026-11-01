@@ -35,39 +35,68 @@ internal sealed class PatternTextFormatter
 
     private static void WriteChoices(FieldTypes types, StringBuilder builder)
     {
-        int startOffset = builder.Length;
-
-        if (types.HasFlag(FieldTypes.ToManyRelationship) && !types.HasFlag(FieldTypes.Relationship))
-        {
-            builder.Append('M');
-        }
-
-        if (types.HasFlag(FieldTypes.ToOneRelationship) && !types.HasFlag(FieldTypes.Relationship))
-        {
-            builder.Append('O');
-        }
-
-        if (types.HasFlag(FieldTypes.Attribute) && !types.HasFlag(FieldTypes.Relationship))
-        {
-            builder.Append('A');
-        }
-
-        if (types.HasFlag(FieldTypes.Relationship) && !types.HasFlag(FieldTypes.Field))
-        {
-            builder.Append('R');
-        }
-
         if (types.HasFlag(FieldTypes.Field))
         {
             builder.Append('F');
         }
-
-        int charCount = builder.Length - startOffset;
-
-        if (charCount > 1)
+        else
         {
-            builder.Insert(startOffset, '[');
-            builder.Append(']');
+            int startOffset = builder.Length;
+
+            WriteRelationshipTokens(types, builder);
+            WriteAttributeTokens(types, builder);
+
+            if (builder.Length - startOffset > 1)
+            {
+                builder.Insert(startOffset, '[');
+                builder.Append(']');
+            }
+        }
+    }
+
+    private static void WriteRelationshipTokens(FieldTypes types, StringBuilder builder)
+    {
+        if (types.HasFlag(FieldTypes.Relationship))
+        {
+            builder.Append('R');
+        }
+        else if (types.HasFlag(FieldTypes.ToOneRelationship))
+        {
+            builder.Append('O');
+        }
+        else if (types.HasFlag(FieldTypes.ToManyRelationship))
+        {
+            builder.Append('M');
+        }
+    }
+
+    private static void WriteAttributeTokens(FieldTypes types, StringBuilder builder)
+    {
+        if (types.HasFlag(FieldTypes.Attribute))
+        {
+            builder.Append('A');
+        }
+        else
+        {
+            if (types.HasFlag(FieldTypes.ScalarAttribute))
+            {
+                builder.Append('S');
+            }
+
+            if (types.HasFlag(FieldTypes.ScalarCollectionAttribute))
+            {
+                builder.Append('L');
+            }
+
+            if (types.HasFlag(FieldTypes.CompoundAttribute))
+            {
+                builder.Append('C');
+            }
+
+            if (types.HasFlag(FieldTypes.CompoundCollectionAttribute))
+            {
+                builder.Append('Q');
+            }
         }
     }
 
