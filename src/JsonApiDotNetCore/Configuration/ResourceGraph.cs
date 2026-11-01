@@ -285,7 +285,7 @@ public sealed class ResourceGraph : IResourceGraph
     {
         // Allows selecting through nullable structs, such as: resource => resource.Location!.Value.Latitude
 
-        return memberExpression.Member is { Name: nameof(Nullable<>.Value) } member && member.DeclaringType is { IsGenericType: true } declaringType &&
+        return memberExpression.Member is { Name: nameof(Nullable<>.Value), DeclaringType: { IsGenericType: true } declaringType } &&
             declaringType.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
