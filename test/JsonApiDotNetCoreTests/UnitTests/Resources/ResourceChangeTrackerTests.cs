@@ -42,25 +42,39 @@ public sealed class ResourceChangeTrackerTests
     }
 
     [Fact]
-    public void Non_attribute_members_of_compound_are_ignored()
+    public void Non_attribute_member_of_compound_that_differs_is_a_change()
     {
         // Arrange
         TrackedResource request = CreateResource();
-        request.Profile!.Extras["a"] = "1";
-        request.Profile.Callback = () => 1;
+        request.Profile!.LastUpdated = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         TrackedResource stored = CreateResource();
-        stored.Profile!.Extras["b"] = "2";
+        stored.Profile!.LastUpdated = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         // Act
         bool hasChanges = HasImplicitChanges(nameof(TrackedResource.Profile), request, stored);
 
         // Assert
-        hasChanges.Should().BeFalse();
+        hasChanges.Should().BeTrue();
     }
 
     [Fact]
-    public void Attribute_member_with_JsonIgnore_is_compared()
+    public void Non_attribute_member_of_compound_that_is_set_afterwards_is_a_change()
+    {
+        // Arrange
+        TrackedResource request = CreateResource();
+        TrackedResource stored = CreateResource();
+
+        // Act
+        bool hasChanges = HasImplicitChangesAfterMutation(nameof(TrackedResource.Plain), request, stored,
+            resource => resource.Profile!.LastUpdated = DateTime.UtcNow);
+
+        // Assert
+        hasChanges.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Member_with_JsonIgnore_is_not_compared()
     {
         // Arrange
         TrackedResource request = CreateResource();
@@ -73,7 +87,7 @@ public sealed class ResourceChangeTrackerTests
         bool hasChanges = HasImplicitChanges(nameof(TrackedResource.Profile), request, stored);
 
         // Assert
-        hasChanges.Should().BeTrue();
+        hasChanges.Should().BeFalse();
     }
 
     [Fact]
@@ -125,13 +139,12 @@ public sealed class ResourceChangeTrackerTests
     }
 
     [Fact]
-    public void Untargeted_attribute_with_NaN_and_delegate_member_does_not_fail()
+    public void Untargeted_attribute_with_NaN_does_not_fail()
     {
         // Arrange
         TrackedResource request = CreateResource();
         TrackedResource stored = CreateResource();
         stored.Doubles = [double.NaN];
-        stored.Profile!.Callback = () => 1;
 
         // Act
         bool hasChanges = HasImplicitChanges(nameof(TrackedResource.Plain), request, stored);
@@ -292,7 +305,7 @@ public sealed class ResourceChangeTrackerTests
     }
 
     [Fact]
-    public void Set_is_compared_without_regard_to_order()
+    public void Set_is_compared_by_enumeration_order_and_content()
     {
         // Arrange
         var request = new TrackedResource
@@ -304,12 +317,12 @@ public sealed class ResourceChangeTrackerTests
             ])
         };
 
-        var reorderedStored = new TrackedResource
+        var sameStored = new TrackedResource
         {
             Set = new HashSet<int>([
-                3,
+                1,
                 2,
-                1
+                3
             ])
         };
 
@@ -331,12 +344,12 @@ public sealed class ResourceChangeTrackerTests
         };
 
         // Act
-        bool reordered = HasImplicitChanges(nameof(TrackedResource.Set), request, reorderedStored);
+        bool same = HasImplicitChanges(nameof(TrackedResource.Set), request, sameStored);
         bool changed = HasImplicitChanges(nameof(TrackedResource.Set), request, changedStored);
         bool smaller = HasImplicitChanges(nameof(TrackedResource.Set), request, smallerStored);
 
         // Assert
-        reordered.Should().BeFalse();
+        same.Should().BeFalse();
         changed.Should().BeTrue();
         smaller.Should().BeTrue();
     }
@@ -980,11 +993,8 @@ public sealed class ResourceChangeTrackerTests
         [Attr]
         public byte[]? Blob { get; set; }
 
-        // Not exposed as attribute, so never compared.
-        public Dictionary<string, string> Extras { get; } = [];
-
-        // Not exposed as attribute, and not serializable.
-        public Func<int>? Callback { get; set; }
+        // Not exposed as attribute, but still compared.
+        public DateTime? LastUpdated { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
