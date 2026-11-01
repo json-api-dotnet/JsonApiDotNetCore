@@ -194,7 +194,7 @@ public sealed class CompoundAttributesUpdateTests
             [
               { "number": "3", "label": "c" },
               { "number": "1", "label": "a" },
-              { "number": "2", "label": "b", "kind": 2 }
+              { "number": "2", "label": "b", "kind": 1 }
             ]
             """);
 
