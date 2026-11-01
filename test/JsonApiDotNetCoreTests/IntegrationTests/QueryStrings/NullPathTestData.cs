@@ -16,8 +16,8 @@ internal static class NullPathTestData
 
     /// <summary>
     /// Creates four calendars: 0 has no workweek, 1 has a workweek without nested compound and with null collections, 2 has a nested compound and empty
-    /// collections (null in the nested compound), 3 has populated collections. Scalar collections nested in compounds are only null when requested,
-    /// because a stored JSON null cannot be queried for them.
+    /// collections (null in the nested compound), 3 has populated collections. Scalar collections nested in compounds are only null when requested, because
+    /// a stored JSON null cannot be queried for them.
     /// </summary>
     public static List<Calendar> CreateCalendars(QueryStringFakers fakers, bool nullScalarCollections = false)
     {

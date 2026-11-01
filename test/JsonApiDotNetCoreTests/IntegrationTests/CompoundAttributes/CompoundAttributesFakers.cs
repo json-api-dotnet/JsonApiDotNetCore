@@ -22,10 +22,10 @@ internal sealed class CompoundAttributesFakers
     private Faker<ContactDate> ContactDate => _lazyContactDateFaker.Value;
 
     private Faker<ContactPhoneNumber> ContactPhoneNumber => _lazyContactPhoneNumberFaker.Value;
-    public Faker<AddressBook> AddressBook => _lazyAddressBookFaker.Value;
-    public Faker<Contact> Contact => _lazyContactFaker.Value;
     private Faker<ContactRoot> ContactRoot => _lazyContactRootFaker.Value;
     private Faker<ContactCompany> ContactCompany => _lazyContactCompanyFaker.Value;
+    public Faker<AddressBook> AddressBook => _lazyAddressBookFaker.Value;
+    public Faker<Contact> Contact => _lazyContactFaker.Value;
 
     public CompoundAttributesFakers()
     {
