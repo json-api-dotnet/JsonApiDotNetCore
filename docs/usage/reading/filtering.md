@@ -119,7 +119,7 @@ public sealed class Contact : Identifiable<long>
 }
 ```
 
-See [attributes](~/usage/resources/attributes.md) for how to define compound attributes.
+See [attributes](~/usage/resources/attributes.md#compound-attributes) for how to define compound attributes.
 
 ```http
 GET /contacts?filter=equals(name.lastName,'Smith') HTTP/1.1
