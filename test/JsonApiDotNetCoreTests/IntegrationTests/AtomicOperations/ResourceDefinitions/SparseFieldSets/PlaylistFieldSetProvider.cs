@@ -2,6 +2,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
 public sealed class PlaylistFieldSetProvider
 {
-    public bool IsEnabled { get; set; }
-    public int QueryCallCount { get; set; }
+    internal bool IsEnabled { get; set; }
+    internal int QueryCallCount { get; set; }
 }

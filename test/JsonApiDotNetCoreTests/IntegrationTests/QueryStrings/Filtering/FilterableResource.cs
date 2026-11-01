@@ -120,7 +120,7 @@ public sealed class FilterableResource : Identifiable<long>
     public List<string>? SomeStrings { get; set; }
 
     [Attr]
-    public List<int?>? SomeNullableInt32s { get; set; }
+    public List<int?>? SomeNullableInt32Elements { get; set; }
 
     [Attr]
     public List<Guid>? SomeGuids { get; set; }

@@ -1044,5 +1044,5 @@ public sealed class ResourceChangeTrackerTests
         public string? Value { get; set; }
     }
 
-    private sealed record Money(decimal Amount);
+    private sealed record Money([UsedImplicitly] decimal Amount);
 }

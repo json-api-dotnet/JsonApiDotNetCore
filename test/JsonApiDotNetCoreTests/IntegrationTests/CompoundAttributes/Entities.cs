@@ -303,13 +303,11 @@ public struct GeoPoint
 public enum ContactMethod
 {
     Phone,
-    Email,
-    Letter
+    Email
 }
 
 public enum PhoneKind
 {
     Mobile,
-    Landline,
     Fax
 }

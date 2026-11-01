@@ -171,7 +171,7 @@ public sealed class CompoundAttributesSerializationTests : IntegrationTestContex
         JsonObject changedContent = CompoundAttributesSamples.CreateIdenticalPatchContent();
         changedContent["audit"]!["createdBy"] = "someone-else";
         requestBody = CompoundAttributesSamples.CreateContactPatchBody(contact.StringId!, changedContent);
-        (HttpResponseMessage _, string _) = await ExecutePatchAsync<string>(route, requestBody);
+        _ = await ExecutePatchAsync<string>(route, requestBody);
 
         (HttpResponseMessage afterChangedPatchResponse, Document _) = await ExecuteGetAsync<Document>(route);
 

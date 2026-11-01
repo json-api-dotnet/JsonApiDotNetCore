@@ -25,10 +25,13 @@ public sealed class UnsupportedElementTypeTests
     public void EF_Core_10_cannot_map_collection_of_element_type_inside_json(Type elementType)
     {
         // Arrange
-        using var dbContext = new ElementTypeDbContext(elementType);
+        Func<IModel> action = () =>
+        {
+            using var dbContext = new ElementTypeDbContext(elementType);
 
-        // Act
-        Func<IModel> action = () => dbContext.Model;
+            // Act
+            return dbContext.Model;
+        };
 
         // Assert
         action.Should().Throw<InvalidOperationException>().WithMessage("*as complex types don't support navigations*");

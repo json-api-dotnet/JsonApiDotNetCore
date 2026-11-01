@@ -146,7 +146,7 @@ public sealed class CompoundAttributesFetchTests
         JsonNode? content = responseDocument.Data.SingleValue.GetAttribute("content");
         content.Should().BeOfType<JsonObject>();
 
-        var contentObject = (JsonObject)content!;
+        var contentObject = (JsonObject)content;
         contentObject.Should().ContainKey("company").WhoseValue.Should().BeNull();
         contentObject.Should().ContainKey("birthDate").WhoseValue.Should().BeNull();
         contentObject.Should().ContainKey("name").WhoseValue.Should().NotBeNull();
@@ -182,7 +182,7 @@ public sealed class CompoundAttributesFetchTests
         JsonNode? favorites = responseDocument.Data.SingleValue.GetAttribute("favorites");
         favorites.Should().BeOfType<JsonArray>();
 
-        var favoritesArray = (JsonArray)favorites!;
+        var favoritesArray = (JsonArray)favorites;
         favoritesArray.Should().HaveCount(2);
         favoritesArray[0].Should().NotBeNull();
         favoritesArray[1].Should().BeNull();
@@ -257,7 +257,7 @@ public sealed class CompoundAttributesFetchTests
         JsonNode? address = responseDocument.Data.SingleValue.GetAttribute("content", "addresses.0");
         address.Should().BeOfType<JsonObject>();
 
-        var addressObject = (JsonObject)address!;
+        var addressObject = (JsonObject)address;
         addressObject.Should().ContainKey("zipCode");
         addressObject.Should().NotContainKey("postalCode");
         addressObject.Should().NotContainKey("line2");
@@ -299,11 +299,11 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Theory]
-    [InlineData("ratings", """[ 5, null, 3 ]""")]
+    [InlineData("ratings", "[ 5, null, 3 ]")]
     [InlineData("company.businessHours", """[ "09:00:00", "17:00:00" ]""")]
     [InlineData("importantDates", """[ { "value": "1843-07-10", "label": "notes" } ]""")]
-    [InlineData("preferredContactMethods", """[ 1, 0 ]""")]
-    [InlineData("creditLimits", """[ 100.5, 2000 ]""")]
+    [InlineData("preferredContactMethods", "[ 1, 0 ]")]
+    [InlineData("creditLimits", "[ 100.5, 2000 ]")]
     [InlineData("anniversaries", """[ "2020-01-02T00:00:00Z" ]""")]
     public async Task Can_render_scalar_collection_element_types(string path, string expectedJson)
     {

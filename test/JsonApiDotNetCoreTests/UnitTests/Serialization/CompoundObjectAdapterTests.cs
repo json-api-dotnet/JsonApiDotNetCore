@@ -29,7 +29,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), $$"""{"content":{{json}}}""", false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -50,7 +50,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), "{\"content\":{\"name\":" + json + "}}", false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -69,7 +69,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), "{\"content\":{\"phoneNumbers\":" + json + "}}", false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -85,7 +85,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), """{"content":{"phoneNumbers":[{"number":"1"},5]}}""", false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -162,7 +162,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), attributesJson, false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -209,7 +209,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), """{"address":{"ZipCode":"1"}}""", false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -253,7 +253,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), attributesJson, writeOperation == WriteOperationKind.UpdateResource);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, writeOperation);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, writeOperation));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -288,8 +288,8 @@ public sealed class CompoundObjectAdapterTests
         string nestedBody = harness.CreateResourceDocument(typeof(Page), """{"rules":{"readOnlyAndBlocked":"x"}}""", false);
 
         // Act
-        Action topLevelAction = () => harness.ConvertResource<Page>(topLevelBody, WriteOperationKind.CreateResource);
-        Action nestedAction = () => harness.ConvertResource<Page>(nestedBody, WriteOperationKind.CreateResource);
+        Func<Page> topLevelAction = harness.Invoking(adapter => adapter.ConvertResource<Page>(topLevelBody, WriteOperationKind.CreateResource));
+        Func<Page> nestedAction = harness.Invoking(adapter => adapter.ConvertResource<Page>(nestedBody, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException topLevel = topLevelAction.Should().ThrowExactly<ModelConversionException>().Which;
@@ -313,7 +313,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), attributesJson, false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -334,7 +334,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), attributesJson, false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -354,7 +354,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), attributesJson, false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -370,7 +370,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateOperationsDocument(typeof(Page), """{"content":{"phoneNumbers":[{"number":1}]}}""");
 
         // Act
-        Action action = () => harness.ConvertOperations(body);
+        Func<IList<OperationContainer>> action = harness.Invoking(adapter => adapter.ConvertOperations(body));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -433,7 +433,7 @@ public sealed class CompoundObjectAdapterTests
         value.Should().NotBeNull();
         value.Should().BeAssignableTo(typeof(CollectionTypes).GetProperty(propertyName)!.PropertyType);
 
-        ((IEnumerable<PhoneCompound>)value!).Select(phone => phone.Number).Should().Contain([
+        ((IEnumerable<PhoneCompound>)value).Select(phone => phone.Number).Should().Contain([
             "1",
             "2"
         ]).And.HaveCount(2);
@@ -474,7 +474,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), attributesJson, false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
@@ -507,7 +507,7 @@ public sealed class CompoundObjectAdapterTests
         string body = harness.CreateResourceDocument(typeof(Page), """{"content":{"":"x"}}""", false);
 
         // Act
-        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+        Func<Page> action = harness.Invoking(adapter => adapter.ConvertResource<Page>(body, WriteOperationKind.CreateResource));
 
         // Assert
         action.Should().ThrowExactly<ModelConversionException>();
@@ -553,7 +553,7 @@ public sealed class CompoundObjectAdapterTests
         public List<GeoPointCompound>? Points { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
-        public string? ReadOnlyAndBlocked => "x";
+        public string ReadOnlyAndBlocked => "x";
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -676,7 +676,7 @@ public sealed class CompoundObjectAdapterTests
         public string? ReadOnly { get; }
 
         [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
-        public string? ReadOnlyAndBlocked => "x";
+        public string ReadOnlyAndBlocked => "x";
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
