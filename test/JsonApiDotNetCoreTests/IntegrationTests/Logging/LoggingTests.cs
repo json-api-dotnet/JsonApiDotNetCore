@@ -38,10 +38,13 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     {
         // Arrange
         using var capturingProvider = new CapturingLoggerProvider(LogLevel.Trace);
-        using ILoggerFactory loggerFactory = new LoggerFactory([capturingProvider], new LoggerFilterOptions
+
+        var filterOptions = new LoggerFilterOptions
         {
             MinLevel = LogLevel.Trace
-        });
+        };
+
+        using ILoggerFactory loggerFactory = new LoggerFactory([capturingProvider], filterOptions);
 
         await using AsyncServiceScope scope = _testContext.App.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<LoggingDbContext>();
