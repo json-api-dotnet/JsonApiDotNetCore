@@ -437,6 +437,50 @@ public sealed class CompoundObjectAdapterTests
     }
 
     [Fact]
+    public void Can_convert_null_elements_for_nullable_element_types()
+    {
+        // Arrange
+        using var harness = new RequestAdapterHarness(null, ResourceTypes);
+
+        string body = harness.CreateResourceDocument(typeof(Page),
+            """{"rulesList":[null,{}],"nullablePoints":[null,{"latitude":1.5}],"nullableNumbers":[null,1],"words":[null,"x"]}""", false);
+
+        // Act
+        var resource = harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+
+        // Assert
+        resource.RulesList.Should().HaveCount(2);
+        resource.RulesList![0].Should().BeNull();
+        resource.RulesList[1].Should().NotBeNull();
+
+        resource.NullablePoints.Should().HaveCount(2);
+        resource.NullablePoints![0].Should().BeNull();
+        resource.NullablePoints[1]!.Value.Latitude.Should().Be(1.5);
+
+        resource.NullableNumbers.Should().Equal(null, 1);
+        resource.Words.Should().Equal(null, "x");
+    }
+
+    [Theory]
+    [InlineData("""{"points":[{"latitude":1},null]}""", "/data/attributes/points/1", "GeoPointCompound")]
+    [InlineData("""{"numbers":[1,null]}""", "/data/attributes/numbers", "Int32")]
+    public void Cannot_convert_null_element_for_non_nullable_value_type(string attributesJson, string expectedPointer, string typeName)
+    {
+        // Arrange
+        using var harness = new RequestAdapterHarness(null, ResourceTypes);
+        string body = harness.CreateResourceDocument(typeof(Page), attributesJson, false);
+
+        // Act
+        Action action = () => harness.ConvertResource<Page>(body, WriteOperationKind.CreateResource);
+
+        // Assert
+        ModelConversionException exception = action.Should().ThrowExactly<ModelConversionException>().Which;
+        exception.GenericMessage.Should().Be("Incompatible attribute value found.");
+        exception.SourcePointer.Should().Be(expectedPointer);
+        exception.SpecificMessage.Should().Contain(typeName);
+    }
+
+    [Fact]
     public void Can_assign_init_only_and_private_setter_members()
     {
         // Arrange
@@ -493,6 +537,18 @@ public sealed class CompoundObjectAdapterTests
         [Attr]
         public List<int?>? NullableNumbers { get; set; }
 
+        [Attr]
+        public List<int>? Numbers { get; set; }
+
+        [Attr]
+        public List<string?>? Words { get; set; }
+
+        [Attr(IsCompound = true)]
+        public List<GeoPointCompound?>? NullablePoints { get; set; }
+
+        [Attr(IsCompound = true)]
+        public List<GeoPointCompound>? Points { get; set; }
+
         [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
         public string? ReadOnlyAndBlocked => "x";
     }
@@ -523,6 +579,13 @@ public sealed class CompoundObjectAdapterTests
 
         [Attr(IsCompound = true)]
         public HashSet<PhoneCompound>? AsHashSet { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public struct GeoPointCompound
+    {
+        [Attr]
+        public double Latitude { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
