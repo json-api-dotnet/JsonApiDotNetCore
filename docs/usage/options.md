@@ -120,7 +120,26 @@ options.SerializerOptions.PropertyNamingPolicy = null;
 options.SerializerOptions.DictionaryKeyPolicy = null;
 ```
 
-Because we copy resource properties into an intermediate object before serialization, JSON annotations such as `[JsonPropertyName]` and `[JsonIgnore]` on `[Attr]` properties are ignored.
+### Naming policies
+
+Two settings play a role, and they have different responsibilities:
+
+- `PropertyNamingPolicy` determines the names that are derived from your model, when no explicit name is specified:
+  - resource types (the `type` value and route), after pluralization
+  - attributes and relationships
+  - _since v6.0_: members of [compound attributes](~/usage/resources/attributes.md#compound-attributes), at every nesting level, including the members of compound collections
+
+  This includes the names used in query strings, such as in `filter`, `sort` and `fields`. An explicit `[Resource(PublicName = "...")]` or `[Attr(PublicName = "...")]` always wins
+  and is used verbatim, so it is not converted by the policy, at every nesting level.
+  The names are determined once at startup, see [here](~/usage/resources/attributes.md#name).
+- `DictionaryKeyPolicy` is meant for keys of dictionaries, such as the keys of `meta` (including the `total` that is added when `IncludeTotalResourceCount` is on),
+  and dictionary values in general. It does not apply to names that are derived from your model.
+
+Neither policy affects the names that are defined by the JSON:API specification, such as `data`, `attributes`, `relationships`, `type`, `id`, `errors`, `links` and `meta`.
+Function names and keywords in query strings (such as `has`, `count`, `equals`, `any` and the element symbol `_`) are not affected either.
+
+JSON annotations such as `[JsonPropertyName]` and `[JsonIgnore]` on resource and compound types are never taken into account, because everything is driven by `[Attr]`.
+Use `[Attr(PublicName = "...")]` to customize a name instead, and the `Capabilities` property (for example `~AttrCapabilities.AllowView`) to hide a member.
 
 
 ## ModelState Validation
@@ -129,6 +148,7 @@ Because we copy resource properties into an intermediate object before serializa
 When `ValidateModelState` is set to `false`, no model validation is performed.
 
 How nullability affects ModelState validation is described [here](~/usage/resources/nullability.md).
+Validation also applies to members of [compound attributes](~/usage/advanced/model-state.md#compound-and-collection-attributes) and elements of collections.
 
 ```c#
 options.ValidateModelState = true;
