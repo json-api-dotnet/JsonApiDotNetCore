@@ -95,6 +95,53 @@ Content-Type: application/vnd.api+json
 }
 ```
 
+#### Nested fields of compound attributes
+
+_since v6.0_
+
+A sparse fieldset is a tree: elements can have children, which are the selected members of a compound attribute.
+The `Including` and `Excluding` extension methods accept a lambda that selects a field, a chain of fields through compound attributes (and to-one relationships),
+or multiple of them in an anonymous type:
+
+```c#
+public class ContactDefinition : JsonApiResourceDefinition<Contact, long>
+{
+    public ContactDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
+    {
+    }
+
+    public override SparseFieldSetExpression? OnApplySparseFieldSet(
+        SparseFieldSetExpression? existingSparseFieldSet)
+    {
+        return existingSparseFieldSet
+            .Including<Contact>(contact => contact.Name!.LastName, ResourceGraph)
+            .Excluding<Contact>(contact => new
+            {
+                contact.Notes,
+                contact.Name!.SocialSecurityNumber
+            }, ResourceGraph);
+    }
+}
+```
+
+The same methods exist with a `ResourceFieldAttribute` or a `ResourceFieldChainExpression` as parameter, which can be used for chains through
+compound collections (a lambda cannot select into the elements of a collection).
+
+Some rules to be aware of:
+
+- When the existing fieldset is `null`, which means no restriction, both methods return `null`. For `Excluding`, the excluded field is then still
+  fetched from the data store, but it is removed before the response is written.
+- Including a nested member of a compound that is already selected as a whole has no effect. Including the compound as a whole when only some of its
+  members are selected widens the selection to the whole compound.
+- Excluding a nested member of a compound that is selected as a whole replaces the compound by its remaining viewable members. Excluding a compound
+  removes all its selected nested members. Members that are not viewable are never added.
+- Returning `null` from the hook means that all viewable fields are used.
+
+The hook is called once per resource type during query composition, and once more per resource type while writing the response. In the latter case
+the existing fieldset is never `null` (it contains all viewable fields when the client did not specify a fieldset), and the result of the hook is intersected
+with it, so the hook cannot add fields there that the client did not select.
+
 ### Default sort order
 
 You can define the default sort order if no `sort` query string parameter is provided.
@@ -255,6 +302,33 @@ public class ItemDefinition : JsonApiResourceDefinition<Item, long>
 }
 ```
 
+### When the query hooks are called
+
+_since v6.0_
+
+The query hooks (`OnApplyPagination`, `OnApplyFilter`, `OnApplySort`, `OnApplySparseFieldSet` and `OnApplyIncludes`) are called per resource type
+while the query layers are composed, so also for the resource types of included resources. The table shows the hooks that are
+called for the resource type(s) involved in a request, in the order in which they currently occur. This order is an implementation
+detail, which can change in future versions.
+
+| Request                                   | Hooks                                                                                                                                               |
+|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GET /stars`                              | Pagination, Filter, Sort, SparseFieldSet, Includes, then (for the response) SparseFieldSet and `GetMeta` for each resource                          |
+| `GET /stars?include=planets`              | As above, with Filter, Sort, Pagination, SparseFieldSet and Includes of `Planet` after the Includes of `Star`                                       |
+| `GET /stars/1`                            | Filter, SparseFieldSet, Includes, then SparseFieldSet and `GetMeta` for the response                                                                |
+| `GET /stars/1/planets`                    | Pagination, Filter, Sort, SparseFieldSet, Includes of `Planet`, Filter of `Star` (twice), Filter of `Planet`, then SparseFieldSet and `GetMeta`     |
+| `GET /stars/1/relationships/planets`      | Filter, Sort, Pagination of `Planet`, Filter of `Star` (twice), Filter of `Planet`; SparseFieldSet and Includes are not called                      |
+| `POST /stars`                             | Filter, Includes, SparseFieldSet, `GetMeta` (in addition to the write hooks described below)                                                        |
+| `PATCH /stars/1`                          | Filter (twice), Includes (in addition to the write hooks)                                                                                           |
+| `DELETE /stars/1`                         | None of the query hooks                                                                                                                             |
+
+`OnApplySparseFieldSet` is called once per resource type for composing the query and once per resource type for writing the response, even when
+the same type occurs in multiple layers (for example `GET /moons?include=orbitsAround.moons` calls it twice for `Moon` and twice for `Planet`).
+Each hook receives the expression produced from the query string (see [query strings](~/usage/extensibility/query-strings.md)), or `null` when absent,
+and returns the expression that is used. For `OnApplySparseFieldSet`, the result is additionally intersected with the fieldset from the query string when writing the response.
+
+The hooks work the same for resources that have compound attributes and collections; the selection of nested members is part of the sparse fieldset.
+
 ## Handling resource changes
 
 _since v4.2_
@@ -321,3 +395,37 @@ Click on a diagram to open it full-size in a new window.
 7. Resource and relationship are updated in database
 8. Developer sends notification to service bus
 9. Success status is sent back to user
+
+## Compound attributes
+
+_since v6.0_
+
+The properties of a [compound type](~/usage/resources/attributes.md) that do not have `[Attr]` are not visible to the API, but they are part of the resource instance
+that resource definitions receive. They can be set from `OnPrepareWriteAsync` and `OnWritingAsync`, for example to stamp a version or timestamp:
+
+```c#
+public class ContactDefinition : JsonApiResourceDefinition<Contact, long>
+{
+    public ContactDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
+    {
+    }
+
+    public override Task OnWritingAsync(Contact resource,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        if (resource.Company != null)
+        {
+            // Not an [Attr], so it never appears in request or response bodies.
+            resource.Company.LastUpdatedAt = DateTime.UtcNow;
+        }
+
+        return Task.CompletedTask;
+    }
+}
+```
+
+Such members are fetched from the data store before an update, so `OnPrepareWriteAsync` sees the stored values. But because a PATCH
+replaces the entire compound value (request bodies cannot contain the non-exposed members), the stored values are lost unless the definition copies them from the
+resource it received in `OnPrepareWriteAsync` into the new value in `OnWritingAsync`. Non-exposed members take part in change detection, so
+a change made by a definition results in a response body instead of 204 No Content.
