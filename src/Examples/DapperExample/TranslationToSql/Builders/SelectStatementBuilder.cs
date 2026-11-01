@@ -154,7 +154,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
             selectedColumns = tableAccessor.Source.Columns.Where(column => column.Type == ColumnType.Scalar).ToHashSet();
         }
 
-        foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in selectors.OrderBy(selector => selector.Key.PublicName))
+        foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in selectors.OrderBy(selector => selector.Key.PublicName, StringComparer.Ordinal))
         {
             if (field is AttrAttribute attribute)
             {
@@ -217,7 +217,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     {
         Dictionary<string, List<SelectorNode>> selectorsPerTable = [];
 
-        foreach (ColumnNode column in columns.OrderBy(column => column.GetTableAliasIndex()).ThenBy(column => column.Name))
+        foreach (ColumnNode column in columns.OrderBy(column => column.GetTableAliasIndex()).ThenBy(column => column.Name, StringComparer.Ordinal))
         {
             string tableAlias = column.TableAlias ?? "!";
             selectorsPerTable.TryAdd(tableAlias, []);
