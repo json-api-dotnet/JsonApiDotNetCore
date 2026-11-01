@@ -400,7 +400,7 @@ Click on a diagram to open it full-size in a new window.
 
 _since v6.0_
 
-The properties of a [compound type](~/usage/resources/attributes.md) that do not have `[Attr]` are not visible to the API, but they are part of the resource instance
+The properties of a [compound type](~/usage/resources/attributes.md#members-without-attr) that do not have `[Attr]` are not visible to the API, but they are part of the resource instance
 that resource definitions receive. They can be set from `OnPrepareWriteAsync` and `OnWritingAsync`, for example to stamp a version or timestamp:
 
 ```c#
