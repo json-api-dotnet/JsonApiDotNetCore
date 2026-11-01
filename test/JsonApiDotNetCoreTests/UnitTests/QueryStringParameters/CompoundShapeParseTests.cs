@@ -124,6 +124,9 @@ public sealed class CompoundShapeParseTests
     [InlineData("containers", "filter", "has(outer.^unfilterableTags)", "Filtering on attribute 'unfilterableTags' is not allowed.")]
     [InlineData("containers", "filter", "has(outer.^unfilterableTags,equals(_,'x'))", "Filtering on attribute 'unfilterableTags' is not allowed.")]
     [InlineData("containers", "filter", "equals(count(outer.^unfilterableTags),'1')", "Filtering on attribute 'unfilterableTags' is not allowed.")]
+    // Right-hand underscore is not allowed
+    [InlineData("containers", "filter", "has(members,has(nicknames,equals(_,^_)))", "Function, value between quotes or null expected.")]
+    [InlineData("containers", "filter", "has(members,has(nicknames,lessThan(_,^_)))", "Function, value between quotes or null expected.")]
     // Filters (unlike sort) do not look for fields on derived types, except inside isType
     [InlineData("listings", "filter", "equals(^building.name,'x')", "Field 'building' does not exist on resource type 'listings'.")]
     [InlineData("listings", "filter", "equals(^building,null)", "Field 'building' does not exist on resource type 'listings'.")]
