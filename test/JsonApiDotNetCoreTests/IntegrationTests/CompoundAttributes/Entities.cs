@@ -190,6 +190,11 @@ public sealed class ContactCompany
     [Attr]
     public string? RegistrationNumber { get; private set; }
 
+    // Public members without [Attr] are not exposed in the API. They are set by server-side code (resource definitions, services, repositories).
+    public DateTime? LastUpdatedAt { get; set; }
+
+    public int InternalVersion { get; set; }
+
     public void SetRegistrationNumber(string? value)
     {
         RegistrationNumber = value;
