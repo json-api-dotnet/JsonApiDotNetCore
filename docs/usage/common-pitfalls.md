@@ -72,7 +72,7 @@ It may be tempting to expose numeric resource attributes such as `customerId`, `
 the richness of JSON:API. For example, it enables users to include related resources in a single request, apply filters over related resources and use dedicated endpoints for updating relationships.
 As an API developer, you'll benefit from rich input validation and fine-grained control for setting what's permitted when users access relationships.
 
-#### Model relationships instead of complex (JSON) attributes
+#### Prefer relationships over large compound attributes
 Similar to the above, returning a complex object takes away all the relationship features of JSON:API. Users can't filter inside a complex object, nor update
 a nested value without risking accidentally overwriting another unrelated nested value from a concurrent request because there's no partial PATCH to prevent that.
 
