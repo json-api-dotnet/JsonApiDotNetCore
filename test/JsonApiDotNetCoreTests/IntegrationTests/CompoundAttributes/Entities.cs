@@ -306,6 +306,7 @@ public enum ContactMethod
     Email
 }
 
+[PublicAPI]
 public enum PhoneKind
 {
     Mobile,
