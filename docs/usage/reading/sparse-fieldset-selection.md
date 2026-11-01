@@ -67,8 +67,7 @@ The same applies to collection attributes. Selecting a compound collection (`pho
 `phoneNumbers.number` returns only that member for every element. A scalar collection (such as `tags`) is selected by its name.
 Compounds nested in compound collections and collections nested in compounds can be selected using longer chains.
 
-When the compound attribute in the database is `null`, it is returned as `null` (when selected as a whole) or omitted from the
-response (when only a nested member is selected).
+When a compound attribute is `null`, it is returned as `null`, also when only a nested member of it is selected.
 
 Members that are not viewable (`AllowView` not set on the attribute) are never returned, also not when the compound is selected as a whole.
 Selecting such a member explicitly using a chain is rejected with a 400 error, as is selecting a member that does not exist.
