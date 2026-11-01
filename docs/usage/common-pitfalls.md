@@ -73,8 +73,16 @@ the richness of JSON:API. For example, it enables users to include related resou
 As an API developer, you'll benefit from rich input validation and fine-grained control for setting what's permitted when users access relationships.
 
 #### Prefer relationships over large compound attributes
-Similar to the above, returning a complex object takes away all the relationship features of JSON:API. Users can't filter inside a complex object, nor update
-a nested value without risking accidentally overwriting another unrelated nested value from a concurrent request because there's no partial PATCH to prevent that.
+[Compound attributes](~/usage/resources/attributes.md#compound-attributes) (since v6.0) make it possible to filter, sort and select inside structured values.
+They are a good fit for small values that belong to a single resource, such as an address or a name. But they are not resources:
+they have no identity, cannot be included, and cannot have relationships. Related data that is shared, large, or that changes independently is better modeled as a resource with relationships,
+which gives you the richness of JSON:API.
+
+Also be aware that a PATCH request replaces a compound attribute (or collection) entirely; there is no partial update of nested members.
+Two concurrent requests that each change a different nested member therefore overwrite each other. When you need to change parts independently, model them as separate attributes or resources.
+
+> [!NOTE]
+> An `[Attr]` of a class type without `IsCompound = true`, serialized by System.Text.Json using `[JsonPropertyName]` and `[JsonIgnore]`, is not supported anymore.
 
 #### Stay away from stored procedures
 There are [many reasons](https://stackoverflow.com/questions/1761601/is-the-usage-of-stored-procedures-a-bad-practice/9483781#9483781) to not use stored procedures.
