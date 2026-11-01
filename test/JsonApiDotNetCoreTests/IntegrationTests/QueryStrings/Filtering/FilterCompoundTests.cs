@@ -176,9 +176,9 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Theory]
-    [InlineData("has(someCompound.someNullableInt32s)", "01")]
-    [InlineData("has(someCompound.someNullableInt32s,equals(_,'5'))", "0")]
-    [InlineData("has(someCompound.someNullableInt32s,equals(_,null))", "0",
+    [InlineData("has(someCompound.someNullableInt32Elements)", "01")]
+    [InlineData("has(someCompound.someNullableInt32Elements,equals(_,'5'))", "0")]
+    [InlineData("has(someCompound.someNullableInt32Elements,equals(_,null))", "0",
         Skip =
             "EF Core 10: Comparing an element of a JSON collection with null fails in PostgreSQL (42804: could not determine polymorphic type because input has type unknown).")]
     [InlineData("has(someCompound.child.someTimeSpans,equals(_,'09:00:00'))", "0")]
@@ -192,7 +192,7 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
             {
                 SomeCompound = new FilterableNested
                 {
-                    SomeNullableInt32s =
+                    SomeNullableInt32Elements =
                     [
                         5,
                         null,
@@ -212,7 +212,7 @@ public sealed class FilterCompoundTests : IClassFixture<IntegrationTestContext<T
             {
                 SomeCompound = new FilterableNested
                 {
-                    SomeNullableInt32s =
+                    SomeNullableInt32Elements =
                     [
                         1,
                         2,

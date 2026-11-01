@@ -434,12 +434,6 @@ public sealed class CompoundResponseModelAdapterTests
         return document.Data.SingleValue!;
     }
 
-
-    private static IResourceGraph CreateResourceGraph(JsonApiOptions options)
-    {
-        return new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Profile, long>().Build();
-    }
-
     private static SparseFieldSetExpression CreateFieldSet(ResourceType resourceType, string commaSeparatedChains)
     {
         var root = new FieldSetNode(null);

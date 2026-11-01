@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -22,7 +21,7 @@ public sealed class PlaylistQueryService(
     : JsonApiResourceService<Playlist, long>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
         resourceDefinitionAccessor)
 {
-    public override async Task<Playlist?> UpdateAsync([DisallowNull] long id, Playlist resource, CancellationToken cancellationToken)
+    public override async Task<Playlist?> UpdateAsync(long id, Playlist resource, CancellationToken cancellationToken)
     {
         Playlist? result = await base.UpdateAsync(id, resource, cancellationToken);
 

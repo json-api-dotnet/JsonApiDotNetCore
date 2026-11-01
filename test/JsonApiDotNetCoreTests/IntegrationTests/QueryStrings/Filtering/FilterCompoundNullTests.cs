@@ -207,7 +207,7 @@ public sealed class FilterCompoundNullTests : IClassFixture<IntegrationTestConte
             data.Add($"not(has({path}))", "012");
             data.Add($"has({path},{matching})", "3");
             data.Add($"not(has({path},{matching}))", "012");
-            data.Add($"has({path},{nonMatching})", "");
+            data.Add($"has({path},{nonMatching})", string.Empty);
             data.Add($"not(has({path},{nonMatching}))", "0123");
             data.Add($"equals(count({path}),'0')", "012");
             data.Add($"not(equals(count({path}),'0'))", "3");

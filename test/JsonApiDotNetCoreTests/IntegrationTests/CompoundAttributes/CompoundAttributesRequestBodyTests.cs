@@ -436,7 +436,7 @@ public sealed class CompoundAttributesRequestBodyTests
     {
         // Arrange
         JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
-        content[""] = "x";
+        content[string.Empty] = "x";
 
         object requestBody = CompoundAttributesSamples.CreateContactPostBody(content);
 

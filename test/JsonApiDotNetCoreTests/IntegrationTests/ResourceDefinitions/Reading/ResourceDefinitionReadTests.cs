@@ -13,6 +13,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext>>
 {
+    private const string StarCollectionHits = "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes " +
+        "Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string StarCollectionWithPlanetsHits =
+        "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes Planet.OnApplyFilter " +
+        "Planet.OnApplySort Planet.OnApplyPagination Planet.OnApplySparseFieldSet Planet.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta " +
+        "Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta";
+
+    private const string StarSingleHits = "Star.OnApplyFilter Star.OnApplySparseFieldSet Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta";
+
+    private const string PlanetSecondaryHits = "Planet.OnApplyPagination Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplySparseFieldSet " +
+        "Planet.OnApplyIncludes Star.OnApplyFilter Star.OnApplyFilter Planet.OnApplyFilter Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta";
+
+    private const string PlanetRelationshipHits = "Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplyPagination Star.OnApplyFilter Star.OnApplyFilter " +
+        "Planet.OnApplyFilter";
+
     private readonly IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
     private readonly UniverseFakers _fakers = new();
 
@@ -24,12 +40,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             { "GET", "/stars?filter=equals(name,'Sun')", StarCollectionHits },
             { "GET", "/stars?sort=name", StarCollectionHits },
             { "GET", "/stars?page[size]=2", StarCollectionHits },
-            {
-                "GET", "/stars?include=planets",
-                "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes Planet.OnApplyFilter " +
-                "Planet.OnApplySort Planet.OnApplyPagination Planet.OnApplySparseFieldSet Planet.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta " +
-                "Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta"
-            },
+            { "GET", "/stars?include=planets", StarCollectionWithPlanetsHits },
             { "GET", "/stars/{id}", StarSingleHits },
             { "GET", "/stars/{id}?fields[stars]=name", StarSingleHits },
             { "GET", "/stars/{id}/planets", PlanetSecondaryHits },
@@ -38,7 +49,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             { "GET", "/stars/{id}/relationships/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2", PlanetRelationshipHits },
             { "POST", "/stars", "Star.OnApplyFilter Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta" },
             { "PATCH", "/stars/{id}", "Star.OnApplyFilter Star.OnApplyFilter Star.OnApplyIncludes" },
-            { "DELETE", "/stars/{id}", "" }
+            { "DELETE", "/stars/{id}", string.Empty }
         };
 
     public ResourceDefinitionReadTests(IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> testContext)

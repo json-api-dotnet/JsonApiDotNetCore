@@ -1297,11 +1297,11 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Theory]
-    [InlineData("has(someNullableInt32s,equals(_,null))", "02")]
-    [InlineData("not(has(someNullableInt32s,equals(_,null)))", "1")]
-    [InlineData("has(someNullableInt32s,greaterThan(_,'1'))", "1")]
-    [InlineData("has(someNullableInt32s,any(_,'1','3'))", "01")]
-    [InlineData("has(someNullableInt32s,any(_,'2'))", "1")]
+    [InlineData("has(someNullableInt32Elements,equals(_,null))", "02")]
+    [InlineData("not(has(someNullableInt32Elements,equals(_,null)))", "1")]
+    [InlineData("has(someNullableInt32Elements,greaterThan(_,'1'))", "1")]
+    [InlineData("has(someNullableInt32Elements,any(_,'1','3'))", "01")]
+    [InlineData("has(someNullableInt32Elements,any(_,'2'))", "1")]
     public async Task Can_filter_nullable_scalar_collection_elements(string filterExpression, string expectedRows)
     {
         // Arrange
@@ -1309,15 +1309,23 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         [
             new()
             {
-                SomeNullableInt32s = [1, null]
+                SomeNullableInt32Elements =
+                [
+                    1,
+                    null
+                ]
             },
             new()
             {
-                SomeNullableInt32s = [2, 3]
+                SomeNullableInt32Elements =
+                [
+                    2,
+                    3
+                ]
             },
             new()
             {
-                SomeNullableInt32s = [null]
+                SomeNullableInt32Elements = [null]
             }
         ];
 

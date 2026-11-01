@@ -61,7 +61,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
                                 new
                                 {
                                     role = "Mixer",
-                                    personName = ""
+                                    personName = string.Empty
                                 }
                             }
                         }

@@ -14,7 +14,6 @@ namespace JsonApiDotNetCoreTests.UnitTests.Queries;
 
 public sealed class SparseFieldSetEvaluatorTests
 {
-    private readonly IResourceGraph _resourceGraph;
     private readonly ResourceType _personType;
     private readonly SparseFieldSetParser _parser = new();
     private readonly PersonDefinition _definition;
@@ -22,13 +21,13 @@ public sealed class SparseFieldSetEvaluatorTests
 
     public SparseFieldSetEvaluatorTests()
     {
-        _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Person, long>().Build();
-        _personType = _resourceGraph.GetResourceType<Person>();
+        IResourceGraph resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Person, long>().Build();
+        _personType = resourceGraph.GetResourceType<Person>();
 
-        _definition = new PersonDefinition(_resourceGraph);
+        _definition = new PersonDefinition(resourceGraph);
 
         ServiceProvider serviceProvider = new ServiceCollection().AddSingleton<IResourceDefinition<Person, long>>(_definition).BuildServiceProvider();
-        _accessor = new ResourceDefinitionAccessor(_resourceGraph, serviceProvider);
+        _accessor = new ResourceDefinitionAccessor(resourceGraph, serviceProvider);
     }
 
     [Fact]
@@ -300,11 +299,12 @@ public sealed class SparseFieldSetEvaluatorTests
         public string? ZipCode { get; set; }
     }
 
-    public sealed class PersonDefinition(IResourceGraph resourceGraph) : JsonApiResourceDefinition<Person, long>(resourceGraph)
+    private sealed class PersonDefinition(IResourceGraph resourceGraph)
+        : JsonApiResourceDefinition<Person, long>(resourceGraph)
     {
-        public Func<SparseFieldSetExpression?, SparseFieldSetExpression?> Callback { get; set; } = existing => existing;
+        internal Func<SparseFieldSetExpression?, SparseFieldSetExpression?> Callback { get; set; } = existing => existing;
 
-        public int InvocationCount { get; private set; }
+        internal int InvocationCount { get; private set; }
 
         public override SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
         {
