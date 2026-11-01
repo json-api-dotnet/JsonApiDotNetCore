@@ -87,3 +87,29 @@ public class Person : Identifiable<long>
 ```
 
 The default naming convention can be changed in [options](~/usage/options.md#customize-serializer-options).
+
+## Compound types
+
+_since v6.0_
+
+Types that are used by [compound attributes](~/usage/resources/attributes.md#compound-attributes) are discovered automatically while building the graph.
+You do not need to register them. They are available through `ResourceGraph.GetCompoundTypes()`, and `AttrAttribute.CompoundType` gives access to the nested attributes.
+Compound types are not resources: they are not part of the graph as resource types, have no `id`, no relationships and no endpoints.
+A type that is used as a compound type is also not reported as a type that is missing from the graph.
+
+The names of nested members are determined using the same rules as for top-level attributes: the configured naming convention,
+or an explicit `[Attr(PublicName = "...")]`. See [here](~/usage/resources/attributes.md#name).
+A compound type is shared by all attributes that use it, so its members have the same names and capabilities everywhere.
+When a derived resource type redeclares an inherited attribute, it must keep the same shape (scalar, collection, compound type), see [inheritance](~/usage/resources/inheritance.md#compound-attributes).
+
+The following rules are validated at startup. When one is violated, the app fails to start with an `InvalidConfigurationException`:
+
+- A compound property must not be a relationship type (implement `IIdentifiable`); use `[HasOne]` or `[HasMany]` instead.
+- A compound type must not be annotated with `[Resource]`.
+- A compound type must not contain relationships or properties annotated with `[EagerLoad]`.
+- A compound type must be instantiable: no interface or abstract class, and classes need a parameterless constructor (which can be non-public).
+- Compound types must not reference themselves, directly or indirectly (for example `A` containing `B` containing `A`).
+- A collection attribute must not be a collection of collections.
+- Two members of the same compound type must not use the same public name.
+
+A warning is logged when a compound type does not contain any attributes.
