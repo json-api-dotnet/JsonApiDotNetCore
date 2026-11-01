@@ -193,6 +193,14 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
             {
                 if (itemElement.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
                 {
+                    // Reference types and Nullable<T> tolerate null elements (the CLR cannot tell whether a reference element is meant to be nullable).
+                    if (RuntimeTypeConverter.CanContainNull(elementType))
+                    {
+                        items.Add(null);
+                        index++;
+                        continue;
+                    }
+
                     throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
                         $"Failed to convert element with value 'null' to type '{RuntimeTypeConverter.GetFriendlyTypeName(elementType)}'.");
                 }

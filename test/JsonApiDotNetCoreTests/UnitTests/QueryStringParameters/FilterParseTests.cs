@@ -140,7 +140,6 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "has(tags,^has(tags,equals(_,'w')))", "Function 'has' cannot be used on scalar collection elements.")]
     [InlineData("filter", "has(tags,equals(^count(tags),'1'))", "Function 'count' cannot be used on scalar collection elements.")]
     [InlineData("filter", "has(tags,^isType(,some))", "Function 'isType' can only be used on resource types.")]
-    [InlineData("filter", "has(tags,equals(_,^_))", "Function, value between quotes or null expected.")]
     [InlineData("filter", "has(tags,startsWith(_,^_))", "Value between quotes expected.")]
     [InlineData("filter", "equals(title,^_)", "Function, field name, value between quotes or null expected.")]
     [InlineData("filter", "equals(owner,^'some')", "To-one relationship name or null expected.")]
@@ -465,9 +464,6 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("calendars", "startsWith(workweek.officeHours.^opensAt,'x')", "Attribute 'opensAt' is of type 'TimeOnly' while type 'String' was expected.")]
     [InlineData("appointments", "endsWith(calendar.workweek.^firstDay,'x')", "Attribute 'firstDay' is of type 'DayOfWeek' while type 'String' was expected.")]
     // Element and function operands
-    [InlineData("calendars", "has(workweek.workDays,equals(_,^_))", "Function, value between quotes or null expected.")]
-    [InlineData("calendars", "has(workweek.workDays,lessThan(_,^_))", "Function or value between quotes expected.")]
-    [InlineData("appointments", "has(keywords,equals(_,^_))", "Function, value between quotes or null expected.")]
     [InlineData("appointments", "has(keywords,any(_,^_))", "Value between quotes expected.")]
     // Equality between to-one relationships
     [InlineData("blogPosts", "equals(author,^caption)", ToOneChain + "To-one relationship on resource type 'blogPosts' expected.")]

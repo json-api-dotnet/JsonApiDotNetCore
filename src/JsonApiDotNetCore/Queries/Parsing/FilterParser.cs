@@ -351,13 +351,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         // Comparing a non-nullable value type to null is a harmless predicate that will simply never match any database rows.
         bool allowNull = isEqualityComparison || RuntimeTypeConverter.CanContainNull(leftType);
 
-        // The scalar collection element (_) is only allowed as left operand, because it makes no sense to compare an element with itself.
-        QueryParseChoices rightTermChoices = QueryParseChoices.Function | QueryParseChoices.QuotedText;
-
-        if (CurrentScope is AttributeContainerFilterScope)
-        {
-            rightTermChoices |= QueryParseChoices.FieldName;
-        }
+        QueryParseChoices rightTermChoices = QueryParseChoices.Function | FieldOrElementChoice | QueryParseChoices.QuotedText;
 
         if (allowNull)
         {
@@ -372,6 +366,16 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
                 object constantValue = constantValueConverter(nextToken.Value!, nextToken.Position);
                 return new LiteralConstantExpression(constantValue, nextToken.Value!);
+            }
+
+            if (CurrentScope is ScalarCollectionElementFilterScope collectionScope)
+            {
+                ScalarCollectionElementValueExpression? elementValue = TryParseScalarCollectionElement(collectionScope);
+
+                if (elementValue != null)
+                {
+                    return elementValue;
+                }
             }
 
             if (IsNullConstantToken(nextToken))
