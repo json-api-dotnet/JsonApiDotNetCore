@@ -52,7 +52,7 @@ To change a single phone number, send the complete `phoneNumbers` array.
 
 - Send `null` to clear a nullable compound or collection attribute. For non-nullable attributes this results in HTTP 422.
 - Because the whole value is replaced, all validation rules of the nested members apply to what is sent, see [model validation](~/usage/advanced/model-state.md#compound-and-collection-attributes).
-- Members that do not allow `AllowChange` result in HTTP 422.
+- Sending a member that does not have the `AllowChange` capability results in HTTP 422.
 - Public properties of the compound type that do not have `[Attr]` are fetched before the update and saved afterwards, but they are not part of the request body.
   They are not copied to the new value for you: a [resource definition](~/usage/extensibility/resource-definitions.md) can carry them over or set them.
 - Unknown members and values of the wrong JSON kind result in HTTP 422 (unknown members are ignored when `AllowUnknownFieldsInRequestBody` is turned on). The `source.pointer` of the error points to the member, such as `/data/attributes/phoneNumbers/0/nope`.
