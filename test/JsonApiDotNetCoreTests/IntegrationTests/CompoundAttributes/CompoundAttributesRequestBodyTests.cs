@@ -251,22 +251,71 @@ public sealed class CompoundAttributesRequestBodyTests
         error.Source.Pointer.Should().Be(expectedPointer);
     }
 
-    [Fact]
-    public async Task Cannot_send_null_element_in_compound_collection()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Can_send_null_element_in_scalar_collection_of_nullable_elements(bool isPatch)
+    {
+        // Arrange
+        JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
+        content["ratings"] = new JsonArray(5, null);
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await SendContentAsync(isPatch, content);
+
+        // Assert
+        if (isPatch)
+        {
+            httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+            return;
+        }
+
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        JsonNode? ratings = ((JsonObject)responseDocument.Data.SingleValue.GetAttribute("content")!)["ratings"];
+        ratings.Should().BeOfType<JsonArray>().Which.Select(node => node?.GetValue<int>()).Should().Equal(5, null);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Cannot_send_null_element_in_scalar_collection_of_non_nullable_elements(bool isPatch)
+    {
+        // Arrange
+        JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
+        content["creditLimits"] = new JsonArray(1, null);
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await SendContentAsync(isPatch, content);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+        responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
+        responseDocument.Errors[0].Source.Should().NotBeNull();
+        responseDocument.Errors[0].Source!.Pointer.Should().Be("/data/attributes/content/creditLimits");
+    }
+
+    [Theory(Skip = "EF Core 10: Cannot materialize a null element in a JSON complex collection (InvalidOperationException 'Invalid token type: Null').")]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Can_send_null_element_in_compound_collection_of_reference_type(bool isPatch)
     {
         // Arrange
         JsonObject content = CompoundAttributesSamples.CreateMinimalContent();
         content["phoneNumbers"] = new JsonArray((JsonNode?)null);
 
-        object requestBody = CompoundAttributesSamples.CreateContactPostBody(content);
-
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>("/contacts", requestBody);
+        (HttpResponseMessage httpResponse, Document responseDocument) = await SendContentAsync(isPatch, content);
 
         // Assert
-        httpResponse.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.UnprocessableEntity);
+        httpResponse.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.Created);
 
-        responseDocument.Errors.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        JsonNode? phoneNumbers = ((JsonObject)responseDocument.Data.SingleValue.GetAttribute("content")!)["phoneNumbers"];
+        phoneNumbers.Should().BeOfType<JsonArray>().Which.Should().ContainSingle().Which.Should().BeNull();
     }
 
     [Fact]
