@@ -165,13 +165,16 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(company.StringId);
 
-        JsonElement headquarters = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("headquarters").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement headquarters = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("headquarters").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         headquarters.GetProperty("city").GetString().Should().Be("Springfield");
 
         responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included.Should().OnlyContain(resource => resource.Type == "departments");
 
-        responseDocument.Included.Select(resource => resource.Id).Should().BeEquivalentTo(company.Departments.Take(2).Select(department => department.StringId));
+        responseDocument.Included.Select(resource => resource.Id).Should()
+            .BeEquivalentTo(company.Departments.Take(2).Select(department => department.StringId));
     }
 
     [Fact]

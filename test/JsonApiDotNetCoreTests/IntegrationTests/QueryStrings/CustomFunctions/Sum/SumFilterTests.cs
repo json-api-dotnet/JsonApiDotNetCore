@@ -203,6 +203,7 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
+
     [Fact]
     public async Task Cannot_use_sum_in_scalar_collection_element_scope()
     {

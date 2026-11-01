@@ -145,7 +145,7 @@ public sealed class QueryExpressionRewriterTests
         QueryExpression? result = rewriter.Visit(expression, null);
 
         // Assert
-        var sparseFieldSet = result.Should().BeOfType<SparseFieldSetExpression>().Subject;
+        SparseFieldSetExpression sparseFieldSet = result.Should().BeOfType<SparseFieldSetExpression>().Subject;
         sparseFieldSet.ToString().Should().Be("title");
     }
 

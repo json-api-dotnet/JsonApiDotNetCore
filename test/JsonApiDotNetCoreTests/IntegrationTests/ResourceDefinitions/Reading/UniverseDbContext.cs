@@ -15,14 +15,11 @@ public sealed class UniverseDbContext(DbContextOptions<UniverseDbContext> option
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Star>()
-            .ComplexProperty(star => star.Classification, complexBuilder => complexBuilder.ToJson());
+        builder.Entity<Star>().ComplexProperty(star => star.Classification, complexBuilder => complexBuilder.ToJson());
 
-        builder.Entity<Constellation>()
-            .ComplexProperty(constellation => constellation.Origin, complexBuilder => complexBuilder.ToJson());
+        builder.Entity<Constellation>().ComplexProperty(constellation => constellation.Origin, complexBuilder => complexBuilder.ToJson());
 
-        builder.Entity<Planet>()
-            .ComplexProperty(planet => planet.Atmosphere, complexBuilder => complexBuilder.ToJson());
+        builder.Entity<Planet>().ComplexProperty(planet => planet.Atmosphere, complexBuilder => complexBuilder.ToJson());
 
         base.OnModelCreating(builder);
     }

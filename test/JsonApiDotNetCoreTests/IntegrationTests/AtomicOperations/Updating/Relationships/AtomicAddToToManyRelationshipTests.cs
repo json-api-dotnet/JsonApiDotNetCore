@@ -20,6 +20,102 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     }
 
     [Fact]
+    public async Task Relationship_operations_leave_compounds_intact()
+    {
+        // Arrange
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne().WithCompounds();
+        existingPlaylist.Tracks = _fakers.MusicTrack.GenerateList(2);
+
+        List<MusicTrack> existingTracks = _fakers.MusicTrack.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Playlists.Add(existingPlaylist);
+            dbContext.MusicTracks.AddRange(existingTracks);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new object[]
+            {
+                new
+                {
+                    op = "add",
+                    @ref = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylist.StringId,
+                        relationship = "tracks"
+                    },
+                    data = new[]
+                    {
+                        new
+                        {
+                            type = "musicTracks",
+                            id = existingTracks[0].StringId
+                        }
+                    }
+                },
+                new
+                {
+                    op = "remove",
+                    @ref = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylist.StringId,
+                        relationship = "tracks"
+                    },
+                    data = new[]
+                    {
+                        new
+                        {
+                            type = "musicTracks",
+                            id = existingPlaylist.Tracks[0].StringId
+                        }
+                    }
+                },
+                new
+                {
+                    op = "update",
+                    @ref = new
+                    {
+                        type = "playlists",
+                        id = existingPlaylist.StringId,
+                        relationship = "tracks"
+                    },
+                    data = new[]
+                    {
+                        new
+                        {
+                            type = "musicTracks",
+                            id = existingTracks[1].StringId
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
+
+            playlistInDatabase.Tracks.Should().ContainSingle().Which.Id.Should().Be(existingTracks[1].Id);
+            playlistInDatabase.ShouldHaveOriginalCompoundsOf(existingPlaylist);
+        });
+    }
+
+    [Fact]
     public async Task Cannot_add_to_ManyToOne_relationship()
     {
         // Arrange

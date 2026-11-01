@@ -15,8 +15,7 @@ public sealed class ClientIdGenerationDbContext(DbContextOptions<ClientIdGenerat
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Game>()
-            .ComplexProperty(game => game.Settings, complexBuilder => complexBuilder.ToJson());
+        builder.Entity<Game>().ComplexProperty(game => game.Settings, complexBuilder => complexBuilder.ToJson());
 
         base.OnModelCreating(builder);
     }

@@ -53,7 +53,10 @@ public sealed class ImplicitlyChangingWorkItemDefinition(IResourceGraph resource
                 const string json = """{"Optimistic":"01:00:00","Likely":"08:00:00","Pessimistic":"16:00:00"}""";
                 const string statement = "UPDATE \"WorkItems\" SET \"Estimate\" = CAST({0} AS jsonb) WHERE \"Id\" = {1}";
 
-                await _dbContext.Database.ExecuteSqlRawAsync(statement, [json, resource.Id], cancellationToken);
+                await _dbContext.Database.ExecuteSqlRawAsync(statement, [
+                    json,
+                    resource.Id
+                ], cancellationToken);
             }
 
             return;

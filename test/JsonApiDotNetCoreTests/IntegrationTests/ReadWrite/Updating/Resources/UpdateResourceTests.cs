@@ -15,8 +15,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources;
 
 public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
 {
-    private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
     private const string NoSideEffectsMarker = ImplicitlyChangingWorkItemDefinition.NoSideEffectsMarker;
+    private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
 
     private readonly ReadWriteFakers _fakers = new();
 
@@ -236,7 +236,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.Should().NotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(ImplicitlyChangingWorkItemDefinition.ChangeEstimateMarker);
+
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should()
+            .Be(ImplicitlyChangingWorkItemDefinition.ChangeEstimateMarker);
 
         object? estimate = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("estimate").WhoseValue;
         JsonSerializer.SerializeToElement(estimate).GetProperty("likely").GetString().Should().Be("08:00:00");

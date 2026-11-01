@@ -281,7 +281,11 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         {
             Budget = 1500000.50m,
             StudioName = "Acme",
-            Locations = ["Paris", "Rome"]
+            Locations =
+            [
+                "Paris",
+                "Rome"
+            ]
         };
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -304,7 +308,9 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
 
-        JsonElement production = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("production").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement production = responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("production").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         production.EnumerateObject().Should().ContainSingle().Which.Name.Should().Be("budget");
         production.GetProperty("budget").GetDecimal().Should().Be(1500000.50m);
     }
@@ -340,12 +346,18 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         List<Movie> movies = _fakers.Movie.GenerateList(2);
 
         movies[0].Genre = _fakers.Genre.GenerateOne();
+
         movies[0].Production = new MovieProduction
         {
-            Locations = ["Paris", "Rome"]
+            Locations =
+            [
+                "Paris",
+                "Rome"
+            ]
         };
 
         movies[1].Genre = _fakers.Genre.GenerateOne();
+
         movies[1].Production = new MovieProduction
         {
             Locations = ["Berlin"]
@@ -379,12 +391,14 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         List<Movie> movies = _fakers.Movie.GenerateList(2);
 
         movies[0].Genre = _fakers.Genre.GenerateOne();
+
         movies[0].Production = new MovieProduction
         {
             Budget = 200
         };
 
         movies[1].Genre = _fakers.Genre.GenerateOne();
+
         movies[1].Production = new MovieProduction
         {
             Budget = 100

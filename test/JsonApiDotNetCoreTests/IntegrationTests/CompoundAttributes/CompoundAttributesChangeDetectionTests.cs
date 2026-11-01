@@ -33,7 +33,8 @@ public sealed class CompoundAttributesChangeDetectionTests
         Contact existingContact = CompoundAttributesSamples.CreateContact();
         await SeedAsync(existingContact);
 
-        object requestBody = CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
+        object requestBody =
+            CompoundAttributesSamples.CreateContactPatchBody(existingContact.StringId!, CompoundAttributesSamples.CreateIdenticalPatchContent());
 
         string route = $"/contacts/{existingContact.StringId}";
 

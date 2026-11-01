@@ -21,12 +21,16 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
 
         testContext.UseController<OperationsController>();
 
+        // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
+        testContext.UseController<PlaylistsController>();
+
         testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<LyricTextDefinition>();
             services.AddResourceDefinition<PlaylistFieldSetDefinition>();
             services.AddResourceService<PlaylistQueryService>();
 
+            services.AddSingleton<PlaylistFieldSetProvider>();
             services.AddSingleton<LyricPermissionProvider>();
             services.AddSingleton<ResourceDefinitionHitCounter>();
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));

@@ -16,8 +16,7 @@ public sealed class LoggingDbContext(DbContextOptions<LoggingDbContext> options)
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<AuditEntry>()
-            .OwnsOne(auditEntry => auditEntry.Origin, ownedBuilder => ownedBuilder.ToJson());
+        builder.Entity<AuditEntry>().OwnsOne(auditEntry => auditEntry.Origin, ownedBuilder => ownedBuilder.ToJson());
 
         base.OnModelCreating(builder);
     }

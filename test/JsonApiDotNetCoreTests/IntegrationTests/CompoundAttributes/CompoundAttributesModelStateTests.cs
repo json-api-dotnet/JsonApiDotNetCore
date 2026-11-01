@@ -127,7 +127,8 @@ public sealed class CompoundAttributesModelStateTests
         };
 
         // Act
-        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>($"/contacts/{existingContact.StringId}", requestBody);
+        (HttpResponseMessage httpResponse, string responseDocument) =
+            await _testContext.ExecutePatchAsync<string>($"/contacts/{existingContact.StringId}", requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);

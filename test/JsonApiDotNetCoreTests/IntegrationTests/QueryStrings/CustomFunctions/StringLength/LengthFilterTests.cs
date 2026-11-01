@@ -259,8 +259,18 @@ public sealed class LengthFilterTests : IClassFixture<IntegrationTestContext<Tes
     {
         // Arrange
         List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
-        appointments[0].Keywords = ["a", "bb"];
-        appointments[1].Keywords = ["a", "bbbb"];
+
+        appointments[0].Keywords =
+        [
+            "a",
+            "bb"
+        ];
+
+        appointments[1].Keywords =
+        [
+            "a",
+            "bbbb"
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -301,8 +311,10 @@ public sealed class LengthFilterTests : IClassFixture<IntegrationTestContext<Tes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
+
         error.Detail.Should().StartWith("Field chain on resource type 'appointments' failed to match the pattern: " +
             "zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute.");
+
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

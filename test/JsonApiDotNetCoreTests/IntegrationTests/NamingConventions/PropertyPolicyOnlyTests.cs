@@ -33,7 +33,14 @@ public sealed class PropertyPolicyOnlyTests : IClassFixture<IntegrationTestConte
             IsHeated = true
         };
 
-        board.Reservations = [new LaneReservation { LaneNumber = 2, BookedBy = "Bob" }];
+        board.Reservations =
+        [
+            new LaneReservation
+            {
+                LaneNumber = 2,
+                BookedBy = "Bob"
+            }
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -55,7 +62,9 @@ public sealed class PropertyPolicyOnlyTests : IClassFixture<IntegrationTestConte
         string[] scheduleKeys = schedule.EnumerateObject().Select(property => property.Name).ToArray();
         scheduleKeys.Should().BeEquivalentTo("OpensAt", "ClosesAt", "IsHeated");
 
-        JsonElement reservations = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("Reservations").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement reservations = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("Reservations").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         string[] reservationKeys = reservations[0].EnumerateObject().Select(property => property.Name).ToArray();
         reservationKeys.Should().BeEquivalentTo("LaneNumber", "Booked-By");
     }

@@ -1059,47 +1059,6 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.ManyValue[0].Id.Should().Be(resource1.StringId);
     }
 
-    public static TheoryData<string, string> NestedOperatorData
-    {
-        get
-        {
-            var data = new TheoryData<string, string>();
-
-            AddComparisons(data, "someInt32", IntLowerBound, IntInTheRange, IntUpperBound);
-            AddComparisons(data, "someDateTime", $"{IsoDateTimeLowerBound}Z", $"{IsoDateTimeInTheRange}Z", $"{IsoDateTimeUpperBound}Z");
-            AddComparisons(data, "someTimeSpan", TimeSpanLowerBound, TimeSpanInTheRange, TimeSpanUpperBound);
-            AddComparisons(data, "someGuid", NestedGuidLowerBound, NestedGuidInTheRange, NestedGuidUpperBound, false);
-            AddComparisons(data, "someEnum", nameof(DayOfWeek.Monday), nameof(DayOfWeek.Tuesday), nameof(DayOfWeek.Wednesday), false);
-            AddComparisons(data, "someString", "apple", "banana", "cherry", false);
-
-            data.Add("contains(someCompound.someString,'nan')", "1");
-            data.Add("startsWith(someCompound.someString,'ch')", "2");
-            data.Add("endsWith(someCompound.someString,'ple')", "0");
-
-            data.Add("equals(someCompound.someBoolean,'true')", "12");
-            data.Add("equals(someCompound.someBoolean,'false')", "0");
-
-            return data;
-        }
-    }
-
-    private static void AddComparisons(TheoryData<string, string> data, string member, string lowerBound, string inTheRange, string upperBound,
-        bool isOrdered = true)
-    {
-        string path = $"someCompound.{member}";
-
-        data.Add($"equals({path},'{inTheRange}')", "1");
-        data.Add($"any({path},'{lowerBound}','{upperBound}')", "02");
-
-        if (isOrdered)
-        {
-            data.Add($"lessThan({path},'{inTheRange}')", "0");
-            data.Add($"lessOrEqual({path},'{inTheRange}')", "01");
-            data.Add($"greaterThan({path},'{inTheRange}')", "2");
-            data.Add($"greaterOrEqual({path},'{inTheRange}')", "12");
-        }
-    }
-
     [Theory]
     [MemberData(nameof(NestedOperatorData))]
     public async Task Can_filter_on_nested_attribute_with_operator(string filterExpression, string expectedRows)
@@ -1253,14 +1212,38 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         [
             new()
             {
-                SomeGuids = [Guid.Parse(NestedGuidLowerBound), Guid.Parse(NestedGuidInTheRange)],
-                SomeDecimals = [1.5m, 2.5m],
-                SomeDateTimes = [new DateTime(2000, 1, 1).AsUtc(), new DateTime(2000, 6, 1).AsUtc()],
-                SomeTimeSpans = [TimeSpan.FromHours(1), TimeSpan.FromHours(5)],
-                SomeDateOnlys = [new DateOnly(2000, 1, 1), new DateOnly(2000, 6, 1)],
+                SomeGuids =
+                [
+                    Guid.Parse(NestedGuidLowerBound),
+                    Guid.Parse(NestedGuidInTheRange)
+                ],
+                SomeDecimals =
+                [
+                    1.5m,
+                    2.5m
+                ],
+                SomeDateTimes =
+                [
+                    new DateTime(2000, 1, 1).AsUtc(),
+                    new DateTime(2000, 6, 1).AsUtc()
+                ],
+                SomeTimeSpans =
+                [
+                    TimeSpan.FromHours(1),
+                    TimeSpan.FromHours(5)
+                ],
+                SomeDateOnlys =
+                [
+                    new DateOnly(2000, 1, 1),
+                    new DateOnly(2000, 6, 1)
+                ],
                 SomeEnums = [DayOfWeek.Monday],
                 SomeBooleans = [false],
-                SomeStrings = ["alpha", "beta"]
+                SomeStrings =
+                [
+                    "alpha",
+                    "beta"
+                ]
             },
             new()
             {
@@ -1271,7 +1254,11 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
                 SomeDateOnlys = [new DateOnly(2001, 1, 1)],
                 SomeEnums = [DayOfWeek.Friday],
                 SomeBooleans = [true],
-                SomeStrings = ["gamma", "delta"]
+                SomeStrings =
+                [
+                    "gamma",
+                    "delta"
+                ]
             },
             new()
         ];

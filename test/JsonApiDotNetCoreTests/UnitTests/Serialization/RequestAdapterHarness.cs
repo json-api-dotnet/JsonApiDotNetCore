@@ -1,6 +1,5 @@
 using System.ComponentModel.Design;
 using System.Text.Json;
-using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;

@@ -428,11 +428,6 @@ public sealed partial class ResourceGraphBuilder
 
         AssertCanBeCompoundType(compoundClrType, compoundAttribute.Property);
 
-        if (_resourceTypesByClrType.ContainsKey(compoundClrType))
-        {
-            throw new InvalidConfigurationException($"Type '{compoundClrType}' cannot be both a resource type and a compound type.");
-        }
-
         _nonIdentifiableTypes.Remove(compoundClrType);
 
         if (_compoundTypesByClrType.TryGetValue(compoundClrType, out CompoundType? existingCompoundType))

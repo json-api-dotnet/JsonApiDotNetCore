@@ -51,7 +51,7 @@ public sealed class SparseFieldSetAddressBookTests
     }
 
     [Fact]
-    public async Task Fetches_all_scalar_properties_when_fieldset_selects_read_only_nested_member()
+    public async Task Can_fetch_all_scalar_properties_when_fieldset_selects_read_only_nested_member()
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();

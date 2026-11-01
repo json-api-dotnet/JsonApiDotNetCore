@@ -12,8 +12,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class CountingSparseFieldSetEvaluator(
-    IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor, SparseFieldSetEvaluatorHitCounter hitCounter)
-    : ISparseFieldSetEvaluator
+    IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
+    SparseFieldSetEvaluatorHitCounter hitCounter) : ISparseFieldSetEvaluator
 {
     private readonly SparseFieldSetEvaluator _inner = new(constraintProviders, resourceDefinitionAccessor);
     private readonly SparseFieldSetEvaluatorHitCounter _hitCounter = hitCounter;

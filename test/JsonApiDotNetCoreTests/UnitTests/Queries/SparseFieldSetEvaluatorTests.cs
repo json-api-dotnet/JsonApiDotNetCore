@@ -251,7 +251,9 @@ public sealed class SparseFieldSetEvaluatorTests
 
     private SparseFieldSetEvaluator CreateEvaluator(params string[] fieldSetTexts)
     {
-        ResourceTypeExpressionInScope[] constraints = fieldSetTexts.Select(text => new ResourceTypeExpressionInScope(_personType, ParseFieldSet(text))).ToArray();
+        ResourceTypeExpressionInScope[] constraints =
+            fieldSetTexts.Select(text => new ResourceTypeExpressionInScope(_personType, ParseFieldSet(text))).ToArray();
+
         var provider = new FakeConstraintProvider(constraints);
 
         return new SparseFieldSetEvaluator([provider], _accessor);

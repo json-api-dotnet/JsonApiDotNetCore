@@ -171,10 +171,7 @@ internal static class CompoundAttributesSamples
                     100.5m,
                     2000m
                 ],
-                Anniversaries =
-                [
-                    new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc)
-                ],
+                Anniversaries = [new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc)],
                 InternalNotes = "internal",
                 Audit = new ContactAudit
                 {
@@ -185,8 +182,8 @@ internal static class CompoundAttributesSamples
     }
 
     /// <summary>
-    /// Creates the request body value for "content" that, when sent in a PATCH request, is identical to the stored data of
-    /// <see cref="CreateContact" />. This requires adding the members that are not rendered and removing the read-only and change-blocked members.
+    /// Creates the request body value for "content" that, when sent in a PATCH request, is identical to the stored data of <see cref="CreateContact" />.
+    /// This requires adding the members that are not rendered and removing the read-only and change-blocked members.
     /// </summary>
     public static JsonObject CreateIdenticalPatchContent()
     {

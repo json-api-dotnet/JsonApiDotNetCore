@@ -219,7 +219,9 @@ public sealed class CompoundTypeTests
         getResourceType.Should().ThrowExactly<InvalidOperationException>();
 
         Action getCompoundType = () => resourceGraph.GetCompoundType(customerClrType);
-        getCompoundType.Should().ThrowExactly<InvalidOperationException>().WithMessage($"Compound type '{typeof(Customer)}' does not exist in the resource graph.");
+
+        getCompoundType.Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage($"Compound type '{typeof(Customer)}' does not exist in the resource graph.");
 
         Action getCompoundTypeGeneric = () => resourceGraph.GetCompoundType<Customer>();
         getCompoundTypeGeneric.Should().ThrowExactly<InvalidOperationException>();

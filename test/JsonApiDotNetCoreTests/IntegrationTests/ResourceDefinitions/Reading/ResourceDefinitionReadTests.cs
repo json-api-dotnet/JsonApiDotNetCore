@@ -1100,41 +1100,6 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         }, options => options.WithStrictOrdering());
     }
 
-    private const string StarCollectionHits = "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes " +
-        "Star.OnApplySparseFieldSet Star.GetMeta";
-
-    private const string StarSingleHits = "Star.OnApplyFilter Star.OnApplySparseFieldSet Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta";
-
-    private const string PlanetSecondaryHits = "Planet.OnApplyPagination Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplySparseFieldSet " +
-        "Planet.OnApplyIncludes Star.OnApplyFilter Star.OnApplyFilter Planet.OnApplyFilter Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta";
-
-    private const string PlanetRelationshipHits = "Planet.OnApplyFilter Planet.OnApplySort Planet.OnApplyPagination Star.OnApplyFilter Star.OnApplyFilter " +
-        "Planet.OnApplyFilter";
-
-    public static TheoryData<string, string, string> HookOrderData => new()
-    {
-        { "GET", "/stars", StarCollectionHits },
-        { "GET", "/stars?fields[stars]=name", StarCollectionHits },
-        { "GET", "/stars?filter=equals(name,'Sun')", StarCollectionHits },
-        { "GET", "/stars?sort=name", StarCollectionHits },
-        { "GET", "/stars?page[size]=2", StarCollectionHits },
-        {
-            "GET", "/stars?include=planets",
-            "Star.OnApplyPagination Star.OnApplyFilter Star.OnApplySort Star.OnApplySparseFieldSet Star.OnApplyIncludes Planet.OnApplyFilter " +
-            "Planet.OnApplySort Planet.OnApplyPagination Planet.OnApplySparseFieldSet Planet.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta " +
-            "Planet.OnApplySparseFieldSet Planet.GetMeta Planet.GetMeta"
-        },
-        { "GET", "/stars/{id}", StarSingleHits },
-        { "GET", "/stars/{id}?fields[stars]=name", StarSingleHits },
-        { "GET", "/stars/{id}/planets", PlanetSecondaryHits },
-        { "GET", "/stars/{id}/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2&fields[planets]=publicName", PlanetSecondaryHits },
-        { "GET", "/stars/{id}/relationships/planets", PlanetRelationshipHits },
-        { "GET", "/stars/{id}/relationships/planets?filter=equals(hasRingSystem,'true')&sort=publicName&page[size]=2", PlanetRelationshipHits },
-        { "POST", "/stars", "Star.OnApplyFilter Star.OnApplyIncludes Star.OnApplySparseFieldSet Star.GetMeta" },
-        { "PATCH", "/stars/{id}", "Star.OnApplyFilter Star.OnApplyFilter Star.OnApplyIncludes" },
-        { "DELETE", "/stars/{id}", "" }
-    };
-
     [Theory]
     [MemberData(nameof(HookInvocationSequenceData))]
     public async Task Invokes_hooks_in_current_order_per_request_kind(string method, string routeTemplate, string expectedHits)
@@ -1219,35 +1184,6 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         string actualHits = string.Join(' ', hitCounter.HitExtensibilityPoints.Select(hit => $"{hit.Item1.Name}.{hit.Item2}"));
         actualHits.Should().Be(expectedHits);
-    }
-
-    private static JsonElement GetAttribute(ResourceObject resourceObject, string name)
-    {
-        resourceObject.Attributes.Should().ContainKey(name);
-        return JsonSerializer.SerializeToElement(resourceObject.Attributes[name]);
-    }
-
-    private static Planet CreatePlanetWithAtmosphere(Planet planet)
-    {
-        planet.Atmosphere = new Atmosphere
-        {
-            Pressure = 1.5M,
-            Composition =
-            [
-                new GasFraction
-                {
-                    Gas = "Nitrogen",
-                    Fraction = 0.78M
-                },
-                new GasFraction
-                {
-                    Gas = "Oxygen",
-                    Fraction = 0.21M
-                }
-            ]
-        };
-
-        return planet;
     }
 
     [Fact]
@@ -1478,6 +1414,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         settingsProvider.HidePlanetsWithPrivateName();
 
         Star star = _fakers.Star.GenerateOne();
+
         star.Classification = new StarClassification
         {
             SpectralClass = "G",
@@ -1582,6 +1519,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         settingsProvider.RewriteConstellationStarsInclude();
 
         Constellation constellation = _fakers.Constellation.GenerateOne();
+
         constellation.Origin = new ConstellationOrigin
         {
             Culture = "Greek",
@@ -1638,8 +1576,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        evaluatorCounter.Calls.Should().Equal("stars:ForQuery", "planets:ForQuery", "Reset", "stars:ForSerializer", "planets:ForSerializer", "stars:ForSerializer",
-            "planets:ForSerializer");
+        evaluatorCounter.Calls.Should().Equal("stars:ForQuery", "planets:ForQuery", "Reset", "stars:ForSerializer", "planets:ForSerializer",
+            "stars:ForSerializer", "planets:ForSerializer");
     }
 
     [Fact]
@@ -1677,5 +1615,34 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(stars[0].Planets.ElementAt(0).StringId);
         responseDocument.Included[0].Attributes.Should().ContainKey("publicName").And.HaveCount(1);
+    }
+
+    private static JsonElement GetAttribute(ResourceObject resourceObject, string name)
+    {
+        resourceObject.Attributes.Should().ContainKey(name);
+        return JsonSerializer.SerializeToElement(resourceObject.Attributes[name]);
+    }
+
+    private static Planet CreatePlanetWithAtmosphere(Planet planet)
+    {
+        planet.Atmosphere = new Atmosphere
+        {
+            Pressure = 1.5M,
+            Composition =
+            [
+                new GasFraction
+                {
+                    Gas = "Nitrogen",
+                    Fraction = 0.78M
+                },
+                new GasFraction
+                {
+                    Gas = "Oxygen",
+                    Fraction = 0.21M
+                }
+            ]
+        };
+
+        return planet;
     }
 }

@@ -10,8 +10,8 @@ using Xunit;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes;
 
 /// <summary>
-/// Verifies that constraints on included collections do not depend on whether a type involved has a compound attribute. Blog, BlogPost and Comment have no
-/// compound attributes (controls), whereas Calendar and Appointment do.
+/// Verifies that constraints on included collections do not depend on whether a type involved has a compound attribute. Blog, BlogPost and Comment have
+/// no compound attributes (controls), whereas Calendar and Appointment do.
 /// </summary>
 public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
@@ -47,6 +47,7 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         calendar.PinnedAppointments = _fakers.Appointment.GenerateSet(1);
 
         Appointment appointment = calendar.PinnedAppointments.Single();
+
         appointment.Cost = new AppointmentCost
         {
             Amount = 12.5m,
@@ -70,7 +71,11 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
             }
         ];
 
-        appointment.Keywords = ["a", "b"];
+        appointment.Keywords =
+        [
+            "a",
+            "b"
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -109,7 +114,11 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         appointment.Calendar.Workweek = new Workweek
         {
             FirstDay = DayOfWeek.Monday,
-            WorkDays = [DayOfWeek.Monday, DayOfWeek.Tuesday]
+            WorkDays =
+            [
+                DayOfWeek.Monday,
+                DayOfWeek.Tuesday
+            ]
         };
 
         appointment.Calendar.Holidays =
@@ -332,6 +341,7 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
+
         responseDocument.Data.ManyValue[0].GetLinkageIds("reminders").Should().BeEquivalentTo(appointments[0].Reminders[1].StringId,
             appointments[0].Reminders[2].StringId);
 
@@ -378,7 +388,13 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         Calendar calendar = _fakers.Calendar.GenerateOne();
         calendar.PinnedAppointments = _fakers.Appointment.GenerateSet(3);
         Appointment[] appointments = calendar.PinnedAppointments.ToArray();
-        appointments[0].Keywords = ["x", "y"];
+
+        appointments[0].Keywords =
+        [
+            "x",
+            "y"
+        ];
+
         appointments[1].Keywords = ["y"];
         appointments[2].Keywords = null;
 
@@ -477,8 +493,7 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.GetIncludedIds("comments").Should()
-            .BeEquivalentTo(comments[0].StringId, comments[2].StringId);
+        responseDocument.GetIncludedIds("comments").Should().BeEquivalentTo(comments[0].StringId, comments[2].StringId);
     }
 
     [Fact]
@@ -500,7 +515,8 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/calendars?include=pinnedAppointments.reminders&filter[pinnedAppointments.reminders]=greaterThan(remindsAt,'2030-02-01T00:00:00Z')";
+        const string route =
+            "/calendars?include=pinnedAppointments.reminders&filter[pinnedAppointments.reminders]=greaterThan(remindsAt,'2030-02-01T00:00:00Z')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -508,8 +524,7 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.GetIncludedIds("reminders").Should()
-            .BeEquivalentTo(appointment.Reminders[1].StringId, appointment.Reminders[2].StringId);
+        responseDocument.GetIncludedIds("reminders").Should().BeEquivalentTo(appointment.Reminders[1].StringId, appointment.Reminders[2].StringId);
     }
 
     [Fact]
@@ -573,7 +588,10 @@ public sealed class IncludeCompoundTests : IClassFixture<IntegrationTestContext<
         responseDocument.GetPrimaryIds().Should().Equal(blog.Posts[2].StringId, blog.Posts[3].StringId);
 
         responseDocument.Links.Should().NotBeNull();
-        responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?filter=startsWith(caption,%27b%27)&sort=-caption&page%5Bsize%5D=2&page%5Bnumber%5D=2");
+
+        responseDocument.Links.Next.Should()
+            .Be($"{HostPrefix}/blogs/{blog.StringId}/posts?filter=startsWith(caption,%27b%27)&sort=-caption&page%5Bsize%5D=2&page%5Bnumber%5D=2");
+
         responseDocument.Links.Last.Should().Be(responseDocument.Links.Next);
     }
 

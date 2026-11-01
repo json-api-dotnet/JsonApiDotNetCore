@@ -196,7 +196,8 @@ public sealed class PaginationParseTests : BaseParseTests
     [InlineData("appointments", "reminders:2", "|reminders", "Page number: 1, size: 25|Page number: 1, size: 2")]
     [InlineData("appointments", "calendar.appointments:2", "|calendar.appointments", "Page number: 1, size: 25|Page number: 1, size: 2")]
     [InlineData("blogs", "posts.comments:2", "|posts.comments", "Page number: 1, size: 25|Page number: 1, size: 2")]
-    public void Reader_Read_Page_Size_Succeeds_On_Compound_Types(string resourceTypeName, string parameterValue, string scopeTreesExpected, string valueTreesExpected)
+    public void Reader_Read_Page_Size_Succeeds_On_Compound_Types(string resourceTypeName, string parameterValue, string scopeTreesExpected,
+        string valueTreesExpected)
     {
         // Arrange
         PaginationQueryStringParameterReader reader = CreateReader(resourceTypeName);
@@ -221,13 +222,15 @@ public sealed class PaginationParseTests : BaseParseTests
     // Compound attributes are not relationships
     [InlineData("calendars", "page[size]", "^workweek:2", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
     [InlineData("calendars", "page[size]", "^holidays:2", "To-many relationship 'holidays' does not exist on resource type 'calendars'.")]
-    [InlineData("calendars", "page[size]", "^mostRecentAppointment:2", "To-many relationship 'mostRecentAppointment' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "page[size]", "^mostRecentAppointment:2",
+        "To-many relationship 'mostRecentAppointment' does not exist on resource type 'calendars'.")]
     [InlineData("calendars", "page[size]", "^workweek.officeHours:2", "Relationship 'workweek' does not exist on resource type 'calendars'.")]
     [InlineData("calendars", "page[size]", "appointments.^location:1", "To-many relationship 'location' does not exist on resource type 'appointments'.")]
     [InlineData("calendars", "page[size]", "appointments.^attendees:1", "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
     [InlineData("calendars", "page[size]", "appointments.^keywords:1", "To-many relationship 'keywords' does not exist on resource type 'appointments'.")]
     [InlineData("calendars", "page[size]", "appointments:2,^workweek:1", "To-many relationship 'workweek' does not exist on resource type 'calendars'.")]
-    [InlineData("calendars", "page[size]", "appointments:2,appointments.^attendees:1", "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
+    [InlineData("calendars", "page[size]", "appointments:2,appointments.^attendees:1",
+        "To-many relationship 'attendees' does not exist on resource type 'appointments'.")]
     [InlineData("appointments", "page[size]", "^location:2", "To-many relationship 'location' does not exist on resource type 'appointments'.")]
     [InlineData("appointments", "page[size]", "^location.address:2", "Relationship 'location' does not exist on resource type 'appointments'.")]
     [InlineData("appointments", "page[size]", "^address:2", "To-many relationship 'address' does not exist on resource type 'appointments'.")]

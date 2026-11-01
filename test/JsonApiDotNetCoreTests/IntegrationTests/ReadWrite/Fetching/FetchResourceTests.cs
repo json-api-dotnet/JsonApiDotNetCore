@@ -69,7 +69,8 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/workItems?filter=equals(description,'parent')&include=children&filter[children]=startsWith(description,'match')&sort[children]=-description&page[size]=1,children:1";
+        const string route =
+            "/workItems?filter=equals(description,'parent')&include=children&filter[children]=startsWith(description,'match')&sort[children]=-description&page[size]=1,children:1";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

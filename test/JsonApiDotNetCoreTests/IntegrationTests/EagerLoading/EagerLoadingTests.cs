@@ -244,7 +244,9 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be(building.PrimaryDoor.Color);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("secondaryDoorColor").WhoseValue.Should().Be(building.SecondaryDoor.Color);
 
-        JsonElement dimensions = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dimensions").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement dimensions = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dimensions").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         dimensions.GetProperty("width").GetDecimal().Should().Be(12);
         dimensions.GetProperty("depth").GetDecimal().Should().Be(20);
         dimensions.GetProperty("height").GetDecimal().Should().Be(8);
@@ -285,7 +287,9 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("windowCount").WhoseValue.Should().Be(4);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be(building.PrimaryDoor.Color);
 
-        JsonElement dimensions = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dimensions").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement dimensions = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dimensions").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         dimensions.EnumerateObject().Should().ContainSingle().Which.Name.Should().Be("width");
         dimensions.GetProperty("width").GetDecimal().Should().Be(12);
     }

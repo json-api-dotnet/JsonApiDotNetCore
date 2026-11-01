@@ -121,7 +121,8 @@ public sealed class IncludeParseTests : BaseParseTests
 
     [Theory]
     [InlineData("calendars", "appointments.calendar", "appointments.calendar", "calendars:appointments.appointments:calendar")]
-    [InlineData("calendars", "appointments,mostRecentAppointment", "appointments,mostRecentAppointment", "calendars:appointments,calendars:mostRecentAppointment")]
+    [InlineData("calendars", "appointments,mostRecentAppointment", "appointments,mostRecentAppointment",
+        "calendars:appointments,calendars:mostRecentAppointment")]
     [InlineData("appointments", "calendar,reminders", "calendar,reminders", "appointments:calendar,appointments:reminders")]
     public void Reader_Read_Succeeds_On_Compound_Types(string resourceTypeName, string parameterValue, string stringExpected, string fullStringExpected)
     {

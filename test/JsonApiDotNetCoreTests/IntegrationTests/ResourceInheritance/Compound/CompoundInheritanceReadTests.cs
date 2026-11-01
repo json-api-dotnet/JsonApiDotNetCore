@@ -130,6 +130,7 @@ public abstract class CompoundInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.Should().OnlyContainKeys("title", "price", "address", "photos", "features", "rooms", "building", "insurance");
             resource.GetAttribute("address").GetProperty("street").GetString().Should().Be(apartment.Address!.Street);
             resource.GetAttribute("photos").EnumerateArray().Select(element => element.GetString()).Should().Equal(apartment.Photos);
+
             resource.GetAttribute("features").EnumerateArray().Select(element => element.GetProperty("name").GetString()).Should()
                 .Equal(apartment.Features.Select(feature => feature.Name));
 
@@ -376,11 +377,7 @@ public abstract class CompoundInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.ManyValue[0].Id.Should().Be(otherApartment.StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(apartment.StringId);
 
-        responseDocument.Data.ManyValue.Skip(2).Select(resource => resource.Id).Should().BeEquivalentTo(new[]
-        {
-            house.StringId,
-            parking.StringId
-        });
+        responseDocument.Data.ManyValue.Skip(2).Select(resource => resource.Id).Should().BeEquivalentTo(house.StringId, parking.StringId);
     }
 
     [Fact]
@@ -400,8 +397,10 @@ public abstract class CompoundInheritanceReadTests<TDbContext> : IClassFixture<I
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
+
         error.Detail.Should().Be("Field 'insurance' is defined on multiple types that derive from resource type 'listings'. " +
             "Failed at position 1: ^insurance.premium");
+
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
@@ -525,7 +524,7 @@ public abstract class CompoundInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_include_polymorphic_children_with_compounds()
     {
         // Arrange
-        (Apartment apartment, House house, Parking parking) = await SeedListingsAsync(withAgent: true);
+        (Apartment apartment, House house, Parking parking) = await SeedListingsAsync(true);
 
         const string route = "/listingAgents?include=listings&fields[apartments]=building.name";
 
@@ -566,7 +565,7 @@ public abstract class CompoundInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_filter_included_polymorphic_collection()
     {
         // Arrange
-        (Apartment apartment, House house, Parking parking) = await SeedListingsAsync(withAgent: true);
+        (Apartment apartment, House house, Parking parking) = await SeedListingsAsync(true);
 
         apartment.Price = 500_000;
         house.Price = 800_000;
@@ -605,7 +604,11 @@ public abstract class CompoundInheritanceReadTests<TDbContext> : IClassFixture<I
 
         if (withAgent)
         {
-            agent.Listings = new HashSet<Listing>([apartment, house, parking]);
+            agent.Listings = new HashSet<Listing>([
+                apartment,
+                house,
+                parking
+            ]);
         }
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

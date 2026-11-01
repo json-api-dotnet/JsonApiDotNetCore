@@ -249,7 +249,9 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         postDocument.Data.SingleValue.Should().NotBeNull();
         string newPoolId = postDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject;
 
-        JsonElement scheduleInPost = postDocument.Data.SingleValue.Attributes.Should().ContainKey("schedule").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement scheduleInPost = postDocument.Data.SingleValue.Attributes.Should().ContainKey("schedule").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         scheduleInPost.GetProperty("opens-at").GetString().Should().Be("09:00:00");
         scheduleInPost.GetProperty("closes-at").GetString().Should().Be("17:30:00");
         scheduleInPost.GetProperty("is-heated").GetBoolean().Should().BeTrue();
@@ -267,7 +269,9 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         scheduleInGet.GetProperty("closes-at").GetString().Should().Be("17:30:00");
         scheduleInGet.GetProperty("is-heated").GetBoolean().Should().BeTrue();
 
-        JsonElement reservationsInGet = getDocument.Data.SingleValue.Attributes.Should().ContainKey("reservations").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement reservationsInGet = getDocument.Data.SingleValue.Attributes.Should().ContainKey("reservations").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         reservationsInGet.GetArrayLength().Should().Be(1);
         reservationsInGet[0].GetProperty("lane-number").GetInt32().Should().Be(3);
     }
@@ -337,7 +341,15 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
     {
         // Arrange
         DivingBoard board = _fakers.DivingBoard.GenerateOne();
-        board.Reservations = [new LaneReservation { LaneNumber = 2, BookedBy = "Bob" }];
+
+        board.Reservations =
+        [
+            new LaneReservation
+            {
+                LaneNumber = 2,
+                BookedBy = "Bob"
+            }
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -355,7 +367,9 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
 
         responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        JsonElement reservations = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("reservations").WhoseValue.Should().BeOfType<JsonElement>().Subject;
+        JsonElement reservations = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("reservations").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
         reservations.GetArrayLength().Should().Be(1);
 
         string[] keys = reservations[0].EnumerateObject().Select(property => property.Name).ToArray();

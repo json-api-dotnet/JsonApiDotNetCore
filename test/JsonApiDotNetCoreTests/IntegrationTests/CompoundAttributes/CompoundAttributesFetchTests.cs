@@ -233,7 +233,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Uses_public_names_for_nested_members()
+    public async Task Can_use_public_names_for_nested_members()
     {
         // Arrange
         Contact contact = CompoundAttributesSamples.CreateContact();
@@ -435,7 +435,7 @@ public sealed class CompoundAttributesFetchTests
     }
 
     [Fact]
-    public async Task Renders_nullable_struct_compound()
+    public async Task Can_render_nullable_struct_compound()
     {
         // Arrange
         Contact contact = _fakers.Contact.Generate();
@@ -462,6 +462,7 @@ public sealed class CompoundAttributesFetchTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.Should().NotBeNull();
+
         responseDocument.Data.SingleValue.GetAttribute("lastKnownLocation").ShouldBeJson("""
             { "latitude": 52.09, "longitude": 5.12 }
             """);
