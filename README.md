@@ -263,6 +263,8 @@ Have a question, found a bug or want to submit code changes? See our [contributi
 
 ## Build from source
 
+Building and testing require the .NET 10 SDK. Tests use xUnit.net v3 with Microsoft Testing Platform.
+
 To build the code from this repository locally, run:
 
 ```shell
@@ -281,7 +283,21 @@ And then to run the tests:
 dotnet test
 ```
 
-Alternatively, to build, run all tests, generate code coverage and NuGet packages:
+To collect code coverage with Coverlet.MTP and generate reports:
+
+```shell
+dotnet tool restore
+dotnet test --configuration Release --coverlet --results-directory artifacts/test-results
+dotnet reportgenerator "-reports:artifacts/test-results/*cobertura*.xml" "-targetdir:artifacts/coverage/report" "-filefilters:-*.g.cs"
+```
+
+Coverage files use deterministic source paths (`/_/`), independent of the checkout location. Coverlet settings are shared
+in `testconfig.json`. Local runs write Cobertura XML to `artifacts/test-results`, which ReportGenerator renders directly
+with line and branch coverage.
+
+Open `artifacts/coverage/report/index.html` to view the HTML report. CI uploads the original Cobertura directly to Codecov.
+
+Alternatively, to clear previous artifacts, build, run all tests, generate code coverage and NuGet packages:
 
 ```shell
 pwsh Build.ps1

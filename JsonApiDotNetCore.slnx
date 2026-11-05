@@ -19,7 +19,7 @@
     <File Path="package-versions.props" />
     <File Path="PackageReadme.md" />
     <File Path="README.md" />
-    <File Path="tests.runsettings" />
+    <File Path="testconfig.json" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/JsonApiDotNetCore.Annotations/JsonApiDotNetCore.Annotations.csproj" />

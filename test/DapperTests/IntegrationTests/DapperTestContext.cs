@@ -16,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests;
 
@@ -60,7 +59,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
         _lazyFactory = new Lazy<WebApplicationFactory<TodoItem>>(CreateFactory);
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await AcquireDatabaseThrottleAsync();
         _throttleAcquired = true;
@@ -175,7 +174,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
         return Factory.CreateClient();
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         try
         {
