@@ -115,7 +115,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                   "id": "{{meeting.StringId}}",
                   "attributes": {
                     "title": "{{meeting.Title}}",
-                    "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
+                    "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier, CultureInfo.InvariantCulture)}}",
                     "duration": "{{meeting.Duration}}",
                     "location": {
                       "lat": {{meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
@@ -263,7 +263,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                   "id": "{{meeting.StringId}}",
                   "attributes": {
                     "title": "{{meeting.Title}}",
-                    "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
+                    "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier, CultureInfo.InvariantCulture)}}",
                     "duration": "{{meeting.Duration}}",
                     "location": {
                       "lat": {{meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
@@ -322,7 +322,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                 "id": "{{meeting.StringId}}",
                 "attributes": {
                   "title": "{{meeting.Title}}",
-                  "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
+                  "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier, CultureInfo.InvariantCulture)}}",
                   "duration": "{{meeting.Duration}}",
                   "location": {
                     "lat": {{meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
@@ -409,7 +409,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                 "id": "{{attendee.Meeting.StringId}}",
                 "attributes": {
                   "title": "{{attendee.Meeting.Title}}",
-                  "startTime": "{{attendee.Meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
+                  "startTime": "{{attendee.Meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier, CultureInfo.InvariantCulture)}}",
                   "duration": "{{attendee.Meeting.Duration}}",
                   "location": {
                     "lat": {{attendee.Meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
@@ -685,7 +685,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
                 "id": "{{newMeeting.StringId}}",
                 "attributes": {
                   "title": "{{newMeeting.Title}}",
-                  "startTime": "{{newMeeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
+                  "startTime": "{{newMeeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier, CultureInfo.InvariantCulture)}}",
                   "duration": "{{newMeeting.Duration}}",
                   "location": {
                     "lat": {{newMeeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},

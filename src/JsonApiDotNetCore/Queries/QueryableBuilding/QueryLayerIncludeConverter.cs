@@ -30,7 +30,7 @@ public sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryLay
 
     public override object? VisitInclude(IncludeExpression expression, QueryLayer queryLayer)
     {
-        foreach (IncludeElementExpression element in expression.Elements.OrderBy(element => element.Relationship.PublicName))
+        foreach (IncludeElementExpression element in expression.Elements.OrderBy(element => element.Relationship.PublicName, StringComparer.Ordinal))
         {
             _ = Visit(element, queryLayer);
         }
@@ -42,7 +42,7 @@ public sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryLay
     {
         QueryLayer subLayer = EnsureRelationshipInSelection(queryLayer, expression.Relationship);
 
-        foreach (IncludeElementExpression nextIncludeElement in expression.Children.OrderBy(child => child.Relationship.PublicName))
+        foreach (IncludeElementExpression nextIncludeElement in expression.Children.OrderBy(child => child.Relationship.PublicName, StringComparer.Ordinal))
         {
             Visit(nextIncludeElement, subLayer);
         }

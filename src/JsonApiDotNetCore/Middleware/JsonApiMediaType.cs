@@ -1,3 +1,4 @@
+using System.Globalization;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
@@ -77,7 +78,7 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
                 foreach (NameValueHeaderValue parameter in headerValue.Parameters)
                 {
                     if (allowQualityFactor && parameter.Name.Equals(QualitySegment, StringComparison.OrdinalIgnoreCase) &&
-                        decimal.TryParse(parameter.Value, out decimal qualityValue))
+                        decimal.TryParse(parameter.Value, CultureInfo.InvariantCulture, out decimal qualityValue))
                     {
                         qualityFactor = qualityValue;
                         continue;
