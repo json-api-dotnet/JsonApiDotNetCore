@@ -9,16 +9,15 @@
     <BenchmarkDotNetVersion>0.15.*</BenchmarkDotNetVersion>
     <BogusVersion>35.6.*</BogusVersion>
     <CodeAnalysisVersion>5.9.*</CodeAnalysisVersion>
-    <CoverletVersion>8.0.*</CoverletVersion>
+    <CoverletVersion>10.1.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>3.0.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <MiniValidationVersion>0.10.*</MiniValidationVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
-    <TestSdkVersion>18.11.*</TestSdkVersion>
-    <XunitVersion>2.9.*</XunitVersion>
-    <XunitVisualStudioVersion>4.0.*</XunitVisualStudioVersion>
+    <TestingPlatformVersion>2.5.*</TestingPlatformVersion>
+    <XunitVersion>4.0.*</XunitVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0'">
