@@ -4,7 +4,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests.QueryStrings;
 

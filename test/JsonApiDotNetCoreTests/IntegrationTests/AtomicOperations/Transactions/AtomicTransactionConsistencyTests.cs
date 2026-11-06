@@ -160,14 +160,14 @@ public sealed class AtomicTransactionConsistencyTests
         error.Source.Pointer.Should().Be("/atomic:operations/0");
     }
 
-    public Task InitializeAsync()
+    public ValueTask InitializeAsync()
     {
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    Task IAsyncLifetime.DisposeAsync()
+    ValueTask IAsyncDisposable.DisposeAsync()
     {
-        return DeleteExtraDatabaseAsync();
+        return new ValueTask(DeleteExtraDatabaseAsync());
     }
 
     private async Task DeleteExtraDatabaseAsync()

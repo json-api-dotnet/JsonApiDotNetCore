@@ -37,6 +37,7 @@ jobs:
       contents: read
     steps:
     - name: Tune GitHub-hosted runner network
+      if: ${{ matrix.os != 'ubuntu-latest' }}
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v9
@@ -98,13 +99,19 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release /p:VersionSuffix=${{ env.PACKAGE_VERSION_SUFFIX }}
     - name: Test
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;annotations-title=@test (@framework);annotations-message=@error\n@trace;summary-include-passed=false"
+      run: >-
+        dotnet test --no-build --configuration Release
+        --coverlet
+        --results-directory artifacts/test-results
+        --report-github --report-github-annotations-title="@test (@framework)"
+        --report-github-annotations-message="@error\n@trace" --report-github-summary-include-passed false
     - name: Upload coverage to codecov.io
       if: ${{ matrix.os == 'ubuntu-latest' }}
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       uses: codecov/codecov-action@v7
       with:
+        directory: artifacts/test-results
         fail_ci_if_error: true
         verbose: true
     - name: Generate packages

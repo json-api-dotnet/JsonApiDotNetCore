@@ -5,7 +5,6 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests.Sql;
 

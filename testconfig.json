@@ -1,0 +1,15 @@
+{
+  "$schema": "https://xunit.net/schema/current/xunit.testconfig.schema.json",
+  "xUnit": {
+    "showLiveOutput": true,
+    "failWarns": true
+  },
+  "platformOptions": {
+    "Coverlet": {
+      "excludeByFile": "**/test/**",
+      "excludeByAttribute": "ObsoleteAttribute,GeneratedCodeAttribute,ExcludeFromCodeCoverageAttribute",
+      "skipAutoProps": true,
+      "deterministicReport": true
+    }
+  }
+}
