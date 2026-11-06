@@ -1,5 +1,12 @@
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
+using LockPrimitive =
+#if NET9_0_OR_GREATER
+    System.Threading.Lock
+#else
+    object
+#endif
+    ;
 
 namespace TestBuildingBlocks;
 
@@ -9,7 +16,7 @@ public sealed class CapturingLoggerProvider : ILoggerProvider
     private static readonly Func<string, LogLevel, bool> DefaultFilter = (_, _) => true;
     private readonly Func<string, LogLevel, bool> _filter;
 
-    private readonly Lock _lockObject = new();
+    private readonly LockPrimitive _lockObject = new();
     private readonly List<LogMessage> _messages = [];
 
     public CapturingLoggerProvider()

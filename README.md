@@ -263,7 +263,8 @@ Have a question, found a bug or want to submit code changes? See our [contributi
 
 ## Build from source
 
-Building and testing require the .NET 10 SDK. Tests use xUnit.net v3 with Microsoft Testing Platform.
+Building requires the .NET 10 SDK. Running all tests also requires the .NET and ASP.NET Core 8 and 9 runtimes.
+Tests use xUnit.net v3 with Microsoft Testing Platform.
 
 To build the code from this repository locally, run:
 
