@@ -31,6 +31,301 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     }
 
     [Fact]
+    public async Task Can_create_playlist_with_compounds_and_local_ids()
+    {
+        // Arrange
+        string newName = _fakers.Playlist.GenerateOne().Name;
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
+
+        const string playlistLocalId = "playlist-1";
+        const string trackLocalId = "track-1";
+
+        var requestBody = new
+        {
+            atomic__operations = new object[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        lid = playlistLocalId,
+                        attributes = new
+                        {
+                            name = newName,
+                            credits = new[]
+                            {
+                                new
+                                {
+                                    role = "Producer",
+                                    personName = "Alice"
+                                },
+                                new
+                                {
+                                    role = "Mixer",
+                                    personName = "Bob"
+                                }
+                            },
+                            recording = new
+                            {
+                                studio = "Abbey Road",
+                                recordedAt = "2020-05-17",
+                                engineer = "Carol"
+                            }
+                        }
+                    }
+                },
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "musicTracks",
+                        lid = trackLocalId,
+                        attributes = new
+                        {
+                            title = newTitle
+                        }
+                    }
+                },
+                new
+                {
+                    op = "update",
+                    @ref = new
+                    {
+                        type = "playlists",
+                        lid = playlistLocalId,
+                        relationship = "tracks"
+                    },
+                    data = new[]
+                    {
+                        new
+                        {
+                            type = "musicTracks",
+                            lid = trackLocalId
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Results.Should().HaveCount(3);
+
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
+        {
+            resource.Type.Should().Be("playlists");
+            resource.Attributes.Should().ContainKey("credits");
+            resource.Attributes.Should().ContainKey("recording");
+        });
+
+        responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource => resource.Type.Should().Be("musicTracks"));
+        responseDocument.Results[2].Data.Value.Should().BeNull();
+
+        long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
+        Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
+
+            playlistInDatabase.Name.Should().Be(newName);
+
+            playlistInDatabase.Credits.Should().HaveCount(2);
+            playlistInDatabase.Credits[0].Role.Should().Be("Producer");
+            playlistInDatabase.Credits[0].PersonName.Should().Be("Alice");
+            playlistInDatabase.Credits[1].PersonName.Should().Be("Bob");
+
+            playlistInDatabase.Recording.Should().NotBeNull();
+            playlistInDatabase.Recording.Studio.Should().Be("Abbey Road");
+            playlistInDatabase.Recording.RecordedAt.Should().Be(new DateOnly(2020, 5, 17));
+            playlistInDatabase.Recording.Engineer.Should().Be("Carol");
+
+            playlistInDatabase.Tracks.Should().ContainSingle().Which.Id.Should().Be(newTrackId);
+        });
+    }
+
+    [Fact]
+    public async Task Cannot_send_compound_as_non_object()
+    {
+        // Arrange
+        string newName = _fakers.Playlist.GenerateOne().Name;
+
+        var requestBody = new
+        {
+            atomic__operations = new object[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = newName
+                        }
+                    }
+                },
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = newName
+                        }
+                    }
+                },
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = newName,
+                            recording = "x"
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
+        error.Detail.Should().Be("Failed to convert attribute 'recording' with value 'x' of type 'String' to type 'PlaylistRecording'.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations/2/data/attributes/recording");
+        error.Meta.Should().HaveRequestBody();
+    }
+
+    [Fact]
+    public async Task Cannot_create_playlist_with_unknown_nested_member_when_unknown_fields_are_not_allowed()
+    {
+        // Arrange
+        string newName = _fakers.Playlist.GenerateOne().Name;
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = newName,
+                            recording = new
+                            {
+                                studio = "Abbey Road",
+                                doesNotExist = "ignored"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
+        error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on compound type 'PlaylistRecording'.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations/0/data/attributes/recording/doesNotExist");
+        error.Meta.Should().HaveRequestBody();
+    }
+
+    [Fact]
+    public async Task Can_create_playlist_with_unknown_nested_member_when_unknown_fields_are_allowed()
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.App.Services.GetRequiredService<IJsonApiOptions>();
+        options.AllowUnknownFieldsInRequestBody = true;
+
+        string newName = _fakers.Playlist.GenerateOne().Name;
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "playlists",
+                        attributes = new
+                        {
+                            name = newName,
+                            recording = new
+                            {
+                                studio = "Abbey Road",
+                                doesNotExist = "ignored"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Results.Should().HaveCount(1);
+
+        long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Playlist playlistInDatabase = await dbContext.Playlists.FirstWithIdAsync(newPlaylistId);
+
+            playlistInDatabase.Recording.Should().NotBeNull();
+            playlistInDatabase.Recording.Studio.Should().Be("Abbey Road");
+        });
+    }
+
+    [Fact]
     public async Task Can_create_resource()
     {
         // Arrange

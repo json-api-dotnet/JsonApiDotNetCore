@@ -30,18 +30,16 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
 
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)
         {
-            throw new QueryParseException("Parameter name expected.", position);
+            throw new QueryParseException(QueryParseChoices.ParameterName, position);
         }
 
         var name = new LiteralConstantExpression(token.Value!);
 
         IncludeExpression? scope = null;
 
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.OpenBracket)
+        if (TryEatSingleCharacterToken(TokenKind.OpenBracket))
         {
-            TokenStack.Pop();
-
-            scope = ParseRelationshipChainEndingInToMany(resourceType, null);
+            scope = ParseRelationshipChainEndingInToMany(resourceType);
 
             EatSingleCharacterToken(TokenKind.CloseBracket);
         }

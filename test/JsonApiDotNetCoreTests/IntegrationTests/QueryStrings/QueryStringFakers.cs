@@ -11,7 +11,11 @@ internal sealed class QueryStringFakers
     private readonly Lazy<Faker<Blog>> _lazyBlogFaker = new(() => new Faker<Blog>()
         .MakeDeterministic()
         .RuleFor(blog => blog.Title, faker => faker.Lorem.Word())
-        .RuleFor(blog => blog.PlatformName, faker => faker.Company.CompanyName()));
+        .RuleFor(blog => blog.Description, faker => faker.Lorem.Sentence())
+        .RuleFor(blog => blog.PlatformName, faker => faker.Company.CompanyName())
+        .RuleFor(blog => blog.Tags, faker => faker.Lorem.Words(2).ToList())
+        .RuleFor(blog => blog.IsPublished, faker => faker.Random.Bool())
+        .RuleFor(blog => blog.ShareCount, faker => faker.Random.Int(1, 100)));
 
     private readonly Lazy<Faker<BlogPost>> _lazyBlogPostFaker = new(() => new Faker<BlogPost>()
         .MakeDeterministic()

@@ -3,7 +3,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -61,6 +60,7 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     [InlineData("fields[^ ]", "Unexpected whitespace.")]
     [InlineData("fields[^owner]", "Resource type 'owner' does not exist.")]
     [InlineData("fields[^owner.posts]", "Resource type 'owner' does not exist.")]
+    [InlineData("fields[^unknown]", "Resource type 'unknown' does not exist.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
         // Arrange
@@ -90,7 +90,29 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     [InlineData("fields[blogPosts]", "id^(", ", expected.")]
     [InlineData("fields[blogPosts]", "id,^", "Field name expected.")]
     [InlineData("fields[blogPosts]", "author.^id,",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: a field. End of field chain expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more compound attributes, followed by a field. " +
+        "End of field chain expected.")]
+    // Compound attributes
+    [InlineData("fields[appointments]", "keywords.^x",
+        "Field chain on resource type 'appointments' failed to match the pattern: zero or more compound attributes, followed by a field. " +
+        "End of field chain expected.")]
+    [InlineData("fields[appointments]", "calendar.^title",
+        "Field chain on resource type 'appointments' failed to match the pattern: zero or more compound attributes, followed by a field. " +
+        "End of field chain expected.")]
+    [InlineData("fields[appointments]", "location.address.city.^x",
+        "Field chain on resource type 'appointments' failed to match the pattern: zero or more compound attributes, followed by a field. " +
+        "End of field chain expected.")]
+    [InlineData("fields[calendars]", "workweek.workDays.^x",
+        "Field chain on resource type 'calendars' failed to match the pattern: zero or more compound attributes, followed by a field. " +
+        "End of field chain expected.")]
+    [InlineData("fields[calendars]", "mostRecentAppointment.^location",
+        "Field chain on resource type 'calendars' failed to match the pattern: zero or more compound attributes, followed by a field. " +
+        "End of field chain expected.")]
+    [InlineData("fields[appointments]", "location.^unknown", "Field 'unknown' does not exist on compound type 'AppointmentLocation'.")]
+    [InlineData("fields[appointments]", "attendees.^unknown", "Field 'unknown' does not exist on compound type 'Attendee'.")]
+    [InlineData("fields[appointments]", "^unknown.x", "Field 'unknown' does not exist on resource type 'appointments'.")]
+    [InlineData("fields[appointments]", "location.^", "Field name expected.")]
+    [InlineData("fields[calendars]", "workweek.^secret", "Retrieving attribute 'secret' is not allowed.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange
@@ -114,22 +136,45 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(author,caption,url)")]
-    [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
-    [InlineData("fields[blogs]", "id", "blogs(id)")]
-    [InlineData("fields[blogs]", "", "blogs(id)")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
+    [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts", "author,caption,url")]
+    [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts", "author,comments,labels")]
+    [InlineData("fields[blogs]", "id", "blogs", "id")]
+    [InlineData("fields[blogs]", "", "blogs", "")]
+    [InlineData("fields[appointments]", "", "appointments", "")]
+    [InlineData("fields[blogs]", "tags", "blogs", "tags")]
+    // Compound attributes
+    [InlineData("fields[appointments]", "location", "appointments", "location")]
+    [InlineData("fields[appointments]", "location.address.city", "appointments", "location.address.city")]
+    [InlineData("fields[appointments]", "location.address.city,location.address.street", "appointments", "location.address.city,location.address.street")]
+    [InlineData("fields[appointments]", "location.address.city,location.name", "appointments", "location.address.city,location.name")]
+    [InlineData("fields[appointments]", "cost.amount,cost.currency", "appointments", "cost.amount,cost.currency")]
+    [InlineData("fields[appointments]", "attendees", "appointments", "attendees")]
+    [InlineData("fields[appointments]", "attendees.name", "appointments", "attendees.name")]
+    [InlineData("fields[appointments]", "keywords", "appointments", "keywords")]
+    [InlineData("fields[appointments]", "calendar", "appointments", "calendar")]
+    [InlineData("fields[calendars]", "workweek.officeHours.opensAt", "calendars", "workweek.officeHours.opensAt")]
+    [InlineData("fields[calendars]", "workweek.officeHours", "calendars", "workweek.officeHours")]
+    [InlineData("fields[calendars]", "workweek.workDays", "calendars", "workweek.workDays")]
+    [InlineData("fields[calendars]", "workweek.internalNote", "calendars", "workweek.internalNote")]
+    [InlineData("fields[calendars]", "audit.createdBy", "calendars", "audit.createdBy")]
+    [InlineData("fields[calendars]", "holidays.name", "calendars", "holidays.name")]
+    [InlineData("fields[calendars]", "mostRecentAppointment", "calendars", "mostRecentAppointment")]
+    // Merging of a whole compound with its children, in both orders
+    [InlineData("fields[appointments]", "location.address.city,location.address", "appointments", "location.address")]
+    [InlineData("fields[appointments]", "location.address,location.address.city", "appointments", "location.address")]
+    [InlineData("fields[appointments]", "cost.amount,cost", "appointments", "cost")]
+    [InlineData("fields[calendars]", "holidays.date,holidays", "calendars", "holidays")]
+    // Duplicates are removed
+    [InlineData("fields[appointments]", "location.address.city,location.address.city", "appointments", "location.address.city")]
+    [InlineData("fields[calendars]", "holidays.name,holidays.name", "calendars", "holidays.name")]
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string resourceTypeExpected, string valueExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
-        ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
-        scope.Should().BeNull();
-
-        QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
-        value.ToString().Should().Be(valueExpected);
+        ResourceTypeExpressionInScope constraint = _reader.GetConstraints().Cast<ResourceTypeExpressionInScope>().ToArray().Single();
+        constraint.ResourceType.PublicName.Should().Be(resourceTypeExpected);
+        constraint.Expression.ToString().Should().Be(valueExpected);
     }
 }

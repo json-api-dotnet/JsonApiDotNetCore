@@ -30,6 +30,10 @@ public sealed class QueryExpressionTests
                 TestExpressionFactory.Instance.Count()
             ],
             [
+                TestExpressionFactory.Instance.ScalarCollectionElementValue(),
+                TestExpressionFactory.Instance.ScalarCollectionElementValue()
+            ],
+            [
                 TestExpressionFactory.Instance.Has(),
                 TestExpressionFactory.Instance.Has()
             ],
@@ -110,8 +114,8 @@ public sealed class QueryExpressionTests
                 TestExpressionFactory.Instance.SparseFieldSet()
             ],
             [
-                TestExpressionFactory.Instance.SparseFieldTable(),
-                TestExpressionFactory.Instance.SparseFieldTable()
+                TestExpressionFactory.Instance.SparseFieldSetElement(),
+                TestExpressionFactory.Instance.SparseFieldSetElement()
             ]
         };
 
@@ -162,7 +166,7 @@ public sealed class QueryExpressionTests
 
     [Theory]
     [MemberData(nameof(ExpressionTestData))]
-    public void Expressions_have_same_return_type(QueryExpression left, QueryExpression right)
+    public void Function_expressions_have_same_return_type(QueryExpression left, QueryExpression right)
     {
         if (left is FunctionExpression leftFunction && right is FunctionExpression rightFunction)
         {
@@ -173,11 +177,98 @@ public sealed class QueryExpressionTests
 
     [Theory]
     [MemberData(nameof(ExpressionTestData))]
+    public void Scalar_collection_expressions_have_same_return_type(QueryExpression left, QueryExpression right)
+    {
+        if (left is ScalarCollectionElementValueExpression leftElement && right is ScalarCollectionElementValueExpression rightElement)
+        {
+            // Assert
+            leftElement.ElementType.Should().Be(rightElement.ElementType);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ExpressionTestData))]
     public void Expressions_can_accept_visitor(QueryExpression left, QueryExpression right)
     {
         // Assert
         left.Accept(EmptyQueryExpressionVisitor.Instance, null).Should().BeNull();
         right.Accept(EmptyQueryExpressionVisitor.Instance, null).Should().BeNull();
+    }
+
+    [Fact]
+    public void ScalarCollectionElementValue_ToString_Equals_GetHashCode()
+    {
+        // Arrange
+        var stringElement = new ScalarCollectionElementValueExpression(typeof(string));
+        var otherStringElement = new ScalarCollectionElementValueExpression(typeof(string));
+        var guidElement = new ScalarCollectionElementValueExpression(typeof(Guid));
+
+        // Act and assert
+        stringElement.ToString().Should().Be("_");
+        stringElement.ToFullString().Should().Be("_");
+        guidElement.ToString().Should().Be("_");
+
+        stringElement.Should().Be(otherStringElement);
+        stringElement.GetHashCode().Should().Be(otherStringElement.GetHashCode());
+        stringElement.Should().NotBe(guidElement);
+        stringElement.GetHashCode().Should().NotBe(guidElement.GetHashCode());
+    }
+
+    [Fact]
+    public void SparseFieldSetElement_equality_includes_children()
+    {
+        // Arrange
+        var fixture = CompoundFixture.Instance;
+
+        SparseFieldSetElementExpression streetAndCity = fixture.CreateAddressElement(fixture.StreetAttribute, fixture.CityAttribute);
+        SparseFieldSetElementExpression cityAndStreet = fixture.CreateAddressElement(fixture.CityAttribute, fixture.StreetAttribute);
+        SparseFieldSetElementExpression cityOnly = fixture.CreateAddressElement(fixture.CityAttribute);
+        SparseFieldSetElementExpression whole = fixture.CreateAddressElement();
+
+        // Act and assert
+        streetAndCity.Should().Be(cityAndStreet);
+        streetAndCity.GetHashCode().Should().Be(cityAndStreet.GetHashCode());
+        streetAndCity.ToString().Should().Be(cityAndStreet.ToString());
+
+        streetAndCity.Should().NotBe(cityOnly);
+        cityOnly.Should().NotBe(whole);
+        streetAndCity.Should().NotBe(whole);
+        whole.ToString().Should().Be("address");
+        streetAndCity.ToString().Should().Be("address.city,address.street");
+    }
+
+    [Fact]
+    public void SparseFieldSet_Create_and_Empty()
+    {
+        // Arrange
+        var fixture = CompoundFixture.Instance;
+
+        // Act
+        var emptySet = SparseFieldSetExpression.Create(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty);
+
+        var nonEmptySet =
+            SparseFieldSetExpression.Create(
+                ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty.Add(fixture.AddressAttribute,
+                    fixture.CreateAddressElement()));
+
+        // Assert
+        emptySet.Should().BeSameAs(SparseFieldSetExpression.Empty);
+        SparseFieldSetExpression.Empty.Elements.Should().BeEmpty();
+        SparseFieldSetExpression.Empty.ToString().Should().BeEmpty();
+
+        nonEmptySet.Should().NotBeSameAs(SparseFieldSetExpression.Empty);
+        nonEmptySet.Elements.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void Has_without_filter_renders_as_has_collection()
+    {
+        // Arrange
+        var has = new HasExpression(TestExpressionFactory.Instance.ResourceFieldChainForChildren(), null);
+
+        // Act and assert
+        has.ToString().Should().Be("has(children)");
+        has.ToFullString().Should().Be("has(baseTestResources:children)");
     }
 
     [Fact]
@@ -296,7 +387,6 @@ public sealed class QueryExpressionTests
 
     private sealed class TestExpressionFactory
     {
-        private readonly ResourceType _baseTestResourceType;
         private readonly ResourceType _derivedTestResourceType;
         private readonly AttrAttribute _textAttribute;
         private readonly RelationshipAttribute _parentRelationship;
@@ -313,11 +403,11 @@ public sealed class QueryExpressionTests
             builder.Add<DerivedTestResource, Guid>();
             IResourceGraph resourceGraph = builder.Build();
 
-            _baseTestResourceType = resourceGraph.GetResourceType<BaseTestResource>();
+            ResourceType baseTestResourceType = resourceGraph.GetResourceType<BaseTestResource>();
             _derivedTestResourceType = resourceGraph.GetResourceType<DerivedTestResource>();
-            _textAttribute = _baseTestResourceType.GetAttributeByPropertyName(nameof(BaseTestResource.Text));
-            _parentRelationship = _baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Parent));
-            _childrenRelationship = _baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Children));
+            _textAttribute = baseTestResourceType.GetAttributeByPropertyName(nameof(BaseTestResource.Text));
+            _parentRelationship = baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Parent));
+            _childrenRelationship = baseTestResourceType.GetRelationshipByPropertyName(nameof(BaseTestResource.Children));
         }
 
         public AnyExpression Any()
@@ -333,6 +423,11 @@ public sealed class QueryExpressionTests
         public CountExpression Count()
         {
             return new CountExpression(ResourceFieldChainForChildren());
+        }
+
+        public ScalarCollectionElementValueExpression ScalarCollectionElementValue()
+        {
+            return new ScalarCollectionElementValueExpression(typeof(string));
         }
 
         public HasExpression Has()
@@ -435,24 +530,64 @@ public sealed class QueryExpressionTests
 
         public SparseFieldSetExpression SparseFieldSet()
         {
-            return new SparseFieldSetExpression([
-                _textAttribute,
-                _childrenRelationship
-            ]);
+            return new SparseFieldSetExpression(ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression>.Empty
+                .Add(_textAttribute, new SparseFieldSetElementExpression(_textAttribute))
+                .Add(_childrenRelationship, new SparseFieldSetElementExpression(_childrenRelationship)));
         }
 
-        public SparseFieldTableExpression SparseFieldTable()
+        public SparseFieldSetElementExpression SparseFieldSetElement()
         {
-            return new SparseFieldTableExpression(new Dictionary<ResourceType, SparseFieldSetExpression>
-            {
-                [_baseTestResourceType] = SparseFieldSet(),
-                [_derivedTestResourceType] = SparseFieldSet()
-            }.ToImmutableDictionary());
+            return new SparseFieldSetElementExpression(_textAttribute);
         }
 
         private static IQueryable<BaseTestResource> TestQueryableHandler(IQueryable<BaseTestResource> source, StringValues parameterValue)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class CompoundResource : Identifiable<long>
+    {
+        [Attr(IsCompound = true)]
+        public CompoundAddress? Address { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class CompoundAddress
+    {
+        [Attr]
+        public string? Street { get; set; }
+
+        [Attr]
+        public string? City { get; set; }
+    }
+
+    private sealed class CompoundFixture
+    {
+        public static CompoundFixture Instance { get; } = new();
+
+        public AttrAttribute AddressAttribute { get; }
+        public AttrAttribute StreetAttribute { get; }
+        public AttrAttribute CityAttribute { get; }
+
+        private CompoundFixture()
+        {
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<CompoundResource, long>().Build();
+            ResourceType resourceType = resourceGraph.GetResourceType<CompoundResource>();
+
+            AddressAttribute = resourceType.GetAttributeByPropertyName(nameof(CompoundResource.Address));
+            StreetAttribute = AddressAttribute.CompoundType!.GetAttributeByPropertyName(nameof(CompoundAddress.Street));
+            CityAttribute = AddressAttribute.CompoundType.GetAttributeByPropertyName(nameof(CompoundAddress.City));
+        }
+
+        public SparseFieldSetElementExpression CreateAddressElement(params AttrAttribute[] children)
+        {
+            ImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> childElements =
+                children.ToImmutableDictionary(child => (ResourceFieldAttribute)child, child => new SparseFieldSetElementExpression(child));
+
+            return new SparseFieldSetElementExpression(AddressAttribute, childElements);
         }
     }
 

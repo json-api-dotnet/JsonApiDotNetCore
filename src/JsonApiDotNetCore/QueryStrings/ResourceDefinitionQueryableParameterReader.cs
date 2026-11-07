@@ -52,7 +52,7 @@ public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQue
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
         object queryableHandler = GetQueryableHandler(parameterName)!;
-        var expressionInScope = new ExpressionInScope(null, new QueryableHandlerExpression(queryableHandler, parameterValue));
+        var expressionInScope = new RelationshipChainExpressionInScope(null, new QueryableHandlerExpression(queryableHandler, parameterValue));
         _constraints.Add(expressionInScope);
     }
 

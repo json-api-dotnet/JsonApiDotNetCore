@@ -29,7 +29,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         ArgumentNullException.ThrowIfNull(selection);
 
-        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, false, context);
+        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType!, false, context);
 
         LambdaExpression lambda = Expression.Lambda(bodyInitializer, context.LambdaScope.Parameter);
 
@@ -154,6 +154,12 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
 
+        foreach (IReadOnlyComplexProperty complexProperty in entityType.GetComplexProperties())
+        {
+            var propertySelector = new PropertySelector(complexProperty.PropertyInfo!);
+            IncludeWritableProperty(propertySelector, propertySelectors);
+        }
+
         foreach (IReadOnlyNavigation navigation in entityType.GetNavigations()
             .Where(navigation => navigation.ForeignKey.IsOwnership && !navigation.IsShadowProperty()))
         {
@@ -166,7 +172,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         foreach ((ResourceFieldAttribute resourceField, QueryLayer? nextLayer) in fieldSelectors)
         {
-            var propertySelector = new PropertySelector(resourceField.Property, nextLayer);
+            FieldSelectors? childSelectors = resourceField is AttrAttribute attr ? fieldSelectors.GetChildSelectors(attr) : null;
+            var propertySelector = new PropertySelector(resourceField.Property, nextLayer, childSelectors);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }
@@ -212,8 +219,175 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             assignmentRightHandSide = CreateAssignmentRightHandSideForLayer(propertySelector.NextLayer, propertyAccess,
                 propertySelector.Property, rightHandSideContext);
         }
+        else if (propertySelector.ChildSelectors is { IsEmpty: false })
+        {
+            if (CollectionConverter.Instance.FindCollectionElementType(propertySelector.Property.PropertyType) == null)
+            {
+                IReadOnlyEntityType? entityType = context.EntityModel.FindEntityType(propertySelector.Property.DeclaringType!);
+                IReadOnlyComplexProperty? compoundProperty = entityType?.FindComplexProperty(propertySelector.Property);
 
-        return Expression.Bind(propertySelector.Property, assignmentRightHandSide);
+                assignmentRightHandSide = CreateCompoundMemberInit(propertySelector.ChildSelectors, propertyAccess, compoundProperty?.ComplexType, context);
+            }
+        }
+
+        if (ReferenceEquals(assignmentRightHandSide, propertyAccess))
+        {
+            IReadOnlyEntityType? declaringEntityType = context.EntityModel.FindEntityType(propertySelector.Property.DeclaringType!);
+            IReadOnlyComplexProperty? complexProperty = declaringEntityType?.FindComplexProperty(propertySelector.Property);
+
+            if (complexProperty is { IsCollection: false })
+            {
+                assignmentRightHandSide = CreateComplexValueCopy(propertyAccess, complexProperty.ComplexType);
+            }
+            else if (complexProperty is { IsCollection: true })
+            {
+                assignmentRightHandSide = CreateComplexCollectionCopy(propertyAccess);
+            }
+        }
+
+        MemberAssignment assignment = Expression.Bind(propertySelector.Property, assignmentRightHandSide);
+        return assignment;
+    }
+
+    private static Expression CreateComplexCollectionCopy(MemberExpression propertyAccess)
+    {
+        // Assigning a complex collection directly inside a projection on a related resource makes EF Core 10 fail when identity resolution is used
+        // ("Projecting queryable operations on JSON collection is not supported"). Materializing it through ToList/ToArray avoids that.
+        Type? elementType = CollectionConverter.Instance.FindCollectionElementType(propertyAccess.Type);
+
+        if (elementType != null)
+        {
+            if (propertyAccess.Type.IsArray)
+            {
+                return Expression.Call(typeof(Enumerable), "ToArray", [elementType], propertyAccess);
+            }
+
+            if (propertyAccess.Type.IsAssignableFrom(typeof(List<>).MakeGenericType(elementType)))
+            {
+                return Expression.Call(typeof(Enumerable), "ToList", [elementType], propertyAccess);
+            }
+        }
+
+        return propertyAccess;
+    }
+
+    private Expression CreateComplexValueCopy(MemberExpression propertyAccess, IReadOnlyComplexType complexType)
+    {
+        // Assigning a complex property as a whole inside a projection makes EF Core 10 fail when identity resolution is used
+        // (https://github.com/dotnet/efcore/issues/39322). Copying its members individually avoids that.
+        var assignments = new List<MemberBinding>();
+        Expression valueAccess = UnwrapNullableValue(propertyAccess);
+
+        foreach (IReadOnlyProperty property in complexType.GetProperties().Where(property => !property.IsShadowProperty()))
+        {
+            if (property.PropertyInfo is { SetMethod: not null })
+            {
+                assignments.Add(Expression.Bind(property.PropertyInfo, Expression.Property(valueAccess, property.PropertyInfo)));
+            }
+        }
+
+        foreach (IReadOnlyComplexProperty nestedProperty in complexType.GetComplexProperties())
+        {
+            if (nestedProperty.PropertyInfo is { SetMethod: not null })
+            {
+                MemberExpression nestedAccess = Expression.Property(valueAccess, nestedProperty.PropertyInfo);
+
+                Expression nestedValue = nestedProperty.IsCollection ? nestedAccess : CreateComplexValueCopy(nestedAccess, nestedProperty.ComplexType);
+                assignments.Add(Expression.Bind(nestedProperty.PropertyInfo, nestedValue));
+            }
+        }
+
+        NewExpression createInstance = _resourceFactory.CreateNewExpression(valueAccess.Type);
+        MemberInitExpression memberInit = Expression.MemberInit(createInstance, assignments);
+        return GuardCompoundInitializer(propertyAccess, memberInit);
+    }
+
+    private static Expression UnwrapNullableValue(Expression compoundAccess)
+    {
+        return Nullable.GetUnderlyingType(compoundAccess.Type) != null ? Expression.Property(compoundAccess, nameof(Nullable<>.Value)) : compoundAccess;
+    }
+
+    private static Expression GuardCompoundInitializer(Expression compoundAccess, MemberInitExpression memberInit)
+    {
+        if (Nullable.GetUnderlyingType(compoundAccess.Type) != null)
+        {
+            // Nullable structs do not define an equality operator, so test the HasValue property instead.
+            MemberExpression hasValue = Expression.Property(compoundAccess, nameof(Nullable<>.HasValue));
+
+            return Expression.Condition(hasValue, Expression.Convert(memberInit, compoundAccess.Type), Expression.Constant(null, compoundAccess.Type));
+        }
+
+        if (compoundAccess.Type.IsValueType)
+        {
+            // A non-nullable struct cannot be null.
+            return memberInit;
+        }
+
+        return TestForNull(compoundAccess, memberInit);
+    }
+
+    private Expression CreateCompoundMemberInit(FieldSelectors childSelectors, MemberExpression propertyAccess, IReadOnlyComplexType? complexType,
+        QueryClauseBuilderContext context)
+    {
+        Expression valueAccess = UnwrapNullableValue(propertyAccess);
+        Type compoundClrType = valueAccess.Type;
+        var assignments = new List<MemberBinding>();
+
+        if (childSelectors.ContainsReadOnlyAttribute)
+        {
+            // If a read-only attribute is selected within this compound type, its calculated value likely depends on another property,
+            // so fetch all writable properties of this compound type.
+            foreach (PropertyInfo property in compoundClrType.GetProperties().Where(p => p.SetMethod != null))
+            {
+                MemberExpression childPropertyAccess = Expression.Property(valueAccess, property);
+                AttrAttribute? childAttr = childSelectors.Keys.OfType<AttrAttribute>().FirstOrDefault(a => a.Property == property);
+                FieldSelectors? grandchildSelectors = childAttr != null ? childSelectors.GetChildSelectors(childAttr) : null;
+
+                Expression childRightHandSide = CreateChildRightHandSide(grandchildSelectors, childAttr is { IsCollection: true }, childPropertyAccess,
+                    property, complexType, context);
+
+                assignments.Add(Expression.Bind(property, childRightHandSide));
+            }
+        }
+        else
+        {
+            foreach ((ResourceFieldAttribute resourceField, _) in childSelectors)
+            {
+                if (resourceField is AttrAttribute childAttr && childAttr.Property.SetMethod != null)
+                {
+                    MemberExpression childPropertyAccess = Expression.Property(valueAccess, childAttr.Property);
+                    FieldSelectors? grandchildSelectors = childSelectors.GetChildSelectors(childAttr);
+
+                    Expression childRightHandSide = CreateChildRightHandSide(grandchildSelectors, childAttr.IsCollection, childPropertyAccess,
+                        childAttr.Property, complexType, context);
+
+                    assignments.Add(Expression.Bind(childAttr.Property, childRightHandSide));
+                }
+            }
+        }
+
+        NewExpression createInstance = _resourceFactory.CreateNewExpression(compoundClrType);
+        MemberInitExpression memberInit = Expression.MemberInit(createInstance, assignments);
+        return GuardCompoundInitializer(propertyAccess, memberInit);
+    }
+
+    private Expression CreateChildRightHandSide(FieldSelectors? grandchildSelectors, bool isCollection, MemberExpression childPropertyAccess,
+        PropertyInfo childProperty, IReadOnlyComplexType? parentComplexType, QueryClauseBuilderContext context)
+    {
+        IReadOnlyComplexProperty? childComplexProperty = parentComplexType?.FindComplexProperty(childProperty);
+
+        if (grandchildSelectors is { IsEmpty: false } && !isCollection)
+        {
+            return CreateCompoundMemberInit(grandchildSelectors, childPropertyAccess, childComplexProperty?.ComplexType, context);
+        }
+
+        if (childComplexProperty is { IsCollection: false })
+        {
+            // A nested compound that is selected as a whole is copied member by member, just like a top-level compound.
+            return CreateComplexValueCopy(childPropertyAccess, childComplexProperty.ComplexType);
+        }
+
+        return childPropertyAccess;
     }
 
     private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, MemberExpression propertyAccess, PropertyInfo selectorPropertyInfo,
@@ -277,13 +451,15 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         public PropertyInfo Property { get; }
         public QueryLayer? NextLayer { get; }
+        public FieldSelectors? ChildSelectors { get; }
 
-        public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null)
+        public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null, FieldSelectors? childSelectors = null)
         {
             ArgumentNullException.ThrowIfNull(property);
 
             Property = property;
             NextLayer = nextLayer;
+            ChildSelectors = childSelectors;
         }
 
         public override string ToString()

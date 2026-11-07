@@ -63,7 +63,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
                 : IncludeChainConverter.Instance.GetRelationshipChains(scopeInclude))
             {
                 SortExpression sort = GetSort(parameterValue.ToString(), scopeChain);
-                var expressionInScope = new ExpressionInScope(scopeChain, sort);
+                var expressionInScope = new RelationshipChainExpressionInScope(scopeChain, sort);
                 _constraints.Add(expressionInScope);
             }
         }
@@ -80,7 +80,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
 
         if (parameterScope.Scope == null)
         {
-            AssertIsCollectionRequest();
+            AssertIsCollectionRequest(parameterName);
         }
 
         return parameterScope.Scope;

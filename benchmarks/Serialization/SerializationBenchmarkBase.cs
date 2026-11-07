@@ -43,11 +43,11 @@ public abstract class SerializationBenchmarkBase
         var metaBuilder = new NoMetaBuilder();
         IQueryConstraintProvider[] constraintProviders = [];
         var resourceDefinitionAccessor = new NeverResourceDefinitionAccessor();
-        var sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
+        var sparseFieldSetEvaluator = new SparseFieldSetEvaluator(constraintProviders, resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
         ResponseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache,
-            sparseFieldSetCache, requestQueryStringAccessor);
+            sparseFieldSetEvaluator, requestQueryStringAccessor);
     }
 
     protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);

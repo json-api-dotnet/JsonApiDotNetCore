@@ -31,12 +31,12 @@ public sealed class IncompleteResourceGraphTests
         var linkBuilder = new FakeLinkBuilder();
         var metaBuilder = new FakeMetaBuilder();
         var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();
-        var sparseFieldSetCache = new SparseFieldSetCache(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
+        var sparseFieldSetEvaluator = new SparseFieldSetEvaluator(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
         var evaluatedIncludeCache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
 
         var responseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache,
-            sparseFieldSetCache, requestQueryStringAccessor);
+            sparseFieldSetEvaluator, requestQueryStringAccessor);
 
         var banana = new Banana();
 

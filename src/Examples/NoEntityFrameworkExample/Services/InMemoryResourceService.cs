@@ -85,6 +85,7 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
 
         FilterExpression[] filtersInTopScope = _constraintProviders
             .SelectMany(provider => provider.GetConstraints())
+            .OfType<RelationshipChainExpressionInScope>()
             .Where(constraint => constraint.Scope == null)
             .Select(constraint => constraint.Expression)
             .OfType<FilterExpression>()

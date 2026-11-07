@@ -208,6 +208,10 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         {
                             attributeValue = JsonInvalidAttributeInfo.Id;
                         }
+                        else if (attribute!.IsCompound)
+                        {
+                            attributeValue = ReadSubTree<JsonElement>(ref reader, options);
+                        }
                         else
                         {
                             try

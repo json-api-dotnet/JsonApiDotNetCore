@@ -22,6 +22,70 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
+    public async Task Can_apply_constraints_to_secondary_collection_of_resource_with_compounds()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        workItem.Tags = _fakers.WorkTag.GenerateSet(4);
+        workItem.Tags.ElementAt(0).Text = "a-1";
+        workItem.Tags.ElementAt(1).Text = "a-3";
+        workItem.Tags.ElementAt(2).Text = "b-2";
+        workItem.Tags.ElementAt(3).Text = "a-2";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItems/{workItem.StringId}/tags?filter=startsWith(text,'a')&sort=-text&page[size]=2";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(workItem.Tags.ElementAt(1).StringId);
+        responseDocument.Data.ManyValue[1].Id.Should().Be(workItem.Tags.ElementAt(3).StringId);
+    }
+
+    [Fact]
+    public async Task Can_apply_constraints_to_included_children_of_resource_with_compounds()
+    {
+        // Arrange
+        WorkItem parent = _fakers.WorkItem.GenerateOne().WithCompounds();
+        parent.Description = "parent";
+        parent.Children = _fakers.WorkItem.GenerateList(3);
+        parent.Children[0].Description = "match-1";
+        parent.Children[1].Description = "other";
+        parent.Children[2].Description = "match-2";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<WorkItem>();
+            dbContext.WorkItems.Add(parent);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route =
+            "/workItems?filter=equals(description,'parent')&include=children&filter[children]=startsWith(description,'match')&sort[children]=-description&page[size]=1,children:1";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(parent.StringId);
+
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(parent.Children[2].StringId);
+    }
+
+    [Fact]
     public async Task Can_get_primary_resources()
     {
         // Arrange

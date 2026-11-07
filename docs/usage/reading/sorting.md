@@ -24,6 +24,22 @@ Multiple attributes are separated by a comma.
 GET /api/articles?sort=author,-pageCount HTTP/1.1
 ```
 
+## Nested attributes
+
+_since v6.0_
+
+The path to sort on can go through to-one relationships and compound attributes, in any combination.
+
+```http
+GET /api/contacts?sort=name.lastName,-name.firstName HTTP/1.1
+```
+
+```http
+GET /api/contacts?sort=employer.address.city HTTP/1.1
+```
+
+The last field in the path must be a scalar attribute. Sorting on a compound attribute, on a collection or on a relationship itself is not possible.
+
 ## Count
 
 To sort on the number of nested resources, use the `count` function.
@@ -33,6 +49,39 @@ GET /api/blogs?sort=count(articles) HTTP/1.1
 ```
 
 This sorts the list of blogs by their number of articles.
+
+_since v6.0_
+
+The `count` function also works on collection attributes: scalar collections, compound collections, and those nested in compound attributes
+or reached through to-one relationships.
+
+```http
+GET /api/contacts?sort=-count(phoneNumbers),count(tags) HTTP/1.1
+```
+
+```http
+GET /api/contacts?sort=count(name.nicknames) HTTP/1.1
+```
+
+A collection that is `null` counts as empty.
+
+## Restricting sorting
+
+By default, all attributes can be sorted on. Use `AttrCapabilities.AllowSort` to opt out, which works for attributes
+of compound types too:
+
+```c#
+#nullable enable
+
+public sealed class Contact : Identifiable<long>
+{
+    [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowFilter)]
+    public string? Notes { get; set; }
+}
+```
+
+The capability is checked on every attribute in the path, including intermediate compound attributes and the collection in `count(...)`.
+For example, when the `Name` compound attribute does not have `AllowSort`, then neither `sort=name.lastName` nor `sort=count(name.nicknames)` is allowed.
 
 ## Secondary endpoints
 

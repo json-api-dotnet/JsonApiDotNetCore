@@ -19,4 +19,11 @@ public sealed class InjectionDbContext : TestableDbContext
 
         TimeProvider = timeProvider;
     }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<GiftCertificate>().ComplexProperty(giftCertificate => giftCertificate.Recipient, complexBuilder => complexBuilder.ToJson());
+
+        base.OnModelCreating(builder);
+    }
 }

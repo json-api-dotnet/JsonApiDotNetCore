@@ -913,7 +913,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
-        error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
+        error.Detail.Should().Be($"Including relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
@@ -936,7 +936,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
-        error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
+        error.Detail.Should().Be($"Including relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
@@ -1109,7 +1109,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
-        error.Detail.Should().Be($"Including 'posts.comments' exceeds the maximum inclusion depth of 1. {parameterValue}");
+        error.Detail.Should().Be($"Including 'posts.comments' has a depth of 2, which exceeds the maximum inclusion depth of 1. {parameterValue}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }

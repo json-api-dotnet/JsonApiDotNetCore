@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, dbContextTypes ?? Array.Empty<Type>());
+        SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, dbContextTypes ?? []);
 
         return services;
     }

@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,7 +11,20 @@ namespace JsonApiDotNetCore.Queries;
 [PublicAPI]
 public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLayer?>
 {
+    private Dictionary<AttrAttribute, FieldSelectors>? _childSelectors;
+
     public bool IsEmpty => Count == 0;
+
+    /// <summary>
+    /// Indicates whether any child selectors have been configured for compound attributes.
+    /// </summary>
+    public bool HasChildSelectors => _childSelectors is { Count: > 0 };
+
+    /// <summary>
+    /// The configured child selectors keyed by their parent compound attribute.
+    /// </summary>
+    public IReadOnlyDictionary<AttrAttribute, FieldSelectors> ChildSelectors =>
+        _childSelectors ?? (IReadOnlyDictionary<AttrAttribute, FieldSelectors>)ImmutableDictionary<AttrAttribute, FieldSelectors>.Empty;
 
     public bool ContainsReadOnlyAttribute
     {
@@ -26,6 +40,32 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
         {
             return Count > 0 && this.All(selector => selector.Key is RelationshipAttribute);
         }
+    }
+
+    /// <summary>
+    /// Gets child selectors for the specified compound attribute, or <c>null</c> if not present.
+    /// </summary>
+    public FieldSelectors? GetChildSelectors(AttrAttribute compoundAttribute)
+    {
+        ArgumentNullException.ThrowIfNull(compoundAttribute);
+        return _childSelectors?.GetValueOrDefault(compoundAttribute);
+    }
+
+    /// <summary>
+    /// Gets or creates child selectors for the specified compound attribute.
+    /// </summary>
+    public FieldSelectors GetOrCreateChildSelectors(AttrAttribute compoundAttribute)
+    {
+        ArgumentNullException.ThrowIfNull(compoundAttribute);
+        _childSelectors ??= new Dictionary<AttrAttribute, FieldSelectors>();
+
+        if (!_childSelectors.TryGetValue(compoundAttribute, out FieldSelectors? childSelectors))
+        {
+            childSelectors = new FieldSelectors();
+            _childSelectors[compoundAttribute] = childSelectors;
+        }
+
+        return childSelectors;
     }
 
     public bool ContainsField(ResourceFieldAttribute field)
@@ -62,10 +102,11 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
 
     public void RemoveAttributes()
     {
-        while (this.Any(pair => pair.Key is AttrAttribute))
+        foreach (ResourceFieldAttribute field in Keys.Where(key => key is AttrAttribute).ToArray())
         {
-            ResourceFieldAttribute field = this.First(pair => pair.Key is AttrAttribute).Key;
             Remove(field);
         }
+
+        _childSelectors?.Clear();
     }
 }

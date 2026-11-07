@@ -11,6 +11,9 @@ public sealed class WebShop : Identifiable<long>, IHasTenant
     [Attr]
     public string Url { get; set; } = null!;
 
+    [Attr(IsCompound = true)]
+    public ShopContact? Contact { get; set; }
+
     public Guid TenantId { get; set; }
 
     [HasMany]

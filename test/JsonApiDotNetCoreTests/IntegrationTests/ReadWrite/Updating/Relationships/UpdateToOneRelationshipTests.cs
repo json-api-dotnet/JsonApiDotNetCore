@@ -24,6 +24,50 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     }
 
     [Fact]
+    public async Task Can_update_relationship_and_leave_compounds_intact()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne().WithCompounds();
+        existingWorkItem.Assignee = _fakers.UserAccount.GenerateOne();
+
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingWorkItem, existingUserAccount);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "userAccounts",
+                id = existingUserAccount.StringId
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
+
+            workItemInDatabase.Assignee.Should().NotBeNull();
+            workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
+            workItemInDatabase.ShouldHaveOriginalCompoundsOf(existingWorkItem);
+        });
+    }
+
+    [Fact]
     public async Task Can_clear_ManyToOne_relationship()
     {
         // Arrange

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -206,6 +207,186 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Included[0].Attributes.Should().ContainKey("doorTotalCount").WhoseValue.Should().Be(2);
         responseDocument.Included[0].Attributes.Should().ContainKey("windowTotalCount").WhoseValue.Should().Be(1);
         responseDocument.Included[0].Relationships.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Loads_eager_parts_for_resource_with_compound()
+    {
+        // Arrange
+        Building building = _fakers.Building.GenerateOne();
+        building.Windows = _fakers.Window.GenerateList(4);
+        building.PrimaryDoor = _fakers.Door.GenerateOne();
+        building.SecondaryDoor = _fakers.Door.GenerateOne();
+
+        building.Dimensions = new BuildingDimensions
+        {
+            Width = 12,
+            Depth = 20,
+            Height = 8
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Buildings.Add(building);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/buildings/{building.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("windowCount").WhoseValue.Should().Be(4);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be(building.PrimaryDoor.Color);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("secondaryDoorColor").WhoseValue.Should().Be(building.SecondaryDoor.Color);
+
+        JsonElement dimensions = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dimensions").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
+        dimensions.GetProperty("width").GetDecimal().Should().Be(12);
+        dimensions.GetProperty("depth").GetDecimal().Should().Be(20);
+        dimensions.GetProperty("height").GetDecimal().Should().Be(8);
+    }
+
+    [Fact]
+    public async Task Loads_eager_parts_when_fieldset_selects_compound_leaf()
+    {
+        // Arrange
+        Building building = _fakers.Building.GenerateOne();
+        building.Windows = _fakers.Window.GenerateList(4);
+        building.PrimaryDoor = _fakers.Door.GenerateOne();
+        building.SecondaryDoor = _fakers.Door.GenerateOne();
+
+        building.Dimensions = new BuildingDimensions
+        {
+            Width = 12,
+            Depth = 20,
+            Height = 8
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Buildings.Add(building);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/buildings/{building.StringId}?fields[buildings]=dimensions.width,windowCount,primaryDoorColor";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(3);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("windowCount").WhoseValue.Should().Be(4);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be(building.PrimaryDoor.Color);
+
+        JsonElement dimensions = responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dimensions").WhoseValue.Should().BeOfType<JsonElement>()
+            .Subject;
+
+        dimensions.EnumerateObject().Should().ContainSingle().Which.Name.Should().Be("width");
+        dimensions.GetProperty("width").GetDecimal().Should().Be(12);
+    }
+
+    [Fact]
+    public async Task Can_filter_nested_compound_with_eager_loads()
+    {
+        // Arrange
+        List<Building> buildings = _fakers.Building.GenerateList(2);
+
+        foreach (Building building in buildings)
+        {
+            building.Windows = _fakers.Window.GenerateList(2);
+            building.PrimaryDoor = _fakers.Door.GenerateOne();
+        }
+
+        buildings[0].Dimensions = new BuildingDimensions
+        {
+            Width = 3
+        };
+
+        buildings[1].Dimensions = new BuildingDimensions
+        {
+            Width = 12
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Building>();
+            dbContext.Buildings.AddRange(buildings);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/buildings?filter=greaterThan(dimensions.width,'5')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(buildings[1].StringId);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("windowCount").WhoseValue.Should().Be(2);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be(buildings[1].PrimaryDoor!.Color);
+    }
+
+    [Fact]
+    public async Task Can_patch_building_with_identical_compound_and_get_204()
+    {
+        // Arrange
+        Building existingBuilding = _fakers.Building.GenerateOne();
+        existingBuilding.PrimaryDoor = _fakers.Door.GenerateOne();
+        existingBuilding.Windows = _fakers.Window.GenerateList(2);
+
+        existingBuilding.Dimensions = new BuildingDimensions
+        {
+            Width = 12,
+            Depth = 20,
+            Height = 8
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Buildings.Add(existingBuilding);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "buildings",
+                id = existingBuilding.StringId,
+                attributes = new
+                {
+                    number = existingBuilding.Number,
+                    primaryDoorColor = existingBuilding.PrimaryDoor.Color,
+                    dimensions = new
+                    {
+                        width = 12,
+                        depth = 20,
+                        height = 8
+                    }
+                }
+            }
+        };
+
+        string route = $"/buildings/{existingBuilding.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
     }
 
     [Fact]

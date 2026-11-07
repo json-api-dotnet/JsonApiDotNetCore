@@ -19,9 +19,13 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
 
         testContext.UseController<WebAccountsController>();
         testContext.UseController<CalendarsController>();
+        testContext.UseController<BlogsController>();
+        testContext.UseController<BlogPostsController>();
+        testContext.UseController<AppointmentsController>();
 
         var options = (JsonApiOptions)testContext.App.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = false;
+        options.IncludeTotalResourceCount = true;
     }
 
     [Fact]
@@ -117,7 +121,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
     }
 
     [Fact]
-    public async Task Can_filter_on_ID()
+    public async Task Can_filter_equals_on_ID()
     {
         // Arrange
         List<WebAccount> accounts = _fakers.WebAccount.GenerateList(2);
@@ -140,5 +144,801 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[0].StringId);
         responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(accounts[0].UserName);
+    }
+
+    [Fact]
+    public async Task Can_filter_equals_null_on_scalar_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].Description = null;
+        blogs[1].Description = "Some text";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=equals(description,null)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_not_equals_null_on_scalar_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].Description = null;
+        blogs[1].Description = "Some text";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=not(equals(description,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_equals_null_on_to_one_relationship()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].Owner = null;
+        blogs[1].Owner = _fakers.WebAccount.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=equals(owner,null)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_not_equals_null_on_to_one_relationship()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].Owner = null;
+        blogs[1].Owner = _fakers.WebAccount.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=not(equals(owner,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_equals_null_on_collection_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].Tags = null;
+
+        blogs[1].Tags =
+        [
+            "news",
+            "tech"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=equals(tags,null)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_not_equals_null_on_collection_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].Tags = null;
+
+        blogs[1].Tags =
+        [
+            "news",
+            "tech"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=not(equals(tags,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_equals_null_on_element_in_scalar_collection_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+
+        blogs[0].Tags =
+        [
+            "news",
+            null!
+        ];
+
+        blogs[1].Tags =
+        [
+            "news",
+            "tech"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=has(tags,equals(_,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_not_equals_null_on_element_in_scalar_collection_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+
+        blogs[0].Tags =
+        [
+            "news",
+            null!
+        ];
+
+        blogs[1].Tags =
+        [
+            "news",
+            "tech"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=has(tags,not(equals(_,null)))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Can_filter_equals_null_on_nullable_value_type_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].ShareCount = null;
+        blogs[1].ShareCount = 123;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=equals(shareCount,null)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_not_equals_null_on_nullable_value_type_attribute()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].ShareCount = null;
+        blogs[1].ShareCount = 123;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=not(equals(shareCount,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_equals_null_on_non_nullable_scalar_value_type()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?filter=equals(showWeekNumbers,null)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Can_filter_not_equals_null_on_non_nullable_scalar_value_type()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?filter=not(equals(showWeekNumbers,null))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Can_filter_equality_between_to_one_relationships()
+    {
+        // Arrange
+        List<WebAccount> accounts = _fakers.WebAccount.GenerateList(2);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
+
+        posts[0].Author = accounts[0];
+        posts[0].Reviewer = accounts[0];
+
+        posts[1].Author = accounts[0];
+        posts[1].Reviewer = accounts[1];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<BlogPost>();
+            dbContext.Posts.AddRange(posts);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogPosts?filter=equals(author,reviewer)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(posts[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_in_scope_of_relationship_with_blocked_inclusion()
+    {
+        // Arrange
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(2);
+        blog.Posts[0].Parent = blog;
+        blog.Posts[1].Parent = blog;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<BlogPost>();
+            dbContext.Blogs.Add(blog);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/blogPosts?filter[parent.posts]=equals(id,'{blog.Posts[1].StringId}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_compound_of_related_to_one()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(3);
+
+        appointments[0].Calendar = new Calendar
+        {
+            Workweek = new Workweek
+            {
+                FirstDay = DayOfWeek.Monday
+            }
+        };
+
+        appointments[1].Calendar = new Calendar
+        {
+            Workweek = new Workweek
+            {
+                FirstDay = DayOfWeek.Sunday
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=equals(calendar.workweek.firstDay,'Sunday')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_nested_compound_of_related_to_one()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(3);
+
+        calendars[0].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
+        calendars[0].MostRecentAppointment!.Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Rotterdam"
+            }
+        };
+
+        calendars[1].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
+        calendars[1].MostRecentAppointment!.Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Utrecht"
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?filter=equals(mostRecentAppointment.location.address.city,'Rotterdam')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(calendars[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_compound_collection_of_related_to_one()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(3);
+
+        calendars[0].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
+        calendars[0].MostRecentAppointment!.Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            },
+            new Attendee
+            {
+                Name = "Bob"
+            }
+        ];
+
+        calendars[1].MostRecentAppointment = _fakers.Appointment.GenerateOne();
+
+        calendars[1].MostRecentAppointment!.Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?filter=has(mostRecentAppointment.attendees,equals(name,'Bob'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(calendars[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_to_many_relationship_with_compound_collection_condition()
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(3);
+
+        calendars[0].PinnedAppointments = _fakers.Appointment.GenerateSet(2);
+
+        calendars[0].PinnedAppointments.ElementAt(0).Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        calendars[0].PinnedAppointments.ElementAt(1).Attendees =
+        [
+            new Attendee
+            {
+                Name = "Bob"
+            }
+        ];
+
+        calendars[1].PinnedAppointments = _fakers.Appointment.GenerateSet(1);
+
+        calendars[1].PinnedAppointments.ElementAt(0).Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        calendars[2].PinnedAppointments = _fakers.Appointment.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/calendars?filter=has(pinnedAppointments,has(attendees,equals(name,'Bob')))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(calendars[0].StringId);
+    }
+
+    [Theory]
+    [InlineData("has(workweek.breaks)", "01")]
+    [InlineData("has(workweek.breaks,equals(opensAt,'12:00:00'))", "0")]
+    [InlineData("has(workweek.breaks,greaterThan(opensAt,'14:00:00'))", "0")]
+    [InlineData("greaterThan(count(workweek.breaks),'1')", "0")]
+    [InlineData("equals(count(workweek.breaks),'0')", "23")]
+    public async Task Can_filter_on_compound_collection_nested_in_compound(string filterExpression, string expectedRows)
+    {
+        // Arrange
+        List<Calendar> calendars = _fakers.Calendar.GenerateList(4);
+
+        calendars[0].Workweek = new Workweek
+        {
+            Breaks =
+            [
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(12, 0),
+                    ClosesAt = new TimeOnly(12, 30)
+                },
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(15, 0),
+                    ClosesAt = new TimeOnly(15, 15)
+                }
+            ]
+        };
+
+        calendars[1].Workweek = new Workweek
+        {
+            Breaks =
+            [
+                new OfficeHours
+                {
+                    OpensAt = new TimeOnly(13, 0),
+                    ClosesAt = new TimeOnly(13, 30)
+                }
+            ]
+        };
+
+        calendars[2].Workweek = new Workweek
+        {
+            Breaks = []
+        };
+
+        calendars[3].Workweek = null;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Calendar>();
+            dbContext.Calendars.AddRange(calendars);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        string[] expectedIds = expectedRows.Select(row => calendars[row - '0'].StringId!).ToArray();
+        responseDocument.GetPrimaryIds().Should().BeEquivalentTo(expectedIds);
+    }
+
+    [Fact]
+    public async Task Can_filter_with_count_of_related_to_many_and_compound_collection()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(3);
+
+        appointments[0].Reminders = _fakers.Reminder.GenerateList(2);
+
+        appointments[0].Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        appointments[1].Reminders = _fakers.Reminder.GenerateList(2);
+
+        appointments[2].Reminders = _fakers.Reminder.GenerateList(1);
+
+        appointments[2].Attendees =
+        [
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=and(greaterThan(count(reminders),'1'),greaterThan(count(attendees),'0'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_combine_filter_sort_and_page_on_nested_attributes()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(5);
+
+        for (int index = 0; index < appointments.Count; index++)
+        {
+            appointments[index].Location = new AppointmentLocation
+            {
+                Name = index == 4 ? "Other" : "Office"
+            };
+
+            appointments[index].Cost = new AppointmentCost
+            {
+                Amount = (index + 1) * 10
+            };
+        }
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=equals(location.name,'Office')&sort=-cost.amount&page[size]=2&page[number]=2";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+        responseDocument.Data.ManyValue[1].Id.Should().Be(appointments[0].StringId);
+
+        responseDocument.Meta.Should().ContainTotal(4);
+    }
+
+    [Fact]
+    public async Task Cannot_filter_on_blocked_nested_attribute()
+    {
+        // Arrange
+        var parameterValue = new MarkedText("equals(workweek.^internalNote,null)", '^');
+        string route = $"/calendars?filter={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Filtering on attribute 'internalNote' is not allowed. {parameterValue}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Fact]
+    public async Task Cannot_filter_through_compound_attribute_with_blocked_capability()
+    {
+        // Arrange
+        var parameterValue = new MarkedText("equals(^audit.createdBy,null)", '^');
+        string route = $"/calendars?filter={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Filtering on attribute 'audit' is not allowed. {parameterValue}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
     }
 }

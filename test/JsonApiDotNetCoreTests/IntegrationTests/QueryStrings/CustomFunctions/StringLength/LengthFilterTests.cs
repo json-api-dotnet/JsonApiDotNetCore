@@ -19,6 +19,7 @@ public sealed class LengthFilterTests : IClassFixture<IntegrationTestContext<Tes
         _testContext = testContext;
 
         testContext.UseController<BlogsController>();
+        testContext.UseController<AppointmentsController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -125,5 +126,196 @@ public sealed class LengthFilterTests : IClassFixture<IntegrationTestContext<Tes
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Posts[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_length_in_scalar_collection_elements()
+    {
+        // Arrange
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+
+        blogs[0].Tags =
+        [
+            "csharp",
+            "dotnet"
+        ];
+
+        blogs[1].Tags =
+        [
+            "csharp",
+            "architecture"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Blog>();
+            dbContext.Blogs.AddRange(blogs);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/blogs?filter=has(tags,greaterThan(length(_),'6'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_length_of_nested_attribute()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Oslo"
+            }
+        };
+
+        appointments[1].Location = new AppointmentLocation
+        {
+            Address = new AppointmentAddress
+            {
+                City = "Rotterdam"
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=greaterThan(length(location.address.city),'5')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_length_in_compound_collection_scope()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Attendees =
+        [
+            new Attendee
+            {
+                Name = "Al"
+            }
+        ];
+
+        appointments[1].Attendees =
+        [
+            new Attendee
+            {
+                Name = "Al"
+            },
+            new Attendee
+            {
+                Name = "Alice"
+            }
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=has(attendees,greaterThan(length(name),'3'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_length_of_scalar_collection_element_in_compound_resource()
+    {
+        // Arrange
+        List<Appointment> appointments = _fakers.Appointment.GenerateList(2);
+
+        appointments[0].Keywords =
+        [
+            "a",
+            "bb"
+        ];
+
+        appointments[1].Keywords =
+        [
+            "a",
+            "bbbb"
+        ];
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Appointment>();
+            dbContext.Appointments.AddRange(appointments);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/appointments?filter=has(keywords,greaterThan(length(_),'3'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("appointments");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(appointments[1].StringId);
+    }
+
+    [Theory]
+    [InlineData("attendees")]
+    [InlineData("keywords")]
+    public async Task Cannot_filter_length_of_collection_attribute(string attributeName)
+    {
+        // Arrange
+        string route = $"/appointments?filter=greaterThan(length({attributeName}),'3')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+
+        error.Detail.Should().StartWith("Field chain on resource type 'appointments' failed to match the pattern: " +
+            "zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute.");
+
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
     }
 }

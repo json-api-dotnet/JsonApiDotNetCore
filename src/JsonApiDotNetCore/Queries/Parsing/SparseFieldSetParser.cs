@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -12,40 +11,42 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
 {
     /// <inheritdoc />
-    public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
+    public SparseFieldSetExpression Parse(string source, ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
-        SparseFieldSetExpression? expression = ParseSparseFieldSet(resourceType);
+        SparseFieldSetExpression expression = ParseSparseFieldSet(resourceType);
 
         AssertTokenStackIsEmpty();
 
         return expression;
     }
 
-    protected virtual SparseFieldSetExpression? ParseSparseFieldSet(ResourceType resourceType)
+    protected virtual SparseFieldSetExpression ParseSparseFieldSet(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
+        var treeBuilder = new SparseFieldTreeBuilder();
+        bool isFirstChain = true;
 
         while (TokenStack.Count > 0)
         {
-            if (fieldSetBuilder.Count > 0)
+            if (isFirstChain)
+            {
+                isFirstChain = false;
+            }
+            else
             {
                 EatSingleCharacterToken(TokenKind.Comma);
             }
 
-            ResourceFieldChainExpression nextChain =
-                ParseFieldChain(BuiltInPatterns.SingleField, FieldChainPatternMatchOptions.None, resourceType, "Field name expected.");
-
-            ResourceFieldAttribute nextField = nextChain.Fields.Single();
-            fieldSetBuilder.Add(nextField);
+            ResourceFieldChainExpression nextChain = ParseFieldChain(BuiltInPatterns.CompoundOrCompoundCollectionChainEndingInField, resourceType);
+            treeBuilder.IncludeChain(nextChain.Fields);
         }
 
-        return fieldSetBuilder.Count > 0 ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
+        return treeBuilder.ToExpression();
     }
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
@@ -55,7 +56,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
         if (field.IsViewBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
-            throw new QueryParseException($"Retrieving the {kind} '{field}' is not allowed.", position);
+            throw new QueryParseException($"Retrieving {kind} '{field}' is not allowed.", position);
         }
     }
 }

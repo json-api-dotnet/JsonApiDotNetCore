@@ -12,7 +12,6 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 {
     private const string HostPrefix = "http://localhost";
     private const int DefaultPageSize = 5;
-    private const string CollectionErrorMessage = "This query string parameter can only be used on a collection of resources (not on a single resource).";
 
     private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();
@@ -87,10 +86,12 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         responseDocument.Errors.Should().HaveCount(1);
 
+        const string message = "Query string parameter 'page[number]' can only be used on a collection of resources.";
+
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^page[number]");
+        error.Detail.Should().Be($"{message} Failed at position 1: ^page[number]");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -184,10 +185,12 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         responseDocument.Errors.Should().HaveCount(1);
 
+        const string message = "Query string parameter 'page[size]' can only be used on a collection of resources.";
+
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^page[size]");
+        error.Detail.Should().Be($"{message} Failed at position 1: ^page[size]");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }

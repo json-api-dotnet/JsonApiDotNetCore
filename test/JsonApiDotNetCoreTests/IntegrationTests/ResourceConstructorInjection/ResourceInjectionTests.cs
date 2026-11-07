@@ -364,4 +364,55 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
             officeInDatabase.GiftCertificates.Should().HaveCount(2);
         });
     }
+
+    [Fact]
+    public async Task Can_create_resource_with_constructor_dependency_and_compound()
+    {
+        // Arrange
+        var timeProvider = (FrozenTimeProvider)_testContext.App.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsClosedTime);
+
+        DateTimeOffset newIssueDate = OfficeIsClosedTime.AddYears(-1).AddDays(-1).UtcDateTime;
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "giftCertificates",
+                attributes = new
+                {
+                    issueDate = newIssueDate,
+                    recipient = new
+                    {
+                        name = "Alice",
+                        emailAddress = "alice@example.com"
+                    }
+                }
+            }
+        };
+
+        const string route = "/giftCertificates";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasExpired").WhoseValue.Should().Be(true);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("recipient").WhoseValue.Should().NotBeNull();
+
+        long newCertificateId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            GiftCertificate certificateInDatabase = await dbContext.GiftCertificates.FirstWithIdAsync(newCertificateId);
+
+            certificateInDatabase.IssueDate.Should().Be(newIssueDate);
+            certificateInDatabase.Recipient.Should().NotBeNull();
+            certificateInDatabase.Recipient.Name.Should().Be("Alice");
+            certificateInDatabase.Recipient.EmailAddress.Should().Be("alice@example.com");
+        });
+    }
 }

@@ -109,14 +109,88 @@ public sealed class IncludeParseTests : BaseParseTests
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
         scope.Should().BeNull();
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
         value.ToString().Should().Be(stringExpected);
         value.ToFullString().Should().Be(fullStringExpected);
+    }
+
+    [Theory]
+    [InlineData("calendars", "appointments.calendar", "appointments.calendar", "calendars:appointments.appointments:calendar")]
+    [InlineData("calendars", "appointments,mostRecentAppointment", "appointments,mostRecentAppointment",
+        "calendars:appointments,calendars:mostRecentAppointment")]
+    [InlineData("appointments", "calendar,reminders", "calendar,reminders", "appointments:calendar,appointments:reminders")]
+    public void Reader_Read_Succeeds_On_Compound_Types(string resourceTypeName, string parameterValue, string stringExpected, string fullStringExpected)
+    {
+        // Arrange
+        IncludeQueryStringParameterReader reader = CreateReader(resourceTypeName);
+
+        // Act
+        reader.Read("include", parameterValue);
+
+        // Assert
+        RelationshipChainExpressionInScope[] constraints = reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
+        ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+        scope.Should().BeNull();
+
+        QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
+        value.ToString().Should().Be(stringExpected);
+        value.ToFullString().Should().Be(fullStringExpected);
+    }
+
+    [Theory]
+    // Attributes are never relationships, whether compound, collection or scalar
+    [InlineData("calendars", "^workweek", "Relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "^holidays", "Relationship 'holidays' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "^audit", "Relationship 'audit' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "^workweek.officeHours", "Relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "mostRecentAppointment.^location", "Relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("calendars", "mostRecentAppointment.^attendees", "Relationship 'attendees' does not exist on resource type 'appointments'.")]
+    [InlineData("calendars", "mostRecentAppointment.calendar.^workweek", "Relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("calendars", "appointments.^attendees", "Relationship 'attendees' does not exist on resource type 'appointments'.")]
+    [InlineData("calendars", "appointments.^keywords", "Relationship 'keywords' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "^location", "Relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "^location.address", "Relationship 'location' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "^cost", "Relationship 'cost' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "^keywords", "Relationship 'keywords' does not exist on resource type 'appointments'.")]
+    [InlineData("appointments", "calendar.^workweek", "Relationship 'workweek' does not exist on resource type 'calendars'.")]
+    [InlineData("appointments", "calendar.^audit", "Relationship 'audit' does not exist on resource type 'calendars'.")]
+    [InlineData("blogs", "^tags", "Relationship 'tags' does not exist on resource type 'blogs'.")]
+    [InlineData("blogs", "owner.^address", "Relationship 'address' does not exist on resource type 'webAccounts'.")]
+    [InlineData("blogs", "posts.^address", "Relationship 'address' does not exist on resource type 'blogPosts'.")]
+    public void Reader_Read_Fails_On_Compound_Types(string resourceTypeName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        IncludeQueryStringParameterReader reader = CreateReader(resourceTypeName);
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => reader.Read("include", parameterValueSource.Text);
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be("include");
+        exception.Errors.Should().HaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified include is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("include");
+    }
+
+    private IncludeQueryStringParameterReader CreateReader(string resourceTypeName)
+    {
+        Request.PrimaryResourceType = ResourceGraph.GetResourceType(resourceTypeName);
+
+        var options = new JsonApiOptions();
+        var parser = new IncludeParser(options);
+        return new IncludeQueryStringParameterReader(parser, Request, ResourceGraph);
     }
 }

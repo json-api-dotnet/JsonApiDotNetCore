@@ -54,6 +54,12 @@ internal sealed class TestableQueryExpressionRewriter : QueryExpressionRewriter<
         return base.VisitHas(expression, argument);
     }
 
+    public override QueryExpression VisitScalarCollectionElementValue(ScalarCollectionElementValueExpression expression, object? argument)
+    {
+        Capture(expression);
+        return base.VisitScalarCollectionElementValue(expression, argument);
+    }
+
     public override QueryExpression VisitIsType(IsTypeExpression expression, object? argument)
     {
         Capture(expression);
@@ -96,16 +102,16 @@ internal sealed class TestableQueryExpressionRewriter : QueryExpressionRewriter<
         return base.VisitAny(expression, argument);
     }
 
-    public override QueryExpression? VisitSparseFieldTable(SparseFieldTableExpression expression, object? argument)
-    {
-        Capture(expression);
-        return base.VisitSparseFieldTable(expression, argument);
-    }
-
     public override QueryExpression VisitSparseFieldSet(SparseFieldSetExpression expression, object? argument)
     {
         Capture(expression);
         return base.VisitSparseFieldSet(expression, argument);
+    }
+
+    public override QueryExpression? VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, object? argument)
+    {
+        Capture(expression);
+        return base.VisitSparseFieldSetElement(expression, argument);
     }
 
     public override QueryExpression? VisitQueryStringParameterScope(QueryStringParameterScopeExpression expression, object? argument)

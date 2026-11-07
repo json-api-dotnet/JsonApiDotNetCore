@@ -30,11 +30,11 @@ public sealed class SumFilterParseTests : BaseParseTests
 
     [Theory]
     [InlineData("filter", "equals(sum^", "( expected.")]
-    [InlineData("filter", "equals(sum(^", "To-many relationship expected.")]
+    [InlineData("filter", "equals(sum(^", "To-many relationship name expected.")]
     [InlineData("filter", "equals(sum(^ ", "Unexpected whitespace.")]
-    [InlineData("filter", "equals(sum(^)", "To-many relationship expected.")]
-    [InlineData("filter", "equals(sum(^'a')", "To-many relationship expected.")]
-    [InlineData("filter", "equals(sum(^null)", "To-many relationship expected.")]
+    [InlineData("filter", "equals(sum(^)", "To-many relationship name expected.")]
+    [InlineData("filter", "equals(sum(^'a')", "To-many relationship name expected.")]
+    [InlineData("filter", "equals(sum(^null)", "To-many relationship name expected.")]
     [InlineData("filter", "equals(sum(^some)", "Field 'some' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "equals(sum(^title)",
         "Field chain on resource type 'blogs' failed to match the pattern: a to-many relationship. " +
@@ -42,8 +42,8 @@ public sealed class SumFilterParseTests : BaseParseTests
     [InlineData("filter", "equals(sum(posts^))", ", expected.")]
     [InlineData("filter", "equals(sum(posts,^))", "Field name expected.")]
     [InlineData("filter", "equals(sum(posts,author^))",
-        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
-        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships or compound non-collection attributes, followed by a scalar non-collection attribute. " +
+        "To-one relationship or non-collection attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "equals(sum(posts,^url))", "Attribute of a numeric type expected.")]
     [InlineData("filter", "equals(sum(posts,^has(labels)))", "Function that returns a numeric type expected.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
@@ -77,9 +77,8 @@ public sealed class SumFilterParseTests : BaseParseTests
         // Act
         _reader.Read(parameterName, parameterValue);
 
-        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
-
         // Assert
+        RelationshipChainExpressionInScope[] constraints = _reader.GetConstraints().Cast<RelationshipChainExpressionInScope>().ToArray();
         ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
         scope?.ToString().Should().Be(scopeExpected);
 

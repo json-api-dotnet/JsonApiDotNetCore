@@ -35,6 +35,11 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
     private const string DerivedQM = "derivedQSetOfItems";
     private const string DerivedVM = "derivedVSetOfItems";
     private const string DerivedToOneOrMany = "derivedToOneOrToMany";
+    private const string DerivedQC = "derivedQInfo";
+    private const string DerivedQQ = "derivedQPhones";
+    private const string DerivedVL = "derivedVTags";
+    private const string SharedC = "sharedInfo";
+    private const string InfoDetail = "detail";
 
     private readonly LoggerFactory _loggerFactory;
     private readonly IResourceGraph _resourceGraph;
@@ -102,6 +107,14 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
     [InlineData("R", TDerivedV, DerivedM, typeof(DerivedV))]
     [InlineData("F", TDerivedV, DerivedM, typeof(DerivedV))]
     [InlineData("M", TDerivedV, DerivedToOneOrMany, typeof(DerivedV))]
+    [InlineData("C", TBase, DerivedQC, typeof(DerivedQ))]
+    [InlineData("A", TBase, DerivedQC, typeof(DerivedQ))]
+    [InlineData("F", TBase, DerivedQC, typeof(DerivedQ))]
+    [InlineData("Q", TBase, DerivedQQ, typeof(DerivedQ))]
+    [InlineData("L", TBase, DerivedVL, typeof(DerivedV))]
+    [InlineData("C", TDerivedQ, DerivedQC, typeof(DerivedQ))]
+    [InlineData("C", TDerivedQ, SharedC, typeof(DerivedQ))]
+    [InlineData("C", TDerivedV, SharedC, typeof(DerivedV))]
     public void MatchSucceeds(string patternText, string resourceTypeName, string fieldChainText, Type expectedType)
     {
         // Arrange
@@ -117,8 +130,32 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
         result.IsSuccess.Should().BeTrue();
 
         result.FieldChain[0].PublicName.Should().Be(fieldChainText);
-        result.FieldChain[0].Type.ClrType.Should().Be(expectedType);
+        result.FieldChain[0].ContainingType.ClrType.Should().Be(expectedType);
         result.FieldChain[0].Property.ReflectedType.Should().Be(expectedType);
+    }
+
+    [Theory]
+    [InlineData("CS", TBase, $"{DerivedQC}.{InfoDetail}", typeof(DerivedQ))]
+    [InlineData("[OC]*S", TBase, $"{DerivedQC}.{InfoDetail}", typeof(DerivedQ))]
+    [InlineData("[OC]*S", TBase, $"{BaseO}.{DerivedQC}.{InfoDetail}", typeof(DerivedQ))]
+    [InlineData("CS", TDerivedQ, $"{DerivedQC}.{InfoDetail}", typeof(DerivedQ))]
+    public void MatchSucceedsThroughDerivedCompound(string patternText, string resourceTypeName, string fieldChainText, Type expectedType)
+    {
+        // Arrange
+        FieldChainPattern pattern = FieldChainPattern.Parse(patternText);
+        ResourceType resourceType = _resourceGraph.GetResourceType(resourceTypeName);
+
+        // Act
+        PatternMatchResult result = pattern.Match(fieldChainText, resourceType, FieldChainPatternMatchOptions.AllowDerivedTypes, _loggerFactory);
+
+        // Assert
+        result.FailureMessage.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+
+        string chainText = string.Join('.', result.FieldChain);
+        chainText.Should().Be(fieldChainText);
+
+        result.FieldChain.Single(field => field.PublicName == DerivedQC).ContainingType.ClrType.Should().Be(expectedType);
     }
 
     [Theory]
@@ -143,6 +180,20 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
     [InlineData("F", TBase, $"^{DerivedToOneOrMany}", $"Field '{DerivedToOneOrMany}' is defined on multiple types that derive from resource type '{TBase}'.")]
     [InlineData("FF", TBase, $"{BaseM}.^{DerivedToOneOrMany}",
         $"Field '{DerivedToOneOrMany}' is defined on multiple types that derive from resource type '{TBase}'.")]
+    // Compound attributes: not found, derived-only compound is not visible from the other derived type
+    [InlineData("F", TDerivedV, $"^{DerivedQC}", $"Field '{DerivedQC}' does not exist on resource type '{TDerivedV}'.")]
+    [InlineData("F", TDerivedQ, $"^{DerivedVL}", $"Field '{DerivedVL}' does not exist on resource type '{TDerivedQ}'.")]
+    // Compound attributes: multiple derived types define the same compound
+    [InlineData("C", TBase, $"^{SharedC}", $"Field '{SharedC}' is defined on multiple types that derive from resource type '{TBase}'.")]
+    [InlineData("F", TBase, $"^{SharedC}", $"Field '{SharedC}' is defined on multiple types that derive from resource type '{TBase}'.")]
+    [InlineData("FF", TBase, $"{BaseO}.^{SharedC}", $"Field '{SharedC}' is defined on multiple types that derive from resource type '{TBase}'.")]
+    // Compound attributes: derived lookup is not applied inside a compound container
+    [InlineData("CS", TBase, $"{DerivedQC}.^{DerivedA}", "Field 'derivedValue' does not exist on compound type 'InfoCompound'.")]
+    [InlineData("CS", TBase, $"{DerivedQC}.^{X}", "Field 'unknown' does not exist on compound type 'InfoCompound'.")]
+    [InlineData("CS", TBase, $"{DerivedQC}.^{BaseO}", "Field 'singleItem' does not exist on compound type 'InfoCompound'.")]
+    [InlineData("CS", TBase, $"{DerivedQC}.{InfoDetail}.^{X}", "End of field chain expected.")]
+    // Compound attributes: type mismatch
+    [InlineData("S", TBase, $"^{DerivedQC}", $"Scalar non-collection attribute on resource type '{TBase}' expected.")]
     public void MatchFails(string patternText, string resourceTypeName, string fieldChainText, string failureMessage)
     {
         // Arrange
@@ -201,6 +252,15 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
 
         [HasOne]
         public Base? DerivedToOneOrToMany { get; set; }
+
+        [Attr(IsCompound = true)]
+        public InfoCompound? DerivedQInfo { get; set; }
+
+        [Attr(IsCompound = true)]
+        public List<InfoCompound> DerivedQPhones { get; set; } = [];
+
+        [Attr(IsCompound = true)]
+        public InfoCompound? SharedInfo { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -226,5 +286,18 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
 
         [HasMany]
         public ISet<Base> DerivedToOneOrToMany { get; set; } = new HashSet<Base>();
+
+        [Attr]
+        public List<string> DerivedVTags { get; set; } = [];
+
+        [Attr(IsCompound = true)]
+        public InfoCompound? SharedInfo { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class InfoCompound
+    {
+        [Attr]
+        public string? Detail { get; set; }
     }
 }

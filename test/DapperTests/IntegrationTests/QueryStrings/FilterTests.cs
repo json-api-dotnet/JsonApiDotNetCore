@@ -230,6 +230,34 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
     }
 
     [Fact]
+    public async Task Can_filter_equals_null_on_non_nullable_attribute_at_primary_endpoint()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
+        store.Clear();
+
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await _testContext.ClearAllTablesAsync(dbContext);
+            dbContext.TodoItems.Add(todoItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/todoItems?filter=equals(createdAt,null)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Can_filter_equals_on_enum_attribute_at_primary_endpoint()
     {
         // Arrange
