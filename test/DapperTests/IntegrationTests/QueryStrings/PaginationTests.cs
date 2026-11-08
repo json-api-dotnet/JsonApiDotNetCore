@@ -7,16 +7,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.QueryStrings;
 
-public sealed class PaginationTests : IClassFixture<DapperTestContext>
+public sealed class PaginationTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public PaginationTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Cannot_use_pagination()

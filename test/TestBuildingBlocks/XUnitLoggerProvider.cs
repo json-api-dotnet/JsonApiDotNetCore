@@ -6,29 +6,24 @@ using Xunit;
 namespace TestBuildingBlocks;
 
 // Based on https://www.meziantou.net/how-to-get-asp-net-core-logs-in-the-output-of-xunit-tests.htm.
-public sealed class XUnitLoggerProvider : ILoggerProvider
+public sealed class XUnitLoggerProvider(string? categoryPrefixFilter, LogOutputFields outputFields = XUnitLoggerProvider.DefaultLogOutputFields)
+    : ILoggerProvider
 {
     private const LogOutputFields DefaultLogOutputFields = LogOutputFields.All & ~LogOutputFields.CategoryNamespace;
-    private readonly ITestOutputHelper _testOutputHelper;
-    private readonly LogOutputFields _outputFields;
-    private readonly string? _categoryPrefixFilter;
-
-    public XUnitLoggerProvider(ITestOutputHelper testOutputHelper, string? categoryPrefixFilter, LogOutputFields outputFields = DefaultLogOutputFields)
-    {
-        ArgumentNullException.ThrowIfNull(testOutputHelper);
-
-        _testOutputHelper = testOutputHelper;
-        _categoryPrefixFilter = categoryPrefixFilter;
-        _outputFields = outputFields;
-    }
+    private readonly ITestOutputHelper? _testOutputHelper = TestContext.Current.TestOutputHelper;
+    private readonly LogOutputFields _outputFields = outputFields;
+    private readonly string? _categoryPrefixFilter = categoryPrefixFilter;
 
     public ILogger CreateLogger(string categoryName)
     {
         ArgumentException.ThrowIfNullOrEmpty(categoryName);
 
-        if (_categoryPrefixFilter == null || categoryName.StartsWith(_categoryPrefixFilter, StringComparison.Ordinal))
+        if (_testOutputHelper != null)
         {
-            return new XUnitLogger(_testOutputHelper, _outputFields, categoryName);
+            if (_categoryPrefixFilter == null || categoryName.StartsWith(_categoryPrefixFilter, StringComparison.Ordinal))
+            {
+                return new XUnitLogger(_testOutputHelper, _outputFields, categoryName);
+            }
         }
 
         return NullLogger.Instance;
@@ -42,7 +37,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
     {
         private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
         private readonly LogOutputFields _outputFields = outputFields;
-        private readonly string? _categoryText = GetCategoryText(categoryName, outputFields);
+        private readonly Lazy<string?> _lazyCategoryText = new(() => GetCategoryText(categoryName, outputFields));
 
         private static string? GetCategoryText(string categoryName, LogOutputFields outputFields)
         {
@@ -96,7 +91,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
                 builder.Append(logLevelString);
             }
 
-            if (_categoryText != null)
+            if (_lazyCategoryText.Value != null)
             {
                 if (builder.Length > 0)
                 {
@@ -104,7 +99,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
                 }
 
                 builder.Append('[');
-                builder.Append(_categoryText);
+                builder.Append(_lazyCategoryText.Value);
                 builder.Append(']');
             }
 

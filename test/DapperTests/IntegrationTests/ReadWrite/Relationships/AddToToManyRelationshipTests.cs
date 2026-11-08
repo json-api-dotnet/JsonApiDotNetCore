@@ -9,16 +9,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Relationships;
 
-public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestContext>
+public sealed class AddToToManyRelationshipTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public AddToToManyRelationshipTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_add_to_OneToMany_relationship()

@@ -10,16 +10,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Relationships;
 
-public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestContext>
+public sealed class UpdateToOneRelationshipTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public UpdateToOneRelationshipTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_clear_OneToOne_relationship_with_nullable_foreign_key_at_left_side()

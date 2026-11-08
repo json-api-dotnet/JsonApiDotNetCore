@@ -9,16 +9,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.QueryStrings;
 
-public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
+public sealed class SparseFieldSets(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public SparseFieldSets(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_select_fields_in_primary_and_included_resources()

@@ -9,16 +9,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.QueryStrings;
 
-public sealed class FilterTests : IClassFixture<DapperTestContext>
+public sealed class FilterTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public FilterTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_filter_equals_on_obfuscated_id_at_primary_endpoint()

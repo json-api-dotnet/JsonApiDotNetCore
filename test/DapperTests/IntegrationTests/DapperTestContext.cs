@@ -31,7 +31,6 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
     public static readonly DateTimeOffset FrozenTime = DefaultDateTimeUtc;
 
     private readonly Lazy<WebApplicationFactory<TodoItem>> _lazyFactory;
-    private ITestOutputHelper? _testOutputHelper;
     private bool _throttleAcquired;
 
     protected override JsonSerializerOptions SerializerOptions
@@ -85,12 +84,8 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 
             builder.ConfigureLogging(loggingBuilder =>
             {
+                loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XUnitLoggerProvider("DapperExample."));
                 ClearLoggingProvidersInReleaseBuild(loggingBuilder);
-
-                if (_testOutputHelper != null)
-                {
-                    loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XUnitLoggerProvider(_testOutputHelper, "DapperExample."));
-                }
             });
 
             builder.UseDefaultServiceProvider(ConfigureServiceProvider);
@@ -107,11 +102,6 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
     private static void ClearLoggingProvidersInReleaseBuild(ILoggingBuilder loggingBuilder)
     {
         loggingBuilder.ClearProviders();
-    }
-
-    public void SetTestOutputHelper(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
     }
 
     public async Task ClearAllTablesAsync(DbContext dbContext)

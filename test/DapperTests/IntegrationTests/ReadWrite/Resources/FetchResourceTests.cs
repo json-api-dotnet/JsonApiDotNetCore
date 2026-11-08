@@ -9,16 +9,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Resources;
 
-public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
+public sealed class FetchResourceTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public FetchResourceTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_get_primary_resources()

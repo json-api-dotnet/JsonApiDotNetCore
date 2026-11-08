@@ -10,16 +10,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Resources;
 
-public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
+public sealed class CreateResourceTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public CreateResourceTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_create_resource()

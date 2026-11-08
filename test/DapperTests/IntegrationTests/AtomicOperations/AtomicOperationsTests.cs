@@ -11,16 +11,10 @@ using Xunit;
 
 namespace DapperTests.IntegrationTests.AtomicOperations;
 
-public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
+public sealed class AtomicOperationsTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public AtomicOperationsTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_use_multiple_operations()
