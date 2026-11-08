@@ -201,13 +201,13 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         }
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await AcquireDatabaseThrottleAsync();
         _throttleAcquired = true;
     }
 
-    public virtual async Task DisposeAsync()
+    public virtual async ValueTask DisposeAsync()
     {
         try
         {
@@ -227,6 +227,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         finally
         {
             ReleaseDatabaseThrottle();
+            GC.SuppressFinalize(this);
         }
     }
 }

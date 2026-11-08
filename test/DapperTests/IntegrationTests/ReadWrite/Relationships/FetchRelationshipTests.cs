@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Relationships;
 

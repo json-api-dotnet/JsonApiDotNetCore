@@ -7,7 +7,7 @@ using Xunit;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.ApiControllerAnnotation;
 
 public sealed class ApiControllerAnnotationLogTests
-    : IntegrationTestContext<TestableStartup<ApiControllerAnnotationDbContext>, ApiControllerAnnotationDbContext>, IAsyncDisposable
+    : IntegrationTestContext<TestableStartup<ApiControllerAnnotationDbContext>, ApiControllerAnnotationDbContext>
 {
     private readonly CapturingLoggerProvider _loggerProvider;
 
@@ -42,14 +42,9 @@ public sealed class ApiControllerAnnotationLogTests
             $"Please remove this attribute for optimal JSON:API compliance.");
     }
 
-    public override Task DisposeAsync()
+    public override ValueTask DisposeAsync()
     {
         _loggerProvider.Dispose();
         return base.DisposeAsync();
-    }
-
-    async ValueTask IAsyncDisposable.DisposeAsync()
-    {
-        await DisposeAsync();
     }
 }
