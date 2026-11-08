@@ -81,7 +81,7 @@ public sealed partial class JsonApiMiddleware
                 }
                 catch (JsonApiException exception)
                 {
-                    await FlushResponseAsync(httpContext.Response, _options.SerializerWriteOptions, exception);
+                    await FlushResponseAsync(httpContext.Response, _options.SerializerWriteOptions, exception, httpContext.RequestAborted);
                     return;
                 }
             }
@@ -235,7 +235,8 @@ public sealed partial class JsonApiMiddleware
 #pragma warning restore CS0618 // Type or member is obsolete
     }
 
-    private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, JsonApiException exception)
+    private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, JsonApiException exception,
+        CancellationToken cancellationToken)
     {
         httpResponse.ContentType = JsonApiMediaType.Default.ToString();
         httpResponse.StatusCode = (int)ErrorObject.GetResponseStatusCode(exception.Errors);
@@ -245,8 +246,8 @@ public sealed partial class JsonApiMiddleware
             Errors = exception.Errors.ToList()
         };
 
-        await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions);
-        await httpResponse.Body.FlushAsync();
+        await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions, cancellationToken);
+        await httpResponse.Body.FlushAsync(cancellationToken);
     }
 
     [LoggerMessage(Level = LogLevel.Information, SkipEnabledCheck = true,

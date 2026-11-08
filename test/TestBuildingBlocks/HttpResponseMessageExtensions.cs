@@ -1,6 +1,7 @@
 using System.Net;
 using FluentAssertions;
 using JetBrains.Annotations;
+using Xunit;
 
 namespace TestBuildingBlocks;
 
@@ -14,7 +15,7 @@ public static class HttpResponseMessageExtensions
 
         if (source.StatusCode != statusCode)
         {
-            string responseText = source.Content.ReadAsStringAsync().Result;
+            string responseText = source.Content.ReadAsStringAsync(TestContext.Current.CancellationToken).Result;
             source.StatusCode.Should().Be(statusCode, string.IsNullOrEmpty(responseText) ? null : $"response body returned was:\n{responseText}");
         }
     }

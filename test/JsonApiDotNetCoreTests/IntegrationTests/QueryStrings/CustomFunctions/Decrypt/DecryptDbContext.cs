@@ -22,13 +22,13 @@ public sealed class DecryptDbContext(DbContextOptions<DecryptDbContext> options)
         base.OnModelCreating(builder);
     }
 
-    internal async Task DeclareDecryptFunctionAsync()
+    internal async Task DeclareDecryptFunctionAsync(CancellationToken cancellationToken)
     {
         // Just for demo purposes, decryption is defined as: base64-decode the incoming value.
         await Database.ExecuteSqlRawAsync("""
             CREATE OR REPLACE FUNCTION decrypt_column_value(value text)
               RETURNS text
             RETURN encode(decode(value, 'base64'), 'escape');
-            """);
+            """, cancellationToken);
     }
 }

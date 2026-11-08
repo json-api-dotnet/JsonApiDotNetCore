@@ -27,7 +27,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -35,7 +35,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be("application/json; charset=utf-8");
 
-        string responseText = await httpResponse.Content.ReadAsStringAsync();
+        string responseText = await httpResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("[\"Welcome!\"]");
     }
 
@@ -56,7 +56,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -64,7 +64,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be("text/plain; charset=utf-8");
 
-        string responseText = await httpResponse.Content.ReadAsStringAsync();
+        string responseText = await httpResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("Hello, Jack");
     }
 
@@ -77,7 +77,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
@@ -85,7 +85,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be("text/plain; charset=utf-8");
 
-        string responseText = await httpResponse.Content.ReadAsStringAsync();
+        string responseText = await httpResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("Please send your name.");
     }
 
@@ -106,7 +106,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -114,7 +114,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be("text/plain; charset=utf-8");
 
-        string responseText = await httpResponse.Content.ReadAsStringAsync();
+        string responseText = await httpResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("Hi, Jane");
     }
 
@@ -127,7 +127,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -135,7 +135,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be("text/plain; charset=utf-8");
 
-        string responseText = await httpResponse.Content.ReadAsStringAsync();
+        string responseText = await httpResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("Good day, Janice");
     }
 
@@ -148,7 +148,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         using HttpClient client = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -156,7 +156,7 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be("text/plain; charset=utf-8");
 
-        string responseText = await httpResponse.Content.ReadAsStringAsync();
+        string responseText = await httpResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("Bye.");
     }
 }

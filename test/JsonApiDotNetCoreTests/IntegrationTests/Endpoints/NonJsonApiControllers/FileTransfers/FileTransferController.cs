@@ -18,7 +18,7 @@ public sealed class FileTransferController : ControllerBase
     }
 
     [HttpPost(Name = "upload")]
-    public async Task<IActionResult> UploadAsync(IFormFile? file)
+    public async Task<IActionResult> UploadAsync(IFormFile? file, CancellationToken cancellationToken)
     {
         if (file?.Length > 0)
         {
@@ -26,7 +26,7 @@ public sealed class FileTransferController : ControllerBase
 
             using (var stream = new MemoryStream())
             {
-                await file.CopyToAsync(stream);
+                await file.CopyToAsync(stream, cancellationToken);
                 fileContents = stream.ToArray();
             }
 

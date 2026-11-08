@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Xunit;
 
 namespace TestBuildingBlocks;
 
@@ -46,7 +47,7 @@ public static class DbContextExtensions
             {
 #pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
                 // Justification: Table names cannot be parameterized.
-                await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"");
+                await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", TestContext.Current.CancellationToken);
 #pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
             }
         }

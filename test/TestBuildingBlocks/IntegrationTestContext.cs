@@ -215,11 +215,11 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
             {
                 try
                 {
-                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync(TestContext.Current.CancellationToken));
                 }
                 finally
                 {
-                    await App.StopAsync();
+                    await App.StopAsync(TestContext.Current.CancellationToken);
                     await App.DisposeAsync();
                 }
             }

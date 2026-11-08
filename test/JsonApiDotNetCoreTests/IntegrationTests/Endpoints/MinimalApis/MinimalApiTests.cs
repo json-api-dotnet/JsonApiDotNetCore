@@ -43,7 +43,7 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(route, newEmail);
+        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(route, newEmail, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -64,13 +64,13 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(route, newEmail);
+        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(route, newEmail, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
         response.Content.Headers.ContentType?.MediaType.Should().Be("application/problem+json");
 
-        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(TestContext.Current.CancellationToken);
         problemDetails.Should().NotBeNull();
         problemDetails.Status.Should().Be((int)HttpStatusCode.BadRequest);
         problemDetails.Title.Should().Be("One or more validation errors occurred.");
@@ -104,12 +104,12 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.GetAsync(route);
+        using HttpResponseMessage response = await httpClient.GetAsync(route, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        var emails = await response.Content.ReadFromJsonAsync<List<Email>>();
+        var emails = await response.Content.ReadFromJsonAsync<List<Email>>(TestContext.Current.CancellationToken);
         emails.Should().HaveCount(1);
         emails[0].Subject.Should().Be(existingEmail.Subject);
         emails[0].Body.Should().Be(existingEmail.Body);
@@ -130,13 +130,13 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.GetAsync(route);
+        using HttpResponseMessage response = await httpClient.GetAsync(route, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
         response.Content.Headers.ContentType?.MediaType.Should().Be("application/problem+json");
 
-        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(TestContext.Current.CancellationToken);
         problemDetails.Should().NotBeNull();
         problemDetails.Status.Should().Be((int)HttpStatusCode.BadRequest);
         problemDetails.Title.Should().Be("One or more validation errors occurred.");
@@ -162,7 +162,7 @@ public sealed class MinimalApiTests : IClassFixture<IntegrationTestContext<Testa
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.SendAsync(request);
+        using HttpResponseMessage response = await httpClient.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);

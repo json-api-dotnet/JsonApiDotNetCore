@@ -175,6 +175,6 @@ public sealed class AtomicTransactionConsistencyTests
         await using AsyncServiceScope scope = _testContext.App.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ExtraDbContext>();
 
-        await dbContext.Database.EnsureDeletedAsync();
+        await dbContext.Database.EnsureDeletedAsync(TestContext.Current.CancellationToken);
     }
 }

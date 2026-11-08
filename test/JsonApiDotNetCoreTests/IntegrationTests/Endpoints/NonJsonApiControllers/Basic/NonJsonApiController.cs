@@ -13,10 +13,10 @@ public sealed class NonJsonApiController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostAsync()
+    public async Task<IActionResult> PostAsync(CancellationToken cancellationToken)
     {
         using var reader = new StreamReader(Request.Body, leaveOpen: true);
-        string name = await reader.ReadToEndAsync();
+        string name = await reader.ReadToEndAsync(cancellationToken);
 
         if (string.IsNullOrEmpty(name))
         {

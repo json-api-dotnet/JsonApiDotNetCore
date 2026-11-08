@@ -35,7 +35,7 @@ public sealed class LoggingTests
         var repository = app.Services.GetRequiredService<IResourceRepository<PrivateResource, long>>();
 
         // Act
-        _ = await repository.GetAsync(new QueryLayer(resourceType), CancellationToken.None);
+        _ = await repository.GetAsync(new QueryLayer(resourceType), TestContext.Current.CancellationToken);
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();

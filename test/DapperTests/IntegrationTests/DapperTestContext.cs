@@ -121,7 +121,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 
         if (databaseProvider == DatabaseProvider.SqlServer)
         {
-            await dbContext.Database.ExecuteSqlRawAsync(SqlServerClearAllTablesScript);
+            await dbContext.Database.ExecuteSqlRawAsync(SqlServerClearAllTablesScript, TestContext.Current.CancellationToken);
         }
         else
         {
@@ -138,7 +138,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 
 #pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
                 // Justification: Table names cannot be parameterized.
-                await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}");
+                await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}", TestContext.Current.CancellationToken);
 #pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
             }
         }
@@ -182,7 +182,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
             {
                 try
                 {
-                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync(TestContext.Current.CancellationToken));
                 }
                 finally
                 {
