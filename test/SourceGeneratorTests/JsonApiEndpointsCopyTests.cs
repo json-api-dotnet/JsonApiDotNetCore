@@ -1,8 +1,6 @@
 using System.Reflection;
-using FluentAssertions;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.SourceGenerators;
-using Xunit;
 
 namespace SourceGeneratorTests;
 

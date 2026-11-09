@@ -1,11 +1,9 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Decrypt;
 
@@ -38,7 +36,7 @@ public sealed class DecryptFilterTests : IClassFixture<IntegrationTestContext<Te
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.DeclareDecryptFunctionAsync();
+            await dbContext.DeclareDecryptFunctionAsync(TestContext.Current.CancellationToken);
             await dbContext.ClearTableAsync<Blog>();
             dbContext.Blogs.AddRange(blogs);
             await dbContext.SaveChangesAsync();
@@ -78,7 +76,7 @@ public sealed class DecryptFilterTests : IClassFixture<IntegrationTestContext<Te
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.DeclareDecryptFunctionAsync();
+            await dbContext.DeclareDecryptFunctionAsync(TestContext.Current.CancellationToken);
             dbContext.Blogs.Add(blog);
             await dbContext.SaveChangesAsync();
         });
@@ -110,7 +108,7 @@ public sealed class DecryptFilterTests : IClassFixture<IntegrationTestContext<Te
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.DeclareDecryptFunctionAsync();
+            await dbContext.DeclareDecryptFunctionAsync(TestContext.Current.CancellationToken);
             await dbContext.ClearTableAsync<Blog>();
             dbContext.Blogs.AddRange(blogs);
             await dbContext.SaveChangesAsync();

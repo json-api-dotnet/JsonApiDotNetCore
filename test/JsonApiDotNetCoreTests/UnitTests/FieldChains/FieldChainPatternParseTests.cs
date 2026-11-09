@@ -1,7 +1,5 @@
-using FluentAssertions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.FieldChains;
 

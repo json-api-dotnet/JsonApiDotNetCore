@@ -71,7 +71,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
         }
 
         var responseMediaType = new JsonApiMediaType(_request.Extensions);
-        await SendResponseBodyAsync(httpContext.Response, responseBody, responseMediaType.ToString());
+        await SendResponseBodyAsync(httpContext.Response, responseBody, responseMediaType.ToString(), httpContext.RequestAborted);
     }
 
     private static bool CanWriteBody(HttpStatusCode statusCode)
@@ -166,7 +166,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
         return false;
     }
 
-    private async Task SendResponseBodyAsync(HttpResponse httpResponse, string? responseBody, string contentType)
+    private async Task SendResponseBodyAsync(HttpResponse httpResponse, string? responseBody, string contentType, CancellationToken cancellationToken)
     {
         if (!string.IsNullOrEmpty(responseBody))
         {
@@ -176,7 +176,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
             await using TextWriter writer = new HttpResponseStreamWriter(httpResponse.Body, Encoding.UTF8);
             await writer.WriteAsync(responseBody);
-            await writer.FlushAsync();
+            await writer.FlushAsync(cancellationToken);
         }
     }
 

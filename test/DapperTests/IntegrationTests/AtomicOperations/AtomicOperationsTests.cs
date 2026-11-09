@@ -2,26 +2,17 @@ using System.Net;
 using DapperExample;
 using DapperExample.Models;
 using DapperExample.Repositories;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests.AtomicOperations;
 
-public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
+public sealed class AtomicOperationsTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public AtomicOperationsTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_use_multiple_operations()

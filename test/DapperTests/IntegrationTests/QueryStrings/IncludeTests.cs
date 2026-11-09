@@ -1,25 +1,16 @@
 using System.Net;
 using DapperExample.Models;
 using DapperExample.Repositories;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests.QueryStrings;
 
-public sealed class IncludeTests : IClassFixture<DapperTestContext>
+public sealed class IncludeTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public IncludeTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_get_primary_resources_with_multiple_include_chains()

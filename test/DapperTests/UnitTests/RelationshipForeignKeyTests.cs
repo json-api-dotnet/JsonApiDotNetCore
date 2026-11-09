@@ -1,5 +1,4 @@
 using DapperExample.TranslationToSql.DataModel;
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
@@ -9,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace DapperTests.UnitTests;
 

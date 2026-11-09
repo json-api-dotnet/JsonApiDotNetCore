@@ -1,4 +1,3 @@
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -7,8 +6,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
-using Xunit;
-using Xunit.Abstractions;
 
 // ReSharper disable InconsistentNaming
 
@@ -39,11 +36,11 @@ public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
     private readonly LoggerFactory _loggerFactory;
     private readonly IResourceGraph _resourceGraph;
 
-    public FieldChainPatternInheritanceMatchTests(ITestOutputHelper testOutputHelper)
+    public FieldChainPatternInheritanceMatchTests()
     {
 #pragma warning disable CA2000 // Dispose objects before losing scope
         // Justification: LoggerFactory.AddProvider takes ownership (passing the provider as a constructor parameter does not).
-        var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
+        var loggerProvider = new XUnitLoggerProvider(null, LogOutputFields.Message);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
         _loggerFactory = new LoggerFactory();

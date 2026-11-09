@@ -1,9 +1,7 @@
 using System.Reflection;
-using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
 

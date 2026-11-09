@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -13,7 +12,6 @@ using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Configuration;
 

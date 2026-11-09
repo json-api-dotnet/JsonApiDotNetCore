@@ -122,7 +122,7 @@ public sealed class TelevisionBroadcastDefinition(
         }
         else if (writeOperation == WriteOperationKind.DeleteResource)
         {
-            TelevisionBroadcast? broadcastToDelete = await _dbContext.Broadcasts.FirstWithIdAsync(broadcast.Id, cancellationToken);
+            TelevisionBroadcast? broadcastToDelete = await _dbContext.Broadcasts.FirstWithIdAsync(broadcast.Id);
 
             if (broadcastToDelete != null)
             {

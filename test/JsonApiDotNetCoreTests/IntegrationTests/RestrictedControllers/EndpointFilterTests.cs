@@ -4,7 +4,6 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 

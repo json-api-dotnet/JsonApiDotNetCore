@@ -1,10 +1,8 @@
 using System.Globalization;
 using System.Net;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Logging;
 

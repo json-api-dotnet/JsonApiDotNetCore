@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Net;
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -8,7 +7,6 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging.Abstractions;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceDefinitions;
 

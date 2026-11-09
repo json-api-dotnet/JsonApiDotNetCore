@@ -1,4 +1,3 @@
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace DiscoveryTests;
 
@@ -35,7 +33,7 @@ public sealed class LoggingTests
         var repository = app.Services.GetRequiredService<IResourceRepository<PrivateResource, long>>();
 
         // Act
-        _ = await repository.GetAsync(new QueryLayer(resourceType), CancellationToken.None);
+        _ = await repository.GetAsync(new QueryLayer(resourceType), TestContext.Current.CancellationToken);
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();

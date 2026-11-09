@@ -15,8 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests;
 
@@ -32,7 +30,6 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
     public static readonly DateTimeOffset FrozenTime = DefaultDateTimeUtc;
 
     private readonly Lazy<WebApplicationFactory<TodoItem>> _lazyFactory;
-    private ITestOutputHelper? _testOutputHelper;
     private bool _throttleAcquired;
 
     protected override JsonSerializerOptions SerializerOptions
@@ -60,7 +57,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
         _lazyFactory = new Lazy<WebApplicationFactory<TodoItem>>(CreateFactory);
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await AcquireDatabaseThrottleAsync();
         _throttleAcquired = true;
@@ -86,12 +83,8 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 
             builder.ConfigureLogging(loggingBuilder =>
             {
+                loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XUnitLoggerProvider("DapperExample."));
                 ClearLoggingProvidersInReleaseBuild(loggingBuilder);
-
-                if (_testOutputHelper != null)
-                {
-                    loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XUnitLoggerProvider(_testOutputHelper, "DapperExample."));
-                }
             });
 
             builder.UseDefaultServiceProvider(ConfigureServiceProvider);
@@ -110,11 +103,6 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
         loggingBuilder.ClearProviders();
     }
 
-    public void SetTestOutputHelper(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
-
     public async Task ClearAllTablesAsync(DbContext dbContext)
     {
         var dataModelService = Factory.Services.GetRequiredService<IDataModelService>();
@@ -122,7 +110,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 
         if (databaseProvider == DatabaseProvider.SqlServer)
         {
-            await dbContext.Database.ExecuteSqlRawAsync(SqlServerClearAllTablesScript);
+            await dbContext.Database.ExecuteSqlRawAsync(SqlServerClearAllTablesScript, TestContext.Current.CancellationToken);
         }
         else
         {
@@ -139,7 +127,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
 
 #pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
                 // Justification: Table names cannot be parameterized.
-                await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}");
+                await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}", TestContext.Current.CancellationToken);
 #pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
             }
         }
@@ -175,7 +163,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
         return Factory.CreateClient();
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         try
         {
@@ -183,7 +171,7 @@ public sealed class DapperTestContext : IntegrationTest, IAsyncLifetime
             {
                 try
                 {
-                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync(TestContext.Current.CancellationToken));
                 }
                 finally
                 {

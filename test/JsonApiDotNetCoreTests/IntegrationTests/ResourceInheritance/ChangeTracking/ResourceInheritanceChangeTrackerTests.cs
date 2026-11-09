@@ -1,9 +1,7 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.ChangeTracking;
 

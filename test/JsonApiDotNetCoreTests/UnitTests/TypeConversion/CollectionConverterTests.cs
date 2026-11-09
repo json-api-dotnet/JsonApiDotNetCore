@@ -1,6 +1,4 @@
-using FluentAssertions;
 using JsonApiDotNetCore;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.TypeConversion;
 

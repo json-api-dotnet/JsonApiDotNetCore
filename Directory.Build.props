@@ -8,7 +8,6 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysisMode>Recommended</AnalysisMode>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
-    <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
     <VersionPrefix>5.12.1</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
   </PropertyGroup>
@@ -40,9 +39,17 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     <!-- CA1707: Identifiers should not contain underscores -->
     <NoWarn>$(NoWarn);CA1707</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <None Include="$(MSBuildThisFileDirectory)testconfig.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+
+    <Using Include="FluentAssertions" Condition="'$(MSBuildProjectName)' != 'AnnotationTests'" />
+    <Using Include="Xunit" Condition="'$(MSBuildProjectName)' != 'AnnotationTests'" />
+  </ItemGroup>
 
   <PropertyGroup
     Condition="!$(MSBuildProjectName.StartsWith('JsonApiDotNetCore')) Or $(MSBuildProjectName.EndsWith('Tests')) Or $(MSBuildProjectName.EndsWith('Example'))">

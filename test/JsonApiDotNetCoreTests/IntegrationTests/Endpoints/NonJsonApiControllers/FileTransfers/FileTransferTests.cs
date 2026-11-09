@@ -1,9 +1,7 @@
 using System.Net;
-using FluentAssertions;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.NonJsonApiControllers.FileTransfers;
 
@@ -38,12 +36,12 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.PostAsync(route, content);
+        using HttpResponseMessage response = await httpClient.PostAsync(route, content, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        string responseText = await response.Content.ReadAsStringAsync();
+        string responseText = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be($"Received file with a size of {data.Length} bytes.");
     }
 
@@ -61,12 +59,12 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.PostAsync(route, content);
+        using HttpResponseMessage response = await httpClient.PostAsync(route, content, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        string responseText = await response.Content.ReadAsStringAsync();
+        string responseText = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("Empty files cannot be uploaded.");
     }
 
@@ -84,7 +82,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.GetAsync(route);
+        using HttpResponseMessage response = await httpClient.GetAsync(route, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -99,7 +97,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.GetAsync(route);
+        using HttpResponseMessage response = await httpClient.GetAsync(route, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
@@ -119,7 +117,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.GetAsync(route);
+        using HttpResponseMessage response = await httpClient.GetAsync(route, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -128,7 +126,7 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         response.Content.Headers.ContentType.ToString().Should().Be("application/octet-stream");
         response.Content.Headers.ContentLength.Should().Be(data.Length);
 
-        string responseText = await response.Content.ReadAsStringAsync();
+        string responseText = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("Hello download");
     }
 
@@ -141,12 +139,12 @@ public sealed class FileTransferTests : IClassFixture<IntegrationTestContext<Tes
         using HttpClient httpClient = _testContext.App.GetTestClient();
 
         // Act
-        using HttpResponseMessage response = await httpClient.GetAsync(route);
+        using HttpResponseMessage response = await httpClient.GetAsync(route, TestContext.Current.CancellationToken);
 
         // Assert
         response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        string responseText = await response.Content.ReadAsStringAsync();
+        string responseText = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         responseText.Should().Be("The file 'demo-missing-file.txt' does not exist.");
     }
 }

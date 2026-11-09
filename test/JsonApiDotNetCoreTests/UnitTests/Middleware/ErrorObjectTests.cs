@@ -1,7 +1,5 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Middleware;
 

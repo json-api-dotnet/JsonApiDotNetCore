@@ -1,5 +1,4 @@
 using System.Text.Json;
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -10,7 +9,6 @@ using JsonApiDotNetCore.Serialization.Response;
 using JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response;
 

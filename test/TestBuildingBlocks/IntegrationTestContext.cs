@@ -64,7 +64,21 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
 
     protected override HttpClient CreateClient()
     {
-        return App.GetTestClient();
+        TestServer testServer = App.GetTestServer();
+
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: HttpClient takes ownership.
+        var logHandler = new XUnitLogHttpMessageHandler
+#pragma warning restore CA2000 // Dispose objects before losing scope
+        {
+            InnerHandler = testServer.CreateHandler()
+        };
+
+        return new HttpClient(logHandler)
+        {
+            BaseAddress = testServer.BaseAddress,
+            Timeout = TimeSpan.FromSeconds(200)
+        };
     }
 
     private WebApplication BuildApp()
@@ -201,13 +215,13 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         }
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await AcquireDatabaseThrottleAsync();
         _throttleAcquired = true;
     }
 
-    public virtual async Task DisposeAsync()
+    public virtual async ValueTask DisposeAsync()
     {
         try
         {
@@ -215,11 +229,11 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
             {
                 try
                 {
-                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                    await RunOnDatabaseAsync(static async dbContext => await dbContext.Database.EnsureDeletedAsync(TestContext.Current.CancellationToken));
                 }
                 finally
                 {
-                    await App.StopAsync();
+                    await App.StopAsync(TestContext.Current.CancellationToken);
                     await App.DisposeAsync();
                 }
             }
@@ -227,6 +241,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
         finally
         {
             ReleaseDatabaseThrottle();
+            GC.SuppressFinalize(this);
         }
     }
 }

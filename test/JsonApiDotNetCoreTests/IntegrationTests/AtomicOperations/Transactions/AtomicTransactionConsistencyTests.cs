@@ -1,11 +1,9 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions;
 
@@ -160,14 +158,14 @@ public sealed class AtomicTransactionConsistencyTests
         error.Source.Pointer.Should().Be("/atomic:operations/0");
     }
 
-    public Task InitializeAsync()
+    public ValueTask InitializeAsync()
     {
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    Task IAsyncLifetime.DisposeAsync()
+    async ValueTask IAsyncDisposable.DisposeAsync()
     {
-        return DeleteExtraDatabaseAsync();
+        await DeleteExtraDatabaseAsync();
     }
 
     private async Task DeleteExtraDatabaseAsync()
@@ -175,6 +173,6 @@ public sealed class AtomicTransactionConsistencyTests
         await using AsyncServiceScope scope = _testContext.App.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ExtraDbContext>();
 
-        await dbContext.Database.EnsureDeletedAsync();
+        await dbContext.Database.EnsureDeletedAsync(TestContext.Current.CancellationToken);
     }
 }

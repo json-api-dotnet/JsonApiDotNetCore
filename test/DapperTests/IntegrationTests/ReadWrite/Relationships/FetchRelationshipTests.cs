@@ -1,25 +1,16 @@
 using System.Net;
 using DapperExample.Models;
 using DapperExample.Repositories;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Relationships;
 
-public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
+public sealed class FetchRelationshipTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public FetchRelationshipTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Can_get_ToOne_relationship()

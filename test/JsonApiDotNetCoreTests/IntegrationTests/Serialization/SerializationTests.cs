@@ -2,12 +2,10 @@ using System.Globalization;
 using System.Net;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
 

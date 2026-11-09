@@ -1,24 +1,15 @@
 using System.Net;
 using DapperExample.Models;
 using DapperExample.Repositories;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace DapperTests.IntegrationTests.Sql;
 
-public sealed class SubQueryInJoinTests : IClassFixture<DapperTestContext>
+public sealed class SubQueryInJoinTests(DapperTestContext testContext) : IClassFixture<DapperTestContext>
 {
-    private readonly DapperTestContext _testContext;
+    private readonly DapperTestContext _testContext = testContext;
     private readonly TestFakers _fakers = new();
-
-    public SubQueryInJoinTests(DapperTestContext testContext, ITestOutputHelper testOutputHelper)
-    {
-        testContext.SetTestOutputHelper(testOutputHelper);
-        _testContext = testContext;
-    }
 
     [Fact]
     public async Task Join_with_table_on_ToOne_include()

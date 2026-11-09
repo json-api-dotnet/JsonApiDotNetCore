@@ -1,11 +1,9 @@
-using FluentAssertions;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.SourceGenerators;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Xunit;
 
 namespace SourceGeneratorTests;
 
@@ -43,11 +41,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -107,11 +105,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -171,11 +169,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -235,11 +233,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -300,11 +298,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -366,11 +364,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -431,11 +429,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -497,11 +495,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -569,11 +567,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -634,11 +632,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -699,11 +697,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -767,11 +765,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -839,11 +837,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -883,11 +881,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -925,11 +923,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().HaveCount(5);
-        outputCompilation.GetDiagnostics().Should().HaveCount(5);
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().HaveCount(5);
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().HaveCount(5);
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -968,11 +966,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().HaveCount(1);
-        outputCompilation.GetDiagnostics().Should().HaveCount(1);
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().HaveCount(1);
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().HaveCount(1);
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -1011,11 +1009,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().HaveCount(1);
-        outputCompilation.GetDiagnostics().Should().HaveCount(1);
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().HaveCount(1);
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().HaveCount(1);
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -1053,11 +1051,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
 
@@ -1102,11 +1100,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().NotBeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().NotBeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -1153,11 +1151,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -1217,11 +1215,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -1280,11 +1278,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -1341,11 +1339,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
@@ -1426,11 +1424,11 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls restore
 
         // Act
-        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        inputCompilation.GetDiagnostics().Should().BeEmpty();
-        outputCompilation.GetDiagnostics().Should().BeEmpty();
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();

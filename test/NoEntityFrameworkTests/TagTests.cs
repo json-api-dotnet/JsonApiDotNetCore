@@ -1,12 +1,10 @@
 using System.Net;
 using System.Text.Json;
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using NoEntityFrameworkExample.Models;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace NoEntityFrameworkTests;
 

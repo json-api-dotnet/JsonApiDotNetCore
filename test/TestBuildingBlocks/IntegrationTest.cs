@@ -4,6 +4,7 @@ using System.Text.Json;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace TestBuildingBlocks;
 
@@ -36,7 +37,7 @@ public abstract class IntegrationTest
 
     protected async Task AcquireDatabaseThrottleAsync()
     {
-        await DatabaseThrottleSemaphore.WaitAsync();
+        await DatabaseThrottleSemaphore.WaitAsync(TestContext.Current.CancellationToken);
     }
 
     protected void ReleaseDatabaseThrottle()
@@ -105,9 +106,9 @@ public abstract class IntegrationTest
         setRequestHeaders?.Invoke(request.Headers);
 
         using HttpClient client = CreateClient();
-        HttpResponseMessage responseMessage = await client.SendAsync(request);
+        HttpResponseMessage responseMessage = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
-        string responseText = await responseMessage.Content.ReadAsStringAsync();
+        string responseText = await responseMessage.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         var responseDocument = DeserializeResponse<TResponseDocument>(responseText);
 
         return (responseMessage, responseDocument!);

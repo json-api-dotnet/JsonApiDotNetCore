@@ -1,5 +1,4 @@
 using System.Net;
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
@@ -10,7 +9,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationships;
 

@@ -1,7 +1,5 @@
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Configuration;
 
