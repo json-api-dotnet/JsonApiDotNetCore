@@ -64,7 +64,21 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IAs
 
     protected override HttpClient CreateClient()
     {
-        return App.GetTestClient();
+        TestServer testServer = App.GetTestServer();
+
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: HttpClient takes ownership.
+        var logHandler = new XUnitLogHttpMessageHandler
+#pragma warning restore CA2000 // Dispose objects before losing scope
+        {
+            InnerHandler = testServer.CreateHandler()
+        };
+
+        return new HttpClient(logHandler)
+        {
+            BaseAddress = testServer.BaseAddress,
+            Timeout = TimeSpan.FromSeconds(200)
+        };
     }
 
     private WebApplication BuildApp()
