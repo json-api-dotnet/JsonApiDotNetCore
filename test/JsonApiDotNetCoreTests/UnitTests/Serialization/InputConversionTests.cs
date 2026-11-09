@@ -1,5 +1,4 @@
 using System.ComponentModel.Design;
-using FluentAssertions;
 using FluentAssertions.Extensions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -10,7 +9,6 @@ using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.Extensions.Logging.Abstractions;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization;
 

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
@@ -6,7 +5,6 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging.Abstractions;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Controllers;
 

@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Net;
 using System.Web;
-using FluentAssertions;
 using FluentAssertions.Extensions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
@@ -9,7 +8,6 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering;
 

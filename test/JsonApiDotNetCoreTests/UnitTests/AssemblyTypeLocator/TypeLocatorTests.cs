@@ -1,7 +1,5 @@
 using System.Reflection;
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.AssemblyTypeLocator;
 

@@ -1,5 +1,4 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -8,7 +7,6 @@ using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;
 

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -8,7 +7,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.Extensions.Logging.Abstractions;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response;
 

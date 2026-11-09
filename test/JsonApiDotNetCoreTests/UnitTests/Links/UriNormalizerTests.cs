@@ -1,6 +1,4 @@
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Response;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Links;
 

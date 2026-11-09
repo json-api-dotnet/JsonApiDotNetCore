@@ -1,9 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
 

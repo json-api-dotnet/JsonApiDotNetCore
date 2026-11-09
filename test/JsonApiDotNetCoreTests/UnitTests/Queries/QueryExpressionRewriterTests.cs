@@ -1,13 +1,11 @@
 using System.Collections.Immutable;
 using System.ComponentModel.Design;
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 using Microsoft.Extensions.Logging.Abstractions;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Queries;
 

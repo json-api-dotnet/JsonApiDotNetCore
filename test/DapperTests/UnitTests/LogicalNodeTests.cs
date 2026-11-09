@@ -1,7 +1,5 @@
 using DapperExample.TranslationToSql.TreeNodes;
-using FluentAssertions;
 using JsonApiDotNetCore.Queries.Expressions;
-using Xunit;
 
 namespace DapperTests.UnitTests;
 

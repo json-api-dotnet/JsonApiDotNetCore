@@ -1,10 +1,8 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.TablePerHierarchy;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance;
 

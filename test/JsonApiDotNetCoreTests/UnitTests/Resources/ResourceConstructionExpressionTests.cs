@@ -1,9 +1,7 @@
 using System.ComponentModel.Design;
 using System.Linq.Expressions;
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Resources;
 

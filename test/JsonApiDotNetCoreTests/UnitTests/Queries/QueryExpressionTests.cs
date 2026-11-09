@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
@@ -8,7 +7,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Primitives;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Queries;
 

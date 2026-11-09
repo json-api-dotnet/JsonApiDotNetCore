@@ -1,5 +1,4 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed;
 

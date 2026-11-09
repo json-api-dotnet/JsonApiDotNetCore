@@ -1,9 +1,7 @@
 using System.Net;
 using DapperExample.Models;
-using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace DapperTests.IntegrationTests.QueryStrings;
 

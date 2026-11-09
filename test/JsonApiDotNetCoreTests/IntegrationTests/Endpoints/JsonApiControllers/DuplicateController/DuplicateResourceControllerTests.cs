@@ -1,7 +1,5 @@
-using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.JsonApiControllers.DuplicateController;
 

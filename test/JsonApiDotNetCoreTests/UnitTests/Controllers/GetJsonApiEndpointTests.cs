@@ -1,9 +1,7 @@
-using FluentAssertions;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Controllers;
 

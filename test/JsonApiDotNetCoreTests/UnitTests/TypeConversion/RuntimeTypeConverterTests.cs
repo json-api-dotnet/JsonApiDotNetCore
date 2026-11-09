@@ -1,9 +1,7 @@
 using System.Net;
 using System.Numerics;
 using System.Text;
-using FluentAssertions;
 using JsonApiDotNetCore.Resources;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.TypeConversion;
 

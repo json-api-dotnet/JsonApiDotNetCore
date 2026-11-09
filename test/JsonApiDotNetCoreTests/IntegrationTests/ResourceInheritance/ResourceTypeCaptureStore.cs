@@ -1,6 +1,5 @@
 // ReSharper disable UnusedTypeParameter
 
-using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance;

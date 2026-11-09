@@ -1,10 +1,8 @@
 using System.Collections.Immutable;
-using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.SourceGenerators;
 using Microsoft.CodeAnalysis;
-using Xunit;
 
 namespace SourceGeneratorTests;
 

@@ -1,9 +1,7 @@
 using System.Net;
-using FluentAssertions;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.NonJsonApiControllers.FileTransfers;
 

@@ -1,9 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
-using FluentAssertions;
 using Microsoft.AspNetCore.TestHost;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Endpoints.NonJsonApiControllers.Basic;
 

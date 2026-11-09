@@ -1,10 +1,8 @@
 using System.Linq.Expressions;
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using NoEntityFrameworkExample;
-using Xunit;
 
 namespace NoEntityFrameworkTests;
 

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -7,7 +6,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
-using Xunit;
 
 // ReSharper disable InconsistentNaming
 

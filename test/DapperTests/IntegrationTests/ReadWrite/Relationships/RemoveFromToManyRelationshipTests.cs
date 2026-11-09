@@ -1,11 +1,9 @@
 using System.Net;
 using DapperExample.Models;
 using DapperExample.Repositories;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace DapperTests.IntegrationTests.ReadWrite.Relationships;
 

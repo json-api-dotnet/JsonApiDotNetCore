@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -10,7 +9,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Links;
 

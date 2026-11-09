@@ -1,5 +1,4 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
@@ -8,7 +7,6 @@ using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
 

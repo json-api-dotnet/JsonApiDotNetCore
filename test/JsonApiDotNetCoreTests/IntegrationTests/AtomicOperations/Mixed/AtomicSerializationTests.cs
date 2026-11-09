@@ -1,9 +1,7 @@
 using System.Net;
-using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
-using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed;
 
