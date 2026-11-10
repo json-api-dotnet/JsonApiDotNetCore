@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- .NET 11 Preview -->
-    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <!-- NU1608: Detected package version outside of dependency constraint (not all EF Core providers already offer matching packages) -->
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
