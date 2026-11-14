@@ -38,6 +38,8 @@ jobs:
     steps:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
+      # Workaround for https://github.com/smorimoto/tune-github-hosted-runner-network/issues/5
+      if: ${{ matrix.os != 'ubuntu-latest' }}
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v9
       with:
@@ -48,9 +50,8 @@ jobs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
-          8.0.*
-          9.0.*
           10.0.*
+          11.0.*
     - name: Show installed versions
       shell: pwsh
       run: |
@@ -156,13 +157,14 @@ jobs:
     steps:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
+      # Workaround for https://github.com/smorimoto/tune-github-hosted-runner-network/issues/5
+      if: ${{ matrix.os != 'ubuntu-latest' }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
-          8.0.*
-          9.0.*
           10.0.*
+          11.0.*
     - name: Git checkout
       uses: actions/checkout@v7
       with:
@@ -214,13 +216,14 @@ jobs:
     steps:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
+      # Workaround for https://github.com/smorimoto/tune-github-hosted-runner-network/issues/5
+      if: ${{ matrix.os != 'ubuntu-latest' }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
-          8.0.*
-          9.0.*
           10.0.*
+          11.0.*
     - name: Git checkout
       uses: actions/checkout@v7
       with:
@@ -262,8 +265,9 @@ jobs:
       contents: write
       id-token: write
     steps:
-    - name: Tune GitHub-hosted runner network
-      uses: smorimoto/tune-github-hosted-runner-network@v1
+      # Workaround for https://github.com/smorimoto/tune-github-hosted-runner-network/issues/5
+      #- name: Tune GitHub-hosted runner network
+      #uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Download package artifacts
       uses: actions/download-artifact@v8
       with:

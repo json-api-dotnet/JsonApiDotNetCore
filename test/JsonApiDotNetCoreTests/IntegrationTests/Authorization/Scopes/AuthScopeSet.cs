@@ -112,7 +112,7 @@ internal sealed class AuthScopeSet
     {
         var builder = new StringBuilder();
 
-        foreach ((string name, Permission permission) in _scopes.OrderBy(scope => scope.Key))
+        foreach ((string name, Permission permission) in _scopes.OrderBy(scope => scope.Key, StringComparer.Ordinal))
         {
             if (builder.Length > 0)
             {

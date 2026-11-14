@@ -11,7 +11,6 @@
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.CodeAnalysis.CSharp.CodeStyle'" />
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.CodeAnalysis.NetAnalyzers'" />
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.CodeAnalysis.CSharp.NetAnalyzers'" />
-      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'xunit.analyzers'" />
     </ItemGroup>
   </Target>
 </Project>

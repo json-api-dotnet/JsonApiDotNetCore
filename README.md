@@ -227,9 +227,10 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 
 | .NET     | Entity Framework Core | JsonApiDotNetCore | Status         |
 | -------- | --------------------- | ----------------- | -------------- |
+| 11       | 11                    | 5.10.0+           | Stable         |
 | 10       | 10                    | 5.10.0+           | Stable         |
-| 9        | 9                     | 5.5.0+            | Stable         |
-| 8        | 8, 9                  | 5.5.0+            | Stable         |
+| 9        | 9                     | 5.5.0 - 5.12.0    | Out of support |
+| 8        | 8, 9                  | 5.5.0 - 5.12.0    | Out of support |
 | 7        | 7                     | 5.0.3 - 5.6.0     | Out of support |
 | 6        | 7                     | 5.0.3 - 5.6.0     | Out of support |
 | 6        | 6                     | 5.0.0 - 5.6.0     | Out of support |
