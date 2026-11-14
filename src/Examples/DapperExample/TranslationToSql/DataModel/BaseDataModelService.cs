@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Reflection;
 using Dapper;
 using DapperExample.TranslationToSql.TreeNodes;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -142,12 +143,10 @@ public abstract class BaseDataModelService : IDataModelService
 
     public IReadOnlyDictionary<string, ResourceFieldAttribute?> GetColumnMappings(ResourceType resourceType)
     {
-        if (_columnMappingsByType.TryGetValue(resourceType, out ReadOnlyDictionary<string, ResourceFieldAttribute?>? columnMappings))
-        {
-            return columnMappings;
-        }
+        ConsistencyGuard.ThrowIf(!_columnMappingsByType.TryGetValue(resourceType, out ReadOnlyDictionary<string, ResourceFieldAttribute?>? columnMappings),
+            $"Column mappings for resource type '{resourceType.ClrType.Name}' are unavailable.");
 
-        throw new InvalidOperationException($"Column mappings for resource type '{resourceType.ClrType.Name}' are unavailable.");
+        return columnMappings;
     }
 
     public object? GetColumnValue(ResourceType resourceType, IIdentifiable resource, string columnName)
@@ -159,10 +158,8 @@ public abstract class BaseDataModelService : IDataModelService
 
         IReadOnlyDictionary<string, ResourceFieldAttribute?> columnMappings = GetColumnMappings(resourceType);
 
-        if (!columnMappings.TryGetValue(columnName, out ResourceFieldAttribute? field))
-        {
-            throw new InvalidOperationException($"Column '{columnName}' not found on resource type '{resourceType}'.");
-        }
+        ConsistencyGuard.ThrowIf(!columnMappings.TryGetValue(columnName, out ResourceFieldAttribute? field),
+            $"Column '{columnName}' not found on resource type '{resourceType}'.");
 
         if (field is AttrAttribute attribute)
         {

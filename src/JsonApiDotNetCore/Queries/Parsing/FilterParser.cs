@@ -245,6 +245,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     private QueryExpression ParseComparisonRightTerm(QueryExpression leftTerm)
     {
+        QueryExpression? rightTerm = null;
+
         if (leftTerm is ResourceFieldChainExpression leftFieldChain)
         {
             ResourceFieldAttribute leftLastField = leftFieldChain.Fields[^1];
@@ -257,17 +259,18 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             var leftAttribute = (AttrAttribute)leftLastField;
 
             ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(leftAttribute);
-            return ParseTypedComparisonRightTerm(leftAttribute.Property.PropertyType, constantValueConverter);
+            rightTerm = ParseTypedComparisonRightTerm(leftAttribute.Property.PropertyType, constantValueConverter);
         }
-
-        if (leftTerm is FunctionExpression leftFunction)
+        else if (leftTerm is FunctionExpression leftFunction)
         {
             ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(leftFunction.ReturnType);
-            return ParseTypedComparisonRightTerm(leftFunction.ReturnType, constantValueConverter);
+            rightTerm = ParseTypedComparisonRightTerm(leftFunction.ReturnType, constantValueConverter);
         }
 
-        throw new InvalidOperationException(
-            $"Internal error: Expected left term to be a function or field chain, instead of '{leftTerm.GetType().Name}': '{leftTerm}'.");
+        ConsistencyGuard.ThrowIf(rightTerm == null,
+            $"Expected left term to be a function or field chain, instead of '{leftTerm.GetType().Name}': '{leftTerm}'.");
+
+        return rightTerm;
     }
 
     private QueryExpression ParseTypedComparisonRightTerm(Type leftType, ConstantValueConverter constantValueConverter)

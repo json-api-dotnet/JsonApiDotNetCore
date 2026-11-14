@@ -137,10 +137,7 @@ internal sealed class PatternMatcher
 
     private static void AssertIsSuccess(MatchState state)
     {
-        if (state.Error != null)
-        {
-            throw new InvalidOperationException($"Internal error: Expected successful match, but found error: {state.Error}");
-        }
+        ConsistencyGuard.ThrowIf(state.Error != null, $"Expected successful match, but found error: {state.Error}");
     }
 
     /// <summary>

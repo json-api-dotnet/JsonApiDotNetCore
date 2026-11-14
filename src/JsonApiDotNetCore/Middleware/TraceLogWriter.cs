@@ -36,7 +36,7 @@ internal abstract class TraceLogWriter
     {
         public override ResourceType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException("This converter cannot be used for reading JSON.");
         }
 
         public override void Write(Utf8JsonWriter writer, ResourceType value, JsonSerializerOptions options)
@@ -63,7 +63,7 @@ internal abstract class TraceLogWriter
         {
             public override TField Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException("This converter cannot be used for reading JSON.");
             }
 
             public override void Write(Utf8JsonWriter writer, TField value, JsonSerializerOptions options)
@@ -77,7 +77,7 @@ internal abstract class TraceLogWriter
     {
         public override IIdentifiable Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException("This converter cannot be used for reading JSON.");
         }
 
         public override void Write(Utf8JsonWriter writer, IIdentifiable value, JsonSerializerOptions options)
@@ -107,7 +107,7 @@ internal abstract class TraceLogWriter
         {
             public override TWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException("This converter cannot be used for reading JSON.");
             }
 
             public override void Write(Utf8JsonWriter writer, TWrapper value, JsonSerializerOptions options)

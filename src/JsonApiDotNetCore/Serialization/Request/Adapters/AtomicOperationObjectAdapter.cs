@@ -67,6 +67,8 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
 
     private WriteOperationKind ConvertOperationCode(AtomicOperationObject atomicOperationObject, RequestAdapterState state)
     {
+        WriteOperationKind? writeOperationKind = null;
+
         switch (atomicOperationObject.Code)
         {
             case AtomicOperationCode.Add:
@@ -77,11 +79,13 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
                     throw new ModelConversionException(state.Position, "The 'relationship' element is required.", null);
                 }
 
-                return atomicOperationObject.Ref == null ? WriteOperationKind.CreateResource : WriteOperationKind.AddToRelationship;
+                writeOperationKind = atomicOperationObject.Ref == null ? WriteOperationKind.CreateResource : WriteOperationKind.AddToRelationship;
+                break;
             }
             case AtomicOperationCode.Update:
             {
-                return atomicOperationObject.Ref?.Relationship != null ? WriteOperationKind.SetRelationship : WriteOperationKind.UpdateResource;
+                writeOperationKind = atomicOperationObject.Ref?.Relationship != null ? WriteOperationKind.SetRelationship : WriteOperationKind.UpdateResource;
+                break;
             }
             case AtomicOperationCode.Remove:
             {
@@ -90,11 +94,17 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
                     throw new ModelConversionException(state.Position, "The 'ref' element is required.", null);
                 }
 
-                return atomicOperationObject.Ref.Relationship != null ? WriteOperationKind.RemoveFromRelationship : WriteOperationKind.DeleteResource;
+                writeOperationKind = atomicOperationObject.Ref.Relationship != null
+                    ? WriteOperationKind.RemoveFromRelationship
+                    : WriteOperationKind.DeleteResource;
+
+                break;
             }
         }
 
-        throw new NotSupportedException($"Unknown operation code '{atomicOperationObject.Code}'.");
+        ConsistencyGuard.ThrowIf(writeOperationKind == null, $"Unknown operation code '{atomicOperationObject.Code}'.");
+
+        return writeOperationKind.Value;
     }
 
     private (ResourceIdentityRequirements requirements, IIdentifiable? primaryResource) ConvertRef(AtomicOperationObject atomicOperationObject,

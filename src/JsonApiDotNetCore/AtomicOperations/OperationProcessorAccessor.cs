@@ -42,15 +42,32 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
 
     private static Type GetProcessorInterface(WriteOperationKind writeOperation)
     {
-        return writeOperation switch
+        Type? processorInterface = null;
+
+        switch (writeOperation)
         {
-            WriteOperationKind.CreateResource => typeof(ICreateProcessor<,>),
-            WriteOperationKind.UpdateResource => typeof(IUpdateProcessor<,>),
-            WriteOperationKind.DeleteResource => typeof(IDeleteProcessor<,>),
-            WriteOperationKind.SetRelationship => typeof(ISetRelationshipProcessor<,>),
-            WriteOperationKind.AddToRelationship => typeof(IAddToRelationshipProcessor<,>),
-            WriteOperationKind.RemoveFromRelationship => typeof(IRemoveFromRelationshipProcessor<,>),
-            _ => throw new NotSupportedException($"Unknown write operation kind '{writeOperation}'.")
-        };
+            case WriteOperationKind.CreateResource:
+                processorInterface = typeof(ICreateProcessor<,>);
+                break;
+            case WriteOperationKind.UpdateResource:
+                processorInterface = typeof(IUpdateProcessor<,>);
+                break;
+            case WriteOperationKind.DeleteResource:
+                processorInterface = typeof(IDeleteProcessor<,>);
+                break;
+            case WriteOperationKind.SetRelationship:
+                processorInterface = typeof(ISetRelationshipProcessor<,>);
+                break;
+            case WriteOperationKind.AddToRelationship:
+                processorInterface = typeof(IAddToRelationshipProcessor<,>);
+                break;
+            case WriteOperationKind.RemoveFromRelationship:
+                processorInterface = typeof(IRemoveFromRelationshipProcessor<,>);
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(processorInterface == null, $"Unknown write operation kind '{writeOperation}'.");
+
+        return processorInterface;
     }
 }

@@ -4,6 +4,7 @@ using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.Generators;
 using DapperExample.TranslationToSql.Transformations;
 using DapperExample.TranslationToSql.TreeNodes;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
@@ -96,10 +97,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private void TrackPrimaryTable(TableAccessorNode tableAccessor)
     {
-        if (_selectorsPerTable.Count > 0)
-        {
-            throw new InvalidOperationException("A primary table already exists.");
-        }
+        ConsistencyGuard.ThrowIf(_selectorsPerTable.Count > 0, "A primary table already exists.");
 
         _queryState.RelatedTables.Add(tableAccessor, []);
 
@@ -186,10 +184,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private void SetColumnSelectors(TableAccessorNode tableAccessor, IEnumerable<ColumnNode> columns)
     {
-        if (!_selectorsPerTable.ContainsKey(tableAccessor))
-        {
-            throw new InvalidOperationException($"Table {tableAccessor.Source.Alias} not found in selected tables.");
-        }
+        ConsistencyGuard.ThrowIf(!_selectorsPerTable.ContainsKey(tableAccessor), $"Table {tableAccessor.Source.Alias} not found in selected tables.");
 
         // When selecting from a table, use a deterministic order to simplify test assertions.
         // When selecting from a sub-query (typically spanning multiple tables and renamed columns), existing order must be preserved.

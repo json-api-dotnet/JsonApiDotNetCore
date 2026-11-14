@@ -77,11 +77,8 @@ public sealed class QueryClauseBuilderContext
     {
         Type? sourceElementType = CollectionConverter.Instance.FindCollectionElementType(sourceType);
 
-        if (sourceElementType != resourceType.ClrType)
-        {
-            throw new InvalidOperationException(
-                $"Internal error: Mismatch between expression type '{sourceElementType?.Name}' and resource type '{resourceType.ClrType.Name}'.");
-        }
+        ConsistencyGuard.ThrowIf(sourceElementType != resourceType.ClrType,
+            $"Mismatch between expression type '{sourceElementType.Name}' and resource type '{resourceType.ClrType.Name}'.");
     }
 
     public QueryClauseBuilderContext WithSource(Expression source)

@@ -58,11 +58,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
     private static void AssertSameType(Type lambdaAccessorType, ResourceType resourceType)
     {
-        if (lambdaAccessorType != resourceType.ClrType)
-        {
-            throw new InvalidOperationException(
-                $"Internal error: Mismatch between lambda accessor type '{lambdaAccessorType.Name}' and resource type '{resourceType.ClrType.Name}'.");
-        }
+        ConsistencyGuard.ThrowIf(lambdaAccessorType != resourceType.ClrType,
+            $"Mismatch between lambda accessor type '{lambdaAccessorType.Name}' and resource type '{resourceType.ClrType.Name}'.");
     }
 
     private Expression CreateLambdaBodyInitializerForTypeHierarchy(FieldSelection selection, ResourceType baseResourceType,
