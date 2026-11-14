@@ -123,41 +123,29 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph)
 
     public override RelationshipForeignKey GetForeignKey(RelationshipAttribute relationship)
     {
-        if (_foreignKeysByRelationship.TryGetValue(relationship, out RelationshipForeignKey? foreignKey))
-        {
-            return foreignKey;
-        }
-
-        throw new InvalidOperationException(
+        ConsistencyGuard.ThrowIf(!_foreignKeysByRelationship.TryGetValue(relationship, out RelationshipForeignKey? foreignKey),
             $"Foreign key mapping for relationship '{relationship.LeftType.ClrType.Name}.{relationship.Property.Name}' is unavailable.");
+
+        return foreignKey;
     }
 
     public override bool IsColumnNullable(AttrAttribute attribute)
     {
-        if (_columnNullabilityPerAttribute.TryGetValue(attribute, out bool isNullable))
-        {
-            return isNullable;
-        }
+        ConsistencyGuard.ThrowIf(!_columnNullabilityPerAttribute.TryGetValue(attribute, out bool isNullable), $"Attribute '{attribute}' is unavailable.");
 
-        throw new InvalidOperationException($"Attribute '{attribute}' is unavailable.");
+        return isNullable;
     }
 
     private DatabaseProvider AssertHasDatabaseProvider()
     {
-        if (_databaseProvider == null)
-        {
-            throw new InvalidOperationException($"Database provider is unavailable. Call {nameof(Initialize)} first.");
-        }
+        ConsistencyGuard.ThrowIf(_databaseProvider == null, $"Database provider is unavailable. Call {nameof(Initialize)} first.");
 
         return _databaseProvider.Value;
     }
 
     private string AssertHasConnectionString()
     {
-        if (_connectionString == null)
-        {
-            throw new InvalidOperationException($"Connection string is unavailable. Call {nameof(Initialize)} first.");
-        }
+        ConsistencyGuard.ThrowIf(_connectionString == null, $"Connection string is unavailable. Call {nameof(Initialize)} first.");
 
         return _connectionString;
     }

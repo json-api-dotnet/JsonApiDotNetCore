@@ -104,10 +104,7 @@ internal sealed partial class MatchTraceScope : IDisposable
 
     public void Dispose()
     {
-        if (_endState == null)
-        {
-            throw new InvalidOperationException("Internal error: End state must be set before leaving trace scope.");
-        }
+        ConsistencyGuard.ThrowIf(_endState == null, "End state must be set before leaving trace scope.");
 
         if (_isEnabled)
         {

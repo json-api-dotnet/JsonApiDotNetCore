@@ -258,25 +258,16 @@ internal sealed class MatchState
 
     private static void AssertIsSuccess(MatchState state)
     {
-        if (state.Error != null)
-        {
-            throw new InvalidOperationException($"Internal error: Expected successful match, but found error: {state.Error}");
-        }
+        ConsistencyGuard.ThrowIf(state.Error != null, $"Expected successful match, but found error: {state.Error}");
     }
 
     private void AssertHasResourceType()
     {
-        if (ResourceType == null)
-        {
-            throw new InvalidOperationException("Internal error: Resource type is unavailable.");
-        }
+        ConsistencyGuard.ThrowIf(ResourceType == null, "Resource type is unavailable.");
     }
 
     private void AssertHasPattern()
     {
-        if (Pattern == null)
-        {
-            throw new InvalidOperationException("Internal error: Pattern chain is unavailable.");
-        }
+        ConsistencyGuard.ThrowIf(Pattern == null, "Pattern chain is unavailable.");
     }
 }

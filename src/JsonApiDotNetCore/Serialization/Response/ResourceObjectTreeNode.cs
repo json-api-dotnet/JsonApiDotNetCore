@@ -202,10 +202,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     private void AssertIsTreeRoot()
     {
-        if (!IsTreeRoot)
-        {
-            throw new InvalidOperationException("Internal error: this method should only be called from the root of the tree.");
-        }
+        ConsistencyGuard.ThrowIf(!IsTreeRoot, "This method should only be called from the root of the tree.");
     }
 
     public bool Equals(ResourceObjectTreeNode? other)

@@ -69,11 +69,8 @@ public class QueryableBuilder : IQueryableBuilder
 
     private static void AssertSameType(ResourceType resourceType, Type elementType)
     {
-        if (elementType != resourceType.ClrType)
-        {
-            throw new InvalidOperationException(
-                $"Internal error: Mismatch between query layer type '{resourceType.ClrType.Name}' and query element type '{elementType.Name}'.");
-        }
+        ConsistencyGuard.ThrowIf(elementType != resourceType.ClrType,
+            $"Mismatch between query layer type '{resourceType.ClrType.Name}' and query element type '{elementType.Name}'.");
     }
 
     protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceType resourceType, QueryableBuilderContext context)

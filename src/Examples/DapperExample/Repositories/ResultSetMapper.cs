@@ -1,5 +1,6 @@
 using System.Reflection;
 using DapperExample.TranslationToSql.TreeNodes;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -52,18 +53,13 @@ internal sealed class ResultSetMapper<TResource, TId>
     {
         // This method executes for each row in the SQL result set.
 
-        if (joinObjects.Length != _includeElementToJoinObjectArrayIndexLookup.Count + 1)
-        {
-            throw new InvalidOperationException("Failed to properly map SQL result set into objects.");
-        }
+        ConsistencyGuard.ThrowIf(joinObjects.Length != _includeElementToJoinObjectArrayIndexLookup.Count + 1,
+            "Failed to properly map SQL result set into objects.");
 
         object?[] objectsCached = joinObjects.Select(GetCached).ToArray();
         var leftResource = (TResource?)objectsCached[0];
 
-        if (leftResource == null)
-        {
-            throw new InvalidOperationException("Failed to properly map SQL result set into objects.");
-        }
+        ConsistencyGuard.ThrowIf(leftResource == null, "Failed to properly map SQL result set into objects.");
 
         RecursiveSetRelationships(leftResource, _include.Elements, objectsCached);
 
@@ -101,10 +97,7 @@ internal sealed class ResultSetMapper<TResource, TId>
     {
         PropertyInfo? property = resource.GetType().GetProperty(TableSourceNode.IdColumnName);
 
-        if (property == null)
-        {
-            throw new InvalidOperationException($"{TableSourceNode.IdColumnName} property not found on object of type '{resource.GetType().Name}'.");
-        }
+        ConsistencyGuard.ThrowIf(property == null, $"{TableSourceNode.IdColumnName} property not found on object of type '{resource.GetType().Name}'.");
 
         return property.GetValue(resource);
     }

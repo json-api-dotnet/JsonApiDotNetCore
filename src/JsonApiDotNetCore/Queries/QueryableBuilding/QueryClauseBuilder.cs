@@ -68,10 +68,8 @@ public abstract class QueryClauseBuilder : QueryExpressionVisitor<QueryClauseBui
             bool requiresUpCast = parentAccessor.Type != propertyType && parentAccessor.Type.IsAssignableFrom(propertyType);
             Type parentType = requiresUpCast ? propertyType : parentAccessor.Type;
 
-            if (parentType.GetProperty(propertyName) == null)
-            {
-                throw new InvalidOperationException($"Type '{parentType.Name}' does not contain a property named '{propertyName}'.");
-            }
+            ConsistencyGuard.ThrowIf(parentType.GetProperty(propertyName) == null,
+                $"Type '{parentType.Name}' does not contain a property named '{propertyName}'.");
 
             property = requiresUpCast
                 ? Expression.MakeMemberAccess(Expression.Convert(parentAccessor, propertyType), field.Property)
