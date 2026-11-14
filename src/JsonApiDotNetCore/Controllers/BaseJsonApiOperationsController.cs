@@ -177,18 +177,33 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     private static string GetOperationCodeText(WriteOperationKind writeOperation)
     {
-        AtomicOperationCode operationCode = writeOperation switch
-        {
-            WriteOperationKind.CreateResource => AtomicOperationCode.Add,
-            WriteOperationKind.UpdateResource => AtomicOperationCode.Update,
-            WriteOperationKind.DeleteResource => AtomicOperationCode.Remove,
-            WriteOperationKind.AddToRelationship => AtomicOperationCode.Add,
-            WriteOperationKind.SetRelationship => AtomicOperationCode.Update,
-            WriteOperationKind.RemoveFromRelationship => AtomicOperationCode.Remove,
-            _ => throw new NotSupportedException($"Unknown operation kind '{writeOperation}'.")
-        };
+        AtomicOperationCode? operationCode = null;
 
-        return operationCode.ToString().ToLowerInvariant();
+        switch (writeOperation)
+        {
+            case WriteOperationKind.CreateResource:
+                operationCode = AtomicOperationCode.Add;
+                break;
+            case WriteOperationKind.UpdateResource:
+                operationCode = AtomicOperationCode.Update;
+                break;
+            case WriteOperationKind.DeleteResource:
+                operationCode = AtomicOperationCode.Remove;
+                break;
+            case WriteOperationKind.AddToRelationship:
+                operationCode = AtomicOperationCode.Add;
+                break;
+            case WriteOperationKind.SetRelationship:
+                operationCode = AtomicOperationCode.Update;
+                break;
+            case WriteOperationKind.RemoveFromRelationship:
+                operationCode = AtomicOperationCode.Remove;
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(operationCode == null, $"Unknown operation kind '{writeOperation}'.");
+
+        return operationCode.Value.ToString().ToLowerInvariant();
     }
 
     protected virtual void ValidateModelState(IList<OperationContainer> operations)

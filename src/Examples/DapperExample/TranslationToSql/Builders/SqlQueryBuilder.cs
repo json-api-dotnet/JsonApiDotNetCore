@@ -1,5 +1,6 @@
 using System.Text;
 using DapperExample.TranslationToSql.TreeNodes;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.Builders;
@@ -176,12 +177,19 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
 
     public override object? VisitJoin(JoinNode node, StringBuilder builder)
     {
-        string joinTypeText = node.JoinType switch
+        string? joinTypeText = null;
+
+        switch (node.JoinType)
         {
-            JoinType.InnerJoin => "INNER JOIN ",
-            JoinType.LeftJoin => "LEFT JOIN ",
-            _ => throw new NotSupportedException($"Unknown join type '{node.JoinType}'.")
-        };
+            case JoinType.InnerJoin:
+                joinTypeText = "INNER JOIN ";
+                break;
+            case JoinType.LeftJoin:
+                joinTypeText = "LEFT JOIN ";
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(joinTypeText == null, $"Unknown join type '{node.JoinType}'.");
 
         AppendOnNewLine(joinTypeText, builder);
         Visit(node.Source, builder);
@@ -250,12 +258,19 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
 
     public override object? VisitLogical(LogicalNode node, StringBuilder builder)
     {
-        string operatorText = node.Operator switch
+        string? operatorText = null;
+
+        switch (node.Operator)
         {
-            LogicalOperator.And => "AND",
-            LogicalOperator.Or => "OR",
-            _ => throw new NotSupportedException($"Unknown logical operator '{node.Operator}'.")
-        };
+            case LogicalOperator.And:
+                operatorText = "AND";
+                break;
+            case LogicalOperator.Or:
+                operatorText = "OR";
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(operatorText == null, $"Unknown logical operator '{node.Operator}'.");
 
         builder.Append('(');
         Visit(node.Terms[0], builder);
@@ -273,15 +288,28 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
 
     public override object? VisitComparison(ComparisonNode node, StringBuilder builder)
     {
-        string operatorText = node.Operator switch
+        string? operatorText = null;
+
+        switch (node.Operator)
         {
-            ComparisonOperator.Equals => node.Left is NullConstantNode || node.Right is NullConstantNode ? "IS" : "=",
-            ComparisonOperator.GreaterThan => ">",
-            ComparisonOperator.GreaterOrEqual => ">=",
-            ComparisonOperator.LessThan => "<",
-            ComparisonOperator.LessOrEqual => "<=",
-            _ => throw new NotSupportedException($"Unknown comparison operator '{node.Operator}'.")
-        };
+            case ComparisonOperator.Equals:
+                operatorText = node.Left is NullConstantNode || node.Right is NullConstantNode ? "IS" : "=";
+                break;
+            case ComparisonOperator.GreaterThan:
+                operatorText = ">";
+                break;
+            case ComparisonOperator.GreaterOrEqual:
+                operatorText = ">=";
+                break;
+            case ComparisonOperator.LessThan:
+                operatorText = "<";
+                break;
+            case ComparisonOperator.LessOrEqual:
+                operatorText = "<=";
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(operatorText == null, $"Unknown comparison operator '{node.Operator}'.");
 
         Visit(node.Left, builder);
         builder.Append($" {operatorText} ");
@@ -464,16 +492,27 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
 
     internal static string FormatIdentifier(string value, DatabaseProvider databaseProvider)
     {
-        return databaseProvider switch
+        string? formatIdentifier = null;
+
+        switch (databaseProvider)
         {
             // https://www.postgresql.org/docs/current/sql-syntax-lexical.html
-            DatabaseProvider.PostgreSql => $"\"{value.Replace("\"", "\"\"")}\"",
+            case DatabaseProvider.PostgreSql:
+                formatIdentifier = $"\"{value.Replace("\"", "\"\"")}\"";
+                break;
             // https://dev.mysql.com/doc/refman/8.0/en/identifiers.html
-            DatabaseProvider.MySql => $"`{value.Replace("`", "``")}`",
+            case DatabaseProvider.MySql:
+                formatIdentifier = $"`{value.Replace("`", "``")}`";
+                break;
             // https://learn.microsoft.com/en-us/sql/t-sql/functions/quotename-transact-sql?view=sql-server-ver16
-            DatabaseProvider.SqlServer => $"[{value.Replace("]", "]]")}]",
-            _ => throw new NotSupportedException($"Unknown database provider '{databaseProvider}'.")
-        };
+            case DatabaseProvider.SqlServer:
+                formatIdentifier = $"[{value.Replace("]", "]]")}]";
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(formatIdentifier == null, $"Unknown database provider '{databaseProvider}'.");
+
+        return formatIdentifier;
     }
 
     private RevertIndentOnDispose Indent()

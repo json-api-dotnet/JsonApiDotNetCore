@@ -131,12 +131,21 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     {
         var termQueue = new Queue<Expression>(expression.Terms.Select(filter => Visit(filter, context)));
 
-        return expression.Operator switch
+        BinaryExpression? binaryExpression = null;
+
+        switch (expression.Operator)
         {
-            LogicalOperator.And => Compose(termQueue, Expression.AndAlso),
-            LogicalOperator.Or => Compose(termQueue, Expression.OrElse),
-            _ => throw new InvalidOperationException($"Unknown logical operator '{expression.Operator}'.")
-        };
+            case LogicalOperator.And:
+                binaryExpression = Compose(termQueue, Expression.AndAlso);
+                break;
+            case LogicalOperator.Or:
+                binaryExpression = Compose(termQueue, Expression.OrElse);
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(binaryExpression == null, $"Unknown logical operator '{expression.Operator}'.");
+
+        return binaryExpression;
     }
 
     private static BinaryExpression Compose(Queue<Expression> argumentQueue, Func<Expression, Expression, BinaryExpression> applyOperator)
@@ -168,15 +177,30 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
         Expression left = WrapInConvert(Visit(expression.Left, context), commonType);
         Expression right = WrapInConvert(Visit(expression.Right, context), commonType);
 
-        return expression.Operator switch
+        BinaryExpression? binaryExpression = null;
+
+        switch (expression.Operator)
         {
-            ComparisonOperator.Equals => Expression.Equal(left, right),
-            ComparisonOperator.LessThan => Expression.LessThan(left, right),
-            ComparisonOperator.LessOrEqual => Expression.LessThanOrEqual(left, right),
-            ComparisonOperator.GreaterThan => Expression.GreaterThan(left, right),
-            ComparisonOperator.GreaterOrEqual => Expression.GreaterThanOrEqual(left, right),
-            _ => throw new InvalidOperationException($"Unknown comparison operator '{expression.Operator}'.")
-        };
+            case ComparisonOperator.Equals:
+                binaryExpression = Expression.Equal(left, right);
+                break;
+            case ComparisonOperator.LessThan:
+                binaryExpression = Expression.LessThan(left, right);
+                break;
+            case ComparisonOperator.LessOrEqual:
+                binaryExpression = Expression.LessThanOrEqual(left, right);
+                break;
+            case ComparisonOperator.GreaterThan:
+                binaryExpression = Expression.GreaterThan(left, right);
+                break;
+            case ComparisonOperator.GreaterOrEqual:
+                binaryExpression = Expression.GreaterThanOrEqual(left, right);
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(binaryExpression == null, $"Unknown comparison operator '{expression.Operator}'.");
+
+        return binaryExpression;
     }
 
     private Type ResolveCommonType(QueryExpression left, QueryExpression right, QueryClauseBuilderContext context)

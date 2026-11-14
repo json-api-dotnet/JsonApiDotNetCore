@@ -1,4 +1,5 @@
 using System.Data.Common;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Data.SqlClient;
@@ -26,13 +27,20 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph)
     {
         _connectionString = dbContext.Database.GetConnectionString();
 
-        _databaseProvider = dbContext.Database.ProviderName switch
+        switch (dbContext.Database.ProviderName)
         {
-            "Npgsql.EntityFrameworkCore.PostgreSQL" => DatabaseProvider.PostgreSql,
-            "Pomelo.EntityFrameworkCore.MySql" or "Microting.EntityFrameworkCore.MySql" => DatabaseProvider.MySql,
-            "Microsoft.EntityFrameworkCore.SqlServer" => DatabaseProvider.SqlServer,
-            _ => throw new NotSupportedException($"Unknown database provider '{dbContext.Database.ProviderName}'.")
-        };
+            case "Npgsql.EntityFrameworkCore.PostgreSQL":
+                _databaseProvider = DatabaseProvider.PostgreSql;
+                break;
+            case "Microting.EntityFrameworkCore.MySql":
+                _databaseProvider = DatabaseProvider.MySql;
+                break;
+            case "Microsoft.EntityFrameworkCore.SqlServer":
+                _databaseProvider = DatabaseProvider.SqlServer;
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(_databaseProvider == null, $"Unknown database provider '{dbContext.Database.ProviderName}'.");
 
         ScanForeignKeys(dbContext.Model);
         ScanColumnNullability(dbContext.Model);
@@ -93,13 +101,24 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph)
         string connectionString = AssertHasConnectionString();
         DatabaseProvider databaseProvider = AssertHasDatabaseProvider();
 
-        return databaseProvider switch
+        DbConnection? dbConnection = null;
+
+        switch (databaseProvider)
         {
-            DatabaseProvider.PostgreSql => new NpgsqlConnection(connectionString),
-            DatabaseProvider.MySql => new MySqlConnection(connectionString),
-            DatabaseProvider.SqlServer => new SqlConnection(connectionString),
-            _ => throw new NotSupportedException($"Unknown database provider '{databaseProvider}'.")
-        };
+            case DatabaseProvider.PostgreSql:
+                dbConnection = new NpgsqlConnection(connectionString);
+                break;
+            case DatabaseProvider.MySql:
+                dbConnection = new MySqlConnection(connectionString);
+                break;
+            case DatabaseProvider.SqlServer:
+                dbConnection = new SqlConnection(connectionString);
+                break;
+        }
+
+        ConsistencyGuard.ThrowIf(dbConnection == null, $"Unknown database provider '{databaseProvider}'.");
+
+        return dbConnection;
     }
 
     public override RelationshipForeignKey GetForeignKey(RelationshipAttribute relationship)
