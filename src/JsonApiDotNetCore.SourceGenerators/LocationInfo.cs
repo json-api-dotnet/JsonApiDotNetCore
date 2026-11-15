@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace JsonApiDotNetCore.SourceGenerators;
 
-internal readonly record struct LocationInfo(string FilePath, TextSpan TextSpan, LinePositionSpan LineSpan)
+internal readonly record struct LocationInfo(SyntaxTree SyntaxTree, TextSpan TextSpan)
 {
     public static LocationInfo? TryCreateFrom(SyntaxNode node)
     {
@@ -17,12 +17,12 @@ internal readonly record struct LocationInfo(string FilePath, TextSpan TextSpan,
             return null;
         }
 
-        return new LocationInfo(location.SourceTree.FilePath, location.SourceSpan, location.GetLineSpan().Span);
+        return new LocationInfo(location.SourceTree, location.SourceSpan);
     }
 
     public Location ToLocation()
     {
-        return Location.Create(FilePath, TextSpan, LineSpan);
+        return Location.Create(SyntaxTree, TextSpan);
     }
 
     public override string ToString()

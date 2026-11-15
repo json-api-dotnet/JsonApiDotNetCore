@@ -1066,6 +1066,54 @@ public sealed class ControllerGenerationTests
     }
 
     [Fact]
+    public void Can_suppress_generator_warning_with_pragma()
+    {
+        // Arrange
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
+
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:wrap_before_first_method_call true
+
+        string source = new SourceCodeBuilder()
+            .WithNamespaceImportFor(typeof(ResourceAttribute))
+            .InNamespace("ExampleApi.Models")
+            .WithCode("""
+                #pragma warning disable JADNC001
+                [Resource]
+                public sealed class Item
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }
+                #pragma warning restore JADNC001
+                """)
+            .Build();
+
+        Compilation inputCompilation = new CompilationBuilder()
+            .WithDefaultReferences()
+            .WithSourceCode(source)
+            .Build();
+
+        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_chained_method_calls restore
+
+        // Act
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
+
+        // Assert
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+
+        GeneratorDriverRunResult runResult = driver.GetRunResult();
+
+        Diagnostic diagnostic = runResult.Diagnostics.Should().ContainSingle().Subject;
+        diagnostic.Id.Should().Be("JADNC001");
+        diagnostic.IsSuppressed.Should().BeTrue();
+
+        runResult.Should().NotHaveProducedSourceCode();
+    }
+
+    [Fact]
     public void Captures_unhandled_exception_during_code_generation()
     {
         // Arrange

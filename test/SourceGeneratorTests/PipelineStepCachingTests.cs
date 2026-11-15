@@ -3,6 +3,8 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.SourceGenerators;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Text;
 
 namespace SourceGeneratorTests;
 
@@ -52,7 +54,7 @@ public sealed class PipelineStepCachingTests
     }
 
     [Fact]
-    public void Pipeline_outputs_are_cached_on_diagnostic()
+    public void Pragma_suppression_is_applied_after_incremental_source_change()
     {
         // Arrange
         var generator = new ControllerSourceGenerator();
@@ -64,12 +66,14 @@ public sealed class PipelineStepCachingTests
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode("""
+                #pragma warning disable CS123456
                 [Resource]
                 public sealed class Item
                 {
                     [Attr]
                     public int Value { get; set; }
                 }
+                #pragma warning restore CS123456
                 """)
             .Build();
 
@@ -81,11 +85,19 @@ public sealed class PipelineStepCachingTests
         // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out _, out _, TestContext.Current.CancellationToken);
+
+        SyntaxTree originalTree = inputCompilation.SyntaxTrees.Single();
+        string updatedSource = source.Replace("CS123456", "JADNC001", StringComparison.Ordinal);
+        SyntaxTree updatedTree = originalTree.WithChangedText(SourceText.From(updatedSource));
+        Compilation updatedCompilation = inputCompilation.ReplaceSyntaxTree(originalTree, updatedTree);
+
         // Act
-        (ImmutableArray<Diagnostic> diagnostics, string[] output) = inputCompilation.AssertOutputsAreCached(generator, AllTrackingNames);
+        driver.RunGeneratorsAndUpdateCompilation(updatedCompilation, out _, out ImmutableArray<Diagnostic> updatedDiagnostics,
+            TestContext.Current.CancellationToken);
 
         // Assert
-        diagnostics.Should().NotBeEmpty();
-        output.Should().BeEmpty();
+        updatedDiagnostics.Should().ContainSingle(diagnostic => diagnostic.Id == "JADNC001" && diagnostic.IsSuppressed);
     }
 }
