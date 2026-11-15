@@ -21,10 +21,15 @@ internal static class GeneratorDriverRunResultExtensions
             Subject.Diagnostics.Should().BeEmpty();
         }
 
-        public void HaveSingleDiagnostic(string message)
+        public void HaveSingleDiagnostic(TextSpan diagnosticSpan, string message, bool isSuppressed)
         {
-            Subject.Diagnostics.Should().HaveCount(1);
-            Subject.Diagnostics[0].ToString().Should().Be(message);
+            Diagnostic diagnostic = Subject.Diagnostics.Should().ContainSingle().Subject;
+
+            diagnostic.Id.Should().Be("JADNC001");
+            diagnostic.Severity.Should().Be(DiagnosticSeverity.Warning);
+            diagnostic.GetMessage().Should().Be(message);
+            diagnostic.Location.SourceSpan.Should().Be(diagnosticSpan);
+            diagnostic.IsSuppressed.Should().Be(isSuppressed);
         }
 
         public void NotHaveProducedSourceCode()

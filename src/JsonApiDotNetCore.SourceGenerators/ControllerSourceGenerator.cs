@@ -159,8 +159,9 @@ public sealed class ControllerSourceGenerator : IIncrementalGenerator
 
     private static SemanticResult CreateDiagnosticForMissingInterface(TypeDeclarationSyntax resourceTypeSyntax)
     {
-        LocationInfo? location = LocationInfo.TryCreateFrom(resourceTypeSyntax);
-        return new SemanticResult(null, new MissingInterfaceDiagnostic(resourceTypeSyntax.Identifier.ValueText, location));
+        SyntaxToken identifierToken = resourceTypeSyntax.Identifier;
+        LocationInfo? location = LocationInfo.TryCreateFrom(identifierToken);
+        return new SemanticResult(null, new MissingInterfaceDiagnostic(identifierToken.ValueText, location));
     }
 
     private static (JsonApiEndpointsCopy endpoints, string? controllerNamespace) GetResourceAttributeArguments(AttributeData attribute)

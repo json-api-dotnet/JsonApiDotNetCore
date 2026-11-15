@@ -5,9 +5,10 @@ namespace JsonApiDotNetCore.SourceGenerators;
 
 internal readonly record struct LocationInfo(SyntaxTree SyntaxTree, TextSpan TextSpan)
 {
-    public static LocationInfo? TryCreateFrom(SyntaxNode node)
+    public static LocationInfo? TryCreateFrom(SyntaxToken token)
     {
-        return TryCreateFrom(node.GetLocation());
+        Location location = token.GetLocation();
+        return TryCreateFrom(location);
     }
 
     private static LocationInfo? TryCreateFrom(Location location)

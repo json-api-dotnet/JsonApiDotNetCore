@@ -18,7 +18,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -34,7 +34,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -82,7 +82,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -98,7 +98,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -146,7 +146,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -162,7 +162,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -210,7 +210,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -226,7 +226,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -274,7 +274,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(Guid))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
@@ -291,7 +291,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -340,7 +340,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(Guid))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
@@ -357,7 +357,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -406,7 +406,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -422,7 +422,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -470,7 +470,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -488,7 +488,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -538,7 +538,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -560,7 +560,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -608,7 +608,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
@@ -625,7 +625,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -673,7 +673,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
@@ -690,7 +690,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -738,7 +738,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
@@ -758,7 +758,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -815,7 +815,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(AttrAttribute))
             .InNamespace("ExampleApi.Models")
@@ -830,7 +830,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -857,7 +857,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
@@ -874,7 +874,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -901,7 +901,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .InNamespace("ExampleApi.Models")
             .WithCode("""
                 [Resource]
@@ -916,7 +916,7 @@ public sealed class ControllerGenerationTests
         Compilation inputCompilation = new CompilationBuilder()
             .WithSystemReferences()
             .WithLoggerFactoryReference()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -943,7 +943,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -959,7 +959,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -986,7 +986,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -1002,7 +1002,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1029,12 +1029,12 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode("""
                 [Resource]
-                public sealed class Item
+                public sealed class [|Item|]
                 {
                     [Attr]
                     public int Value { get; set; }
@@ -1044,7 +1044,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1059,8 +1059,8 @@ public sealed class ControllerGenerationTests
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
 
-        runResult.Should().HaveSingleDiagnostic(
-            "(5,1): warning JADNC001: Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers");
+        runResult.Should().HaveSingleDiagnostic(source.DiagnosticSpan,
+            "Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers", false);
 
         runResult.Should().NotHaveProducedSourceCode();
     }
@@ -1074,13 +1074,13 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode("""
                 #pragma warning disable JADNC001
                 [Resource]
-                public sealed class Item
+                public sealed class [|Item|]
                 {
                     [Attr]
                     public int Value { get; set; }
@@ -1091,7 +1091,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1106,9 +1106,8 @@ public sealed class ControllerGenerationTests
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
 
-        Diagnostic diagnostic = runResult.Diagnostics.Should().ContainSingle().Subject;
-        diagnostic.Id.Should().Be("JADNC001");
-        diagnostic.IsSuppressed.Should().BeTrue();
+        runResult.Should().HaveSingleDiagnostic(source.DiagnosticSpan,
+            "Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers", true);
 
         runResult.Should().NotHaveProducedSourceCode();
     }
@@ -1125,7 +1124,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -1141,7 +1140,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1176,7 +1175,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -1192,7 +1191,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1240,7 +1239,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("TopLevel")
@@ -1256,7 +1255,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1304,7 +1303,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithCode("""
@@ -1319,7 +1318,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1364,7 +1363,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi")
@@ -1380,7 +1379,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -1427,7 +1426,7 @@ public sealed class ControllerGenerationTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithCode("""
@@ -1465,7 +1464,7 @@ public sealed class ControllerGenerationTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore

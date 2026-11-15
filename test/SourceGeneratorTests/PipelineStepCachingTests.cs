@@ -23,7 +23,7 @@ public sealed class PipelineStepCachingTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
@@ -39,7 +39,7 @@ public sealed class PipelineStepCachingTests
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -62,24 +62,24 @@ public sealed class PipelineStepCachingTests
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string source = new SourceCodeBuilder()
+        MarkedSourceCode source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode("""
-                #pragma warning disable CS123456
                 [Resource]
-                public sealed class Item
+                #pragma warning disable CS999999
+                public sealed class [|Item|]
+                #pragma warning restore CS999999
                 {
                     [Attr]
                     public int Value { get; set; }
                 }
-                #pragma warning restore CS123456
                 """)
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
             .WithDefaultReferences()
-            .WithSourceCode(source)
+            .WithSourceCode(source.Text)
             .Build();
 
         // @formatter:wrap_before_first_method_call restore
@@ -89,15 +89,22 @@ public sealed class PipelineStepCachingTests
         driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out _, out _, TestContext.Current.CancellationToken);
 
         SyntaxTree originalTree = inputCompilation.SyntaxTrees.Single();
-        string updatedSource = source.Replace("CS123456", "JADNC001", StringComparison.Ordinal);
+        string updatedSource = source.Text.Replace("CS999999", "JADNC001", StringComparison.Ordinal);
         SyntaxTree updatedTree = originalTree.WithChangedText(SourceText.From(updatedSource));
         Compilation updatedCompilation = inputCompilation.ReplaceSyntaxTree(originalTree, updatedTree);
 
         // Act
-        driver.RunGeneratorsAndUpdateCompilation(updatedCompilation, out _, out ImmutableArray<Diagnostic> updatedDiagnostics,
-            TestContext.Current.CancellationToken);
+        driver = driver.RunGeneratorsAndUpdateCompilation(updatedCompilation, out Compilation outputCompilation, out _, TestContext.Current.CancellationToken);
 
         // Assert
-        updatedDiagnostics.Should().ContainSingle(diagnostic => diagnostic.Id == "JADNC001" && diagnostic.IsSuppressed);
+        inputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+
+        GeneratorDriverRunResult runResult = driver.GetRunResult();
+
+        runResult.Should().HaveSingleDiagnostic(source.DiagnosticSpan,
+            "Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers", true);
+
+        runResult.Should().NotHaveProducedSourceCode();
     }
 }
