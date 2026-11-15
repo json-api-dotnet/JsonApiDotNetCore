@@ -44,29 +44,6 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    [Obsolete("This method is no longer used and will be removed in a future version.")]
-    public FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType)
-    {
-        ArgumentNullException.ThrowIfNull(primaryResourceType);
-
-        // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:wrap_before_first_method_call true
-
-        ReadOnlyCollection<FilterExpression> filtersInTopScope = _constraintProviders
-            .SelectMany(provider => provider.GetConstraints())
-            .Where(constraint => constraint.Scope == null)
-            .Select(constraint => constraint.Expression)
-            .OfType<FilterExpression>()
-            .ToArray()
-            .AsReadOnly();
-
-        // @formatter:wrap_before_first_method_call restore
-        // @formatter:wrap_chained_method_calls restore
-
-        return GetFilter(filtersInTopScope, primaryResourceType);
-    }
-
-    /// <inheritdoc />
     public FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
     {
         ArgumentNullException.ThrowIfNull(primaryId);
@@ -413,7 +390,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return primaryLayer;
     }
 
-    private IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression? relativeInclude, RelationshipAttribute secondaryRelationship)
+    private static IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression? relativeInclude, RelationshipAttribute secondaryRelationship)
     {
         IncludeElementExpression parentElement = relativeInclude != null
             ? new IncludeElementExpression(secondaryRelationship, relativeInclude.Elements)
@@ -422,7 +399,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return new IncludeExpression(ImmutableHashSet.Create(parentElement));
     }
 
-    private FilterExpression? CreateFilterByIds<TId>(TId[] ids, AttrAttribute idAttribute, FilterExpression? existingFilter)
+    private static FilterExpression? CreateFilterByIds<TId>(TId[] ids, AttrAttribute idAttribute, FilterExpression? existingFilter)
     {
         var idChain = new ResourceFieldChainExpression(idAttribute);
 
@@ -573,7 +550,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return _resourceDefinitionAccessor.OnApplySort(resourceType, sort);
     }
 
-    private SortExpression CreateSortById(ResourceType resourceType)
+    private static SortExpression CreateSortById(ResourceType resourceType)
     {
         AttrAttribute idAttribute = GetIdAttribute(resourceType);
         var idAscendingSort = new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true);

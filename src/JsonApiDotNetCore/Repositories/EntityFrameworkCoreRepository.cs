@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Repositories;
 public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
     where TResource : class, IIdentifiable<TId>
 {
+    private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
     private readonly DbContext _dbContext;
     private readonly IDbContextResolver _dbContextResolver;
@@ -39,15 +40,17 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     private readonly IResourceFactory _resourceFactory;
     private readonly IQueryConstraintProvider[] _constraintProviders;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+    private readonly IQueryableBuilder _queryableBuilder;
     private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
     /// <inheritdoc />
     public virtual string? TransactionId => _dbContext.Database.CurrentTransaction?.TransactionId.ToString();
 
-    public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
-        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
+    public EntityFrameworkCoreRepository(IJsonApiRequest request, ITargetedFields targetedFields, IDbContextResolver dbContextResolver,
+        IResourceGraph resourceGraph, IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+        IResourceDefinitionAccessor resourceDefinitionAccessor, IQueryableBuilder queryableBuilder)
     {
+        ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(targetedFields);
         ArgumentNullException.ThrowIfNull(dbContextResolver);
         ArgumentNullException.ThrowIfNull(resourceGraph);
@@ -55,7 +58,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         ArgumentNullException.ThrowIfNull(constraintProviders);
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(queryableBuilder);
 
+        _request = request;
         _targetedFields = targetedFields;
         _dbContextResolver = dbContextResolver;
         _dbContext = dbContextResolver.GetContext();
@@ -63,6 +68,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         _resourceFactory = resourceFactory;
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
+        _queryableBuilder = queryableBuilder;
         _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
     }
 
@@ -149,12 +155,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 source = queryableHandler.Apply(source);
             }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            IQueryableBuilder builder = _resourceDefinitionAccessor.QueryableBuilder;
-#pragma warning restore CS0618 // Type or member is obsolete
-
             var context = QueryableBuilderContext.CreateRoot(source, typeof(Queryable), _dbContext.Model, null);
-            Expression expression = builder.ApplyQuery(queryLayer, context);
+            Expression expression = _queryableBuilder.ApplyQuery(queryLayer, context);
 
             _traceWriter.LogDebug(expression);
 
@@ -182,9 +184,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     {
         // EF Core rejects the way we project sparse fieldsets when owned entities are involved, unless the query is explicitly
         // marked as non-tracked (see https://github.com/dotnet/EntityFramework.Docs/issues/2205#issuecomment-1542914439).
-#pragma warning disable CS0618 // Type or member is obsolete
-        return _resourceDefinitionAccessor.IsReadOnlyRequest ? QueryTrackingBehavior.NoTrackingWithIdentityResolution : null;
-#pragma warning restore CS0618 // Type or member is obsolete
+        return _request.IsReadOnly ? QueryTrackingBehavior.NoTrackingWithIdentityResolution : null;
     }
 
     /// <inheritdoc />

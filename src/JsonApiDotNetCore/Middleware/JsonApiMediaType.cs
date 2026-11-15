@@ -25,12 +25,6 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
     /// </summary>
     public static readonly JsonApiMediaType AtomicOperations = new([JsonApiMediaTypeExtension.AtomicOperations]);
 
-    /// <summary>
-    /// Gets the JSON:API media type with the "atomic" extension.
-    /// </summary>
-    [Obsolete("This media type is no longer needed and will be removed in a future version. Use AtomicOperations instead.")]
-    public static readonly JsonApiMediaType RelaxedAtomicOperations = new([JsonApiMediaTypeExtension.RelaxedAtomicOperations]);
-
     public IReadOnlySet<JsonApiMediaTypeExtension> Extensions { get; }
 
     public JsonApiMediaType(IReadOnlySet<JsonApiMediaTypeExtension> extensions)
@@ -114,44 +108,20 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
     {
         var baseHeaderValue = new MediaTypeHeaderValue(BaseMediaTypeSegment);
         List<NameValueHeaderValue> parameters = [];
-        bool requiresEscape = false;
 
         foreach (JsonApiMediaTypeExtension extension in Extensions)
         {
             var extHeaderValue = new NameValueHeaderValue(ExtSegment);
             extHeaderValue.SetAndEscapeValue(extension.UnescapedValue);
 
-            if (extHeaderValue.Value != extension.UnescapedValue)
-            {
-                requiresEscape = true;
-            }
-
             parameters.Add(extHeaderValue);
         }
 
-        if (parameters.Count == 1)
-        {
-            baseHeaderValue.Parameters.Add(parameters[0]);
-        }
-        else if (parameters.Count > 1)
-        {
-            if (requiresEscape)
-            {
-                // JSON:API requires all 'ext' parameters combined into a single space-separated value.
-                string compositeValue = string.Join(' ', parameters.Select(parameter => parameter.GetUnescapedValue().ToString()));
-                var compositeParameter = new NameValueHeaderValue(ExtSegment);
-                compositeParameter.SetAndEscapeValue(compositeValue);
-                baseHeaderValue.Parameters.Add(compositeParameter);
-            }
-            else
-            {
-                // Relaxed mode: use separate 'ext' parameters.
-                foreach (NameValueHeaderValue parameter in parameters)
-                {
-                    baseHeaderValue.Parameters.Add(parameter);
-                }
-            }
-        }
+        // JSON:API requires all 'ext' parameters combined into a single space-separated value.
+        string compositeValue = string.Join(' ', parameters.Select(parameter => parameter.GetUnescapedValue().ToString()));
+        var compositeParameter = new NameValueHeaderValue(ExtSegment);
+        compositeParameter.SetAndEscapeValue(compositeValue);
+        baseHeaderValue.Parameters.Add(compositeParameter);
 
         return baseHeaderValue.ToString();
     }

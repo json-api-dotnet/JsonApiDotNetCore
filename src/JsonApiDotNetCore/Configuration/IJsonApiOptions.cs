@@ -1,6 +1,5 @@
 using System.Data;
 using System.Text.Json;
-using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -133,18 +132,6 @@ public interface IJsonApiOptions
     ClientIdGenerationMode ClientIdGeneration { get; }
 
     /// <summary>
-    /// Whether clients can provide IDs when creating resources. When not allowed, a 403 Forbidden response is returned if a client attempts to create a
-    /// resource with a defined ID. <c>false</c> by default.
-    /// </summary>
-    /// <remarks>
-    /// Setting this to <c>true</c> corresponds to <see cref="ClientIdGenerationMode.Allowed" />, while <c>false</c> corresponds to
-    /// <see cref="ClientIdGenerationMode.Forbidden" />.
-    /// </remarks>
-    [PublicAPI]
-    [Obsolete("Use ClientIdGeneration instead.")]
-    bool AllowClientGeneratedIds { get; }
-
-    /// <summary>
     /// Whether to produce an error on unknown query string parameters. <c>false</c> by default.
     /// </summary>
     bool AllowUnknownQueryStringParameters { get; }
@@ -184,8 +171,7 @@ public interface IJsonApiOptions
 
     /// <summary>
     /// Lists the JSON:API extensions that are turned on. Empty by default, but if your project contains a controller that derives from
-    /// <see cref="BaseJsonApiOperationsController" />, the <see cref="JsonApiMediaTypeExtension.AtomicOperations" /> and
-    /// <see cref="JsonApiMediaTypeExtension.RelaxedAtomicOperations" /> extensions are automatically added.
+    /// <see cref="BaseJsonApiOperationsController" />, the <see cref="JsonApiMediaTypeExtension.AtomicOperations" /> extension is automatically added.
     /// </summary>
     /// <remarks>
     /// To implement a custom JSON:API extension, add it here and override <see cref="JsonApiContentNegotiator.GetPossibleMediaTypes" /> to indicate which

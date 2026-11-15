@@ -165,7 +165,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
     }
 
     [Fact]
-    public async Task Denies_no_Accept_headers_at_operations_endpoint()
+    public async Task Denies_missing_Accept_headers_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -206,9 +206,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
         error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
-#pragma warning disable CS0618 // Type or member is obsolete
-        error.Detail.Should().Be($"Include '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' in the Accept header values.");
-#pragma warning restore CS0618 // Type or member is obsolete
+        error.Detail.Should().Be($"Include '{JsonApiMediaType.AtomicOperations}' in the Accept header values.");
         error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Accept");
     }
@@ -254,9 +252,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
         error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
-#pragma warning disable CS0618 // Type or member is obsolete
-        error.Detail.Should().Be($"Include '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' in the Accept header values.");
-#pragma warning restore CS0618 // Type or member is obsolete
+        error.Detail.Should().Be($"Include '{JsonApiMediaType.AtomicOperations}' in the Accept header values.");
         error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Accept");
     }

@@ -122,9 +122,7 @@ public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
             else
             {
                 var options = (JsonApiOptions)_options;
-#pragma warning disable CS0618 // Type or member is obsolete
-                options.IncludeExtensions(JsonApiMediaTypeExtension.AtomicOperations, JsonApiMediaTypeExtension.RelaxedAtomicOperations);
-#pragma warning restore CS0618 // Type or member is obsolete
+                options.IncludeExtensions(JsonApiMediaTypeExtension.AtomicOperations);
             }
 
             if (IsRoutingConventionDisabled(controller))
