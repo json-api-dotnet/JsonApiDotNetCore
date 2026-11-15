@@ -1404,20 +1404,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Middleware.HeaderConstants.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Middleware.HeaderConstants.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "JsonApiDotNetCore.Middleware.HeaderConstants",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Middleware.HttpContextExtensions.yml",
       "output": {
         ".html": {

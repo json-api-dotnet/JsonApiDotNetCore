@@ -1061,19 +1061,6 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.IJsonApiOptions
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions
   nameWithType: IJsonApiOptions
-- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowClientGeneratedIds
-  name: AllowClientGeneratedIds
-  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowClientGeneratedIds
-  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowClientGeneratedIds
-  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowClientGeneratedIds
-  nameWithType: IJsonApiOptions.AllowClientGeneratedIds
-- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowClientGeneratedIds*
-  name: AllowClientGeneratedIds
-  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowClientGeneratedIds_
-  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowClientGeneratedIds
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowClientGeneratedIds
-  nameWithType: IJsonApiOptions.AllowClientGeneratedIds
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowUnknownFieldsInRequestBody
   name: AllowUnknownFieldsInRequestBody
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowUnknownFieldsInRequestBody
@@ -1621,19 +1608,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Configuration.JsonApiOptions.New
   nameWithType: JsonApiOptions.JsonApiOptions
   nameWithType.vb: JsonApiOptions.New
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds
-  name: AllowClientGeneratedIds
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_AllowClientGeneratedIds
-  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds
-  nameWithType: JsonApiOptions.AllowClientGeneratedIds
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds*
-  name: AllowClientGeneratedIds
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_AllowClientGeneratedIds_
-  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds
-  nameWithType: JsonApiOptions.AllowClientGeneratedIds
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowUnknownFieldsInRequestBody
   name: AllowUnknownFieldsInRequestBody
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_AllowUnknownFieldsInRequestBody
@@ -4849,30 +4823,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.ExceptionHandler.HandleException
   nameWithType: ExceptionHandler.HandleException
-- uid: JsonApiDotNetCore.Middleware.HeaderConstants
-  name: HeaderConstants
-  href: api/JsonApiDotNetCore.Middleware.HeaderConstants.html
-  commentId: T:JsonApiDotNetCore.Middleware.HeaderConstants
-  fullName: JsonApiDotNetCore.Middleware.HeaderConstants
-  nameWithType: HeaderConstants
-- uid: JsonApiDotNetCore.Middleware.HeaderConstants.AtomicOperationsMediaType
-  name: AtomicOperationsMediaType
-  href: api/JsonApiDotNetCore.Middleware.HeaderConstants.html#JsonApiDotNetCore_Middleware_HeaderConstants_AtomicOperationsMediaType
-  commentId: F:JsonApiDotNetCore.Middleware.HeaderConstants.AtomicOperationsMediaType
-  fullName: JsonApiDotNetCore.Middleware.HeaderConstants.AtomicOperationsMediaType
-  nameWithType: HeaderConstants.AtomicOperationsMediaType
-- uid: JsonApiDotNetCore.Middleware.HeaderConstants.MediaType
-  name: MediaType
-  href: api/JsonApiDotNetCore.Middleware.HeaderConstants.html#JsonApiDotNetCore_Middleware_HeaderConstants_MediaType
-  commentId: F:JsonApiDotNetCore.Middleware.HeaderConstants.MediaType
-  fullName: JsonApiDotNetCore.Middleware.HeaderConstants.MediaType
-  nameWithType: HeaderConstants.MediaType
-- uid: JsonApiDotNetCore.Middleware.HeaderConstants.RelaxedAtomicOperationsMediaType
-  name: RelaxedAtomicOperationsMediaType
-  href: api/JsonApiDotNetCore.Middleware.HeaderConstants.html#JsonApiDotNetCore_Middleware_HeaderConstants_RelaxedAtomicOperationsMediaType
-  commentId: F:JsonApiDotNetCore.Middleware.HeaderConstants.RelaxedAtomicOperationsMediaType
-  fullName: JsonApiDotNetCore.Middleware.HeaderConstants.RelaxedAtomicOperationsMediaType
-  nameWithType: HeaderConstants.RelaxedAtomicOperationsMediaType
 - uid: JsonApiDotNetCore.Middleware.HttpContextExtensions
   name: HttpContextExtensions
   href: api/JsonApiDotNetCore.Middleware.HttpContextExtensions.html
@@ -5381,12 +5331,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode
   nameWithType: JsonApiMediaType.GetHashCode
-- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.RelaxedAtomicOperations
-  name: RelaxedAtomicOperations
-  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_RelaxedAtomicOperations
-  commentId: F:JsonApiDotNetCore.Middleware.JsonApiMediaType.RelaxedAtomicOperations
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.RelaxedAtomicOperations
-  nameWithType: JsonApiMediaType.RelaxedAtomicOperations
 - uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_ToString
@@ -5469,12 +5413,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.GetHashCode
   nameWithType: JsonApiMediaTypeExtension.GetHashCode
-- uid: JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.RelaxedAtomicOperations
-  name: RelaxedAtomicOperations
-  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html#JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension_RelaxedAtomicOperations
-  commentId: F:JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.RelaxedAtomicOperations
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.RelaxedAtomicOperations
-  nameWithType: JsonApiMediaTypeExtension.RelaxedAtomicOperations
 - uid: JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html#JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension_ToString
@@ -10029,19 +9967,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship
   nameWithType: IQueryLayerComposer.ComposeSecondaryLayerForRelationship
-- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  name: GetPrimaryFilterFromConstraints(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetPrimaryFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: IQueryLayerComposer.GetPrimaryFilterFromConstraints(ResourceType)
-- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints*
-  name: GetPrimaryFilterFromConstraints
-  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetPrimaryFilterFromConstraints_
-  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints
-  nameWithType: IQueryLayerComposer.GetPrimaryFilterFromConstraints
 - uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints*
   name: GetSecondaryFilterFromConstraints
   href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryFilterFromConstraints_
@@ -11714,19 +11639,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.GetPagination
   nameWithType: QueryLayerComposer.GetPagination
-- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  name: GetPrimaryFilterFromConstraints(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_GetPrimaryFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.QueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: QueryLayerComposer.GetPrimaryFilterFromConstraints(ResourceType)
-- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.GetPrimaryFilterFromConstraints*
-  name: GetPrimaryFilterFromConstraints
-  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_GetPrimaryFilterFromConstraints_
-  commentId: Overload:JsonApiDotNetCore.Queries.QueryLayerComposer.GetPrimaryFilterFromConstraints
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.GetPrimaryFilterFromConstraints
-  nameWithType: QueryLayerComposer.GetPrimaryFilterFromConstraints
 - uid: JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints*
   name: GetSecondaryFilterFromConstraints
   href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_GetSecondaryFilterFromConstraints_
@@ -12889,19 +12801,6 @@ references:
   commentId: T:JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns
   fullName: JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns
   nameWithType: BuiltInPatterns
-- uid: JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.RelationshipChainEndingInToMany
-  name: RelationshipChainEndingInToMany
-  href: api/JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.html#JsonApiDotNetCore_QueryStrings_FieldChains_BuiltInPatterns_RelationshipChainEndingInToMany
-  commentId: P:JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.RelationshipChainEndingInToMany
-  fullName: JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.RelationshipChainEndingInToMany
-  nameWithType: BuiltInPatterns.RelationshipChainEndingInToMany
-- uid: JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.RelationshipChainEndingInToMany*
-  name: RelationshipChainEndingInToMany
-  href: api/JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.html#JsonApiDotNetCore_QueryStrings_FieldChains_BuiltInPatterns_RelationshipChainEndingInToMany_
-  commentId: Overload:JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.RelationshipChainEndingInToMany
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.RelationshipChainEndingInToMany
-  nameWithType: BuiltInPatterns.RelationshipChainEndingInToMany
 - uid: JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.SingleField
   name: SingleField
   href: api/JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.html#JsonApiDotNetCore_QueryStrings_FieldChains_BuiltInPatterns_SingleField
@@ -14307,15 +14206,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId)
   nameWithType: EntityFrameworkCoreRepository<TResource, TId>
   nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId)
-- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  name: EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable<IQueryConstraintProvider>, ILoggerFactory, IResourceDefinitionAccessor)
-  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
-  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  name.vb: New(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable(Of IQueryConstraintProvider), ILoggerFactory, IResourceDefinitionAccessor)
-  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.EntityFrameworkCoreRepository(JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Repositories.IDbContextResolver, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Resources.IResourceFactory, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).New(JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Repositories.IDbContextResolver, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Resources.IResourceFactory, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable<IQueryConstraintProvider>, ILoggerFactory, IResourceDefinitionAccessor)
-  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).New(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable(Of IQueryConstraintProvider), ILoggerFactory, IResourceDefinitionAccessor)
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder)
+  name: EntityFrameworkCoreRepository(IJsonApiRequest, ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable<IQueryConstraintProvider>, ILoggerFactory, IResourceDefinitionAccessor, IQueryableBuilder)
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Queries_QueryableBuilding_IQueryableBuilder_
+  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder)
+  name.vb: New(IJsonApiRequest, ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable(Of IQueryConstraintProvider), ILoggerFactory, IResourceDefinitionAccessor, IQueryableBuilder)
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.EntityFrameworkCoreRepository(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Repositories.IDbContextResolver, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Resources.IResourceFactory, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder)
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).New(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Repositories.IDbContextResolver, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Resources.IResourceFactory, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder)
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.EntityFrameworkCoreRepository(IJsonApiRequest, ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable<IQueryConstraintProvider>, ILoggerFactory, IResourceDefinitionAccessor, IQueryableBuilder)
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).New(IJsonApiRequest, ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable(Of IQueryConstraintProvider), ILoggerFactory, IResourceDefinitionAccessor, IQueryableBuilder)
 - uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor*
   name: EntityFrameworkCoreRepository
   href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_
@@ -15800,19 +15699,6 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute
   nameWithType: RelationshipAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude
-  name: CanInclude
-  href: api/JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude
-  fullName: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude
-  nameWithType: RelationshipAttribute.CanInclude
-- uid: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude*
-  name: CanInclude
-  href: api/JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude
-  nameWithType: RelationshipAttribute.CanInclude
 - uid: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Equals(System.Object)
   name: Equals(object?)
   href: api/JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_System_Object_
@@ -16315,19 +16201,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
   nameWithType: IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
-- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
-  name: IsReadOnlyRequest
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_IsReadOnlyRequest
-  commentId: P:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
-  nameWithType: IResourceDefinitionAccessor.IsReadOnlyRequest
-- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest*
-  name: IsReadOnlyRequest
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_IsReadOnlyRequest_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
-  nameWithType: IResourceDefinitionAccessor.IsReadOnlyRequest
 - uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync*
   name: OnAddToRelationshipAsync
   href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync_
@@ -16546,19 +16419,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnWritingAsync(Of TResource)(TResource, JsonApiDotNetCore.Middleware.WriteOperationKind, System.Threading.CancellationToken)
   nameWithType: IResourceDefinitionAccessor.OnWritingAsync<TResource>(TResource, WriteOperationKind, CancellationToken)
   nameWithType.vb: IResourceDefinitionAccessor.OnWritingAsync(Of TResource)(TResource, WriteOperationKind, CancellationToken)
-- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder
-  name: QueryableBuilder
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_QueryableBuilder
-  commentId: P:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder
-  nameWithType: IResourceDefinitionAccessor.QueryableBuilder
-- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder*
-  name: QueryableBuilder
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_QueryableBuilder_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder
-  nameWithType: IResourceDefinitionAccessor.QueryableBuilder
 - uid: JsonApiDotNetCore.Resources.IResourceDefinition`2
   name: IResourceDefinition<TResource, TId>
   href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html
@@ -17705,19 +17565,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
   nameWithType: ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
-- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
-  name: IsReadOnlyRequest
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_IsReadOnlyRequest
-  commentId: P:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
-  nameWithType: ResourceDefinitionAccessor.IsReadOnlyRequest
-- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest*
-  name: IsReadOnlyRequest
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_IsReadOnlyRequest_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
-  nameWithType: ResourceDefinitionAccessor.IsReadOnlyRequest
 - uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnAddToRelationshipAsync*
   name: OnAddToRelationshipAsync
   href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnAddToRelationshipAsync_
@@ -17936,19 +17783,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnWritingAsync(Of TResource)(TResource, JsonApiDotNetCore.Middleware.WriteOperationKind, System.Threading.CancellationToken)
   nameWithType: ResourceDefinitionAccessor.OnWritingAsync<TResource>(TResource, WriteOperationKind, CancellationToken)
   nameWithType.vb: ResourceDefinitionAccessor.OnWritingAsync(Of TResource)(TResource, WriteOperationKind, CancellationToken)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.QueryableBuilder
-  name: QueryableBuilder
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_QueryableBuilder
-  commentId: P:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.QueryableBuilder
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.QueryableBuilder
-  nameWithType: ResourceDefinitionAccessor.QueryableBuilder
-- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.QueryableBuilder*
-  name: QueryableBuilder
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_QueryableBuilder_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.QueryableBuilder
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.QueryableBuilder
-  nameWithType: ResourceDefinitionAccessor.QueryableBuilder
 - uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResolveResourceDefinition(JsonApiDotNetCore.Configuration.ResourceType)
   name: ResolveResourceDefinition(ResourceType)
   href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_ResolveResourceDefinition_JsonApiDotNetCore_Configuration_ResourceType_

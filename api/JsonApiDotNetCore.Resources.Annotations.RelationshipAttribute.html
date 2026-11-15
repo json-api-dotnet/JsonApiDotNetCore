@@ -286,48 +286,11 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute</code></pre
 </h2>
 
 
-  <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude*"></a>
-
-  <h3 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude">
-  CanInclude
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L80"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Whether or not this relationship can be included using the <code>include</code> query string parameter. This is <code>true</code> by default.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use AllowInclude in Capabilities instead.&quot;)]
-public bool CanInclude { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-  <h4 class="section" id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>When explicitly set, this value takes precedence over Capabilities for backwards-compatibility. Capabilities are adjusted accordingly when building
-the resource graph.</p>
-</div>
-
-
-
-
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty*"></a>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty">
   InverseNavigationProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.reflection.propertyinfo">PropertyInfo</a> of the Entity Framework Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed
@@ -373,7 +336,7 @@ public class Person : Identifiable&lt;long&gt;
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_LeftType" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.LeftType">
   LeftType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The containing resource type in which this relationship is declared. Identical to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_Type">Type</a>.</p>
@@ -405,7 +368,7 @@ public class Person : Identifiable&lt;long&gt;
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Links" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Links">
   Links
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Configures which links to write in the relationship-level links object for this relationship. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>,
@@ -438,7 +401,7 @@ which falls back to <a class="xref" href="JsonApiDotNetCore.Resources.Annotation
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RightType" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RightType">
   RightType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The resource type this relationship points to. In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a> relationship, this value will be the collection
@@ -478,7 +441,7 @@ element type.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a value that indicates whether this instance is equal to a specified object.</p>
@@ -517,7 +480,7 @@ element type.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetHashCode" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/RelationshipAttribute.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>

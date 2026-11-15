@@ -177,20 +177,22 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
 
   <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)">
-  EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt;, ILoggerFactory, IResourceDefinitionAccessor)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Queries_QueryableBuilding_IQueryableBuilder_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder)">
+  EntityFrameworkCoreRepository(IJsonApiRequest, ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt;, ILoggerFactory, IResourceDefinitionAccessor, IQueryableBuilder)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L49"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)</code></pre>
+    <pre><code class="lang-csharp hljs">public EntityFrameworkCoreRepository(IJsonApiRequest request, ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor, IQueryableBuilder queryableBuilder)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a></dt>
+    <dd></dd>
     <dt><code>targetedFields</code> <a class="xref" href="JsonApiDotNetCore.Resources.ITargetedFields.html">ITargetedFields</a></dt>
     <dd></dd>
     <dt><code>dbContextResolver</code> <a class="xref" href="JsonApiDotNetCore.Repositories.IDbContextResolver.html">IDbContextResolver</a></dt>
@@ -204,6 +206,8 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
     <dt><code>loggerFactory</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory">ILoggerFactory</a></dt>
     <dd></dd>
     <dt><code>resourceDefinitionAccessor</code> <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html">IResourceDefinitionAccessor</a></dt>
+    <dd></dd>
+    <dt><code>queryableBuilder</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html">IQueryableBuilder</a></dt>
     <dd></dd>
   </dl>
 
@@ -226,7 +230,7 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
 
   <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_TransactionId" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.TransactionId">
   TransactionId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Identifies the currently active transaction.</p>
@@ -305,7 +309,7 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
 
   <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_ApplyQueryLayer_JsonApiDotNetCore_Queries_QueryLayer_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.ApplyQueryLayer(JsonApiDotNetCore.Queries.QueryLayer)">
   ApplyQueryLayer(QueryLayer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L123"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -374,7 +378,7 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
 
   <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CountAsync_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CountAsync(JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)">
   CountAsync(FilterExpression?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes a read query using the specified filter and returns the count of matching resources.</p>
@@ -495,7 +499,7 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
 
   <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAll" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetAll">
   GetAll()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L170"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -526,7 +530,7 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
 
   <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetAsync(JsonApiDotNetCore.Queries.QueryLayer,System.Threading.CancellationToken)">
   GetAsync(QueryLayer, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L76"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes a read query using the specified constraints and returns the collection of matching resources.</p>
@@ -648,7 +652,7 @@ public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepo
 
   <h3 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetTrackingBehavior" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetTrackingBehavior">
   GetTrackingBehavior()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L181"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L183"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
