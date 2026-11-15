@@ -74,14 +74,6 @@ public sealed class JsonApiOptions : IJsonApiOptions
     public ClientIdGenerationMode ClientIdGeneration { get; set; }
 
     /// <inheritdoc />
-    [Obsolete("Use ClientIdGeneration instead.")]
-    public bool AllowClientGeneratedIds
-    {
-        get => ClientIdGeneration is ClientIdGenerationMode.Allowed or ClientIdGenerationMode.Required;
-        set => ClientIdGeneration = value ? ClientIdGenerationMode.Allowed : ClientIdGenerationMode.Forbidden;
-    }
-
-    /// <inheritdoc />
     public bool AllowUnknownQueryStringParameters { get; set; }
 
     /// <inheritdoc />
@@ -111,7 +103,7 @@ public sealed class JsonApiOptions : IJsonApiOptions
         // These are the options common to serialization and deserialization.
         // At runtime, we actually use SerializerReadOptions and SerializerWriteOptions, which are customized copies of these settings,
         // to overcome the limitation in System.Text.Json that the JsonPath is incorrect when using custom converters.
-        // Therefore we try to avoid using custom converters has much as possible.
+        // Therefore, we try to avoid using custom converters has much as possible.
         // https://github.com/Tarmil/FSharp.SystemTextJson/issues/37
         // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
 

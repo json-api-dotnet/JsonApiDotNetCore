@@ -143,15 +143,10 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
 
         responseDocument.Errors.Should().HaveCount(1);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        string detail =
-            $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of 'text/html' for the Content-Type header value.";
-#pragma warning restore CS0618 // Type or member is obsolete
-
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be(detail);
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.AtomicOperations}' instead of 'text/html' for the Content-Type header value.");
         error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
@@ -286,15 +281,10 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
 
         responseDocument.Errors.Should().HaveCount(1);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        string detail =
-            $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of '{contentType}' for the Content-Type header value.";
-#pragma warning restore CS0618 // Type or member is obsolete
-
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be(detail);
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.AtomicOperations}' instead of '{contentType}' for the Content-Type header value.");
         error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
@@ -526,15 +516,10 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
 
         responseDocument.Errors.Should().HaveCount(1);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        string detail =
-            $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of '{contentType}' for the Content-Type header value.";
-#pragma warning restore CS0618 // Type or member is obsolete
-
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be(detail);
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.AtomicOperations}' instead of '{contentType}' for the Content-Type header value.");
         error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }

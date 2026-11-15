@@ -1,7 +1,9 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
@@ -10,10 +12,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public class CarCompositeKeyAwareRepository<TResource, TId>(
-    ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
-    : EntityFrameworkCoreRepository<TResource, TId>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
-        resourceDefinitionAccessor)
+    IJsonApiRequest request, ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
+    IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+    IResourceDefinitionAccessor resourceDefinitionAccessor, IQueryableBuilder queryableBuilder)
+    : EntityFrameworkCoreRepository<TResource, TId>(request, targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders,
+        loggerFactory, resourceDefinitionAccessor, queryableBuilder)
     where TResource : class, IIdentifiable<TId>
 {
     private readonly CarExpressionRewriter _writer = new(resourceGraph);

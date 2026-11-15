@@ -15,10 +15,6 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     // This field is definitely assigned after building the resource graph, which is why its public equivalent is declared as non-nullable.
     private ResourceType? _rightType;
 
-    private bool? _canInclude;
-
-    internal bool HasExplicitCanInclude => _canInclude != null;
-
     /// <summary>
     /// The <see cref="PropertyInfo" /> of the Entity Framework Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed
     /// as a JSON:API relationship.
@@ -69,20 +65,6 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     /// which falls back to <see cref="ResourceLinksAttribute.RelationshipLinks" /> and then falls back to RelationshipLinks in global options.
     /// </summary>
     public LinkTypes Links { get; set; }
-
-    /// <summary>
-    /// Whether or not this relationship can be included using the <c>include</c> query string parameter. This is <c>true</c> by default.
-    /// </summary>
-    /// <remarks>
-    /// When explicitly set, this value takes precedence over Capabilities for backwards-compatibility. Capabilities are adjusted accordingly when building
-    /// the resource graph.
-    /// </remarks>
-    [Obsolete("Use AllowInclude in Capabilities instead.")]
-    public bool CanInclude
-    {
-        get => _canInclude ?? true;
-        set => _canInclude = value;
-    }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

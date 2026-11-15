@@ -1,6 +1,8 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
@@ -12,11 +14,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets;
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class ResultCapturingRepository<TResource, TId>(
-    ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor,
-    ResourceCaptureStore captureStore)
-    : EntityFrameworkCoreRepository<TResource, TId>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
-        resourceDefinitionAccessor)
+    IJsonApiRequest request, ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
+    IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+    IResourceDefinitionAccessor resourceDefinitionAccessor, IQueryableBuilder queryableBuilder, ResourceCaptureStore captureStore)
+    : EntityFrameworkCoreRepository<TResource, TId>(request, targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders,
+        loggerFactory, resourceDefinitionAccessor, queryableBuilder)
     where TResource : class, IIdentifiable<TId>
 {
     private readonly ResourceCaptureStore _captureStore = captureStore;

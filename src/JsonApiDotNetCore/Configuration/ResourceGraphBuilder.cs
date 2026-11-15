@@ -117,7 +117,7 @@ public partial class ResourceGraphBuilder
         }
     }
 
-    private void ValidateFieldsInDerivedTypes(ResourceGraph resourceGraph)
+    private static void ValidateFieldsInDerivedTypes(ResourceGraph resourceGraph)
     {
         foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
         {
@@ -298,7 +298,7 @@ public partial class ResourceGraphBuilder
                 linksAttribute.ResourceLinks, linksAttribute.RelationshipLinks);
     }
 
-    private ClientIdGenerationMode? GetClientIdGeneration(Type resourceClrType)
+    private static ClientIdGenerationMode? GetClientIdGeneration(Type resourceClrType)
     {
         var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
         return resourceAttribute?.NullableClientIdGeneration;
@@ -377,53 +377,36 @@ public partial class ResourceGraphBuilder
 
     private void SetRelationshipCapabilities(RelationshipAttribute relationship)
     {
-#pragma warning disable CS0618 // Type or member is obsolete
-        bool canInclude = relationship.CanInclude;
-#pragma warning restore CS0618 // Type or member is obsolete
-
         if (relationship is HasOneAttribute hasOneRelationship)
         {
-            SetHasOneRelationshipCapabilities(hasOneRelationship, canInclude);
+            SetHasOneRelationshipCapabilities(hasOneRelationship);
         }
         else if (relationship is HasManyAttribute hasManyRelationship)
         {
-            SetHasManyRelationshipCapabilities(hasManyRelationship, canInclude);
+            SetHasManyRelationshipCapabilities(hasManyRelationship);
         }
     }
 
-    private void SetHasOneRelationshipCapabilities(HasOneAttribute hasOneRelationship, bool canInclude)
+    private void SetHasOneRelationshipCapabilities(HasOneAttribute hasOneRelationship)
     {
         if (!hasOneRelationship.HasExplicitCapabilities)
         {
             hasOneRelationship.Capabilities = _options.DefaultHasOneCapabilities;
         }
-
-        if (hasOneRelationship.HasExplicitCanInclude)
-        {
-            hasOneRelationship.Capabilities = canInclude
-                ? hasOneRelationship.Capabilities | HasOneCapabilities.AllowInclude
-                : hasOneRelationship.Capabilities & ~HasOneCapabilities.AllowInclude;
-        }
     }
 
-    private void SetHasManyRelationshipCapabilities(HasManyAttribute hasManyRelationship, bool canInclude)
+    private void SetHasManyRelationshipCapabilities(HasManyAttribute hasManyRelationship)
     {
         if (!hasManyRelationship.HasExplicitCapabilities)
         {
             hasManyRelationship.Capabilities = _options.DefaultHasManyCapabilities;
-        }
-
-        if (hasManyRelationship.HasExplicitCanInclude)
-        {
-            hasManyRelationship.Capabilities = canInclude
-                ? hasManyRelationship.Capabilities | HasManyCapabilities.AllowInclude
-                : hasManyRelationship.Capabilities & ~HasManyCapabilities.AllowInclude;
         }
     }
 
     private ReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
     {
         AssertNoInfiniteRecursion(recursionDepth);
+        _ = recursionDepth;
 
         List<EagerLoadAttribute> eagerLoads = [];
         PropertyInfo[] properties = resourceClrType.GetProperties();
@@ -468,7 +451,7 @@ public partial class ResourceGraphBuilder
         }
     }
 
-    private void AssertNoDuplicatePublicName(IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
+    private static void AssertNoDuplicatePublicName(IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
     {
         IEnumerable<(AttrAttribute attribute, RelationshipAttribute relationship)> query =
             from attribute in attributes

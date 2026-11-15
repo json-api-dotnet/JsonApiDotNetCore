@@ -10,8 +10,4 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
 {
     /// <summary />
     public LinkTypes Links { get; set; }
-
-    /// <summary />
-    [Obsolete("Use AllowInclude in Capabilities instead.")]
-    public bool CanInclude { get; set; } = true;
 }

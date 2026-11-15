@@ -181,21 +181,12 @@ public class JsonApiContentNegotiator : IJsonApiContentNegotiator
     {
         List<JsonApiMediaType> mediaTypes = [];
 
-        // Relaxed entries come after JSON:API compliant entries, which makes them less likely to be selected.
-
         if (IsOperationsEndpoint())
         {
             if (_options.Extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations))
             {
                 mediaTypes.Add(JsonApiMediaType.AtomicOperations);
             }
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
-            {
-                mediaTypes.Add(JsonApiMediaType.RelaxedAtomicOperations);
-            }
-#pragma warning restore CS0618 // Type or member is obsolete
         }
         else
         {

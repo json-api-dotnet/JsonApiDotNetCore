@@ -29,8 +29,6 @@ public sealed class BlogPost : Identifiable<long>
     [HasMany]
     public ISet<Comment> Comments { get; set; } = new HashSet<Comment>();
 
-#pragma warning disable CS0618 // Type or member is obsolete
-    [HasOne(CanInclude = false)]
-#pragma warning restore CS0618 // Type or member is obsolete
+    [HasOne(Capabilities = HasOneCapabilities.All & ~HasOneCapabilities.AllowInclude)]
     public Blog? Parent { get; set; }
 }
