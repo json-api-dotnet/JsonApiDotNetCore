@@ -8,7 +8,7 @@ internal sealed class SourceCodeBuilder
     private string? _namespace;
     private string? _code;
 
-    public string Build()
+    public MarkedSourceCode Build()
     {
         StringBuilder builder = new();
 
@@ -33,7 +33,8 @@ internal sealed class SourceCodeBuilder
             builder.Append(_code);
         }
 
-        return builder.ToString();
+        string text = builder.ToString();
+        return new MarkedSourceCode(text);
     }
 
     public SourceCodeBuilder WithNamespaceImportFor(Type type)
