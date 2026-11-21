@@ -10005,19 +10005,6 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.ISparseFieldSetCache
   fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache
   nameWithType: ISparseFieldSetCache
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  name: GetIdAttributeSetForRelationshipQuery(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(ResourceType)
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery*
-  name: GetIdAttributeSetForRelationshipQuery
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_
-  commentId: Overload:JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
-  nameWithType: ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
 - uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSparseFieldSetForQuery(ResourceType)
   href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_
@@ -12707,19 +12694,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.SparseFieldSetCache.New
   nameWithType: SparseFieldSetCache.SparseFieldSetCache
   nameWithType.vb: SparseFieldSetCache.New
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  name: GetIdAttributeSetForRelationshipQuery(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(ResourceType)
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery*
-  name: GetIdAttributeSetForRelationshipQuery
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_
-  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
-  nameWithType: SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
 - uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSparseFieldSetForQuery(ResourceType)
   href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_
