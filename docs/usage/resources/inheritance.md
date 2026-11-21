@@ -208,6 +208,35 @@ Only return people who have at least one female married child:
 GET /humans?filter=has(children,isType(,woman,not(equals(husband,null)))) HTTP/1.1
 ```
 
+## Compound attributes
+
+_since v6.0_
+
+[Compound attributes](~/usage/resources/attributes.md#compound-attributes) and collection attributes are inherited like other attributes:
+a derived type exposes the compound attributes of its base type, and it can declare additional ones.
+
+```c#
+#nullable enable
+
+public abstract class Human : Identifiable<long>
+{
+    [Attr(IsCompound = true)]
+    public Address? HomeAddress { get; set; }
+}
+
+public sealed class Man : Human
+{
+    [Attr(IsCompound = true)]
+    public List<Tattoo> Tattoos { get; set; } = [];
+}
+```
+
+- Compound types are not resources, so they have no type hierarchy of their own. A compound type is shared by all attributes that use it, across base and derived resource types.
+- Compound attributes of derived types are accessible in the same way as other derived attributes, such as through a derived endpoint.
+- When a derived type redeclares an attribute from its base type, the attribute must keep the same shape: a scalar can't become a collection or compound, and a compound attribute must
+  use the same compound type. Otherwise, the app fails to start with an `InvalidConfigurationException`, for example:
+  `Attribute 'homeAddress' in derived type 'Man' cannot change the shape of the attribute inherited from base type 'Human'. The base type declares a compound type 'Address', but the derived type declares a scalar value.`
+
 ## Writing data
 
 Just like reading data, you can use base or derived endpoints. When using relationships in request bodies, you can use base or derived types as well.

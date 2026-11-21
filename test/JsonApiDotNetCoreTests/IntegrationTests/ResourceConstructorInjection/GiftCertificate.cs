@@ -18,6 +18,9 @@ public sealed class GiftCertificate(InjectionDbContext injectionDbContext) : Ide
     [NotMapped]
     public bool HasExpired => IssueDate.AddYears(1) < _timeProvider.GetUtcNow();
 
+    [Attr(IsCompound = true)]
+    public Recipient? Recipient { get; set; }
+
     [HasOne]
     public PostOffice? Issuer { get; set; }
 }

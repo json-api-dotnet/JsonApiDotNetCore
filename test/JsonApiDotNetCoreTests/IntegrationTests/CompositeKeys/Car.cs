@@ -42,6 +42,9 @@ public sealed class Car : Identifiable<string?>
     [Attr]
     public long RegionId { get; set; }
 
+    [Attr(IsCompound = true)]
+    public CarPaint? Paint { get; set; }
+
     [HasOne]
     public Engine Engine { get; set; } = null!;
 

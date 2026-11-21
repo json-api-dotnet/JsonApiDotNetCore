@@ -1,7 +1,6 @@
-using System.Collections.Immutable;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries;
 
@@ -10,21 +9,21 @@ namespace JsonApiDotNetCore.Queries;
 /// <see cref="IResourceDefinition{TResource,TId}.OnApplySparseFieldSet" /> on them.
 /// </summary>
 /// <remarks>
-/// This cache ensures that for each request (or operation per request), the resource definition callback is executed only twice per resource type. The
+/// This service ensures that for each request (or operation per request), the resource definition callback is executed only twice per resource type. The
 /// first invocation is used to obtain the fields to retrieve from the underlying data store, while the second invocation is used to determine which
 /// fields to write to the response body.
 /// </remarks>
-public interface ISparseFieldSetCache
+public interface ISparseFieldSetEvaluator
 {
     /// <summary>
-    /// Gets the set of sparse fields to retrieve from the underlying data store. Returns an empty set to retrieve all fields.
+    /// Gets the sparse fieldset to retrieve from the underlying data store, or null to retrieve all fields.
     /// </summary>
-    IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceType resourceType);
+    SparseFieldSetExpression? GetSparseFieldSetForQuery(ResourceType resourceType);
 
     /// <summary>
-    /// Gets the evaluated set of sparse fields to serialize into the response body.
+    /// Gets the evaluated sparse fieldset to serialize into the response body.
     /// </summary>
-    IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceType resourceType);
+    SparseFieldSetExpression GetSparseFieldSetForSerializer(ResourceType resourceType);
 
     /// <summary>
     /// Resets the cached results from resource definition callbacks.

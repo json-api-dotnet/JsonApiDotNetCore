@@ -184,3 +184,23 @@ LEFT JOIN LATERAL (
 ) AS t2 ON TRUE
 ORDER BY t.c, t."Id", a."Id", t2."DisplayName0", t2."Id", t2."Id0", t2."ParentId", t2."CreatedAt" DESC, t2."DisplayName", t2."Id1"
 ```
+
+# Compound attributes in queries
+
+_since v6.0_
+
+The following concepts were added for compound attributes and collections:
+
+- A `SparseFieldSetExpression` is a tree. Each `SparseFieldSetElementExpression` has a `Field` and optional `Children`, which are the selected members of a compound attribute.
+  An element without children selects the field entirely. `fields[contacts]=name.lastName,phoneNumbers` produces an element `name` with child `lastName`, and an element `phoneNumbers` without children.
+  `QueryExpressionRewriter` drops an element whose children were all removed. `SparseFieldTreeBuilder` is used to build and adapt such trees, which is what the
+  `Including` and `Excluding` extension methods do.
+- Query string parsers match field chains against a `FieldChainPattern` (see `BuiltInPatterns`), where tokens such as `O`, `M`, `S`, `L`, `C`, `Q` and `A` stand for kinds of fields
+  (to-one, to-many, scalar, scalar collection, compound, compound collection, any attribute). For example, filters and sorts use `[OC]*S` for chains
+  that end in a scalar attribute, and `[OC]*[MLQ]` for chains that end in a collection (used by `has` and `count`).
+  The capabilities of every field in the chain are validated by the parser.
+- `IAttributeContainer` is implemented by `ResourceType` and `CompoundType`. Field chains are matched starting from a container.
+- `FilterParser` tracks a filter scope: an `AttributeContainerFilterScope` (resource or compound type) or a `ScalarCollectionElementFilterScope`
+  (the element symbol `_`). The condition of `has` is parsed in the scope of the collection element.
+  Expressions use `ScalarCollectionElementValueExpression` for the element symbol, and `CountExpression` and `HasExpression` accept collection attributes besides to-many relationships.
+- The query builders translate nested paths into member access on the compound property, and project the selected members of compounds individually.

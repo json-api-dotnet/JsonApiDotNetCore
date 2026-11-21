@@ -14,6 +14,9 @@ public sealed class MeetingAttendee : Identifiable<Guid>
     [Attr]
     public Address HomeAddress { get; set; } = null!;
 
+    [Attr(IsCompound = true)]
+    public AttendeeProfile? Profile { get; set; }
+
     [HasOne]
     public Meeting? Meeting { get; set; }
 }

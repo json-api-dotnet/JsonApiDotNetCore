@@ -20,11 +20,11 @@ public class QueryLayerComposer : IQueryLayerComposer
     private readonly IPaginationContext _paginationContext;
     private readonly ITargetedFields _targetedFields;
     private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
-    private readonly ISparseFieldSetCache _sparseFieldSetCache;
+    private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
 
     public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
         IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache,
-        ISparseFieldSetCache sparseFieldSetCache)
+        ISparseFieldSetEvaluator sparseFieldSetEvaluator)
     {
         ArgumentNullException.ThrowIfNull(constraintProviders);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
@@ -32,7 +32,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         ArgumentNullException.ThrowIfNull(paginationContext);
         ArgumentNullException.ThrowIfNull(targetedFields);
         ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
-        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
 
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
@@ -40,7 +40,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         _paginationContext = paginationContext;
         _targetedFields = targetedFields;
         _evaluatedIncludeCache = evaluatedIncludeCache;
-        _sparseFieldSetCache = sparseFieldSetCache;
+        _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
     }
 
     /// <inheritdoc />
@@ -142,7 +142,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         // @formatter:wrap_before_first_method_call true
 
         return constraints
-            .Where(constraint => constraint.Scope == null)
+            .Where(constraint => constraint is not RelationshipChainExpressionInScope chainScope || chainScope.Scope == null)
             .Select(constraint => constraint.Expression)
             .ToArray()
             .AsReadOnly();
@@ -177,6 +177,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         // @formatter:wrap_before_first_method_call true
 
         IncludeExpression include = constraints
+            .OfType<RelationshipChainExpressionInScope>()
             .Where(constraint => constraint.Scope == null)
             .Select(constraint => constraint.Expression)
             .OfType<IncludeExpression>()
@@ -188,9 +189,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         IImmutableSet<IncludeElementExpression> includeElements =
             ProcessIncludeSet(include.Elements, topLayer, ImmutableArray<RelationshipAttribute>.Empty, constraints);
 
-        IncludeExpression result = !ReferenceEquals(includeElements, include.Elements)
-            ? includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty
-            : include;
+        IncludeExpression result = !ReferenceEquals(includeElements, include.Elements) ? IncludeExpression.Create(includeElements) : include;
 
         _evaluatedIncludeCache.Set(result);
 
@@ -217,6 +216,7 @@ public class QueryLayerComposer : IQueryLayerComposer
                 // @formatter:wrap_before_first_method_call true
 
                 ReadOnlyCollection<QueryExpression> expressionsInCurrentScope = constraints
+                    .OfType<RelationshipChainExpressionInScope>()
                     .Where(constraint => constraint.Scope != null && constraint.Scope.Fields.SequenceEqual(relationshipChain))
                     .Select(constraint => constraint.Expression)
                     .ToArray()
@@ -454,7 +454,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return new QueryLayer(primaryResourceType)
         {
             Filter = CreateFilterForIds(primaryResourceType, primaryFilter, id),
-            Include = includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty
+            Include = IncludeExpression.Create(includeElements)
         };
     }
 
@@ -591,23 +591,36 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         foreach (ResourceType nextType in resourceTypes)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
+            SparseFieldSetExpression? fieldSetExpression = _sparseFieldSetEvaluator.GetSparseFieldSetForQuery(nextType);
 
-            if (fieldSet.Count == 0)
+            if (fieldSetExpression != null)
             {
-                continue;
+                FieldSelectors selectors = selection.GetOrCreateSelectors(nextType);
+                PopulateSelectors(selectors, fieldSetExpression.Elements);
+
+                AttrAttribute idAttribute = GetIdAttribute(nextType);
+                selectors.IncludeAttribute(idAttribute);
             }
-
-            HashSet<AttrAttribute> attributeSet = fieldSet.OfType<AttrAttribute>().ToHashSet();
-
-            FieldSelectors selectors = selection.GetOrCreateSelectors(nextType);
-            selectors.IncludeAttributes(attributeSet);
-
-            AttrAttribute idAttribute = GetIdAttribute(nextType);
-            selectors.IncludeAttribute(idAttribute);
         }
 
         return selection.IsEmpty ? null : selection;
+    }
+
+    private static void PopulateSelectors(FieldSelectors selectors, IImmutableDictionary<ResourceFieldAttribute, SparseFieldSetElementExpression> elements)
+    {
+        foreach ((ResourceFieldAttribute field, SparseFieldSetElementExpression element) in elements)
+        {
+            if (field is AttrAttribute attr)
+            {
+                selectors.IncludeAttribute(attr);
+
+                if (element.Children.Count > 0)
+                {
+                    FieldSelectors childSelectors = selectors.GetOrCreateChildSelectors(attr);
+                    PopulateSelectors(childSelectors, element.Children);
+                }
+            }
+        }
     }
 
     private static AttrAttribute GetIdAttribute(ResourceType resourceType)

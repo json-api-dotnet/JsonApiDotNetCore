@@ -18,6 +18,9 @@ public sealed class SerializationDbContext(DbContextOptions<SerializationDbConte
         builder.Entity<MeetingAttendee>()
             .OwnsOne(meetingAttendee => meetingAttendee.HomeAddress);
 
+        builder.Entity<MeetingAttendee>()
+            .ComplexProperty(meetingAttendee => meetingAttendee.Profile, complexBuilder => complexBuilder.ToJson());
+
         base.OnModelCreating(builder);
     }
 }

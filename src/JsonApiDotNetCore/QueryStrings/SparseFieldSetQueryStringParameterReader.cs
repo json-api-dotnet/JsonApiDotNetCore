@@ -7,8 +7,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
-using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings;
@@ -80,23 +78,14 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
 
     private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceType resourceType)
     {
-        SparseFieldSetExpression? sparseFieldSet = _sparseFieldSetParser.Parse(parameterValue, resourceType);
-
-        if (sparseFieldSet == null)
-        {
-            // We add ID to an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
-            AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<>.Id));
-            return new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
-        }
-
-        return sparseFieldSet;
+        return _sparseFieldSetParser.Parse(parameterValue, resourceType);
     }
 
     /// <inheritdoc />
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
         return _sparseFieldTableBuilder.Count > 0
-            ? [new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTableBuilder.ToImmutable()))]
+            ? _sparseFieldTableBuilder.Select(pair => new ResourceTypeExpressionInScope(pair.Key, pair.Value)).ToArray().AsReadOnly()
             : Array.Empty<ExpressionInScope>();
     }
 }
