@@ -22,12 +22,6 @@ public interface ISparseFieldSetCache
     IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceType resourceType);
 
     /// <summary>
-    /// Gets the set of attributes to retrieve from the underlying data store for relationship endpoints. This always returns 'id', along with any additional
-    /// attributes from resource definition callback.
-    /// </summary>
-    IImmutableSet<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceType resourceType);
-
-    /// <summary>
     /// Gets the evaluated set of sparse fields to serialize into the response body.
     /// </summary>
     IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceType resourceType);
