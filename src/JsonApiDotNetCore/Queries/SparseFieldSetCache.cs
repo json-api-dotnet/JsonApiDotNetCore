@@ -90,25 +90,6 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     }
 
     /// <inheritdoc />
-    public IImmutableSet<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceType resourceType)
-    {
-        ArgumentNullException.ThrowIfNull(resourceType);
-
-        AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<>.Id));
-        var inputExpression = new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
-
-        // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
-        SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
-
-        ImmutableHashSet<AttrAttribute> outputAttributes = outputExpression == null
-            ? ImmutableHashSet<AttrAttribute>.Empty
-            : outputExpression.Fields.OfType<AttrAttribute>().ToImmutableHashSet();
-
-        outputAttributes = outputAttributes.Add(idAttribute);
-        return outputAttributes;
-    }
-
-    /// <inheritdoc />
     public IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
