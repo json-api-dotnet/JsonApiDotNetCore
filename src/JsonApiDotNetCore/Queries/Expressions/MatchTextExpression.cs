@@ -34,18 +34,18 @@ public class MatchTextExpression : FilterExpression
     public LiteralConstantExpression TextValue { get; }
 
     /// <summary>
-    /// The kind of matching to perform.
+    /// The text matching operator to apply.
     /// </summary>
-    public TextMatchKind MatchKind { get; }
+    public TextMatchOperator Operator { get; }
 
-    public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression textValue, TextMatchKind matchKind)
+    public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression textValue, TextMatchOperator @operator)
     {
         ArgumentNullException.ThrowIfNull(matchTarget);
         ArgumentNullException.ThrowIfNull(textValue);
 
         MatchTarget = matchTarget;
         TextValue = textValue;
-        MatchKind = matchKind;
+        Operator = @operator;
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -67,7 +67,7 @@ public class MatchTextExpression : FilterExpression
     {
         var builder = new StringBuilder();
 
-        builder.Append(MatchKind.ToString().Camelize());
+        builder.Append(Operator.ToString().Camelize());
         builder.Append('(');
 
         builder.Append(toFullString
@@ -93,11 +93,11 @@ public class MatchTextExpression : FilterExpression
 
         var other = (MatchTextExpression)obj;
 
-        return MatchTarget.Equals(other.MatchTarget) && TextValue.Equals(other.TextValue) && MatchKind == other.MatchKind;
+        return MatchTarget.Equals(other.MatchTarget) && TextValue.Equals(other.TextValue) && Operator == other.Operator;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(MatchTarget, TextValue, MatchKind);
+        return HashCode.Combine(MatchTarget, TextValue, Operator);
     }
 }

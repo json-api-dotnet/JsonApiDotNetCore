@@ -1,6 +1,6 @@
 namespace JsonApiDotNetCore.Queries.Expressions;
 
-public enum TextMatchKind
+public enum TextMatchOperator
 {
     Contains,
     StartsWith,

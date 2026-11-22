@@ -99,10 +99,10 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         Expression text = Visit(expression.TextValue, context);
 
-        return expression.MatchKind switch
+        return expression.Operator switch
         {
-            TextMatchKind.StartsWith => Expression.Call(property, "StartsWith", null, text),
-            TextMatchKind.EndsWith => Expression.Call(property, "EndsWith", null, text),
+            TextMatchOperator.StartsWith => Expression.Call(property, "StartsWith", null, text),
+            TextMatchOperator.EndsWith => Expression.Call(property, "EndsWith", null, text),
             _ => Expression.Call(property, "Contains", null, text)
         };
     }

@@ -365,7 +365,7 @@ public sealed class QueryExpressionTests
 
         public MatchTextExpression MatchText()
         {
-            return new MatchTextExpression(ResourceFieldChainForText(), LiteralConstant(), TextMatchKind.Contains);
+            return new MatchTextExpression(ResourceFieldChainForText(), LiteralConstant(), TextMatchOperator.Contains);
         }
 
         public NotExpression Not()

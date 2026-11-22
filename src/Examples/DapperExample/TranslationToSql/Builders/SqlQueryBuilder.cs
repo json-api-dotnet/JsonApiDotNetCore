@@ -322,7 +322,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
         Visit(node.Column, builder);
         builder.Append(" LIKE '");
 
-        if (node.MatchKind is TextMatchKind.Contains or TextMatchKind.EndsWith)
+        if (node.Operator is TextMatchOperator.Contains or TextMatchOperator.EndsWith)
         {
             builder.Append('%');
         }
@@ -345,7 +345,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
 
         builder.Append(safeValue);
 
-        if (node.MatchKind is TextMatchKind.Contains or TextMatchKind.StartsWith)
+        if (node.Operator is TextMatchOperator.Contains or TextMatchOperator.StartsWith)
         {
             builder.Append('%');
         }

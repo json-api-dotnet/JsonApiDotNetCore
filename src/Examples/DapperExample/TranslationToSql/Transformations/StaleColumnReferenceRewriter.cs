@@ -228,7 +228,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
     public override SqlTreeNode VisitLike(LikeNode node, ColumnVisitMode mode)
     {
         ColumnNode column = TypedVisit(node.Column, mode);
-        return new LikeNode(column, node.MatchKind, node.Text);
+        return new LikeNode(column, node.Operator, node.Text);
     }
 
     public override SqlTreeNode VisitIn(InNode node, ColumnVisitMode mode)

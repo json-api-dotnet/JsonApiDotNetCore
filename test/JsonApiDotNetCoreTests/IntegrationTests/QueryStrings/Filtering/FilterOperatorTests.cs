@@ -299,7 +299,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(IntUpperBound, IntLowerBound, ComparisonOperator.GreaterThan, IntLowerBound)]
     [InlineData(IntUpperBound, IntLowerBound, ComparisonOperator.GreaterOrEqual, IntInTheRange)]
     [InlineData(IntUpperBound, IntLowerBound, ComparisonOperator.GreaterOrEqual, IntUpperBound)]
-    public async Task Can_filter_comparison_on_whole_number(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator,
+    public async Task Can_filter_comparison_on_whole_number(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
         string filterValue)
     {
         // Arrange
@@ -320,7 +320,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someInt32,'{filterValue}')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someInt32,'{filterValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -341,7 +341,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(DoubleUpperBound, DoubleLowerBound, ComparisonOperator.GreaterThan, DoubleLowerBound)]
     [InlineData(DoubleUpperBound, DoubleLowerBound, ComparisonOperator.GreaterOrEqual, DoubleInTheRange)]
     [InlineData(DoubleUpperBound, DoubleLowerBound, ComparisonOperator.GreaterOrEqual, DoubleUpperBound)]
-    public async Task Can_filter_comparison_on_fractional_number(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator,
+    public async Task Can_filter_comparison_on_fractional_number(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
         string filterValue)
     {
         // Arrange
@@ -362,7 +362,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDouble,'{filterValue}')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someDouble,'{filterValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -391,7 +391,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterThan, InvariantDateTimeLowerBound)]
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateTimeInTheRange)]
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateTimeUpperBound)]
-    public async Task Can_filter_comparison_on_DateTime_in_local_time_zone(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator,
+    public async Task Can_filter_comparison_on_DateTime_in_local_time_zone(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
         string filterValue)
     {
         // Arrange
@@ -412,7 +412,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTimeInLocalZone,'{filterValue}')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someDateTimeInLocalZone,'{filterValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -442,7 +442,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterThan, InvariantDateTimeLowerBound)]
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateTimeInTheRange)]
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateTimeUpperBound)]
-    public async Task Can_filter_comparison_on_DateTime_in_UTC_time_zone(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator,
+    public async Task Can_filter_comparison_on_DateTime_in_UTC_time_zone(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
         string filterValue)
     {
         // Arrange
@@ -463,7 +463,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTimeInUtcZone,'{filterValue}Z')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someDateTimeInUtcZone,'{filterValue}Z')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -493,7 +493,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterThan, InvariantDateTimeLowerBound)]
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateTimeInTheRange)]
     [InlineData(InvariantDateTimeUpperBound, InvariantDateTimeLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateTimeUpperBound)]
-    public async Task Can_filter_comparison_on_DateTimeOffset(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator,
+    public async Task Can_filter_comparison_on_DateTimeOffset(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
         string filterValue)
     {
         // Arrange
@@ -514,7 +514,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTimeOffset,'{filterValue}Z')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someDateTimeOffset,'{filterValue}Z')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -536,7 +536,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(TimeSpanUpperBound, TimeSpanLowerBound, ComparisonOperator.GreaterThan, TimeSpanLowerBound)]
     [InlineData(TimeSpanUpperBound, TimeSpanLowerBound, ComparisonOperator.GreaterOrEqual, TimeSpanInTheRange)]
     [InlineData(TimeSpanUpperBound, TimeSpanLowerBound, ComparisonOperator.GreaterOrEqual, TimeSpanUpperBound)]
-    public async Task Can_filter_comparison_on_TimeSpan(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator, string filterValue)
+    public async Task Can_filter_comparison_on_TimeSpan(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
+        string filterValue)
     {
         // Arrange
         var resource = new FilterableResource
@@ -556,7 +557,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someTimeSpan,'{filterValue}')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someTimeSpan,'{filterValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -585,7 +586,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(InvariantDateOnlyUpperBound, InvariantDateOnlyLowerBound, ComparisonOperator.GreaterThan, InvariantDateOnlyLowerBound)]
     [InlineData(InvariantDateOnlyUpperBound, InvariantDateOnlyLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateOnlyInTheRange)]
     [InlineData(InvariantDateOnlyUpperBound, InvariantDateOnlyLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateOnlyUpperBound)]
-    public async Task Can_filter_comparison_on_DateOnly(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator, string filterValue)
+    public async Task Can_filter_comparison_on_DateOnly(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
+        string filterValue)
     {
         // Arrange
         var resource = new FilterableResource
@@ -605,7 +607,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateOnly,'{filterValue}')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someDateOnly,'{filterValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -626,7 +628,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData(TimeOnlyUpperBound, TimeOnlyLowerBound, ComparisonOperator.GreaterThan, TimeOnlyLowerBound)]
     [InlineData(TimeOnlyUpperBound, TimeOnlyLowerBound, ComparisonOperator.GreaterOrEqual, TimeOnlyInTheRange)]
     [InlineData(TimeOnlyUpperBound, TimeOnlyLowerBound, ComparisonOperator.GreaterOrEqual, TimeOnlyUpperBound)]
-    public async Task Can_filter_comparison_on_TimeOnly(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator, string filterValue)
+    public async Task Can_filter_comparison_on_TimeOnly(string matchingValue, string nonMatchingValue, ComparisonOperator comparisonOperator,
+        string filterValue)
     {
         // Arrange
         var resource = new FilterableResource
@@ -646,7 +649,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someTimeOnly,'{filterValue}')";
+        string route = $"/filterableResources?filter={comparisonOperator.ToString().Camelize()}(someTimeOnly,'{filterValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -659,12 +662,12 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Theory]
-    [InlineData("The fox jumped over the lazy dog", "Other", TextMatchKind.Contains, "jumped")]
-    [InlineData("The fox jumped over the lazy dog", "the fox...", TextMatchKind.Contains, "The")]
-    [InlineData("The fox jumped over the lazy dog", "The fox jumped", TextMatchKind.Contains, "dog")]
-    [InlineData("The fox jumped over the lazy dog", "Yesterday The fox...", TextMatchKind.StartsWith, "The")]
-    [InlineData("The fox jumped over the lazy dog", "over the lazy dog earlier", TextMatchKind.EndsWith, "dog")]
-    public async Task Can_filter_text_match(string matchingText, string nonMatchingText, TextMatchKind matchKind, string filterText)
+    [InlineData("The fox jumped over the lazy dog", "Other", TextMatchOperator.Contains, "jumped")]
+    [InlineData("The fox jumped over the lazy dog", "the fox...", TextMatchOperator.Contains, "The")]
+    [InlineData("The fox jumped over the lazy dog", "The fox jumped", TextMatchOperator.Contains, "dog")]
+    [InlineData("The fox jumped over the lazy dog", "Yesterday The fox...", TextMatchOperator.StartsWith, "The")]
+    [InlineData("The fox jumped over the lazy dog", "over the lazy dog earlier", TextMatchOperator.EndsWith, "dog")]
+    public async Task Can_filter_text_match(string matchingText, string nonMatchingText, TextMatchOperator textMatchOperator, string filterText)
     {
         // Arrange
         var resource = new FilterableResource
@@ -684,7 +687,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter={matchKind.ToString().Camelize()}(someString,'{filterText}')";
+        string route = $"/filterableResources?filter={textMatchOperator.ToString().Camelize()}(someString,'{filterText}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

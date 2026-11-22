@@ -154,7 +154,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
 
         if (newMatchTarget != null && newTextValue != null)
         {
-            var newExpression = new MatchTextExpression(newMatchTarget, newTextValue, expression.MatchKind);
+            var newExpression = new MatchTextExpression(newMatchTarget, newTextValue, expression.Operator);
             return newExpression.Equals(expression) ? expression : newExpression;
         }
 

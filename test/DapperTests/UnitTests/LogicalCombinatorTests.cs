@@ -20,8 +20,8 @@ public sealed class LogicalCombinatorTests
         var conditionRight2 = new ComparisonNode(ComparisonOperator.LessOrEqual, column, new ParameterNode("@p4", 200));
         var and2 = new LogicalNode(LogicalOperator.And, conditionLeft2, conditionRight2);
 
-        var conditionLeft3 = new LikeNode(column, TextMatchKind.EndsWith, "Z");
-        var conditionRight3 = new LikeNode(column, TextMatchKind.StartsWith, "A");
+        var conditionLeft3 = new LikeNode(column, TextMatchOperator.EndsWith, "Z");
+        var conditionRight3 = new LikeNode(column, TextMatchOperator.StartsWith, "A");
         var and3 = new LogicalNode(LogicalOperator.And, conditionLeft3, conditionRight3);
 
         var source = new LogicalNode(LogicalOperator.And, and1, new LogicalNode(LogicalOperator.And, and2, and3));
