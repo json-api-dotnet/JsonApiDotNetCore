@@ -97,7 +97,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
             throw new InvalidOperationException("Expression must be a string.");
         }
 
-        Expression text = Visit(expression.TextValue, context);
+        Expression text = Visit(expression.Text, context);
 
         return expression.Operator switch
         {

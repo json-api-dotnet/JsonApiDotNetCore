@@ -31,20 +31,20 @@ public class MatchTextExpression : FilterExpression
     /// <summary>
     /// The text to match against.
     /// </summary>
-    public LiteralConstantExpression TextValue { get; }
+    public LiteralConstantExpression Text { get; }
 
     /// <summary>
     /// The text matching operator to apply.
     /// </summary>
     public TextMatchOperator Operator { get; }
 
-    public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression textValue, TextMatchOperator @operator)
+    public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression text, TextMatchOperator @operator)
     {
         ArgumentNullException.ThrowIfNull(matchTarget);
-        ArgumentNullException.ThrowIfNull(textValue);
+        ArgumentNullException.ThrowIfNull(text);
 
         MatchTarget = matchTarget;
-        TextValue = textValue;
+        Text = text;
         Operator = @operator;
     }
 
@@ -71,8 +71,8 @@ public class MatchTextExpression : FilterExpression
         builder.Append('(');
 
         builder.Append(toFullString
-            ? string.Join(',', MatchTarget.ToFullString(), TextValue.ToFullString())
-            : string.Join(',', MatchTarget.ToString(), TextValue.ToString()));
+            ? string.Join(',', MatchTarget.ToFullString(), Text.ToFullString())
+            : string.Join(',', MatchTarget.ToString(), Text.ToString()));
 
         builder.Append(')');
 
@@ -93,11 +93,11 @@ public class MatchTextExpression : FilterExpression
 
         var other = (MatchTextExpression)obj;
 
-        return MatchTarget.Equals(other.MatchTarget) && TextValue.Equals(other.TextValue) && Operator == other.Operator;
+        return MatchTarget.Equals(other.MatchTarget) && Text.Equals(other.Text) && Operator == other.Operator;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(MatchTarget, TextValue, Operator);
+        return HashCode.Combine(MatchTarget, Text, Operator);
     }
 }
