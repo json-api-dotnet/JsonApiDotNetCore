@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -401,17 +400,13 @@ public abstract class QueryExpressionParser
         return builder.ToString();
     }
 
-    private void AssertAtLeastOneCanBeIncluded(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, int position)
+    private static void AssertAtLeastOneCanBeIncluded(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, int position)
     {
         if (relationshipsFound.All(relationship => relationship.IsIncludeBlocked()))
         {
             ResourceType resourceType = relationshipsFound.First().LeftType;
             string message = $"Including relationship '{relationshipName}' on '{resourceType}' is not allowed.";
-
-            var exception = new QueryParseException(message, position);
-            string specificMessage = exception.GetMessageWithPosition(Source);
-
-            throw new InvalidQueryStringParameterException("include", "The specified include is invalid.", specificMessage);
+            throw new QueryParseException(message, position);
         }
     }
 
