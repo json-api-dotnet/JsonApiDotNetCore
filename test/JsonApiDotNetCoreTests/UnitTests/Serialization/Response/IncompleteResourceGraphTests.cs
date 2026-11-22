@@ -31,9 +31,9 @@ public sealed class IncompleteResourceGraphTests
         var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();
         var sparseFieldSetEvaluator = new SparseFieldSetEvaluator(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
-        var evaluatedIncludeCache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
+        var includeContext = new IncludeContext(Array.Empty<IQueryConstraintProvider>());
 
-        var responseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache,
+        var responseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, includeContext,
             sparseFieldSetEvaluator, requestQueryStringAccessor);
 
         var banana = new Banana();

@@ -592,7 +592,7 @@ public sealed class ResponseModelAdapterTests
             PrimaryId = primaryId
         };
 
-        var evaluatedIncludeCache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
+        var includeContext = new IncludeContext(Array.Empty<IQueryConstraintProvider>());
         var linkBuilder = new FakeLinkBuilder();
         var metaBuilder = new FakeMetaBuilder();
         var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();
@@ -601,9 +601,9 @@ public sealed class ResponseModelAdapterTests
 
         var includeParser = new IncludeParser(options);
         IncludeExpression include = includeParser.Parse(includeChains, request.PrimaryResourceType);
-        evaluatedIncludeCache.Set(include);
+        includeContext.Set(include);
 
-        return new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache, sparseFieldSetEvaluator,
+        return new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, includeContext, sparseFieldSetEvaluator,
             requestQueryStringAccessor);
     }
 }

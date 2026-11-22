@@ -36,7 +36,7 @@ public abstract class SerializationBenchmarkBase
 
         // ReSharper disable VirtualMemberCallInConstructor
         JsonApiRequest request = CreateJsonApiRequest(ResourceGraph);
-        IEvaluatedIncludeCache evaluatedIncludeCache = CreateEvaluatedIncludeCache(ResourceGraph);
+        IIncludeContext includeContext = CreateIncludeContext(ResourceGraph);
         // ReSharper restore VirtualMemberCallInConstructor
 
         var linkBuilder = new FakeLinkBuilder();
@@ -46,13 +46,13 @@ public abstract class SerializationBenchmarkBase
         var sparseFieldSetEvaluator = new SparseFieldSetEvaluator(constraintProviders, resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
-        ResponseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache,
+        ResponseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, includeContext,
             sparseFieldSetEvaluator, requestQueryStringAccessor);
     }
 
     protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);
 
-    protected abstract IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph);
+    protected abstract IIncludeContext CreateIncludeContext(IResourceGraph resourceGraph);
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class OutgoingResource : Identifiable<long>

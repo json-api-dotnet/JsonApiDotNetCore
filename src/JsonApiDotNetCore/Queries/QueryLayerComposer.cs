@@ -19,11 +19,11 @@ public class QueryLayerComposer : IQueryLayerComposer
     private readonly IJsonApiOptions _options;
     private readonly IPaginationContext _paginationContext;
     private readonly ITargetedFields _targetedFields;
-    private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
+    private readonly IIncludeContext _includeContext;
     private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
 
     public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
-        IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache,
+        IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IIncludeContext includeContext,
         ISparseFieldSetEvaluator sparseFieldSetEvaluator)
     {
         ArgumentNullException.ThrowIfNull(constraintProviders);
@@ -31,7 +31,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(paginationContext);
         ArgumentNullException.ThrowIfNull(targetedFields);
-        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
+        ArgumentNullException.ThrowIfNull(includeContext);
         ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
 
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
@@ -39,7 +39,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         _options = options;
         _paginationContext = paginationContext;
         _targetedFields = targetedFields;
-        _evaluatedIncludeCache = evaluatedIncludeCache;
+        _includeContext = includeContext;
         _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
     }
 
@@ -192,7 +192,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             ? includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty
             : include;
 
-        _evaluatedIncludeCache.Set(result);
+        _includeContext.Set(result);
 
         return result;
     }

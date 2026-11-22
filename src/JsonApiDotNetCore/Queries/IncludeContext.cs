@@ -2,14 +2,14 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Queries;
 
-/// <inheritdoc cref="IEvaluatedIncludeCache" />
-internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
+/// <inheritdoc cref="IIncludeContext" />
+internal sealed class IncludeContext : IIncludeContext
 {
     private readonly IQueryConstraintProvider[] _constraintProviders;
     private IncludeExpression? _include;
     private bool _isAssigned;
 
-    public EvaluatedIncludeCache(IEnumerable<IQueryConstraintProvider> constraintProviders)
+    public IncludeContext(IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
         ArgumentNullException.ThrowIfNull(constraintProviders);
 

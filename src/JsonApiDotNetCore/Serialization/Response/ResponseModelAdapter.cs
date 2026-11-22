@@ -23,7 +23,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
     private readonly ILinkBuilder _linkBuilder;
     private readonly IMetaBuilder _metaBuilder;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
-    private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
+    private readonly IIncludeContext _includeContext;
     private readonly IRequestQueryStringAccessor _requestQueryStringAccessor;
     private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
 
@@ -31,7 +31,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
     private readonly Dictionary<IIdentifiable, ResourceObjectTreeNode> _resourceToTreeNodeCache = new(IdentifiableComparer.Instance);
 
     public ResponseModelAdapter(IJsonApiRequest request, IJsonApiOptions options, ILinkBuilder linkBuilder, IMetaBuilder metaBuilder,
-        IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetEvaluator sparseFieldSetEvaluator,
+        IResourceDefinitionAccessor resourceDefinitionAccessor, IIncludeContext includeContext, ISparseFieldSetEvaluator sparseFieldSetEvaluator,
         IRequestQueryStringAccessor requestQueryStringAccessor)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -39,7 +39,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         ArgumentNullException.ThrowIfNull(linkBuilder);
         ArgumentNullException.ThrowIfNull(metaBuilder);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
-        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
+        ArgumentNullException.ThrowIfNull(includeContext);
         ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
         ArgumentNullException.ThrowIfNull(requestQueryStringAccessor);
 
@@ -48,7 +48,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         _linkBuilder = linkBuilder;
         _metaBuilder = metaBuilder;
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
-        _evaluatedIncludeCache = evaluatedIncludeCache;
+        _includeContext = includeContext;
         _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
         _requestQueryStringAccessor = requestQueryStringAccessor;
     }
@@ -61,7 +61,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         var document = new Document();
 
-        IncludeExpression? include = _evaluatedIncludeCache.Get();
+        IncludeExpression? include = _includeContext.Get();
         IImmutableSet<IncludeElementExpression> includeElements = include?.Elements ?? ImmutableHashSet<IncludeElementExpression>.Empty;
 
         var rootNode = ResourceObjectTreeNode.CreateRoot();
