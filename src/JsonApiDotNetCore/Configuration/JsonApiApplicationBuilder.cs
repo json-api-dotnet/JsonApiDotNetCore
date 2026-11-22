@@ -173,7 +173,7 @@ internal sealed class JsonApiApplicationBuilder
         _services.TryAddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
         _services.TryAddScoped<IPaginationContext, PaginationContext>();
         _services.TryAddScoped<IEvaluatedIncludeCache, EvaluatedIncludeCache>();
-        _services.TryAddScoped<ISparseFieldSetCache, SparseFieldSetCache>();
+        _services.TryAddScoped<ISparseFieldSetEvaluator, SparseFieldSetEvaluator>();
         _services.TryAddScoped<IQueryLayerComposer, QueryLayerComposer>();
         _services.TryAddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
         _services.TryAddSingleton<IDocumentDescriptionLinkProvider, NoDocumentDescriptionLinkProvider>();

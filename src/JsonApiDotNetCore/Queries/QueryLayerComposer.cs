@@ -20,11 +20,11 @@ public class QueryLayerComposer : IQueryLayerComposer
     private readonly IPaginationContext _paginationContext;
     private readonly ITargetedFields _targetedFields;
     private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
-    private readonly ISparseFieldSetCache _sparseFieldSetCache;
+    private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
 
     public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
         IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache,
-        ISparseFieldSetCache sparseFieldSetCache)
+        ISparseFieldSetEvaluator sparseFieldSetEvaluator)
     {
         ArgumentNullException.ThrowIfNull(constraintProviders);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
@@ -32,7 +32,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         ArgumentNullException.ThrowIfNull(paginationContext);
         ArgumentNullException.ThrowIfNull(targetedFields);
         ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
-        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
 
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
@@ -40,7 +40,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         _paginationContext = paginationContext;
         _targetedFields = targetedFields;
         _evaluatedIncludeCache = evaluatedIncludeCache;
-        _sparseFieldSetCache = sparseFieldSetCache;
+        _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
     }
 
     /// <inheritdoc />
@@ -591,7 +591,7 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         foreach (ResourceType nextType in resourceTypes)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetEvaluator.GetSparseFieldSetForQuery(nextType);
 
             if (fieldSet.Count == 0)
             {
