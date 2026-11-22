@@ -13610,12 +13610,15 @@ references:
   fullName.vb: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.New
   nameWithType: QueryStringParameterReader.QueryStringParameterReader
   nameWithType.vb: QueryStringParameterReader.New
-- uid: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest
-  name: AssertIsCollectionRequest()
-  href: api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_QueryStringParameterReader_AssertIsCollectionRequest
-  commentId: M:JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest
-  fullName: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest()
-  nameWithType: QueryStringParameterReader.AssertIsCollectionRequest()
+- uid: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest(System.String)
+  name: AssertIsCollectionRequest(string)
+  href: api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_QueryStringParameterReader_AssertIsCollectionRequest_System_String_
+  commentId: M:JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest(System.String)
+  name.vb: AssertIsCollectionRequest(String)
+  fullName: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest(string)
+  fullName.vb: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest(String)
+  nameWithType: QueryStringParameterReader.AssertIsCollectionRequest(string)
+  nameWithType.vb: QueryStringParameterReader.AssertIsCollectionRequest(String)
 - uid: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest*
   name: AssertIsCollectionRequest
   href: api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_QueryStringParameterReader_AssertIsCollectionRequest_
