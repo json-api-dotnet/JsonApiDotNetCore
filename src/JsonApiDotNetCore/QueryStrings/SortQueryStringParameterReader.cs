@@ -80,7 +80,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
 
         if (parameterScope.Scope == null)
         {
-            AssertIsCollectionRequest();
+            AssertIsCollectionRequest(parameterName);
         }
 
         return parameterScope.Scope;

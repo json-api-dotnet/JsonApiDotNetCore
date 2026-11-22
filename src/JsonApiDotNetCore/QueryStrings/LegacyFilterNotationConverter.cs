@@ -124,7 +124,7 @@ public sealed class LegacyFilterNotationConverter
             }
         }
 
-        throw new QueryParseException("Expected field name between brackets in filter parameter name.", -1);
+        throw new QueryParseException("Field name between brackets expected in filter parameter name.", -1);
     }
 
     private static string EscapeQuotes(string text)

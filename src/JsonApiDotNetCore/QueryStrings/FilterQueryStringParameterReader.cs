@@ -123,7 +123,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
         if (parameterScope.Scope == null)
         {
-            AssertIsCollectionRequest();
+            AssertIsCollectionRequest(parameterName);
         }
 
         return parameterScope.Scope;

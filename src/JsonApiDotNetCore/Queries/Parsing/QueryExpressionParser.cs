@@ -406,7 +406,7 @@ public abstract class QueryExpressionParser
         if (relationshipsFound.All(relationship => relationship.IsIncludeBlocked()))
         {
             ResourceType resourceType = relationshipsFound.First().LeftType;
-            string message = $"Including the relationship '{relationshipName}' on '{resourceType}' is not allowed.";
+            string message = $"Including relationship '{relationshipName}' on '{resourceType}' is not allowed.";
 
             var exception = new QueryParseException(message, position);
             string specificMessage = exception.GetMessageWithPosition(Source);

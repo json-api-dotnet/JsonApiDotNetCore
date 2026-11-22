@@ -60,7 +60,8 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         if (parentChain.Count > maximumDepth)
         {
             string path = string.Join('.', parentChain.Reverse().Select(relationship => relationship.PublicName));
-            throw new QueryParseException($"Including '{path}' exceeds the maximum inclusion depth of {maximumDepth}.", position);
+            string message = $"Including '{path}' has a depth of {parentChain.Count}, which exceeds the maximum inclusion depth of {maximumDepth}.";
+            throw new QueryParseException(message, position);
         }
 
         foreach (IncludeElementExpression child in includeElement.Children)

@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.Queries;
 public interface IPaginationContext
 {
     /// <summary>
-    /// The value 1, unless overridden from query string or resource definition. Should not be higher than <see cref="IJsonApiOptions.MaximumPageNumber" />.
+    /// The value 1, unless overridden from query string or resource definition. Should not be greater than <see cref="IJsonApiOptions.MaximumPageNumber" />.
     /// </summary>
     PageNumber PageNumber { get; set; }
 
     /// <summary>
-    /// The default page size from options, unless overridden from query string or resource definition. Should not be higher than
+    /// The default page size from options, unless overridden from query string or resource definition. Should not be greater than
     /// <see cref="IJsonApiOptions.MaximumPageSize" />. Can be <c>null</c>, which means pagination is disabled.
     /// </summary>
     PageSize? PageSize { get; set; }
