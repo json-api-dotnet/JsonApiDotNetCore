@@ -23,15 +23,15 @@ public class ResponseModelAdapter : IResponseModelAdapter
     private readonly ILinkBuilder _linkBuilder;
     private readonly IMetaBuilder _metaBuilder;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
-    private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
+    private readonly IIncludeContext _includeContext;
     private readonly IRequestQueryStringAccessor _requestQueryStringAccessor;
-    private readonly ISparseFieldSetCache _sparseFieldSetCache;
+    private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
 
     // Ensures that at most one ResourceObject (and one tree node) is produced per resource instance.
     private readonly Dictionary<IIdentifiable, ResourceObjectTreeNode> _resourceToTreeNodeCache = new(IdentifiableComparer.Instance);
 
     public ResponseModelAdapter(IJsonApiRequest request, IJsonApiOptions options, ILinkBuilder linkBuilder, IMetaBuilder metaBuilder,
-        IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache,
+        IResourceDefinitionAccessor resourceDefinitionAccessor, IIncludeContext includeContext, ISparseFieldSetEvaluator sparseFieldSetEvaluator,
         IRequestQueryStringAccessor requestQueryStringAccessor)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -39,8 +39,8 @@ public class ResponseModelAdapter : IResponseModelAdapter
         ArgumentNullException.ThrowIfNull(linkBuilder);
         ArgumentNullException.ThrowIfNull(metaBuilder);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
-        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
-        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(includeContext);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
         ArgumentNullException.ThrowIfNull(requestQueryStringAccessor);
 
         _request = request;
@@ -48,20 +48,20 @@ public class ResponseModelAdapter : IResponseModelAdapter
         _linkBuilder = linkBuilder;
         _metaBuilder = metaBuilder;
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
-        _evaluatedIncludeCache = evaluatedIncludeCache;
-        _sparseFieldSetCache = sparseFieldSetCache;
+        _includeContext = includeContext;
+        _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
         _requestQueryStringAccessor = requestQueryStringAccessor;
     }
 
     /// <inheritdoc />
     public Document Convert(object? model)
     {
-        _sparseFieldSetCache.Reset();
+        _sparseFieldSetEvaluator.Reset();
         _resourceToTreeNodeCache.Clear();
 
         var document = new Document();
 
-        IncludeExpression? include = _evaluatedIncludeCache.Get();
+        IncludeExpression? include = _includeContext.Get();
         IImmutableSet<IncludeElementExpression> includeElements = include?.Elements ?? ImmutableHashSet<IncludeElementExpression>.Empty;
 
         var rootNode = ResourceObjectTreeNode.CreateRoot();
@@ -139,7 +139,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
             resourceObject = rootNode.GetResponseData().Single();
 
-            _sparseFieldSetCache.Reset();
+            _sparseFieldSetEvaluator.Reset();
             _resourceToTreeNodeCache.Clear();
         }
 
@@ -224,7 +224,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         if (!isRelationship)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetEvaluator.GetSparseFieldSetForSerializer(resourceType);
 
             resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSet);
             resourceObject.Links = _linkBuilder.GetResourceLinks(resourceType, resource);
@@ -323,7 +323,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     private void PopulateRelationshipsInResourceObject(ResourceObjectTreeNode treeNode)
     {
-        IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(treeNode.ResourceType);
+        IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetEvaluator.GetSparseFieldSetForSerializer(treeNode.ResourceType);
 
         foreach (RelationshipAttribute relationship in treeNode.ResourceType.Relationships)
         {

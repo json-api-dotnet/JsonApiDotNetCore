@@ -128,8 +128,8 @@ public class OperationsSerializationBenchmarks : SerializationBenchmarkBase
         };
     }
 
-    protected override IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph)
+    protected override IIncludeContext CreateIncludeContext(IResourceGraph resourceGraph)
     {
-        return new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
+        return new IncludeContext(Array.Empty<IQueryConstraintProvider>());
     }
 }

@@ -5,10 +5,10 @@ namespace JsonApiDotNetCore.Queries;
 
 /// <summary>
 /// Provides in-memory storage for the evaluated inclusion tree within a request. This tree is produced from query string and resource definition
-/// callbacks. The cache enables the serialization layer to take changes from <see cref="IResourceDefinition{TResource,TId}.OnApplyIncludes" /> into
+/// callbacks. This context enables the serialization layer to take changes from <see cref="IResourceDefinition{TResource,TId}.OnApplyIncludes" /> into
 /// account.
 /// </summary>
-public interface IEvaluatedIncludeCache
+public interface IIncludeContext
 {
     /// <summary>
     /// Stores the evaluated inclusion tree for later usage.

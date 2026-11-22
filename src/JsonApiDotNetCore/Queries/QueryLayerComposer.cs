@@ -19,32 +19,32 @@ public class QueryLayerComposer : IQueryLayerComposer
     private readonly IJsonApiOptions _options;
     private readonly IPaginationContext _paginationContext;
     private readonly ITargetedFields _targetedFields;
-    private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
-    private readonly ISparseFieldSetCache _sparseFieldSetCache;
+    private readonly IIncludeContext _includeContext;
+    private readonly ISparseFieldSetEvaluator _sparseFieldSetEvaluator;
 
     public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
-        IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache,
-        ISparseFieldSetCache sparseFieldSetCache)
+        IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IIncludeContext includeContext,
+        ISparseFieldSetEvaluator sparseFieldSetEvaluator)
     {
         ArgumentNullException.ThrowIfNull(constraintProviders);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(paginationContext);
         ArgumentNullException.ThrowIfNull(targetedFields);
-        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
-        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(includeContext);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetEvaluator);
 
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _options = options;
         _paginationContext = paginationContext;
         _targetedFields = targetedFields;
-        _evaluatedIncludeCache = evaluatedIncludeCache;
-        _sparseFieldSetCache = sparseFieldSetCache;
+        _includeContext = includeContext;
+        _sparseFieldSetEvaluator = sparseFieldSetEvaluator;
     }
 
     /// <inheritdoc />
-    public FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
+    public FilterExpression? ComposeSecondaryFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
     {
         ArgumentNullException.ThrowIfNull(primaryId);
         ArgumentNullException.ThrowIfNull(hasManyRelationship);
@@ -192,7 +192,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             ? includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty
             : include;
 
-        _evaluatedIncludeCache.Set(result);
+        _includeContext.Set(result);
 
         return result;
     }
@@ -591,7 +591,7 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         foreach (ResourceType nextType in resourceTypes)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetEvaluator.GetSparseFieldSetForQuery(nextType);
 
             if (fieldSet.Count == 0)
             {

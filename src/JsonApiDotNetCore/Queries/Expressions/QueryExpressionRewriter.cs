@@ -150,11 +150,11 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
     public override QueryExpression? VisitMatchText(MatchTextExpression expression, TArgument argument)
     {
         var newMatchTarget = Visit(expression.MatchTarget, argument) as ResourceFieldChainExpression;
-        var newTextValue = Visit(expression.TextValue, argument) as LiteralConstantExpression;
+        var newTextValue = Visit(expression.Text, argument) as LiteralConstantExpression;
 
         if (newMatchTarget != null && newTextValue != null)
         {
-            var newExpression = new MatchTextExpression(newMatchTarget, newTextValue, expression.MatchKind);
+            var newExpression = new MatchTextExpression(newMatchTarget, newTextValue, expression.Operator);
             return newExpression.Equals(expression) ? expression : newExpression;
         }
 

@@ -10,16 +10,16 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 internal sealed class LikeNode : FilterNode
 {
     public ColumnNode Column { get; }
-    public TextMatchKind MatchKind { get; }
+    public TextMatchOperator Operator { get; }
     public string Text { get; }
 
-    public LikeNode(ColumnNode column, TextMatchKind matchKind, string text)
+    public LikeNode(ColumnNode column, TextMatchOperator @operator, string text)
     {
         ArgumentNullException.ThrowIfNull(column);
         ArgumentNullException.ThrowIfNull(text);
 
         Column = column;
-        MatchKind = matchKind;
+        Operator = @operator;
         Text = text;
     }
 

@@ -83,8 +83,8 @@ Commonly used types are listed in the following sections.
   - <xref:JsonApiDotNetCore.Serialization.Response.JsonApiWriter> implements <xref:JsonApiDotNetCore.Serialization.Response.IJsonApiWriter>
     - <xref:JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter> implements <xref:JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter>
 - <xref:JsonApiDotNetCore.Serialization.Objects.Document>
-- <xref:JsonApiDotNetCore.Queries.IEvaluatedIncludeCache>
-- <xref:JsonApiDotNetCore.Queries.SparseFieldSetCache> implements <xref:JsonApiDotNetCore.Queries.ISparseFieldSetCache>
+- <xref:JsonApiDotNetCore.Queries.IIncludeContext>
+- <xref:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator> implements <xref:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator>
 
 ## Error handling
 

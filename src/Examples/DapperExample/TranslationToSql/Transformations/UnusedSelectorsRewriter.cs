@@ -167,7 +167,7 @@ internal sealed partial class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<
     public override SqlTreeNode VisitLike(LikeNode node, ISet<ColumnNode> usedColumns)
     {
         ColumnNode column = TypedVisit(node.Column, usedColumns);
-        return new LikeNode(column, node.MatchKind, node.Text);
+        return new LikeNode(column, node.Operator, node.Text);
     }
 
     public override SqlTreeNode VisitIn(InNode node, ISet<ColumnNode> usedColumns)

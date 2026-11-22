@@ -7,8 +7,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries;
 
-/// <inheritdoc cref="ISparseFieldSetCache" />
-public sealed class SparseFieldSetCache : ISparseFieldSetCache
+/// <inheritdoc cref="ISparseFieldSetEvaluator" />
+public sealed class SparseFieldSetEvaluator : ISparseFieldSetEvaluator
 {
     private static readonly ConcurrentDictionary<ResourceType, SparseFieldSetExpression> ViewableFieldSetCache = new();
 
@@ -16,7 +16,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     private readonly Lazy<Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>>> _lazySourceTable;
     private readonly Dictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> _visitedTable = [];
 
-    public SparseFieldSetCache(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    public SparseFieldSetEvaluator(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
         ArgumentNullException.ThrowIfNull(constraintProviders);
         ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);

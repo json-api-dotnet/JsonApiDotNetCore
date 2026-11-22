@@ -123,7 +123,7 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
         };
     }
 
-    protected override IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph)
+    protected override IIncludeContext CreateIncludeContext(IResourceGraph resourceGraph)
     {
         ResourceType resourceType = resourceGraph.GetResourceType<OutgoingResource>();
 
@@ -146,8 +146,8 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
             }.ToImmutableHashSet())
         }.ToImmutableHashSet());
 
-        var cache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
-        cache.Set(include);
-        return cache;
+        var includeContext = new IncludeContext(Array.Empty<IQueryConstraintProvider>());
+        includeContext.Set(include);
+        return includeContext;
     }
 }

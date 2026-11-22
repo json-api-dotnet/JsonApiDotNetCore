@@ -332,8 +332,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
-        var matchKind = Enum.Parse<TextMatchKind>(operatorName.Pascalize());
-        return new MatchTextExpression(matchTarget, constant, matchKind);
+        var textMatchOperator = Enum.Parse<TextMatchOperator>(operatorName.Pascalize());
+        return new MatchTextExpression(matchTarget, constant, textMatchOperator);
     }
 
     private QueryExpression ParseTextMatchLeftTerm()

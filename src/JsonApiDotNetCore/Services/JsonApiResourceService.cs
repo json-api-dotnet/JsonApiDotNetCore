@@ -220,7 +220,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     private async Task RetrieveResourceCountForNonPrimaryEndpointAsync([DisallowNull] TId id, HasManyAttribute relationship,
         CancellationToken cancellationToken)
     {
-        FilterExpression? secondaryFilter = _queryLayerComposer.GetSecondaryFilterFromConstraints(id, relationship);
+        FilterExpression? secondaryFilter = _queryLayerComposer.ComposeSecondaryFilter(id, relationship);
 
         if (secondaryFilter != null)
         {
