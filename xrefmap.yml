@@ -577,15 +577,15 @@ references:
   commentId: T:JsonApiDotNetCore.AtomicOperations.OperationsProcessor
   fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor
   nameWithType: OperationsProcessor
-- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor,JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory,JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  name: OperationsProcessor(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetCache)
-  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor__ctor_JsonApiDotNetCore_AtomicOperations_IOperationProcessorAccessor_JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Queries_ISparseFieldSetCache_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor,JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory,JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  name.vb: New(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetCache)
-  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.OperationsProcessor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor, JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory, JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  fullName.vb: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.New(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor, JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory, JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  nameWithType: OperationsProcessor.OperationsProcessor(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetCache)
-  nameWithType.vb: OperationsProcessor.New(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetCache)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor,JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory,JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  name: OperationsProcessor(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetEvaluator)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor__ctor_JsonApiDotNetCore_AtomicOperations_IOperationProcessorAccessor_JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor,JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory,JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  name.vb: New(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetEvaluator)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.OperationsProcessor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor, JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory, JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.New(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor, JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory, JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  nameWithType: OperationsProcessor.OperationsProcessor(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetEvaluator)
+  nameWithType.vb: OperationsProcessor.New(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceGraph, IJsonApiRequest, ITargetedFields, ISparseFieldSetEvaluator)
 - uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor*
   name: OperationsProcessor
   href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor__ctor_
@@ -7097,15 +7097,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression
   nameWithType: MatchTextExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  name: MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchKind)
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchKind_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  name.vb: New(QueryExpression, LiteralConstantExpression, TextMatchKind)
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTextExpression(JsonApiDotNetCore.Queries.Expressions.QueryExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.New(JsonApiDotNetCore.Queries.Expressions.QueryExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchKind)
-  nameWithType: MatchTextExpression.MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchKind)
-  nameWithType.vb: MatchTextExpression.New(QueryExpression, LiteralConstantExpression, TextMatchKind)
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchOperator)
+  name: MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchOperator)
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchOperator_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchOperator)
+  name.vb: New(QueryExpression, LiteralConstantExpression, TextMatchOperator)
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTextExpression(JsonApiDotNetCore.Queries.Expressions.QueryExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchOperator)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.New(JsonApiDotNetCore.Queries.Expressions.QueryExpression, JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.TextMatchOperator)
+  nameWithType: MatchTextExpression.MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchOperator)
+  nameWithType.vb: MatchTextExpression.New(QueryExpression, LiteralConstantExpression, TextMatchOperator)
 - uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor*
   name: MatchTextExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_
@@ -7161,19 +7161,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode
   nameWithType: MatchTextExpression.GetHashCode
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind
-  name: MatchKind
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchKind
-  commentId: P:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind
-  nameWithType: MatchTextExpression.MatchKind
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind*
-  name: MatchKind
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchKind_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind
-  nameWithType: MatchTextExpression.MatchKind
 - uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget
   name: MatchTarget
   href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchTarget
@@ -7187,19 +7174,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget
   nameWithType: MatchTextExpression.MatchTarget
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue
-  name: TextValue
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TextValue
-  commentId: P:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue
-  nameWithType: MatchTextExpression.TextValue
-- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue*
-  name: TextValue
-  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TextValue_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator
+  name: Operator
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Operator
+  commentId: P:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator
+  nameWithType: MatchTextExpression.Operator
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator*
+  name: Operator
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Operator_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue
-  nameWithType: MatchTextExpression.TextValue
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator
+  nameWithType: MatchTextExpression.Operator
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text
+  name: Text
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Text
+  commentId: P:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text
+  nameWithType: MatchTextExpression.Text
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text*
+  name: Text
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Text_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text
+  nameWithType: MatchTextExpression.Text
 - uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.ToFullString
   name: ToFullString()
   href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_ToFullString
@@ -9528,30 +9528,30 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.ToString
   nameWithType: SparseFieldTableExpression.ToString
-- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchKind
-  name: TextMatchKind
-  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html
-  commentId: T:JsonApiDotNetCore.Queries.Expressions.TextMatchKind
-  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchKind
-  nameWithType: TextMatchKind
-- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchKind.Contains
+- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator
+  name: TextMatchOperator
+  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.html
+  commentId: T:JsonApiDotNetCore.Queries.Expressions.TextMatchOperator
+  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator
+  nameWithType: TextMatchOperator
+- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.Contains
   name: Contains
-  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html#JsonApiDotNetCore_Queries_Expressions_TextMatchKind_Contains
-  commentId: F:JsonApiDotNetCore.Queries.Expressions.TextMatchKind.Contains
-  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchKind.Contains
-  nameWithType: TextMatchKind.Contains
-- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchKind.EndsWith
+  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.html#JsonApiDotNetCore_Queries_Expressions_TextMatchOperator_Contains
+  commentId: F:JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.Contains
+  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.Contains
+  nameWithType: TextMatchOperator.Contains
+- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.EndsWith
   name: EndsWith
-  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html#JsonApiDotNetCore_Queries_Expressions_TextMatchKind_EndsWith
-  commentId: F:JsonApiDotNetCore.Queries.Expressions.TextMatchKind.EndsWith
-  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchKind.EndsWith
-  nameWithType: TextMatchKind.EndsWith
-- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchKind.StartsWith
+  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.html#JsonApiDotNetCore_Queries_Expressions_TextMatchOperator_EndsWith
+  commentId: F:JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.EndsWith
+  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.EndsWith
+  nameWithType: TextMatchOperator.EndsWith
+- uid: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.StartsWith
   name: StartsWith
-  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html#JsonApiDotNetCore_Queries_Expressions_TextMatchKind_StartsWith
-  commentId: F:JsonApiDotNetCore.Queries.Expressions.TextMatchKind.StartsWith
-  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchKind.StartsWith
-  nameWithType: TextMatchKind.StartsWith
+  href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.html#JsonApiDotNetCore_Queries_Expressions_TextMatchOperator_StartsWith
+  commentId: F:JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.StartsWith
+  fullName: JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.StartsWith
+  nameWithType: TextMatchOperator.StartsWith
 - uid: JsonApiDotNetCore.Queries.FieldSelection
   name: FieldSelection
   href: api/JsonApiDotNetCore.Queries.FieldSelection.html
@@ -9736,38 +9736,38 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.FieldSelectors.RemoveAttributes
   nameWithType: FieldSelectors.RemoveAttributes
-- uid: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache
-  name: IEvaluatedIncludeCache
-  href: api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html
-  commentId: T:JsonApiDotNetCore.Queries.IEvaluatedIncludeCache
-  fullName: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache
-  nameWithType: IEvaluatedIncludeCache
-- uid: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Get
+- uid: JsonApiDotNetCore.Queries.IIncludeContext
+  name: IIncludeContext
+  href: api/JsonApiDotNetCore.Queries.IIncludeContext.html
+  commentId: T:JsonApiDotNetCore.Queries.IIncludeContext
+  fullName: JsonApiDotNetCore.Queries.IIncludeContext
+  nameWithType: IIncludeContext
+- uid: JsonApiDotNetCore.Queries.IIncludeContext.Get
   name: Get()
-  href: api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html#JsonApiDotNetCore_Queries_IEvaluatedIncludeCache_Get
-  commentId: M:JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Get
-  fullName: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Get()
-  nameWithType: IEvaluatedIncludeCache.Get()
-- uid: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Get*
+  href: api/JsonApiDotNetCore.Queries.IIncludeContext.html#JsonApiDotNetCore_Queries_IIncludeContext_Get
+  commentId: M:JsonApiDotNetCore.Queries.IIncludeContext.Get
+  fullName: JsonApiDotNetCore.Queries.IIncludeContext.Get()
+  nameWithType: IIncludeContext.Get()
+- uid: JsonApiDotNetCore.Queries.IIncludeContext.Get*
   name: Get
-  href: api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html#JsonApiDotNetCore_Queries_IEvaluatedIncludeCache_Get_
-  commentId: Overload:JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Get
+  href: api/JsonApiDotNetCore.Queries.IIncludeContext.html#JsonApiDotNetCore_Queries_IIncludeContext_Get_
+  commentId: Overload:JsonApiDotNetCore.Queries.IIncludeContext.Get
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Get
-  nameWithType: IEvaluatedIncludeCache.Get
-- uid: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Set(JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
+  fullName: JsonApiDotNetCore.Queries.IIncludeContext.Get
+  nameWithType: IIncludeContext.Get
+- uid: JsonApiDotNetCore.Queries.IIncludeContext.Set(JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
   name: Set(IncludeExpression)
-  href: api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html#JsonApiDotNetCore_Queries_IEvaluatedIncludeCache_Set_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_
-  commentId: M:JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Set(JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
-  fullName: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Set(JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
-  nameWithType: IEvaluatedIncludeCache.Set(IncludeExpression)
-- uid: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Set*
+  href: api/JsonApiDotNetCore.Queries.IIncludeContext.html#JsonApiDotNetCore_Queries_IIncludeContext_Set_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_
+  commentId: M:JsonApiDotNetCore.Queries.IIncludeContext.Set(JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
+  fullName: JsonApiDotNetCore.Queries.IIncludeContext.Set(JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
+  nameWithType: IIncludeContext.Set(IncludeExpression)
+- uid: JsonApiDotNetCore.Queries.IIncludeContext.Set*
   name: Set
-  href: api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html#JsonApiDotNetCore_Queries_IEvaluatedIncludeCache_Set_
-  commentId: Overload:JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Set
+  href: api/JsonApiDotNetCore.Queries.IIncludeContext.html#JsonApiDotNetCore_Queries_IIncludeContext_Set_
+  commentId: Overload:JsonApiDotNetCore.Queries.IIncludeContext.Set
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.Set
-  nameWithType: IEvaluatedIncludeCache.Set
+  fullName: JsonApiDotNetCore.Queries.IIncludeContext.Set
+  nameWithType: IIncludeContext.Set
 - uid: JsonApiDotNetCore.Queries.IPaginationContext
   name: IPaginationContext
   href: api/JsonApiDotNetCore.Queries.IPaginationContext.html
@@ -9954,6 +9954,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeFromConstraints
   nameWithType: IQueryLayerComposer.ComposeFromConstraints
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter*
+  name: ComposeSecondaryFilter
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryFilter_
+  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter
+  nameWithType: IQueryLayerComposer.ComposeSecondaryFilter
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name: ComposeSecondaryFilter<TId>(TId, HasManyAttribute)
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryFilter__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_
+  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name.vb: ComposeSecondaryFilter(Of TId)(TId, HasManyAttribute)
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter<TId>(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  fullName.vb: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter(Of TId)(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  nameWithType: IQueryLayerComposer.ComposeSecondaryFilter<TId>(TId, HasManyAttribute)
+  nameWithType.vb: IQueryLayerComposer.ComposeSecondaryFilter(Of TId)(TId, HasManyAttribute)
 - uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceType)
   name: ComposeSecondaryLayerForRelationship(ResourceType)
   href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceType_
@@ -9967,22 +9983,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship
   nameWithType: IQueryLayerComposer.ComposeSecondaryLayerForRelationship
-- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints*
-  name: GetSecondaryFilterFromConstraints
-  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryFilterFromConstraints_
-  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints
-  nameWithType: IQueryLayerComposer.GetSecondaryFilterFromConstraints
-- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  name: GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
-  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryFilterFromConstraints__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_
-  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  name.vb: GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
-  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  fullName.vb: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  nameWithType: IQueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
-  nameWithType.vb: IQueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
 - uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint*
   name: WrapLayerForSecondaryEndpoint
   href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint_
@@ -9999,51 +9999,51 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(JsonApiDotNetCore.Queries.QueryLayer, JsonApiDotNetCore.Configuration.ResourceType, TId, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
   nameWithType: IQueryLayerComposer.WrapLayerForSecondaryEndpoint<TId>(QueryLayer, ResourceType, TId, RelationshipAttribute)
   nameWithType.vb: IQueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(QueryLayer, ResourceType, TId, RelationshipAttribute)
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache
-  name: ISparseFieldSetCache
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html
-  commentId: T:JsonApiDotNetCore.Queries.ISparseFieldSetCache
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache
-  nameWithType: ISparseFieldSetCache
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
+- uid: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator
+  name: ISparseFieldSetEvaluator
+  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html
+  commentId: T:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator
+  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator
+  nameWithType: ISparseFieldSetEvaluator
+- uid: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSparseFieldSetForQuery(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: ISparseFieldSetCache.GetSparseFieldSetForQuery(ResourceType)
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForQuery*
+  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: ISparseFieldSetEvaluator.GetSparseFieldSetForQuery(ResourceType)
+- uid: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForQuery*
   name: GetSparseFieldSetForQuery
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_GetSparseFieldSetForQuery_
-  commentId: Overload:JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForQuery
+  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_GetSparseFieldSetForQuery_
+  commentId: Overload:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForQuery
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForQuery
-  nameWithType: ISparseFieldSetCache.GetSparseFieldSetForQuery
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForQuery
+  nameWithType: ISparseFieldSetEvaluator.GetSparseFieldSetForQuery
+- uid: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSparseFieldSetForSerializer(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: ISparseFieldSetCache.GetSparseFieldSetForSerializer(ResourceType)
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForSerializer*
+  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer(ResourceType)
+- uid: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer*
   name: GetSparseFieldSetForSerializer
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_GetSparseFieldSetForSerializer_
-  commentId: Overload:JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForSerializer
+  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_GetSparseFieldSetForSerializer_
+  commentId: Overload:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.GetSparseFieldSetForSerializer
-  nameWithType: ISparseFieldSetCache.GetSparseFieldSetForSerializer
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.Reset
+  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer
+  nameWithType: ISparseFieldSetEvaluator.GetSparseFieldSetForSerializer
+- uid: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.Reset
   name: Reset()
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_Reset
-  commentId: M:JsonApiDotNetCore.Queries.ISparseFieldSetCache.Reset
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.Reset()
-  nameWithType: ISparseFieldSetCache.Reset()
-- uid: JsonApiDotNetCore.Queries.ISparseFieldSetCache.Reset*
+  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_Reset
+  commentId: M:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.Reset
+  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.Reset()
+  nameWithType: ISparseFieldSetEvaluator.Reset()
+- uid: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.Reset*
   name: Reset
-  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html#JsonApiDotNetCore_Queries_ISparseFieldSetCache_Reset_
-  commentId: Overload:JsonApiDotNetCore.Queries.ISparseFieldSetCache.Reset
+  href: api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_Reset_
+  commentId: Overload:JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.Reset
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetCache.Reset
-  nameWithType: ISparseFieldSetCache.Reset
+  fullName: JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.Reset
+  nameWithType: ISparseFieldSetEvaluator.Reset
 - uid: JsonApiDotNetCore.Queries.Parsing
   name: JsonApiDotNetCore.Queries.Parsing
   href: api/JsonApiDotNetCore.Queries.Parsing.html
@@ -11456,15 +11456,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.QueryLayerComposer
   fullName: JsonApiDotNetCore.Queries.QueryLayerComposer
   nameWithType: QueryLayerComposer
-- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.IEvaluatedIncludeCache,JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  name: QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IEvaluatedIncludeCache, ISparseFieldSetCache)
-  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Queries_IEvaluatedIncludeCache_JsonApiDotNetCore_Queries_ISparseFieldSetCache_
-  commentId: M:JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.IEvaluatedIncludeCache,JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  name.vb: New(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IEvaluatedIncludeCache, ISparseFieldSetCache)
-  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.QueryLayerComposer(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.IEvaluatedIncludeCache, JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  fullName.vb: JsonApiDotNetCore.Queries.QueryLayerComposer.New(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.IEvaluatedIncludeCache, JsonApiDotNetCore.Queries.ISparseFieldSetCache)
-  nameWithType: QueryLayerComposer.QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IEvaluatedIncludeCache, ISparseFieldSetCache)
-  nameWithType.vb: QueryLayerComposer.New(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IEvaluatedIncludeCache, ISparseFieldSetCache)
+- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.IIncludeContext,JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  name: QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IIncludeContext, ISparseFieldSetEvaluator)
+  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Queries_IIncludeContext_JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_
+  commentId: M:JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.IIncludeContext,JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  name.vb: New(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IIncludeContext, ISparseFieldSetEvaluator)
+  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.QueryLayerComposer(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.IIncludeContext, JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  fullName.vb: JsonApiDotNetCore.Queries.QueryLayerComposer.New(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Queries.IIncludeContext, JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)
+  nameWithType: QueryLayerComposer.QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IIncludeContext, ISparseFieldSetEvaluator)
+  nameWithType.vb: QueryLayerComposer.New(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IIncludeContext, ISparseFieldSetEvaluator)
 - uid: JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor*
   name: QueryLayerComposer
   href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer__ctor_
@@ -11565,6 +11565,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeFromConstraints
   nameWithType: QueryLayerComposer.ComposeFromConstraints
+- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter*
+  name: ComposeSecondaryFilter
+  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_ComposeSecondaryFilter_
+  commentId: Overload:JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter
+  nameWithType: QueryLayerComposer.ComposeSecondaryFilter
+- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name: ComposeSecondaryFilter<TId>(TId, HasManyAttribute)
+  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_ComposeSecondaryFilter__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_
+  commentId: M:JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name.vb: ComposeSecondaryFilter(Of TId)(TId, HasManyAttribute)
+  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter<TId>(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  fullName.vb: JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter(Of TId)(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  nameWithType: QueryLayerComposer.ComposeSecondaryFilter<TId>(TId, HasManyAttribute)
+  nameWithType.vb: QueryLayerComposer.ComposeSecondaryFilter(Of TId)(TId, HasManyAttribute)
 - uid: JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceType)
   name: ComposeSecondaryLayerForRelationship(ResourceType)
   href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceType_
@@ -11626,22 +11642,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.GetPagination
   nameWithType: QueryLayerComposer.GetPagination
-- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints*
-  name: GetSecondaryFilterFromConstraints
-  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_GetSecondaryFilterFromConstraints_
-  commentId: Overload:JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints
-  nameWithType: QueryLayerComposer.GetSecondaryFilterFromConstraints
-- uid: JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  name: GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
-  href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_GetSecondaryFilterFromConstraints__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_
-  commentId: M:JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  name.vb: GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
-  fullName: JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  fullName.vb: JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
-  nameWithType: QueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
-  nameWithType.vb: QueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
 - uid: JsonApiDotNetCore.Queries.QueryLayerComposer.GetSelectionForSparseAttributeSet(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSelectionForSparseAttributeSet(ResourceType)
   href: api/JsonApiDotNetCore.Queries.QueryLayerComposer.html#JsonApiDotNetCore_Queries_QueryLayerComposer_GetSelectionForSparseAttributeSet_JsonApiDotNetCore_Configuration_ResourceType_
@@ -12669,70 +12669,70 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.QueryableBuilding.WhereClauseBuilder.VisitNullConstant
   nameWithType: WhereClauseBuilder.VisitNullConstant
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache
-  name: SparseFieldSetCache
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html
-  commentId: T:JsonApiDotNetCore.Queries.SparseFieldSetCache
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache
-  nameWithType: SparseFieldSetCache
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  name: SparseFieldSetCache(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
-  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetCache.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator
+  name: SparseFieldSetEvaluator
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html
+  commentId: T:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator
+  nameWithType: SparseFieldSetEvaluator
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  name: SparseFieldSetEvaluator(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
+  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
   name.vb: New(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor)
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.SparseFieldSetCache(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  fullName.vb: JsonApiDotNetCore.Queries.SparseFieldSetCache.New(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  nameWithType: SparseFieldSetCache.SparseFieldSetCache(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
-  nameWithType.vb: SparseFieldSetCache.New(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor)
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.#ctor*
-  name: SparseFieldSetCache
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache__ctor_
-  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetCache.#ctor
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.SparseFieldSetEvaluator(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  fullName.vb: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.New(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  nameWithType: SparseFieldSetEvaluator.SparseFieldSetEvaluator(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
+  nameWithType.vb: SparseFieldSetEvaluator.New(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor)
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.#ctor*
+  name: SparseFieldSetEvaluator
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator__ctor_
+  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.#ctor
   isSpec: "True"
   name.vb: New
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.SparseFieldSetCache
-  fullName.vb: JsonApiDotNetCore.Queries.SparseFieldSetCache.New
-  nameWithType: SparseFieldSetCache.SparseFieldSetCache
-  nameWithType.vb: SparseFieldSetCache.New
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.SparseFieldSetEvaluator
+  fullName.vb: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.New
+  nameWithType: SparseFieldSetEvaluator.SparseFieldSetEvaluator
+  nameWithType.vb: SparseFieldSetEvaluator.New
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSparseFieldSetForQuery(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: SparseFieldSetCache.GetSparseFieldSetForQuery(ResourceType)
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForQuery*
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: SparseFieldSetEvaluator.GetSparseFieldSetForQuery(ResourceType)
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForQuery*
   name: GetSparseFieldSetForQuery
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_GetSparseFieldSetForQuery_
-  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForQuery
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator_GetSparseFieldSetForQuery_
+  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForQuery
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForQuery
-  nameWithType: SparseFieldSetCache.GetSparseFieldSetForQuery
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForQuery
+  nameWithType: SparseFieldSetEvaluator.GetSparseFieldSetForQuery
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSparseFieldSetForSerializer(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: SparseFieldSetCache.GetSparseFieldSetForSerializer(ResourceType)
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForSerializer*
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: SparseFieldSetEvaluator.GetSparseFieldSetForSerializer(ResourceType)
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForSerializer*
   name: GetSparseFieldSetForSerializer
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_GetSparseFieldSetForSerializer_
-  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForSerializer
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator_GetSparseFieldSetForSerializer_
+  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForSerializer
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.GetSparseFieldSetForSerializer
-  nameWithType: SparseFieldSetCache.GetSparseFieldSetForSerializer
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.Reset
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.GetSparseFieldSetForSerializer
+  nameWithType: SparseFieldSetEvaluator.GetSparseFieldSetForSerializer
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.Reset
   name: Reset()
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_Reset
-  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetCache.Reset
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.Reset()
-  nameWithType: SparseFieldSetCache.Reset()
-- uid: JsonApiDotNetCore.Queries.SparseFieldSetCache.Reset*
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator_Reset
+  commentId: M:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.Reset
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.Reset()
+  nameWithType: SparseFieldSetEvaluator.Reset()
+- uid: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.Reset*
   name: Reset
-  href: api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_SparseFieldSetCache_Reset_
-  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetCache.Reset
+  href: api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html#JsonApiDotNetCore_Queries_SparseFieldSetEvaluator_Reset_
+  commentId: Overload:JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.Reset
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.SparseFieldSetCache.Reset
-  nameWithType: SparseFieldSetCache.Reset
+  fullName: JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.Reset
+  nameWithType: SparseFieldSetEvaluator.Reset
 - uid: JsonApiDotNetCore.Queries.TopFieldSelection
   name: TopFieldSelection
   href: api/JsonApiDotNetCore.Queries.TopFieldSelection.html
@@ -20802,15 +20802,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter
   fullName: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter
   nameWithType: ResponseModelAdapter
-- uid: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.ILinkBuilder,JsonApiDotNetCore.Serialization.Response.IMetaBuilder,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Queries.IEvaluatedIncludeCache,JsonApiDotNetCore.Queries.ISparseFieldSetCache,JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
-  name: ResponseModelAdapter(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IEvaluatedIncludeCache, ISparseFieldSetCache, IRequestQueryStringAccessor)
-  href: api/JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.html#JsonApiDotNetCore_Serialization_Response_ResponseModelAdapter__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Serialization_Response_ILinkBuilder_JsonApiDotNetCore_Serialization_Response_IMetaBuilder_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Queries_IEvaluatedIncludeCache_JsonApiDotNetCore_Queries_ISparseFieldSetCache_JsonApiDotNetCore_QueryStrings_IRequestQueryStringAccessor_
-  commentId: M:JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.ILinkBuilder,JsonApiDotNetCore.Serialization.Response.IMetaBuilder,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Queries.IEvaluatedIncludeCache,JsonApiDotNetCore.Queries.ISparseFieldSetCache,JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
-  name.vb: New(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IEvaluatedIncludeCache, ISparseFieldSetCache, IRequestQueryStringAccessor)
-  fullName: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.ResponseModelAdapter(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.ILinkBuilder, JsonApiDotNetCore.Serialization.Response.IMetaBuilder, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Queries.IEvaluatedIncludeCache, JsonApiDotNetCore.Queries.ISparseFieldSetCache, JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
-  fullName.vb: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.New(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.ILinkBuilder, JsonApiDotNetCore.Serialization.Response.IMetaBuilder, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Queries.IEvaluatedIncludeCache, JsonApiDotNetCore.Queries.ISparseFieldSetCache, JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
-  nameWithType: ResponseModelAdapter.ResponseModelAdapter(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IEvaluatedIncludeCache, ISparseFieldSetCache, IRequestQueryStringAccessor)
-  nameWithType.vb: ResponseModelAdapter.New(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IEvaluatedIncludeCache, ISparseFieldSetCache, IRequestQueryStringAccessor)
+- uid: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.ILinkBuilder,JsonApiDotNetCore.Serialization.Response.IMetaBuilder,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Queries.IIncludeContext,JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator,JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
+  name: ResponseModelAdapter(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IIncludeContext, ISparseFieldSetEvaluator, IRequestQueryStringAccessor)
+  href: api/JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.html#JsonApiDotNetCore_Serialization_Response_ResponseModelAdapter__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Serialization_Response_ILinkBuilder_JsonApiDotNetCore_Serialization_Response_IMetaBuilder_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Queries_IIncludeContext_JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_JsonApiDotNetCore_QueryStrings_IRequestQueryStringAccessor_
+  commentId: M:JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.ILinkBuilder,JsonApiDotNetCore.Serialization.Response.IMetaBuilder,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Queries.IIncludeContext,JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator,JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
+  name.vb: New(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IIncludeContext, ISparseFieldSetEvaluator, IRequestQueryStringAccessor)
+  fullName: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.ResponseModelAdapter(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.ILinkBuilder, JsonApiDotNetCore.Serialization.Response.IMetaBuilder, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Queries.IIncludeContext, JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator, JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
+  fullName.vb: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.New(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.ILinkBuilder, JsonApiDotNetCore.Serialization.Response.IMetaBuilder, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Queries.IIncludeContext, JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator, JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
+  nameWithType: ResponseModelAdapter.ResponseModelAdapter(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IIncludeContext, ISparseFieldSetEvaluator, IRequestQueryStringAccessor)
+  nameWithType.vb: ResponseModelAdapter.New(IJsonApiRequest, IJsonApiOptions, ILinkBuilder, IMetaBuilder, IResourceDefinitionAccessor, IIncludeContext, ISparseFieldSetEvaluator, IRequestQueryStringAccessor)
 - uid: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.#ctor*
   name: ResponseModelAdapter
   href: api/JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.html#JsonApiDotNetCore_Serialization_Response_ResponseModelAdapter__ctor_

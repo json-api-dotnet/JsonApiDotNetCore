@@ -165,8 +165,8 @@ public class QueryLayerComposer : IQueryLayerComposer</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_QueryLayerComposer__ctor_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Queries_IEvaluatedIncludeCache_JsonApiDotNetCore_Queries_ISparseFieldSetCache_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.IEvaluatedIncludeCache,JsonApiDotNetCore.Queries.ISparseFieldSetCache)">
-  QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt;, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IEvaluatedIncludeCache, ISparseFieldSetCache)
+  <h3 id="JsonApiDotNetCore_Queries_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Queries_IIncludeContext_JsonApiDotNetCore_Queries_ISparseFieldSetEvaluator_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Queries.IIncludeContext,JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator)">
+  QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt;, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext, ITargetedFields, IIncludeContext, ISparseFieldSetEvaluator)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryLayerComposer.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -174,7 +174,7 @@ public class QueryLayerComposer : IQueryLayerComposer</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache)</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IIncludeContext includeContext, ISparseFieldSetEvaluator sparseFieldSetEvaluator)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -189,9 +189,9 @@ public class QueryLayerComposer : IQueryLayerComposer</code></pre>
     <dd></dd>
     <dt><code>targetedFields</code> <a class="xref" href="JsonApiDotNetCore.Resources.ITargetedFields.html">ITargetedFields</a></dt>
     <dd></dd>
-    <dt><code>evaluatedIncludeCache</code> <a class="xref" href="JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html">IEvaluatedIncludeCache</a></dt>
+    <dt><code>includeContext</code> <a class="xref" href="JsonApiDotNetCore.Queries.IIncludeContext.html">IIncludeContext</a></dt>
     <dd></dd>
-    <dt><code>sparseFieldSetCache</code> <a class="xref" href="JsonApiDotNetCore.Queries.ISparseFieldSetCache.html">ISparseFieldSetCache</a></dt>
+    <dt><code>sparseFieldSetEvaluator</code> <a class="xref" href="JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html">ISparseFieldSetEvaluator</a></dt>
     <dd></dd>
   </dl>
 
@@ -460,6 +460,50 @@ request.</p>
 
 
 
+  <a id="JsonApiDotNetCore_Queries_QueryLayerComposer_ComposeSecondaryFilter_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryLayerComposer_ComposeSecondaryFilter__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryFilter``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)">
+  ComposeSecondaryFilter&lt;TId&gt;(TId, HasManyAttribute)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryLayerComposer.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FilterExpression? ComposeSecondaryFilter&lt;TId&gt;(TId primaryId, HasManyAttribute hasManyRelationship)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>primaryId</code> <span class="xref">TId</span></dt>
+    <dd></dd>
+    <dt><code>hasManyRelationship</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TId</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Queries_QueryLayerComposer_ComposeSecondaryLayerForRelationship_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryLayerForRelationship*"></a>
 
   <h3 id="JsonApiDotNetCore_Queries_QueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceType)">
@@ -601,50 +645,6 @@ request.</p>
     <dd></dd>
   </dl>
 
-
-
-
-
-
-
-
-
-
-
-  <a id="JsonApiDotNetCore_Queries_QueryLayerComposer_GetSecondaryFilterFromConstraints_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints*"></a>
-
-  <h3 id="JsonApiDotNetCore_Queries_QueryLayerComposer_GetSecondaryFilterFromConstraints__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_" data-uid="JsonApiDotNetCore.Queries.QueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)">
-  GetSecondaryFilterFromConstraints&lt;TId&gt;(TId, HasManyAttribute)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryLayerComposer.cs/#L47"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FilterExpression? GetSecondaryFilterFromConstraints&lt;TId&gt;(TId primaryId, HasManyAttribute hasManyRelationship)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>primaryId</code> <span class="xref">TId</span></dt>
-    <dd></dd>
-    <dt><code>hasManyRelationship</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Type Parameters</h4>
-  <dl class="parameters">
-    <dt><code>TId</code></dt>
-    <dd></dd>
-  </dl>
 
 
 

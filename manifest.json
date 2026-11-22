@@ -2180,16 +2180,16 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Expressions.TextMatchKind.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "JsonApiDotNetCore.Queries.Expressions.TextMatchKind",
+      "Title": "JsonApiDotNetCore.Queries.Expressions.TextMatchOperator",
       "Summary": null
     },
     {
@@ -2235,18 +2235,28 @@
       "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.FieldSelectors.yml\" sourcestartlinenumber=\"1\">A data structure that contains which fields (attributes and relationships) to retrieve, or empty to retrieve all. In the case of a relationship, it\ncontains the nested query constraints.</p>\n"
     },
     {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.yml",
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.md",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html"
         }
       },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.IIncludeContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.IIncludeContext.html"
+        }
+      },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "JsonApiDotNetCore.Queries.IEvaluatedIncludeCache",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.yml\" sourcestartlinenumber=\"1\">Provides in-memory storage for the evaluated inclusion tree within a request. This tree is produced from query string and resource definition\ncallbacks. The cache enables the serialization layer to take changes from <xref href=\"JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplyIncludes(System.Collections.Immutable.IImmutableSet%7bJsonApiDotNetCore.Queries.Expressions.IncludeElementExpression%7d)\" data-throw-if-not-resolved=\"false\"></xref> into\naccount.</p>\n"
+      "Title": "JsonApiDotNetCore.Queries.IIncludeContext",
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.IIncludeContext.yml\" sourcestartlinenumber=\"1\">Provides in-memory storage for the evaluated inclusion tree within a request. This tree is produced from query string and resource definition\ncallbacks. This context enables the serialization layer to take changes from <xref href=\"JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplyIncludes(System.Collections.Immutable.IImmutableSet%7bJsonApiDotNetCore.Queries.Expressions.IncludeElementExpression%7d)\" data-throw-if-not-resolved=\"false\"></xref> into\naccount.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2291,18 +2301,28 @@
       "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.IQueryLayerComposer.yml\" sourcestartlinenumber=\"1\">Takes scoped expressions from <xref href=\"JsonApiDotNetCore.Queries.IQueryConstraintProvider\" data-throw-if-not-resolved=\"false\"></xref>s and transforms them.</p>\n"
     },
     {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.yml",
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.md",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html"
         }
       },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.html"
+        }
+      },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "JsonApiDotNetCore.Queries.ISparseFieldSetCache",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.yml\" sourcestartlinenumber=\"1\">Takes sparse fieldsets from <xref href=\"JsonApiDotNetCore.Queries.IQueryConstraintProvider\" data-throw-if-not-resolved=\"false\"></xref>s and invokes\n<xref href=\"JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)\" data-throw-if-not-resolved=\"false\"></xref> on them.</p>\n"
+      "Title": "JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator",
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.ISparseFieldSetEvaluator.yml\" sourcestartlinenumber=\"1\">Takes sparse fieldsets from <xref href=\"JsonApiDotNetCore.Queries.IQueryConstraintProvider\" data-throw-if-not-resolved=\"false\"></xref>s and invokes\n<xref href=\"JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)\" data-throw-if-not-resolved=\"false\"></xref> on them.</p>\n"
     },
     {
       "type": "Redirection",
@@ -2997,18 +3017,28 @@
       "Summary": null
     },
     {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.SparseFieldSetCache.yml",
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.SparseFieldSetCache.md",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html"
         }
       },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.html"
+        }
+      },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "JsonApiDotNetCore.Queries.SparseFieldSetCache",
-      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.SparseFieldSetCache.yml\" sourcestartlinenumber=\"1\">Takes sparse fieldsets from <xref href=\"JsonApiDotNetCore.Queries.IQueryConstraintProvider\" data-throw-if-not-resolved=\"false\"></xref>s and invokes\n<xref href=\"JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)\" data-throw-if-not-resolved=\"false\"></xref> on them.</p>\n"
+      "Title": "JsonApiDotNetCore.Queries.SparseFieldSetEvaluator",
+      "Summary": "<p sourcefile=\"api/JsonApiDotNetCore.Queries.SparseFieldSetEvaluator.yml\" sourcestartlinenumber=\"1\">Takes sparse fieldsets from <xref href=\"JsonApiDotNetCore.Queries.IQueryConstraintProvider\" data-throw-if-not-resolved=\"false\"></xref>s and invokes\n<xref href=\"JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)\" data-throw-if-not-resolved=\"false\"></xref> on them.</p>\n"
     },
     {
       "type": "ManagedReference",

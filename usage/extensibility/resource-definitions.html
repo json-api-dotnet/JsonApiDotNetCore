@@ -254,8 +254,8 @@ Content-Type: application/vnd.api+json
     {
     }
 
-    public override IImmutableList&lt;IncludeElementExpression&gt; OnApplyIncludes(
-        IImmutableList&lt;IncludeElementExpression&gt; existingIncludes)
+    public override IImmutableSet&lt;IncludeElementExpression&gt; OnApplyIncludes(
+        IImmutableSet&lt;IncludeElementExpression&gt; existingIncludes)
     {
         if (existingIncludes.Any(include =&gt;
             include.Relationship.Property.Name == nameof(Employee.Manager)))

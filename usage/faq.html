@@ -205,8 +205,8 @@ Either way, you can use the built-in query string and request body parsing, as w
 <li><code>IJsonApiRequest</code>: This contains routing information, such as whether a primary, secondary, or relationship endpoint is being accessed.</li>
 <li><code>ITargetedFields</code>: Lists the attributes and relationships from an incoming POST/PATCH resource request. Any fields missing there should not be stored (partial updates).</li>
 <li><code>IEnumerable&lt;IQueryConstraintProvider&gt;</code>: Provides access to the parsed query string parameters.</li>
-<li><code>IEvaluatedIncludeCache</code>: This tells the response serializer which related resources to render.</li>
-<li><code>ISparseFieldSetCache</code>: This tells the response serializer which fields to render in the <code>attributes</code> and <code>relationships</code> objects.</li>
+<li><code>IIncludeContext</code>: This tells the response serializer which related resources to render.</li>
+<li><code>ISparseFieldSetEvaluator</code>: This tells the response serializer which fields to render in the <code>attributes</code> and <code>relationships</code> objects.</li>
 </ul>
 <p>You may also want to inject the singletons <code>IJsonApiOptions</code> (which contains settings such as default page size) and <code>IResourceGraph</code> (the JSON:API model of resources, attributes and relationships).</p>
 <p>So, back to the topic of where to intercept. It helps to familiarize yourself with the <a href="../internals/queries.html">execution pipeline</a>.

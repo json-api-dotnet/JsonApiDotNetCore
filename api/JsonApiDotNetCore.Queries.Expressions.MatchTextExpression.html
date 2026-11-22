@@ -169,8 +169,8 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchKind_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)">
-  MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchKind)
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchOperator_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchOperator)">
+  MatchTextExpression(QueryExpression, LiteralConstantExpression, TextMatchOperator)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -178,16 +178,16 @@ public class MatchTextExpression : FilterExpression</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression textValue, TextMatchKind matchKind)</code></pre>
+    <pre><code class="lang-csharp hljs">public MatchTextExpression(QueryExpression matchTarget, LiteralConstantExpression text, TextMatchOperator @operator)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>matchTarget</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
     <dd></dd>
-    <dt><code>textValue</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html">LiteralConstantExpression</a></dt>
+    <dt><code>text</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html">LiteralConstantExpression</a></dt>
     <dd></dd>
-    <dt><code>matchKind</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html">TextMatchKind</a></dt>
+    <dt><code>operator</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.html">TextMatchOperator</a></dt>
     <dd></dd>
   </dl>
 
@@ -204,38 +204,6 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h2 class="section" id="properties">Properties
 </h2>
-
-
-  <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchKind_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind*"></a>
-
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchKind" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind">
-  MatchKind
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L39"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The kind of matching to perform.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TextMatchKind MatchKind { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html">TextMatchKind</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
 
 
   <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchTarget_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchTarget*"></a>
@@ -270,10 +238,42 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
 
 
-  <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TextValue_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue*"></a>
+  <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Operator_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TextValue" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue">
-  TextValue
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Operator" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Operator">
+  Operator
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The text matching operator to apply.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TextMatchOperator Operator { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.TextMatchOperator.html">TextMatchOperator</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Text_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Text" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Text">
+  Text
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -282,7 +282,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LiteralConstantExpression TextValue { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public LiteralConstantExpression Text { get; }</code></pre>
   </div>
 
 

@@ -374,6 +374,50 @@ request.</p>
 
 
 
+  <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryFilter_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryFilter__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryFilter``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)">
+  ComposeSecondaryFilter&lt;TId&gt;(TId, HasManyAttribute)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">FilterExpression? ComposeSecondaryFilter&lt;TId&gt;(TId primaryId, HasManyAttribute hasManyRelationship)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>primaryId</code> <span class="xref">TId</span></dt>
+    <dd></dd>
+    <dt><code>hasManyRelationship</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TId</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship*"></a>
 
   <h3 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceType)">
@@ -401,50 +445,6 @@ request.</p>
     <dd></dd>
   </dl>
 
-
-
-
-
-
-
-
-
-
-
-  <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryFilterFromConstraints_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints*"></a>
-
-  <h3 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryFilterFromConstraints__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)">
-  GetSecondaryFilterFromConstraints&lt;TId&gt;(TId, HasManyAttribute)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L17"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">FilterExpression? GetSecondaryFilterFromConstraints&lt;TId&gt;(TId primaryId, HasManyAttribute hasManyRelationship)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>primaryId</code> <span class="xref">TId</span></dt>
-    <dd></dd>
-    <dt><code>hasManyRelationship</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Type Parameters</h4>
-  <dl class="parameters">
-    <dt><code>TId</code></dt>
-    <dd></dd>
-  </dl>
 
 
 
