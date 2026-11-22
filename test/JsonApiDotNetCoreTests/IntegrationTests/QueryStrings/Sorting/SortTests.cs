@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting;
 
 public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
-    private const string CollectionErrorMessage = "This query string parameter can only be used on a collection of resources (not on a single resource).";
+    private const string CollectionErrorMessage = "Query string parameter 'sort' can only be used on a collection of resources.";
 
     private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();

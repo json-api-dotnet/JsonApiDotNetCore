@@ -29,9 +29,9 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[]", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter", "Field name between brackets expected in filter parameter name.")]
+    [InlineData("filter[", "Field name between brackets expected in filter parameter name.")]
+    [InlineData("filter[]", "Field name between brackets expected in filter parameter name.")]
     [InlineData("filter[some]", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[author.posts]",
         "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-one relationship or an attribute. " +

@@ -69,7 +69,7 @@ public sealed class QueryTokenizer
                 {
                     if (_textBuffer.Length > 0)
                     {
-                        throw new QueryParseException("Unexpected ' outside text.", _sourceOffset);
+                        throw new QueryParseException("Unexpected ' outside quoted text.", _sourceOffset);
                     }
 
                     _isInQuotedSection = true;
@@ -108,7 +108,7 @@ public sealed class QueryTokenizer
 
         if (_isInQuotedSection)
         {
-            throw new QueryParseException("' expected.", _sourceOffset - 1);
+            throw new QueryParseException("Closing ' expected.", _sourceOffset - 1);
         }
 
         Token? lastToken = ProduceTokenFromTextBuffer(false);
