@@ -44,7 +44,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
+    public FilterExpression? ComposeSecondaryFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
     {
         ArgumentNullException.ThrowIfNull(primaryId);
         ArgumentNullException.ThrowIfNull(hasManyRelationship);

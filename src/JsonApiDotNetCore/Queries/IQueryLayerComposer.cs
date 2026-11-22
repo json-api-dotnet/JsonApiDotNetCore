@@ -14,7 +14,7 @@ public interface IQueryLayerComposer
     /// <summary>
     /// Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.
     /// </summary>
-    FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship);
+    FilterExpression? ComposeSecondaryFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship);
 
     /// <summary>
     /// Collects constraints and builds a <see cref="QueryLayer" /> out of them, used to retrieve the actual resources.

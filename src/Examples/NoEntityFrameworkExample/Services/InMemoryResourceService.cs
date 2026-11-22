@@ -184,7 +184,7 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
 
     private void SetResourceCountForNonPrimaryEndpoint([DisallowNull] TId id, HasManyAttribute relationship)
     {
-        FilterExpression? secondaryFilter = _queryLayerComposer.GetSecondaryFilterFromConstraints(id, relationship);
+        FilterExpression? secondaryFilter = _queryLayerComposer.ComposeSecondaryFilter(id, relationship);
 
         if (secondaryFilter != null)
         {
