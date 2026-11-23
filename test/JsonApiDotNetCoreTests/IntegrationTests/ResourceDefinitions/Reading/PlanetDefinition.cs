@@ -49,4 +49,30 @@ public sealed class PlanetDefinition(IResourceGraph resourceGraph, IClientSettin
 
         return existingFilter;
     }
+
+    public override PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination)
+    {
+        base.OnApplyPagination(existingPagination);
+
+        if (_clientSettingsProvider.IsPlanetPageSizeLimited)
+        {
+            return new PaginationExpression(PageNumber.ValueOne, new PageSize(2));
+        }
+
+        return existingPagination;
+    }
+
+    public override SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
+    {
+        base.OnApplySparseFieldSet(existingSparseFieldSet);
+
+        return _clientSettingsProvider.PlanetFieldSetBehavior switch
+        {
+            PlanetFieldSetBehavior.IncludeAtmospherePressure => existingSparseFieldSet.Including<Planet>(planet => planet.Atmosphere!.Pressure, ResourceGraph),
+            PlanetFieldSetBehavior.ExcludeAtmosphereComposition => existingSparseFieldSet.Excluding<Planet>(planet => planet.Atmosphere!.Composition,
+                ResourceGraph),
+            PlanetFieldSetBehavior.ReturnNull => null,
+            _ => existingSparseFieldSet
+        };
+    }
 }

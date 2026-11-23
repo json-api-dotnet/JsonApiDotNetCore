@@ -142,6 +142,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             QueryableHandlerExpression[] queryableHandlers = _constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
+                .OfType<ExpressionInRelationshipChainScope>()
                 .Where(expressionInScope => expressionInScope.Scope == null)
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<QueryableHandlerExpression>()
@@ -170,6 +171,14 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     protected virtual IQueryable<TResource> GetAll()
     {
         IQueryable<TResource> source = _dbContext.Set<TResource>();
+
+        int? majorVersion = typeof(DbContext).Assembly.GetName().Version?.Major;
+
+        if (majorVersion == 11)
+        {
+            // Workaround for EF Core 11 bug at https://github.com/dotnet/efcore/issues/39670.
+            return source;
+        }
 
         return GetTrackingBehavior() switch
         {

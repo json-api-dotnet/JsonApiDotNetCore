@@ -21,7 +21,7 @@ internal sealed class LengthWhereClauseBuilder : WhereClauseBuilder
 
     private MemberExpression VisitLength(LengthExpression expression, QueryClauseBuilderContext context)
     {
-        Expression propertyAccess = Visit(expression.TargetAttribute, context);
+        Expression propertyAccess = Visit(expression.Target, context);
         return Expression.Property(propertyAccess, LengthPropertyGetter);
     }
 }

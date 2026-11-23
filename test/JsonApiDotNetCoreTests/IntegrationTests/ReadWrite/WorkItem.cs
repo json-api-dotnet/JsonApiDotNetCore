@@ -26,6 +26,12 @@ public sealed class WorkItem : Identifiable<int>
         set => Priority = value ? WorkItemPriority.High : throw new NotSupportedException();
     }
 
+    [Attr(IsCompound = true)]
+    public TimeEstimate? Estimate { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<ChecklistItem> Checklist { get; set; } = [];
+
     [HasOne]
     public UserAccount? Assignee { get; set; }
 

@@ -67,8 +67,8 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
         ExpressionInScope expressionInScope = _includeExpression != null
-            ? new ExpressionInScope(null, _includeExpression)
-            : new ExpressionInScope(null, IncludeExpression.Empty);
+            ? new ExpressionInRelationshipChainScope(null, _includeExpression)
+            : new ExpressionInRelationshipChainScope(null, IncludeExpression.Empty);
 
         return [expressionInScope];
     }

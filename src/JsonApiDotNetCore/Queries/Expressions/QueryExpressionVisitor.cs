@@ -44,6 +44,11 @@ public abstract class QueryExpressionVisitor<TArgument, TResult>
         return DefaultVisit(expression, argument);
     }
 
+    public virtual TResult VisitScalarCollectionElementValue(ScalarCollectionElementValueExpression expression, TArgument argument)
+    {
+        return DefaultVisit(expression, argument);
+    }
+
     public virtual TResult VisitLogical(LogicalExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);
@@ -94,12 +99,12 @@ public abstract class QueryExpressionVisitor<TArgument, TResult>
         return DefaultVisit(expression, argument);
     }
 
-    public virtual TResult VisitSparseFieldTable(SparseFieldTableExpression expression, TArgument argument)
+    public virtual TResult VisitSparseFieldSet(SparseFieldSetExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);
     }
 
-    public virtual TResult VisitSparseFieldSet(SparseFieldSetExpression expression, TArgument argument)
+    public virtual TResult VisitSparseFieldSetElement(SparseFieldSetElementExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);
     }

@@ -31,20 +31,31 @@ internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
 
         IServiceProvider serviceProvider = GetScopedServiceProvider();
         var request = serviceProvider.GetRequiredService<IJsonApiRequest>();
-        bool isTopResourceInPrimaryRequest = string.IsNullOrEmpty(parentEntry.Key) && IsAtPrimaryEndpoint(request);
 
-        if (!isTopResourceInPrimaryRequest)
+        if (!IsAtPrimaryEndpoint(request))
         {
             return false;
         }
 
-        if (request.WriteOperation == WriteOperationKind.UpdateResource)
+        if (string.IsNullOrEmpty(parentEntry.Key))
         {
-            var targetedFields = serviceProvider.GetRequiredService<ITargetedFields>();
-            return IsFieldTargeted(entry, targetedFields);
+            if (request.WriteOperation == WriteOperationKind.UpdateResource)
+            {
+                var targetedFields = serviceProvider.GetRequiredService<ITargetedFields>();
+                return IsFieldTargeted(entry, targetedFields);
+            }
+
+            return true;
         }
 
-        return true;
+        var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
+        return IsInCompoundType(parentEntry, resourceGraph);
+    }
+
+    private static bool IsInCompoundType(ValidationEntry parentEntry, IResourceGraph resourceGraph)
+    {
+        // Elements of a compound collection are Type-kind entries, which are always validated (see above). Only members of a compound type get here.
+        return resourceGraph.FindCompoundType(parentEntry.Metadata.ModelType) != null;
     }
 
     private IServiceProvider GetScopedServiceProvider()

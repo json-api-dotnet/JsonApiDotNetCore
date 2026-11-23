@@ -38,6 +38,7 @@ internal sealed class IncludeContext : IIncludeContext
 
             _include = _constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
+                .OfType<ExpressionInRelationshipChainScope>()
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<IncludeExpression>()

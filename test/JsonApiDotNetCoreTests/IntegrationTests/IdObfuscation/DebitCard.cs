@@ -14,6 +14,12 @@ public sealed class DebitCard : ObfuscatedIdentifiable
     [Attr]
     public short PinCode { get; set; }
 
+    [Attr(IsCompound = true)]
+    public CardLimits? Limits { get; set; }
+
+    [Attr(IsCompound = true)]
+    public List<CardNote> Notes { get; set; } = [];
+
     [HasOne]
     public BankAccount Account { get; set; } = null!;
 }

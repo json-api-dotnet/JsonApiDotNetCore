@@ -12,7 +12,7 @@ public sealed class BlogPost : Identifiable<long>
     public string Caption { get; set; } = null!;
 
     [Attr]
-    public string Url { get; set; } = null!;
+    public string? Url { get; set; }
 
     [HasOne]
     public WebAccount? Author { get; set; }

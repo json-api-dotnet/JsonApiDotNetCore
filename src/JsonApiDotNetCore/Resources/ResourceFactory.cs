@@ -85,8 +85,9 @@ internal sealed class ResourceFactory : IResourceFactory
     {
         ArgumentNullException.ThrowIfNull(resourceClrType);
 
-        if (HasSingleConstructorWithoutParameters(resourceClrType))
+        if (resourceClrType.IsValueType || HasSingleConstructorWithoutParameters(resourceClrType))
         {
+            // Structs always have an implicit parameterless constructor, which is not returned by reflection.
             return Expression.New(resourceClrType);
         }
 

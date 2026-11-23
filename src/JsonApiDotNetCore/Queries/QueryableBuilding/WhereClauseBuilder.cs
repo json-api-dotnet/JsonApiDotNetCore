@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq.Expressions;
+using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -50,17 +51,25 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         if (expression.Filter != null)
         {
-            ResourceType resourceType = ((HasManyAttribute)expression.TargetCollection.Fields[^1]).RightType;
+            ResourceType? nestedResourceType = expression.TargetCollection.Fields[^1] is HasManyAttribute hasMany ? hasMany.RightType : null;
 
             using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(elementType);
 
-            var nestedContext = new QueryClauseBuilderContext(property, resourceType, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
+            var nestedContext = new QueryClauseBuilderContext(property, nestedResourceType, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
                 lambdaScope, context.QueryableBuilder, context.State);
 
             predicate = GetPredicateLambda(expression.Filter, nestedContext);
         }
 
-        return AnyExtensionMethodCall(elementType, property, predicate);
+        MethodCallExpression anyCall = AnyExtensionMethodCall(elementType, property, predicate);
+
+        if (RequiresNullGuard(expression.TargetCollection, property))
+        {
+            // A null collection (or a collection below a null compound) counts as empty.
+            return Expression.Condition(IsNotNull(property), anyCall, Expression.Constant(false));
+        }
+
+        return anyCall;
     }
 
     private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source, Expression? predicate)
@@ -177,6 +186,11 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
         Expression left = WrapInConvert(Visit(expression.Left, context), commonType);
         Expression right = WrapInConvert(Visit(expression.Right, context), commonType);
 
+        if (expression.Operator != ComparisonOperator.Equals)
+        {
+            (left, right) = MakeOrderable(left, right);
+        }
+
         BinaryExpression? binaryExpression = null;
 
         switch (expression.Operator)
@@ -201,6 +215,37 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
         ConsistencyGuard.ThrowIf(binaryExpression == null, $"Unknown comparison operator '{expression.Operator}'.");
 
         return binaryExpression;
+    }
+
+    /// <summary>
+    /// Rewrites operands of types for which the CLR has no relational operators. Strings are compared using <see cref="string.Compare(string, string)" />
+    /// (the ordering is determined by the database), enums are compared by their underlying numeric value.
+    /// </summary>
+    private static (Expression Left, Expression Right) MakeOrderable(Expression left, Expression right)
+    {
+        Type type = Nullable.GetUnderlyingType(left.Type) ?? left.Type;
+
+        if (type == typeof(string))
+        {
+            MethodInfo compareMethod = typeof(string).GetMethod(nameof(string.Compare), [
+                typeof(string),
+                typeof(string)
+            ])!;
+
+            ConstantExpression zero = Expression.Constant(0);
+
+            return (Expression.Call(compareMethod, left, right), zero);
+        }
+
+        if (type.IsEnum)
+        {
+            Type underlyingType = Enum.GetUnderlyingType(type);
+            Type numericType = left.Type == type ? underlyingType : typeof(Nullable<>).MakeGenericType(underlyingType);
+
+            return (Expression.Convert(left, numericType), Expression.Convert(right, numericType));
+        }
+
+        return (left, right);
     }
 
     private Type ResolveCommonType(QueryExpression left, QueryExpression right, QueryClauseBuilderContext context)
@@ -240,6 +285,11 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
             return typeof(int);
         }
 
+        if (expression is ScalarCollectionElementValueExpression elementValue)
+        {
+            return elementValue.ElementType;
+        }
+
         if (expression is ResourceFieldChainExpression chain)
         {
             Expression child = Visit(chain, context);
@@ -269,5 +319,10 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     public override Expression VisitLiteralConstant(LiteralConstantExpression expression, QueryClauseBuilderContext context)
     {
         return SystemExpressionBuilder.CloseOver(expression.TypedValue);
+    }
+
+    public override Expression VisitScalarCollectionElementValue(ScalarCollectionElementValueExpression expression, QueryClauseBuilderContext context)
+    {
+        return context.LambdaScope.Accessor;
     }
 }
